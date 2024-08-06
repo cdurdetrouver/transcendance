@@ -24,7 +24,7 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python manage.py test
+        python backend/manage.py test
   frontend:
     name: Tests for frontend
     runs-on: ubuntu-latest
