@@ -15,7 +15,7 @@ services:
     build: ./frontend
     container_name: frontend
     ports:
-      - "5500:80"
+      - "5500:5500"
     volumes:
       - ./frontend:/app
     networks:

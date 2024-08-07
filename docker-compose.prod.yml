@@ -11,11 +11,14 @@ services:
     networks:
       - app-network
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
     image: ghcr.io/cdurdetrouver/frontend:latest
     container_name: frontend
     ports:
       - "80:80"
+      # - "443:443"
     volumes:
       - ./frontend:/app
     networks:
