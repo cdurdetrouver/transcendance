@@ -1,27 +1,71 @@
 # Transcendance
 
-## Overview
+## Description
 
-Transcendance is a web application that leverages modern web technologies to provide a seamless user experience. This project is structured with a Django backend and a React frontend.
+Transcendance is a web application built with a Django backend and a vanilla JavaScript frontend. It is designed to be a Single Page Application (SPA) that provides a seamless user experience. The project includes CI/CD pipelines, Docker support, and deployment configurations.
 
-## Technologies Used
+## Technologies
 
-### Backend
+- **Backend**: Django 5.0.8
+- **Frontend**: Vanilla JavaScript
+- **Containerization**: Docker
+- **CI/CD**: GitHub Actions
+- **Web Server**: Nginx
 
-- **Python 3.10.12**: The backend is built using Python.
-- **Django**: A high-level Python web framework that encourages rapid development and clean, pragmatic design.
-- **SQLite**: A lightweight database used for development and testing.
+## How to run
 
-### Frontend
+### Prerequisites
 
-- **React**: A JavaScript library for building user interfaces.
-- **Create React App**: A tool that sets up a modern web app by running one command.
-- **Node.js**: JavaScript runtime built on Chrome's V8 JavaScript engine.
-- **npm**: Package manager for JavaScript.
+- Docker
+- Docker Compose
 
-### Docker
+### Development
 
-- **Docker**: Used to containerize the application for consistent environments across development, testing, and production.
-- **Docker Compose**: Used to manage multi-container Docker applications.
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/yourusername/transcendance.git
+    cd transcendance
+    ```
 
-## Project Structure
+2. Start the development environment:
+    ```sh
+    docker-compose -f docker-compose.yml up --build
+    ```
+
+3. Access the application:
+    - Frontend: [http://localhost:5500/](http://localhost:5500/)
+    - Backend: [http://localhost:8000/](http://localhost:8000/)
+
+### Production
+
+1. Access the application in production:
+    - Frontend: [http://35.180.227.136/](http://35.180.227.136/)
+    - Backend: [http://35.180.227.136:8000/](http://35.180.227.136:8000/)
+
+## How to contribute
+
+1. Create a new branch based on the `dev` branch:
+    ```sh
+    git checkout -b feature/your-feature-name
+    ```
+2. Make your changes.
+3. Commit your changes:
+    ```sh
+    git commit -m 'Add some feature'
+    ```
+    Write them with [conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)
+5. Push to the branch:
+    ```sh
+    git push origin feature/your-feature-name
+    ```
+6. Open a pull request to dev.
+7. Wait for the CI pipeline to pass and for the two code reviews.
+8. Merge the pull request.
+9. Delete the branch.
+
+## Authors
+- cdurdetrouver
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
