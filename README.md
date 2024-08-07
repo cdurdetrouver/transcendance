@@ -58,7 +58,7 @@ Transcendance is a web application built with a Django backend and a vanilla Jav
     ```sh
     git push origin feature/your-feature-name
     ```
-6. Open a pull request to dev.
+6. Open a pull request to `dev` branch.
 7. Wait for the CI pipeline to pass and for the two code reviews.
 8. Merge the pull request.
 9. Delete the branch.
