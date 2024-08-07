@@ -31,3 +31,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Install Dependencies
+        run: |
+          cd frontend
+          npm install
+      - name: Run Tests
+        run: |
+          cd frontend
+          npm test

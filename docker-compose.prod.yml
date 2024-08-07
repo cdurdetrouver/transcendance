@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  backend:
+    build: ./backend
+    image: ghcr.io/cdurdetrouver/backend:latest
+    container_name: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    networks:
+      - app-network
+  frontend:
+    build: ./frontend
+    image: ghcr.io/cdurdetrouver/frontend:latest
+    container_name: frontend
+    ports:
+      - "5500:80"
+    volumes:
+      - ./frontend:/app
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
