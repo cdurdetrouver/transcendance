@@ -15,7 +15,7 @@ services:
     image: ghcr.io/cdurdetrouver/frontend:latest
     container_name: frontend
     ports:
-      - "5500:80"
+      - "80:80"
     volumes:
       - ./frontend:/app
     networks:
