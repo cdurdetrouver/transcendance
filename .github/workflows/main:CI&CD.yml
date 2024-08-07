@@ -8,7 +8,7 @@ on:
 
 jobs:
   backend:
-    name: Django Tests
+    name: Tests for backend
     runs-on: ubuntu-latest
     
     steps:
@@ -43,8 +43,8 @@ jobs:
         run: |
           cd frontend
           npm test
-  deploy:
-    name: Deploy
+  build:
+    name: Build and Push Docker Images
     runs-on: ubuntu-latest
     needs: [backend, frontend]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -59,3 +59,17 @@ jobs:
         run: docker compose -f docker-compose.prod.yml build
       - name: Push Docker Images
         run: docker compose -f docker-compose.prod.yml push
+
+  deploy:
+    name: Deploy to EC2
+    runs-on: self-hosted
+    needs: [build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Pull and Deploy
+        run: |
+          cd /home/ubuntu
+          docker pull ghcr.io/cdurdetrouver/backend:latest
+          docker pull ghcr.io/cdurdetrouver/frontend:latest
+          docker compose -f docker-compose.prod.yml up -d
