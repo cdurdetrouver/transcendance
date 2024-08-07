@@ -11,11 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker Images
-        run: docker-compose -f docker-compose.prod.yml build
+        run: docker compose -f docker-compose.prod.yml build
       - name: Login to Github Docker Registry
         run: echo ${{ secrets.TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Push Docker Images
-        run: docker-compose -f docker-compose.prod.yml push
+        run: docker compose -f docker-compose.prod.yml push
 
 
 
