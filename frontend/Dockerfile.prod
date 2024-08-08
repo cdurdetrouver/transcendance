@@ -11,8 +11,8 @@ COPY ./src /usr/share/nginx/html
 COPY ./conf/nginx.prod.conf /etc/nginx/conf.d/default.conf
 
 # Copy SSL certificates (if you have them)
-# COPY ./path/to/ssl/nginx.crt /etc/nginx/ssl/nginx.crt
-# COPY ./path/to/ssl/nginx.key /etc/nginx/ssl/nginx.key
+COPY ./conf/nginx.crt /etc/nginx/ssl/nginx.crt
+COPY ./conf/nginx.key /etc/nginx/ssl/nginx.key
 
 # Expose the ports Nginx is running on
 EXPOSE 80
