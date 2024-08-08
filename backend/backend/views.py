@@ -1,4 +1,4 @@
 from django.http import HttpResponse
 
-def return_literal_string(request):
-    return HttpResponse("Cdurdetrouver", content_type="text/plain")
+def home(request):
+    return HttpResponse("Welcome to the Home Page!")

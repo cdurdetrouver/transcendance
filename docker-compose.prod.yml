@@ -1,12 +1,12 @@
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
     image: ghcr.io/cdurdetrouver/backend:latest
     container_name: backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app
     networks:
       - app-network
   frontend:
@@ -18,8 +18,6 @@ services:
     ports:
       - "80:80"
       # - "443:443"
-    volumes:
-      - ./frontend:/app
     networks:
       - app-network
 networks:
