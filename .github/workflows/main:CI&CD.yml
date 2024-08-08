@@ -59,9 +59,17 @@ jobs:
           npm install
       - name: Run website
         run: docker compose -f docker-compose.yml up --build -d
+      - name: Wait for web service to be healthy
+        run: |
+          while ! curl -s http://localhost:5500; do
+            echo "Waiting for web service..."
+            sleep 5
+          done
       - name: Run Test
         run: |
           node test/test-route-speed.js
+      - name: Stop website
+        run: docker compose -f docker-compose.yml down
   build:
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
