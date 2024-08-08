@@ -15,7 +15,7 @@ services:
     ports:
       - "5500:5500"
     volumes:
-      - ./frontend:/app
+      - ./frontend/src:/usr/share/nginx/html
     networks:
       - app-network
 

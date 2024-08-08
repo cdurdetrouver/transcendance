@@ -4,9 +4,6 @@ FROM nginx:alpine
 # Set the working directory
 WORKDIR /usr/share/nginx/html
 
-# Copy the static files to the Nginx html directory
-COPY ./src /usr/share/nginx/html
-
 # Copy the Nginx configuration file
 COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
 
