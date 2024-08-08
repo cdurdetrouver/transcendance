@@ -7,9 +7,11 @@ export default class Home extends Component {
 	}
 
 	async getHtml() {
+		const text = "Welcome to the Home Page!";
+	
 		return `
 			<h1>Here We Go Transcendance ça commence</h1>
-			<p>Et ouais c'est une SPA in pure vanilla js.</p>
+			<p>${text}</p>
 		`;
 	}
 }

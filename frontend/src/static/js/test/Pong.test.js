@@ -1,7 +1,7 @@
-import Pong from './Pong.js';
+import Pong from '../views/Pong.js';
 
 test('Pong class', async () => {
-	  const pong = new Pong();
+  const pong = new Pong();
   const html = await pong.getHtml();
   expect(html).toBe(`
 			<h1>Pong</h1>

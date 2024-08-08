@@ -7,6 +7,11 @@ async function fetchResource(url, resourceType = '') {
     const response = await axios.get(url);
     const end = Date.now();
     const duration = end - start;
+
+    if (response.status !== 200) {
+      console.error(`Failed to fetch ${resourceType} from ${url}: ${response.statusText}`);
+      process.exit(1);
+    }
     return duration;
   } catch (error) {
     console.error(`Failed to fetch ${resourceType} from ${url}: ${error.message}`);

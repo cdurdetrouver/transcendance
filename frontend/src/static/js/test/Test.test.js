@@ -1,4 +1,4 @@
-import Test from "./Test.js";
+import Test from "../views/Test.js";
 
 test("Test class", async () => {
 	  const test = new Test();
