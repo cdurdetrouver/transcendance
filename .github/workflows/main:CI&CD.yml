@@ -61,7 +61,7 @@ jobs:
         run: docker compose -f docker-compose.yml up --build -d
       - name: Run Test
         run: |
-          node test-route-speed.js
+          node test/test-route-speed.js
   build:
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
