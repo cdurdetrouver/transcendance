@@ -1,11 +1,17 @@
 import Home from './views/Home.js';
 import About from './views/About.js';
+import Test from './views/Test.js';
+import Pong from './views/Pong.js';
 
 const route = async () => {
 	const routes = [
 		{path: '/', view: Home},
 		{path: '/about', view: About},
+		{path: '/test', view: Test},
+		{path: '/pong', view: Pong}
 	];
+
+	console.log(location.pathname);
 
 	const potentialMatches = routes.map(route => {
 		return {
