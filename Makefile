@@ -7,4 +7,11 @@ start:
 down:
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 
-.PHONY: start down
+help:
+	@echo "Usage: make [target]"
+	@echo ""
+	@echo "Targets:"
+	@echo "  start		Start the application in dev mode"
+	@echo "  down		Stop the application"
+
+.PHONY: start down help
