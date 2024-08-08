@@ -50,7 +50,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Run website
-        run: docker compose -f docker-compose.yml up -build -d
+        run: docker compose -f docker-compose.yml up --build -d
       - name: Run Test
         run: |
           chmod +x test/time.sh
