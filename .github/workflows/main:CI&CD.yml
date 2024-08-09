@@ -84,6 +84,7 @@ jobs:
         run: echo ${{ secrets.TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Create SSL Certificate Files
         run: |
+          mkdir -p certs
           echo "${{ secrets.PROD_SSL_CERT }}" > certs/prod.crt
           echo "${{ secrets.PROD_SSL_KEY }}" > certs/prod.key
       - name: Build Docker Images
