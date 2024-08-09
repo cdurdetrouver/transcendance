@@ -144,5 +144,4 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Backend API',
     'DESCRIPTION': 'API documentation for the backend',
     'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
 }
