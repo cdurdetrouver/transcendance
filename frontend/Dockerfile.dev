@@ -8,8 +8,8 @@ COPY ./src /usr/share/nginx/html
 COPY ./conf/nginx.dev.conf /etc/nginx/conf.d/default.conf
 
 # Copy the SSL certificate and key
-COPY ./conf/dev.crt /etc/nginx/certs/dev.crt
-COPY ./conf/dev.key /etc/nginx/certs/dev.key
+COPY ./certs/dev.crt /etc/nginx/certs/dev.crt
+COPY ./certs/dev.key /etc/nginx/certs/dev.key
 
 # Expose the ports Nginx is running on
 EXPOSE 80
