@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-vlnawq$@1)m42+q$jhl=^w5cw6hivi3+)7*kbl3pk+%!g$@zjl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['pong.cdurdetrouver.fr', 'www.pong.cdurdetrouver.fr', 'dev-pong.cdurdetrouver.fr', 'www.dev-pong.cdurdetrouver.fr']
 
 
 # Application definition
