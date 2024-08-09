@@ -2,9 +2,9 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.prod
-    image: ghcr.io/cdurdetrouver/backend:latest
-    container_name: backend
+      dockerfile: Dockerfile.dev
+    image: ghcr.io/cdurdetrouver/backend-dev:latest
+    container_name: backend-dev
     ports:
       - "8000:8000"
     networks:
@@ -12,9 +12,9 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.prod
-    image: ghcr.io/cdurdetrouver/frontend:latest
-    container_name: frontend
+      dockerfile: Dockerfile.dev
+    image: ghcr.io/cdurdetrouver/frontend-dev:latest
+    container_name: frontend-dev
     ports:
       - "80:80"
       - "443:443"
