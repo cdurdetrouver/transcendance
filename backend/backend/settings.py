@@ -25,7 +25,13 @@ SECRET_KEY = 'django-insecure-vlnawq$@1)m42+q$jhl=^w5cw6hivi3+)7*kbl3pk+%!g$@zjl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['pong.cdurdetrouver.fr', 'www.pong.cdurdetrouver.fr', 'dev-pong.cdurdetrouver.fr', 'www.dev-pong.cdurdetrouver.fr']
+ALLOWED_HOSTS = [
+    'pong.cdurdetrouver.fr',
+    'www.pong.cdurdetrouver.fr',
+    'dev-pong.cdurdetrouver.fr',
+    'www.dev-pong.cdurdetrouver.fr',
+    'localhost',
+]
 
 
 # Application definition
@@ -124,12 +130,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
@@ -140,4 +142,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Backend API',
+    'DESCRIPTION': 'API documentation for the backend',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
