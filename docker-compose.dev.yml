@@ -18,7 +18,7 @@ services:
     ports:
       - "80:80"
     networks:
-      - app-network
+      - dev-network
 networks:
-  app-network:
+  dev-network:
     driver: bridge

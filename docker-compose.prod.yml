@@ -32,8 +32,8 @@ services:
       - ./certs/www:/var/www/certbot
     command: certonly --webroot -w /var/www/certbot --force-renewal --email gabriel.bazart@gmail.com --agree-tos -d pong.cdurdetrouver.fr --non-interactive
     networks:
-      - app-network
+      - prod-network
 
 networks:
-  app-network:
+  prod-network:
     driver: bridge
