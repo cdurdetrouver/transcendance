@@ -102,6 +102,7 @@ jobs:
       - name: Pull and Deploy
         run: |
           cd /home/ubuntu
+          docker compose -f docker-compose.prod.yml -p prod down
           docker pull ghcr.io/cdurdetrouver/backend:latest
           docker pull ghcr.io/cdurdetrouver/frontend:latest
-          docker compose -f docker-compose.prod.yml up -d
+          docker compose -f docker-compose.prod.yml -p prod up -d --remove-orphans
