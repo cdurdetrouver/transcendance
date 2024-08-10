@@ -8,7 +8,7 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - app-network
+      - prod-network
   frontend:
     build:
       context: ./frontend
@@ -16,10 +16,9 @@ services:
     image: ghcr.io/cdurdetrouver/frontend:latest
     container_name: frontend
     ports:
-      - "80:80"
       - "443:443"
     networks:
-      - app-network
+      - prod-network
     volumes:
       - ./certs/conf:/etc/letsencrypt
       - ./certs/www:/var/www/certbot
@@ -32,8 +31,8 @@ services:
       - ./certs/www:/var/www/certbot
     command: certonly --webroot -w /var/www/certbot --force-renewal --email gabriel.bazart@gmail.com --agree-tos -d pong.cdurdetrouver.fr --non-interactive
     networks:
-      - app-network
+      - prod-network
 
 networks:
-  app-network:
+  prod-network:
     driver: bridge
