@@ -103,5 +103,5 @@ jobs:
         run: |
           cd /home/ubuntu
           docker pull ghcr.io/cdurdetrouver/backend-dev:latest
-          docker pull ghcr.io/cdurdetrouver/frontend_dev:latest
+          docker pull ghcr.io/cdurdetrouver/frontend-dev:latest
           docker compose -f docker-compose.dev.yml up -d
