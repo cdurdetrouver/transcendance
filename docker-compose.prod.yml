@@ -20,6 +20,18 @@ services:
       - "443:443"
     networks:
       - app-network
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certs/conf:/etc/letsencrypt
+      - ./certs/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email gabriel.bazart@gmail.com --agree-tos -d pong.cdurdetrouver.com --non-interactive
+    depends_on:
+      - frontend
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge

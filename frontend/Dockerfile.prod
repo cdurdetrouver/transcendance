@@ -7,10 +7,6 @@ COPY ./src /usr/share/nginx/html
 # Copy the Nginx configuration file
 COPY ./conf/nginx.prod.conf /etc/nginx/conf.d/default.conf
 
-# Copy the SSL certificate and key
-COPY ./certs/prod.crt /etc/nginx/certs/prod.crt
-COPY ./certs/prod.key /etc/nginx/certs/prod.key
-
 # Expose the ports Nginx is running on
 EXPOSE 80
 EXPOSE 443
