@@ -4,7 +4,7 @@ test('Home class', async () => {
   const home = new Home();
   const html = await home.getHtml();
   expect(html).toBe(`
-			<h1>Welcome to Transcendance Pong Game</h1>
+			<h1>Bonjour to Transcendance Pong Game</h1>
 			<p>This site is a Pong game developed as part of the Transcendance project at the 42 school.</p>
 			<p>Enjoy playing and improving your skills!</p>
 			<style>
