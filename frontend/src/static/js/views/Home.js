@@ -7,7 +7,7 @@ export default class Home extends Component {
 	}
 
 	async getHtml() {
-		const text = "Welcome to Transcendance Pong Game";
+		const text = "Bonjour to Transcendance Pong Game";
 	
 		return `
 			<h1>${text}</h1>
