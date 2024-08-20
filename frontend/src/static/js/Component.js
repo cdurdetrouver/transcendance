@@ -1,9 +1,11 @@
 export class Component {
-	constructor() {
+	constructor()
+	{
 		console.log('Component class');
 	}
 
-	async getHtml() {
+	async getHtml()
+	{
 		return '';
 	}
 }
