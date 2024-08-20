@@ -4,6 +4,11 @@ export class Component {
 		console.log('Component class');
 	}
 
+	getScript()
+	{
+		return '';
+	}
+
 	async getHtml()
 	{
 		return '';
