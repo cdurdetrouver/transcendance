@@ -32,6 +32,11 @@ const route = async () => {
 	const view = new match.route.view();
 
 	document.querySelector('#app').innerHTML = await view.getHtml();
+
+	const scriptContent = view.getScript();
+    const scriptElement = document.createElement('script');
+    scriptElement.textContent = scriptContent;
+    document.body.appendChild(scriptElement);
 }
 
 route();
