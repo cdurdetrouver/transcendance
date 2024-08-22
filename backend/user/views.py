@@ -4,7 +4,20 @@ from .serializers import UserSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
+@swagger_auto_schema(
+    method='get',
+    responses={200: UserSerializer(many=True)},
+    operation_description="Retrieve a list of users"
+)
+@swagger_auto_schema(
+    method='post',
+    request_body=UserSerializer,
+    responses={201: UserSerializer, 400: 'Bad Request'},
+    operation_description="Create a new user"
+)
 @api_view(['GET', 'POST'])
 def user_list(request):
 
@@ -20,6 +33,22 @@ def user_list(request):
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(
+    method='get',
+    responses={200: UserSerializer, 404: 'Not Found'},
+    operation_description="Retrieve a user by ID"
+)
+@swagger_auto_schema(
+    method='put',
+    request_body=UserSerializer,
+    responses={200: UserSerializer, 400: 'Bad Request', 404: 'Not Found'},
+    operation_description="Update a user by ID"
+)
+@swagger_auto_schema(
+    method='delete',
+    responses={204: 'No Content', 404: 'Not Found'},
+    operation_description="Delete a user by ID"
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 def user_detail(request, pk):
 	try:
