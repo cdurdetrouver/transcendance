@@ -14,20 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from rest_framework.schemas import get_schema_view
-from django.views.generic import TemplateView
+from django.urls import path
+from user import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('users/', include('user.urls')),
-    path('schema/', get_schema_view(
-        title="Api Documentation",
-        description="Documentation for the API",
-    ), name='schema'),
-    path('docs/', TemplateView.as_view(
-        template_name='docs.html',
-        extra_context={'schema_url':'schema'}
-    )),
+    path('', views.user_list),
+    path('<int:pk>/', views.user_detail),
 ]
