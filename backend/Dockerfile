@@ -10,12 +10,12 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Install dependencies
-COPY ./requirements.txt /app/requirements.txt
-RUN pip install --upgrade pip
+COPY requirements.txt requirements.txt
+RUN pip install --upgrade pip setuptools wheel
 RUN pip install -r requirements.txt
 
 # Copy project
-COPY . /app/
+COPY . .
 
 # Export the port the app runs on
 EXPOSE 8000
