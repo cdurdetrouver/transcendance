@@ -10,7 +10,7 @@ jobs:
   backend:
     name: Tests for backend
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10.12
@@ -24,7 +24,7 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python backend/manage.py test
+        python backend/manage.py test --settings=backend.settings.settings
   frontend:
     name: Tests for frontend
     runs-on: ubuntu-latest
