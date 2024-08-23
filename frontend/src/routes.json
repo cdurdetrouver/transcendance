@@ -1,0 +1,14 @@
+[
+	{
+		"path": "/",
+		"files": ""
+	},
+	{
+		"path": "/about",
+		"files": "/about"
+	},
+	{
+		"path": "/pong",
+		"files": "/pong"
+	}
+]
