@@ -4,7 +4,6 @@ class Router {
 		this.components = {};
 		this.componentsscripts = [];
 		this.componentsstyles = [];
-		this.initRouter();
 	}
 
 	async initRouter() {
@@ -44,11 +43,17 @@ class Router {
 	}
 
 	async _loadRoute(pathName) {
-		const route = this.routes.find(r => r.path === pathName);
+		let route = this.routes.find(r => r.path === pathName);
 		if (!route) {
-			console.error(`Route for path "${pathName}" not found`);
-			return;
+			route = this.routes.find(r => r.path === '/404');
+			if (!route) {
+				console.error('404 page not found');
+				return;
+			}
 		}
+
+		// Remove previously loaded scripts and styles
+		this._clearDynamicAssets();
 
 		const files = route.files;
 
@@ -58,9 +63,6 @@ class Router {
 
 			// Load and replace components within the HTML content
 			html = await this._loadComponentsHtml(html);
-
-			// Remove previously loaded scripts and styles
-			this._clearDynamicAssets();
 
 			document.querySelector('#app').innerHTML = html;
 
@@ -75,6 +77,9 @@ class Router {
 				this._loadStyle(style);
 			}
 			this._loadStyle(`routes${files}/style.css`);
+
+			this.componentsscripts = [];
+			this.componentsstyles = [];
 
 		} catch (error) {
 			console.error(`Error loading route "${pathName}":`, error);
@@ -100,7 +105,13 @@ class Router {
 
 	async _fetchComponentHtml(componentName) {
 		try {
-			const html = await fetch(`components/${componentName.toLowerCase()}/page.html`).then(res => res.text());
+			const html = await fetch(`components/${componentName.toLowerCase()}/page.html`)
+			.then(res => {
+				if (!res.ok) {
+					throw new Error(`Error loading component "${componentName}": ${res.status}`);
+				}
+				return res.text()
+			});
 			return html;
 		} catch (error) {
 			console.error(`Error loading component "${componentName}":`, error);
@@ -108,10 +119,10 @@ class Router {
 		}
 	}
 
-	_loadScript(scriptUrl) {
+	_loadScript(scriptUrl, isModule = true) {
 		const scriptElement = document.createElement('script');
 		scriptElement.src = scriptUrl;
-		scriptElement.type = 'text/javascript';
+		scriptElement.type = isModule ? 'module' : 'text/javascript';
 		scriptElement.defer = true;
 		scriptElement.setAttribute('data-dynamic', 'true');
 		document.body.appendChild(scriptElement);
@@ -127,6 +138,7 @@ class Router {
 
 	_clearDynamicAssets() {
 		// Remove previously loaded scripts
+		Array.from(document.querySelectorAll('script[data-dynamic]')).forEach(script => console.log(script.src));
 		Array.from(document.querySelectorAll('script[data-dynamic]')).forEach(script => script.remove());
 
 		// Remove previously loaded styles
@@ -136,3 +148,4 @@ class Router {
 
 // Initialize Router
 const router = new Router();
+router.initRouter();
