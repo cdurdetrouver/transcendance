@@ -65,7 +65,6 @@ jobs:
         run: |
           cd /home/ubuntu/transcendance-dev
           git checkout dev
-          cd /home/ubuntu
           docker compose -f docker-compose.dev.yml -p dev down
           docker pull ghcr.io/cdurdetrouver/backend-dev:latest
           docker pull ghcr.io/cdurdetrouver/frontend-dev:latest
