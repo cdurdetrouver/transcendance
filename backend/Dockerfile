@@ -17,6 +17,9 @@ RUN pip install -r requirements.txt
 # Copy project
 COPY . .
 
+RUN python3 manage.py makemigrations --settings=backend.settings.settings
+RUN python3 manage.py migrate --settings=backend.settings.settings
+
 # Export the port the app runs on
 EXPOSE 8000
 
