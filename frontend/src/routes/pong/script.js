@@ -1,5 +1,5 @@
 var counter = 3;
-var PlayerLife = 3;
+var PlayerLife = 1;
 
 var gameCanvas = document.getElementById("game-layer");
 var ctx = gameCanvas.getContext("2d");
@@ -7,17 +7,12 @@ var ctx = gameCanvas.getContext("2d");
 var uiCanvas = document.getElementById("ui-layer");
 var uiCtx = uiCanvas.getContext("2d");
 
-let bgCanvas = document.getElementById("background-layer");
-let  bgCtx = bgCanvas.getContext('2d');
-/*gestion image & background */
+var bgCanvas = document.getElementById("background-layer");
+var  bgCtx = bgCanvas.getContext('2d');
 
 const background = new Image();
 background.src = 'floor.png';
 
-// let offscreenCanvas = document.createElement('canvas');
-// let offscreenCtx = offscreenCanvas.getContext('2d');
-// offscreenCanvas.width = canvas.width;
-// offscreenCanvas.height = canvas.height;
 
 let pong = {
     isRunning: false,
@@ -30,6 +25,9 @@ let pong = {
 };
 
 function gameStart() {
+	// bgCtx.drawImage(background, 0, 0, bgCanvas.width, bgCanvas.height);
+	bgCtx.fillStyle = "blue";
+	bgCtx.fill()
     initializeGame();
     updateScoreboard();
 	manageAddEvent();
@@ -64,7 +62,6 @@ function manageAddEvent()
 }
 
 function initializeGame() {
-	bgCtx.drawImage(background, 0, 0, bgCanvas.width, bgCanvas.height);
     pong.ball = new Ball(gameCanvas.width/2, gameCanvas.height/2)
     pong.leftPaddle = new Paddle(120, gameCanvas.height/2 - 30, "w", "s");
     pong.rightPaddle = new Paddle(gameCanvas.width - 130, gameCanvas.height/2 - 30, "ArrowUp", "ArrowDown");
@@ -124,7 +121,6 @@ var pongGame = {
 		if (!pong.isRunning) return;
 
 		this.clear();
-	
 		if (pong.rightPlayerScore == 0) {
 			this.gameOver("left");
 			return;
