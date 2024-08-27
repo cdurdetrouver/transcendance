@@ -15,9 +15,6 @@ down:
 rm:
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down -v --rmi all
 
-test-frontend:
-	cd frontend && npm install && npm run test
-
 test-backend: build
 	cd backend && docker run -it --rm -p 8000:8000 transcendance-backend python3 manage.py test --settings=backend.settings.settings
 
@@ -31,7 +28,6 @@ help:
 	@echo "  start			Start the application in dev mode"
 	@echo "  down			Stop the application"
 	@echo "  rm			Stop the application and remove volumes and images"
-	@echo "  test-frontend		Run frontend tests"
 	@echo "  test-backend		Run backend tests"
 
-.PHONY: build start down rm test-frontend test-backend help
+.PHONY: build start down rm test-backend help

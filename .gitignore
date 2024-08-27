@@ -314,3 +314,6 @@ cython_debug/
 
 # SSL certificates
 certs/
+
+# don't ignore env frontend
+!frontend/src/env

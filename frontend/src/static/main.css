@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Bellefair&display=swap');
+
+body {
+  font-family: "Bellefair", serif;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+}

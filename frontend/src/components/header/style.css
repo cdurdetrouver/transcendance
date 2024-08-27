@@ -1,0 +1,15 @@
+/* Example CSS for the Header component */
+header {
+	background-color: #f4f4f4;
+	padding: 10px;
+	text-align: center;
+}
+
+header h2 {
+	color: red;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
