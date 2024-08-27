@@ -10,7 +10,7 @@ services:
       - app-network
     depends_on:
       db:
-        - condition: service_started
+        condition: service_started
 
   db:
     container_name: db
