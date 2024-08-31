@@ -317,3 +317,12 @@ certs/
 
 # don't ignore env frontend
 !frontend/src/env
+
+#db
+db/
+
+# Ignore everything in any migrations directory
+backend/*/migrations/*
+
+# But do not ignore the __init__.py file in any migrations directory
+!backend/*/migrations/__init__.py
