@@ -9,6 +9,9 @@ services:
       - "8000:8000"
     networks:
       - prod-network
+    depends_on:
+      db:
+        condition: service_started
   db:
     container_name: db
     image: postgres:latest
