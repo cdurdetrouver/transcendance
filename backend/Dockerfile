@@ -20,5 +20,7 @@ COPY . .
 # Export the port the app runs on
 EXPOSE 8000
 
-# Run the application
-CMD ["sh", "script.sh"]
+# Copy the script to the container
+COPY script.sh .
+RUN chmod +x script.sh
+ENTRYPOINT [ "sh", "script.sh", "8000", "backend.settings.settings"]

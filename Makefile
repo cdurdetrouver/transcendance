@@ -13,10 +13,11 @@ down:
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 
 rm:
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down -v --rmi all
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down -v --rmi all --remove-orphans
 
 test-backend: build
-	cd backend && docker run -it --rm -p 8000:8000 transcendance-backend python3 manage.py test --settings=backend.settings.settings
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec backend python3 manage.py test --settings=backend.settings.settings
 
 
 help:

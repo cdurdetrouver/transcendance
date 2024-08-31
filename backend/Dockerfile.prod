@@ -20,5 +20,7 @@ COPY . .
 # Export the port the app runs on
 EXPOSE 8000
 
-# Run the application
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000", "--settings=backend.settings.settings-prod"]
+# Copy the script to the container
+COPY script.sh .
+RUN chmod +x script.sh
+ENTRYPOINT [ "sh", "script.sh", "8000", "backend.settings.settings-prod"]
