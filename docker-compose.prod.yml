@@ -9,6 +9,9 @@ services:
       - "8000:8000"
     networks:
       - prod-network
+    depends_on:
+      db:
+        condition: service_started
   db:
     container_name: db
     image: postgres:latest
@@ -22,7 +25,7 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data
     networks:
-      - app-network
+      - prod-network
   frontend:
     build:
       context: ./frontend

@@ -9,6 +9,9 @@ services:
       - "8080:8080"
     networks:
       - dev-network
+    depends_on:
+      db:
+        condition: service_started
   db:
     container_name: db
     image: postgres:latest
@@ -22,7 +25,7 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data
     networks:
-      - app-network
+      - dev-network
   frontend:
     build:
       context: ./frontend
