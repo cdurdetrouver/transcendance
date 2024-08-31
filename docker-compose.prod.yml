@@ -22,7 +22,7 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data
     networks:
-      - app-network
+      - prod-network
   frontend:
     build:
       context: ./frontend
