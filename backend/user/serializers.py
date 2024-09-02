@@ -4,5 +4,4 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ['id', 'username', 'email', 'password', 'created_at', 'updated_at']
-
+		exclude = ['password']
