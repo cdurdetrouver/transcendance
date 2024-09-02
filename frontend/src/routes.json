@@ -12,6 +12,10 @@
 		"files": "/pong"
 	},
 	{
+		"path": "/login",
+		"files": "/login"
+	},
+	{
 		"path": "/404",
 		"files": "/404"
 	}
