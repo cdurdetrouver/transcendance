@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
 from .models import User
 from .serializers import UserSerializer
@@ -68,3 +69,60 @@ def user_detail(request, pk):
 	elif request.method == 'DELETE':
 		user.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+@swagger_auto_schema(
+	method='post',
+	request_body=openapi.Schema(
+		type=openapi.TYPE_OBJECT,
+		properties={
+			'username': openapi.Schema(type=openapi.TYPE_STRING),
+			'password': openapi.Schema(type=openapi.TYPE_STRING),
+			'user_type': openapi.Schema(type=openapi.TYPE_STRING, enum=['email', 'google', 'github'])
+		}
+	),
+	responses={200: UserSerializer, 400: 'Invalid credentials'},
+	operation_description="Login a user"
+)
+@api_view(['POST'])
+def login(request):
+	username = request.data.get('username')
+	password = request.data.get('password')
+
+	try:
+		user = User.objects.get(username=username)
+	except User.DoesNotExist:
+		return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+	if check_password(password, user.password):
+		return JsonResponse({'user': UserSerializer(user).data})
+	else:
+		return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+	method='post',
+	request_body=openapi.Schema(
+		type=openapi.TYPE_OBJECT,
+		properties={
+			'username': openapi.Schema(type=openapi.TYPE_STRING),
+			'email': openapi.Schema(type=openapi.TYPE_STRING),
+			'password': openapi.Schema(type=openapi.TYPE_STRING),
+			'user_type': openapi.Schema(type=openapi.TYPE_STRING, enum=['email', 'google', 'github'])
+		}
+	),
+	responses={200: UserSerializer, 400: 'Invalid credentials'},
+	operation_description="Login a user"
+)
+@api_view(['POST'])
+def register(request):
+	username = request.data.get('username')
+	password = request.data.get('password')
+
+	try:
+		user = User.objects.get(username=username)
+	except User.DoesNotExist:
+		return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+	if check_password(password, user.password):
+		return JsonResponse({'user': UserSerializer(user).data})
+	else:
+		return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
