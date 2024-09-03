@@ -20,6 +20,8 @@ test-backend: build
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec backend python3 manage.py makemigrations --settings=backend.settings.settings
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec backend python3 manage.py migrate --settings=backend.settings.settings
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec backend python3 manage.py test --settings=backend.settings.settings
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
+
 clear-db: build
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec db rm -rf /var/lib/postgresql/data/*
