@@ -1,7 +1,7 @@
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 from django.http import JsonResponse
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, LoginSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -72,57 +72,48 @@ def user_detail(request, pk):
 
 @swagger_auto_schema(
 	method='post',
-	request_body=openapi.Schema(
-		type=openapi.TYPE_OBJECT,
-		properties={
-			'username': openapi.Schema(type=openapi.TYPE_STRING),
-			'password': openapi.Schema(type=openapi.TYPE_STRING),
-			'user_type': openapi.Schema(type=openapi.TYPE_STRING, enum=['email', 'google', 'github'])
-		}
-	),
-	responses={200: UserSerializer, 400: 'Invalid credentials'},
+	request_body=LoginSerializer,
+	responses={200: UserSerializer, 400: 'Invalid credentials', 404: "User doesn't exist"},
 	operation_description="Login a user"
 )
 @api_view(['POST'])
 def login(request):
-	username = request.data.get('username')
-	password = request.data.get('password')
+	serializer = LoginSerializer(data=request.data)
 
-	try:
-		user = User.objects.get(username=username)
-	except User.DoesNotExist:
-		return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+	if serializer.is_valid():
+		email = serializer.validated_data['email']
+		password = serializer.validated_data['password']
+		try:
+			user = User.objects.get(email=email)
+		except User.DoesNotExist:
+			return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
-	if check_password(password, user.password):
-		return JsonResponse({'user': UserSerializer(user).data})
+		if check_password(password, user.password):
+			user_serializer = UserSerializer(user)
+			return Response(user_serializer.data, status=status.HTTP_200_OK)
+		else:
+			return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 	else:
-		return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @swagger_auto_schema(
 	method='post',
-	request_body=openapi.Schema(
-		type=openapi.TYPE_OBJECT,
-		properties={
-			'username': openapi.Schema(type=openapi.TYPE_STRING),
-			'email': openapi.Schema(type=openapi.TYPE_STRING),
-			'password': openapi.Schema(type=openapi.TYPE_STRING),
-			'user_type': openapi.Schema(type=openapi.TYPE_STRING, enum=['email', 'google', 'github'])
-		}
-	),
-	responses={200: UserSerializer, 400: 'Invalid credentials'},
-	operation_description="Login a user"
+	request_body=UserSerializer,
+	responses={201: UserSerializer, 400: 'User not valid'},
+	operation_description="Register a user"
 )
 @api_view(['POST'])
 def register(request):
-	username = request.data.get('username')
-	password = request.data.get('password')
+	user_data = request.data.copy()
+	password = user_data.get('password')
 
-	try:
-		user = User.objects.get(username=username)
-	except User.DoesNotExist:
-		return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+	if not password:
+		return Response({'error': 'Password is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-	if check_password(password, user.password):
-		return JsonResponse({'user': UserSerializer(user).data})
+	serializer = UserSerializer(data=user_data)
+
+	if serializer.is_valid():
+		serializer.save()
+		return Response(serializer.data, status=status.HTTP_201_CREATED)
 	else:
-		return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

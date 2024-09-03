@@ -10,7 +10,7 @@ class User(models.Model):
 
 	username = models.CharField(max_length=50)
 	email = models.EmailField()
-	password = models.CharField(max_length=128)
+	password = models.CharField(max_length=256)
 	user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='email')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
