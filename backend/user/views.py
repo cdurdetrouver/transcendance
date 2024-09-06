@@ -10,15 +10,17 @@ from drf_yasg import openapi
 
 @swagger_auto_schema(
 	method='get',
-	responses={200: openapi.Schema(
-		type=openapi.TYPE_OBJECT,
-		properties={
-			'users': openapi.Schema(
-				type=openapi.TYPE_ARRAY,
-				items=openapi.Schema(type=openapi.TYPE_OBJECT, ref='UserSerializer')
-			)
-		}
-	)},
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'users': openapi.Schema(
+					type=openapi.TYPE_ARRAY,
+					items=UserSerializer.user_swagger
+				)
+			}
+		)
+	},
 	operation_description="Retrieve a list of users"
 )
 @swagger_auto_schema(
@@ -33,7 +35,7 @@ def user_list(request):
 	if request.method == 'GET':
 		users = User.objects.all()
 		serializer = UserSerializer(users, many=True)
-		return JsonResponse({'users': serializer.data})
+		return JsonResponse({'users': serializer.data}, safe=False)
 	elif request.method == 'POST':
 		user = request.data
 		serializer = UserSerializer(data=user)
@@ -44,7 +46,10 @@ def user_list(request):
 
 @swagger_auto_schema(
 	method='get',
-	responses={200: UserSerializer, 404: 'Not Found'},
+	responses={
+		200: UserSerializer.user_swagger,
+		404: 'Not Found'
+	},
 	operation_description="Retrieve a user by ID"
 )
 @swagger_auto_schema(
@@ -81,8 +86,18 @@ def user_detail(request, pk):
 @swagger_auto_schema(
 	method='post',
 	request_body=LoginSerializer,
-	responses={200: UserSerializer, 400: 'Invalid credentials', 404: "User doesn't exist"},
-	operation_description="Login a user"
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'access_token': openapi.Schema(type=openapi.TYPE_STRING, description='Access token for the session'),
+				'user': UserSerializer.user_swagger
+			}
+		),
+		400: "Invalid credentials or validation error",
+		404: "User doesn't exist",
+	},
+	operation_description="Authenticate a user and return an access token and user data"
 )
 @api_view(['POST'])
 def login(request):
@@ -93,12 +108,12 @@ def login(request):
 		password = serializer.validated_data['password']
 		try:
 			user = User.objects.get(email=email)
-		except User.DoesNotExist:
+		except User.DoesNotExist: 
 			return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
 		if check_password(password, user.password):
 			user_serializer = UserSerializer(user)
-			return Response(user_serializer.data, status=status.HTTP_200_OK)
+			return JsonResponse({'access_token': '1234', 'user':user_serializer.data}, status=status.HTTP_200_OK)
 		else:
 			return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 	else:
