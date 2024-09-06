@@ -10,7 +10,15 @@ from drf_yasg import openapi
 
 @swagger_auto_schema(
 	method='get',
-	responses={200: UserSerializer(many=True)},
+	responses={200: openapi.Schema(
+		type=openapi.TYPE_OBJECT,
+		properties={
+			'users': openapi.Schema(
+				type=openapi.TYPE_ARRAY,
+				items=openapi.Schema(type=openapi.TYPE_OBJECT, ref='UserSerializer')
+			)
+		}
+	)},
 	operation_description="Retrieve a list of users"
 )
 @swagger_auto_schema(
