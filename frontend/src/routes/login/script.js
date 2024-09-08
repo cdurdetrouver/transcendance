@@ -1,42 +1,18 @@
-function getLocalStore(key) {
-	return localStorage.getItem(key);
-}
+import { login } from '../../components/user/script.js';
 
-function setLocalStore(key, value) {
-	localStorage.setItem(key, value);
-}
+const form = document.querySelector('.login form');
+form.addEventListener('submit', login_form);
 
-$('.toggle').click(function(){
-	$(this).children('i').toggleClass('fa-pencil');
-	$('.form').animate({
-		height: "toggle",
-		'padding-top': 'toggle',
-		'padding-bottom': 'toggle',
-		opacity: "toggle"
-	}, "slow");
-});
+async function login_form(event)
+{
+	event.preventDefault();
+	const email = document.querySelector('input[name="email"]').value;
+	const password = document.querySelector('input[name="pswd"]').value;
 
-function login() {
-	var username = $('#username').val();
-	var password = $('#password').val();
-	$.ajax({
-		url: 'http://localhost:8000/api/login',
-		type: 'POST',
-		data: {
-			username: username,
-			password: password
-		},
-		success: function(data) {
-			if (data.status === 200) {
-				setLocalStore('token', data.token);
-				setLocalStore('username', username);
-				window.location.href = '/home';
-			} else {
-				alert(data.message);
-			}
-		},
-		error: function(err) {
-			console.log(err);
-		}
-	});
+	const response = await login(email, password);
+
+	if (response.status === 200)
+		window.location.href = '/';
+	else
+		alert('Login failed');
 }

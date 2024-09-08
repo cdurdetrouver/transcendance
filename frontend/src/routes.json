@@ -16,6 +16,14 @@
 		"files": "/login"
 	},
 	{
+		"path": "/register",
+		"files": "/register"
+	},
+	{
+		"path": "/logout",
+		"files": "/logout"
+	},
+	{
 		"path": "/404",
 		"files": "/404"
 	}
