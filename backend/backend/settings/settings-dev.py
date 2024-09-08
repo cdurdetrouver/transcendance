@@ -11,3 +11,5 @@ CORS_ALLOWED_ORIGINS = [
     'http://dev-pong.cdurdetrouver.fr',
     'http://www.dev-pong.cdurdetrouver.fr',
 ]
+
+CORS_ALLOW_CREDENTIALS = True

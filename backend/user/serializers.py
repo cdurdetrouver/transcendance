@@ -8,6 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 	user_swagger=openapi.Schema(
 		type=openapi.TYPE_OBJECT,
 		properties={
+			'id': openapi.Schema(type=openapi.TYPE_INTEGER),
 			'username': openapi.Schema(type=openapi.TYPE_STRING),
 			'email': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_EMAIL),
 			'user_type': openapi.Schema(type=openapi.TYPE_STRING),
@@ -18,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User
-		fields = '__all__'
+		fields = ['id', 'username', 'password', 'email', 'user_type', 'created_at', 'updated_at']
 
 class LoginSerializer(serializers.ModelSerializer):
 	password = serializers.CharField(write_only=True)

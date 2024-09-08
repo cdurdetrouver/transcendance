@@ -1,19 +1,20 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.contrib.auth.hashers import make_password
 
-class User(models.Model):
+class User(AbstractUser):
 	USER_TYPE_CHOICES = [
 		('email', 'Email'),
 		('google', 'Google'),
 		('github', 'GitHub'),
 	]
 
-	username = models.CharField(max_length=50)
-	email = models.EmailField()
-	password = models.CharField(max_length=256)
 	user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='email')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+
+	groups = models.ManyToManyField(Group, related_name='custom_user_set')
+	user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set')
 
 	def save(self, *args, **kwargs):
 		if not self.pk and self.user_type == 'email':
