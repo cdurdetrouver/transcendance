@@ -167,7 +167,9 @@ def refresh_token(request):
 	},
 	operation_description="Log out a user"
 )
+@ensure_csrf_cookie
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def logout(request):
 	response = JsonResponse({'message': 'Logged out successfully'})
 	response.delete_cookie('refresh_token')
