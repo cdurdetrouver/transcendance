@@ -1,87 +1,46 @@
 from django.contrib.auth.hashers import check_password, make_password
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
-from .models import User
-from .serializers import UserSerializer, LoginSerializer
-from rest_framework.decorators import api_view
+from django.conf import settings
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from .utils import generate_access_token, generate_refresh_token, AttributeDict
+from .models import User
+from .serializers import UserSerializer, LoginSerializer
+import jwt
 
 @swagger_auto_schema(
 	method='get',
+	request_body=None,
 	responses={
 		200: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-				'users': openapi.Schema(
-					type=openapi.TYPE_ARRAY,
-					items=UserSerializer.user_swagger
-				)
+				'user': UserSerializer.user_swagger
 			}
 		)
 	},
+	manual_parameters=[
+		openapi.Parameter(
+			'Authorization',
+			openapi.IN_HEADER,
+			description="Authorization token",
+			type=openapi.TYPE_STRING,
+			default='Bearer <token>'
+		)
+	],
 	operation_description="Retrieve a list of users"
 )
-@swagger_auto_schema(
-	method='post',
-	request_body=UserSerializer,
-	responses={201: UserSerializer, 400: 'Bad Request'},
-	operation_description="Create a new user"
-)
-@api_view(['GET', 'POST'])
-def user_list(request):
+@api_view(['GET'])
+def user_detail(request):
 
-	if request.method == 'GET':
-		users = User.objects.all()
-		serializer = UserSerializer(users, many=True)
-		return JsonResponse({'users': serializer.data}, safe=False)
-	elif request.method == 'POST':
-		user = request.data
-		serializer = UserSerializer(data=user)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@swagger_auto_schema(
-	method='get',
-	responses={
-		200: UserSerializer.user_swagger,
-		404: 'Not Found'
-	},
-	operation_description="Retrieve a user by ID"
-)
-@swagger_auto_schema(
-	method='put',
-	request_body=UserSerializer,
-	responses={200: UserSerializer, 400: 'Bad Request', 404: 'Not Found'},
-	operation_description="Update a user by ID"
-)
-@swagger_auto_schema(
-	method='delete',
-	responses={204: 'No Content', 404: 'Not Found'},
-	operation_description="Delete a user by ID"
-)
-@api_view(['GET', 'PUT', 'DELETE'])
-def user_detail(request, pk):
-	try:
-		user = User.objects.get(pk=pk)
-	except User.DoesNotExist:
-		return Response(status=status.HTTP_404_NOT_FOUND)
-
-	if request.method == 'GET':
-		serializer = UserSerializer(user)
-		return JsonResponse(serializer.data)
-	elif request.method == 'PUT':
-		serializer = UserSerializer(user, data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-	elif request.method == 'DELETE':
-		user.delete()
-		return Response(status=status.HTTP_204_NO_CONTENT)
+	user = request.user
+	serialized_user = UserSerializer(user)
+	return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(
 	method='post',
@@ -97,9 +56,11 @@ def user_detail(request, pk):
 		400: "Invalid credentials or validation error",
 		404: "User doesn't exist",
 	},
-	operation_description="Authenticate a user and return an access token and user data"
+	operation_description="Authenticate a user and return an access token and user data",
 )
+@ensure_csrf_cookie
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login(request):
 	serializer = LoginSerializer(data=request.data)
 
@@ -107,13 +68,18 @@ def login(request):
 		email = serializer.validated_data['email']
 		password = serializer.validated_data['password']
 		try:
-			user = User.objects.get(email=email)
-		except User.DoesNotExist: 
+			user = User.objects.filter(email=email).first()
+		except User.DoesNotExist:
 			return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
 		if check_password(password, user.password):
 			user_serializer = UserSerializer(user)
-			return JsonResponse({'access_token': '1234', 'user':user_serializer.data}, status=status.HTTP_200_OK)
+			access_token = generate_access_token(user)
+			response = JsonResponse({'access_token': access_token, 'user': user_serializer.data}, status=status.HTTP_200_OK)
+			refresh_token = generate_refresh_token(user)
+			expires = datetime.utcnow() + timedelta(days=7)
+			response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='Strict', expires=expires)
+			return response
 		else:
 			return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 	else:
@@ -122,10 +88,21 @@ def login(request):
 @swagger_auto_schema(
 	method='post',
 	request_body=UserSerializer,
-	responses={201: UserSerializer, 400: 'User not valid'},
+	responses={
+		201: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'access_token': openapi.Schema(type=openapi.TYPE_STRING, description='Access token for the session'),
+				'user': UserSerializer.user_swagger
+			}
+		),
+		400: 'User not valid'
+	},
 	operation_description="Register a user"
 )
+@ensure_csrf_cookie
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register(request):
 	user_data = request.data.copy()
 	password = user_data.get('password')
@@ -137,6 +114,61 @@ def register(request):
 
 	if serializer.is_valid():
 		serializer.save()
-		return Response(serializer.data, status=status.HTTP_201_CREATED)
+		user = AttributeDict(serializer.data)
+		access_token = generate_access_token(user)
+		response = JsonResponse({'access_token': access_token, 'user' : serializer.data}, status=status.HTTP_201_CREATED)
+		refresh_token = generate_refresh_token(user)
+		expires = datetime.utcnow() + timedelta(days=7)
+		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='Strict', expires=expires)
+		return response
 	else:
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+	method='post',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'access_token': openapi.Schema(type=openapi.TYPE_STRING, description='Access token for the session'),
+			}
+		)
+	},
+	operation_description="Retrieve a new access token using a refresh token"
+)
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def refresh_token(request):
+	refresh_token = request.COOKIES.get('refresh_token')
+
+	if not refresh_token:
+		return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+	payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
+	user = User.objects.filter(id=payload['user_id']).first()
+
+	if user is None:
+		return Response({'error': 'Invalid refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+
+	access_token = generate_access_token(user)
+	return JsonResponse({'access_token': access_token}, status=status.HTTP_200_OK)
+
+@swagger_auto_schema(
+	method='post',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='Logged out successfully'),
+			}
+		)
+	},
+	operation_description="Log out a user"
+)
+@api_view(['POST'])
+def logout(request):
+	response = JsonResponse({'message': 'Logged out successfully'})
+	response.delete_cookie('refresh_token')
+	return response
