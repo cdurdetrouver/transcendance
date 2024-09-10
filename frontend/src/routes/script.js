@@ -1,7 +1,20 @@
-import { login } from '../components/login/script.js';
+import { getCookie } from '../components/storage/script.js';
+import { get_user, refresh_token } from '../components/user/script.js';
 
-console.log('Home page script loaded');
+let userCookie = getCookie('user');
+if (userCookie)
+{
+	const user = JSON.parse(userCookie);
+	document.querySelector('#user_username').innerText = user.username;
+}
+else
+{
+	await get_user();
+	let userCookie = getCookie('user');
+	const user = JSON.parse(userCookie);
 
-document.getElementById('test').addEventListener('click', () => {
-	login('cdurdetrouver', 'motdepasse');
-});
+	if (user)
+		document.querySelector('#user_username').innerText = user.username;
+	else
+		window.location.href = '/login';
+}

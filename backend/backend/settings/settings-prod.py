@@ -11,3 +11,5 @@ CORS_ALLOWED_ORIGINS = [
     'https://pong.cdurdetrouver.fr',
     'https://www.pong.cdurdetrouver.fr',
 ]
+
+CORS_ALLOW_CREDENTIALS = True

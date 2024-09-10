@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     # apps
     'user',
     'chat',
-    'backend',
 ]
 
 MIDDLEWARE = [
@@ -156,4 +155,13 @@ CHANNEL_LAYERS = {
             'HOST': 'db',
             'PORT': '5432',    },
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'user.authentication.SafeJWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }

@@ -138,7 +138,6 @@ class Router {
 
 	_clearDynamicAssets() {
 		// Remove previously loaded scripts
-		Array.from(document.querySelectorAll('script[data-dynamic]')).forEach(script => console.log(script.src));
 		Array.from(document.querySelectorAll('script[data-dynamic]')).forEach(script => script.remove());
 
 		// Remove previously loaded styles
