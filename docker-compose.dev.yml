@@ -12,6 +12,7 @@ services:
     depends_on:
       db:
         condition: service_started
+    restart: always
   db:
     container_name: db
     image: postgres:latest
@@ -32,6 +33,7 @@ services:
       dockerfile: Dockerfile.dev
     image: ghcr.io/cdurdetrouver/frontend-dev:latest
     container_name: frontend-dev
+    restart: always
     ports:
       - "80:80"
     networks:
