@@ -12,6 +12,10 @@
 		"files": "/pong"
 	},
 	{
+		"path": "/chat",
+		"files": "/chat"
+	},
+	{
 		"path": "/404",
 		"files": "/404"
 	}
