@@ -25,18 +25,26 @@ SECRET_KEY = 'django-insecure-+d)n)4r&^s84n8u8t90u(abeno%&e)@qcop3&e8rkbr0hgv7-y
 # Application definition
 
 INSTALLED_APPS = [
+    # dependencies
+    'channels',
+    'channels_postgres',
+    'daphne',
     'corsheaders',
     'rest_framework',
-    'backend',
+    'drf_yasg',
+    'rest_framework_swagger',
+
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_swagger',
-    'drf_yasg',
+
+    # apps
     'user',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +76,8 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = 'backend.asgi.application'
+
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
@@ -81,7 +91,15 @@ DATABASES = {
         'PASSWORD': 'postgres',
         'HOST': 'db',
         'PORT': '5432',
-    }
+    },
+    'channels_postgres': {
+		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': 'postgres',
+		'USER': 'postgres',
+		'PASSWORD': 'postgres',
+		'HOST': 'db',
+		'PORT': '5432',
+	}
 }
 
 
@@ -126,6 +144,18 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_postgres.core.PostgresChannelLayer',
+        'CONFIG': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': 'db',
+            'PORT': '5432',    },
+    }
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

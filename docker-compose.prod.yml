@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile.prod
     image: ghcr.io/cdurdetrouver/backend:latest
     container_name: backend
+    restart: always
     ports:
       - "8000:8000"
     networks:
@@ -32,6 +33,7 @@ services:
       dockerfile: Dockerfile.prod
     image: ghcr.io/cdurdetrouver/frontend:latest
     container_name: frontend
+    restart: always
     ports:
       - "443:443"
     networks:
