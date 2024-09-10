@@ -24,6 +24,10 @@
 		"files": "/register"
 	},
 	{
+		"path": "/chat",
+		"files": "/chat"
+	},
+	{
 		"path": "/logout",
 		"files": "/logout"
 	},
