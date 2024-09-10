@@ -12,6 +12,7 @@ from .utils import generate_access_token, generate_refresh_token, AttributeDict
 from .models import User
 from .serializers import UserSerializer, LoginSerializer
 import jwt
+import datetime
 
 @swagger_auto_schema(
 	method='get',
@@ -77,7 +78,7 @@ def login(request):
 			access_token = generate_access_token(user)
 			response = JsonResponse({'access_token': access_token, 'user': user_serializer.data}, status=status.HTTP_200_OK)
 			refresh_token = generate_refresh_token(user)
-			expires = datetime.utcnow() + timedelta(days=7)
+			expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
 			response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='Strict', expires=expires)
 			return response
 		else:
@@ -118,7 +119,7 @@ def register(request):
 		access_token = generate_access_token(user)
 		response = JsonResponse({'access_token': access_token, 'user' : serializer.data}, status=status.HTTP_201_CREATED)
 		refresh_token = generate_refresh_token(user)
-		expires = datetime.utcnow() + timedelta(days=7)
+		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
 		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='Strict', expires=expires)
 		return response
 	else:
