@@ -18,6 +18,5 @@ from django.urls import path
 from user import views
 
 urlpatterns = [
-    path('', views.user_list),
-    path('<int:pk>/', views.user_detail),
+    path('', views.user_detail),
 ]

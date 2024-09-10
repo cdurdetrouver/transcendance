@@ -23,4 +23,4 @@ EXPOSE 8000
 # Copy the script to the container
 COPY script.sh .
 RUN chmod +x script.sh
-ENTRYPOINT [ "sh", "script.sh", "8000", "backend.settings.settings"]
+ENTRYPOINT [ "sh", "script.sh", "8000"]

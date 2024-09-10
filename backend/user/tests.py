@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .models import User
+from django.contrib.auth.hashers import make_password, check_password
 
 class UserModelTest(TestCase):
 
@@ -7,13 +8,13 @@ class UserModelTest(TestCase):
         self.user = User.objects.create(
             username='testuser',
             email='testuser@example.com',
-            password='password123'
+            password='\MVwbDjln('
         )
 
     def test_user_creation(self):
         self.assertEqual(self.user.username, 'testuser')
         self.assertEqual(self.user.email, 'testuser@example.com')
-        self.assertEqual(self.user.password, 'password123')
+        self.assertEqual(check_password('\MVwbDjln(', self.user.password), True)
 
     def test_user_str(self):
         self.assertEqual(str(self.user), 'testuser')
