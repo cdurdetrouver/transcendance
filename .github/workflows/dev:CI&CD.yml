@@ -17,6 +17,12 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Install make
         run: sudo apt-get install make
+      - name: Add Secrets
+        run: |
+          mkdir -p secrets
+          echo "DB_NAME=test" > secrets/backend.env
+          echo "DB_USER=test" >> secrets/backend.env
+          echo "DB_PASSWORD=test" >> secrets/backend.env
       - name: Run backend tests
         run: make test-backend
 
@@ -54,6 +60,13 @@ jobs:
           cd /home/ubuntu/transcendance-dev
           git checkout dev
           git pull
+      - name: Add Secrets
+        run: |
+          cd /home/ubuntu/transcendance-dev
+          mkdir -p secrets
+          echo "DB_NAME=${{ secrets.DB_NAME }}" > secrets/backend.env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> secrets/backend.env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> secrets/backend.env
       - name: Pull and Deploy
         run: |
           cd /home/ubuntu/transcendance-dev
