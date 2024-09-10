@@ -10,6 +10,18 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
+
+def parse_backend_secret():
+    secrets = {}
+    with open('/run/secrets/backend_secret', 'r') as file:
+        for line in file:
+            key, value = line.strip().split('=', 1)
+            secrets[key] = value
+    return secrets
+
+secrets = parse_backend_secret()
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -149,11 +161,12 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_postgres.core.PostgresChannelLayer',
         'CONFIG': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'postgres',
-            'USER': 'postgres',
-            'PASSWORD': 'postgres',
-            'HOST': 'db',
-            'PORT': '5432',    },
+            'NAME': secrets['DB_NAME'] or 'postgres',
+            'USER': secrets['DB_USER'] or 'postgres',
+            'PASSWORD': secrets['DB_USER'] or 'postgres',
+            'HOST': os.environ['DB_HOST']  or 'db',
+            'PORT': os.environ['DB_PORT'] or '5432',
+        },
     }
 }
 

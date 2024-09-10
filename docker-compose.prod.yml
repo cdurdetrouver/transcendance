@@ -13,6 +13,12 @@ services:
     depends_on:
       db:
         condition: service_started
+    environment:
+      - DB_PORT=5432
+      - DB_HOST=db
+    secrets:
+      - backend_secret
+
   db:
     container_name: db
     image: postgres:latest
@@ -22,11 +28,12 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     expose:
-      - "5432:5432"
+      - "5433:5433"
     volumes:
       - ./db:/var/lib/postgresql/data
     networks:
       - prod-network
+
   frontend:
     build:
       context: ./frontend
@@ -51,6 +58,10 @@ services:
     command: certonly --webroot -w /var/www/certbot --force-renewal --email gabriel.bazart@gmail.com --agree-tos -d pong.cdurdetrouver.fr --non-interactive
     networks:
       - prod-network
+
+secrets:
+  backend_secret:
+    file: ./secrets/backend.env
 
 networks:
   prod-network:
