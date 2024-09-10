@@ -14,9 +14,9 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name, self.channel_name
         )
-                
-        self.accept()
 
+        self.accept()
+        #if pour join mess
         self.send(text_data=json.dumps({"message": "bonjour"}))
 
 
