@@ -14,8 +14,6 @@ services:
     environment:
       - DB_PORT=5432
       - DB_HOST=db
-    secrets:
-      - backend_secret
 
   db:
     container_name: db
@@ -39,10 +37,6 @@ services:
       - ./frontend/src:/usr/share/nginx/html
     networks:
       - app-network
-
-secrets:
-  backend_secret:
-    file: ./secrets/backend.env
 
 networks:
   app-network:
