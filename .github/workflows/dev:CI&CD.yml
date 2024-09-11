@@ -67,6 +67,8 @@ jobs:
           echo "DB_NAME=${{ secrets.DB_NAME }}" > secrets/backend.env
           echo "DB_USER=${{ secrets.DB_USER }}" >> secrets/backend.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> secrets/backend.env
+          echo "BACKEND_SECRET_KEY=${{ secrets.BACKEND_SECRET_KEY }}" >> secrets/backend.env
+          echo "CHANNELS_DB_NAME=${{ secrets.CHANNELS_DB_NAME }}" >> secrets/backend.env
       - name: Pull and Deploy
         run: |
           cd /home/ubuntu/transcendance-dev
@@ -75,3 +77,7 @@ jobs:
           docker pull ghcr.io/cdurdetrouver/backend-dev:latest
           docker pull ghcr.io/cdurdetrouver/frontend-dev:latest
           docker compose -f docker-compose.dev.yml -p dev up -d --remove-orphans
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
