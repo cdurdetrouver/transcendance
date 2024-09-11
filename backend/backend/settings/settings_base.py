@@ -19,7 +19,7 @@ def parse_backend_secret():
             for line in file:
                 key, value = line.strip().split('=', 1)
                 secrets[key] = value
-    except FileNotFoundError:
+    except BaseException:
         pass
     return secrets
 
@@ -35,7 +35,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secrets['BACKEND_SECRET_KEY']
+SECRET_KEY = secrets.get('BACKEND_SECRET_KEY') or 'django-insecure-#&fefzjf'
 
 # Application definition
 
@@ -101,9 +101,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': secrets['DB_NAME'] or 'postgres',
-        'USER': secrets['DB_USER'] or 'postgres',
-        'PASSWORD': secrets['DB_USER'] or 'postgres',
+        'NAME': secrets.get('DB_NAME') or 'postgres',
+        'USER': secrets.get('DB_USER') or 'postgres',
+        'PASSWORD': secrets.get('DB_USER') or 'postgres',
         'HOST': os.environ['DB_HOST']  or 'db',
         'PORT': os.environ['DB_PORT'] or '5432',
     }
@@ -156,9 +156,9 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_postgres.core.PostgresChannelLayer',
         'CONFIG': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': secrets['DB_NAME'] or 'postgres',
-            'USER': secrets['DB_USER'] or 'postgres',
-            'PASSWORD': secrets['DB_USER'] or 'postgres',
+            'NAME': secrets.get('DB_NAME') or 'postgres',
+            'USER': secrets.get('DB_USER') or 'postgres',
+            'PASSWORD': secrets.get('DB_USER') or 'postgres',
             'HOST': os.environ['DB_HOST']  or 'db',
             'PORT': os.environ['DB_PORT'] or '5432',
         },
