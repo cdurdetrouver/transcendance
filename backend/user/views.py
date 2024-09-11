@@ -79,7 +79,8 @@ def login(request):
 			response = JsonResponse({'access_token': access_token, 'user': user_serializer.data}, status=status.HTTP_200_OK)
 			refresh_token = generate_refresh_token(user)
 			expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
-			response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='Strict', expires=expires)
+			secure_cookie = not settings.DEBUG
+			response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 			return response
 		else:
 			return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
@@ -120,7 +121,8 @@ def register(request):
 		response = JsonResponse({'access_token': access_token, 'user' : serializer.data}, status=status.HTTP_201_CREATED)
 		refresh_token = generate_refresh_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
-		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='Strict', expires=expires)
+		secure_cookie = not settings.DEBUG
+		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 		return response
 	else:
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
