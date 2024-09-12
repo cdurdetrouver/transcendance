@@ -103,7 +103,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': secrets.get('DB_NAME') or 'postgres',
         'USER': secrets.get('DB_USER') or 'postgres',
-        'PASSWORD': secrets.get('DB_USER') or 'postgres',
+        'PASSWORD': secrets.get('DB_PASSWORD') or 'postgres',
         'HOST': os.environ['DB_HOST']  or 'db',
         'PORT': os.environ['DB_PORT'] or '5432',
     }
@@ -158,7 +158,7 @@ CHANNEL_LAYERS = {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': secrets.get('DB_NAME') or 'postgres',
             'USER': secrets.get('DB_USER') or 'postgres',
-            'PASSWORD': secrets.get('DB_USER') or 'postgres',
+            'PASSWORD': secrets.get('DB_PASSWORD') or 'postgres',
             'HOST': os.environ['DB_HOST']  or 'db',
             'PORT': os.environ['DB_PORT'] or '5432',
         },
