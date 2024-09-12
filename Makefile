@@ -24,7 +24,7 @@ test-backend: build
 
 clear-db: build
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec db "rm -rf /var/lib/postgresql/data/*"
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec db sh -c "rm -rf /var/lib/postgresql/data/*"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 
 

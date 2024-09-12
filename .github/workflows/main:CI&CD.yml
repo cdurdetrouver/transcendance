@@ -71,7 +71,7 @@ jobs:
         run: |
           cd /home/ubuntu/transcendance
           git checkout main
-          docker compose -f docker-compose.prod.yml -p prod exec db "rm -rf /var/lib/postgresql/data/*"
+          docker compose -f docker-compose.prod.yml -p prod exec db sh -c "rm -rf /var/lib/postgresql/data/*"
           docker compose -f docker-compose.prod.yml -p prod down
           docker pull ghcr.io/cdurdetrouver/backend:latest
           docker pull ghcr.io/cdurdetrouver/frontend:latest

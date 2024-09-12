@@ -10,7 +10,7 @@ services:
       - app-network
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
     environment:
       - DB_PORT=5432
       - DB_HOST=db
@@ -18,6 +18,11 @@ services:
   db:
     container_name: db
     image: postgres:latest
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 5s
+      retries: 5
+      start_period: 10s
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
