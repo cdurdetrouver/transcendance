@@ -5,16 +5,47 @@ services:
       dockerfile: Dockerfile.prod
     image: ghcr.io/cdurdetrouver/backend:latest
     container_name: backend
+    restart: always
     ports:
       - "8000:8000"
     networks:
       - prod-network
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_PORT=5432
+      - DB_HOST=db
+    secrets:
+      - backend_secret
+
+  db:
+    container_name: db
+    image: postgres:latest
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_PASSWORD}" ]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    expose:
+      - "5432:5432"
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    networks:
+      - prod-network
+
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
     image: ghcr.io/cdurdetrouver/frontend:latest
     container_name: frontend
+    restart: always
     ports:
       - "443:443"
     networks:
@@ -32,6 +63,10 @@ services:
     command: certonly --webroot -w /var/www/certbot --force-renewal --email gabriel.bazart@gmail.com --agree-tos -d pong.cdurdetrouver.fr --non-interactive
     networks:
       - prod-network
+
+secrets:
+  backend_secret:
+    file: ./secrets/backend.env
 
 networks:
   prod-network:

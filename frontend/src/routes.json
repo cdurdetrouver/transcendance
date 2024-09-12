@@ -1,0 +1,34 @@
+[
+	{
+		"path": "/",
+		"files": ""
+	},
+	{
+		"path": "/about",
+		"files": "/about"
+	},
+	{
+		"path": "/pong",
+		"files": "/pong"
+	},
+	{
+		"path": "/chat",
+		"files": "/chat"
+	},
+	{
+		"path": "/login",
+		"files": "/login"
+	},
+	{
+		"path": "/register",
+		"files": "/register"
+	},
+	{
+		"path": "/logout",
+		"files": "/logout"
+	},
+	{
+		"path": "/404",
+		"files": "/404"
+	}
+]

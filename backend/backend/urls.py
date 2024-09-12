@@ -15,13 +15,32 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
-from . import views
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django.urls import path, include
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
+from user.views import login, register, refresh_token, logout
+
+schema_view = get_schema_view(
+	openapi.Info(
+		title="API Documentation",
+		default_version='v1',
+		description="Documentation for the API",
+		terms_of_service="https://www.google.com/policies/terms/",
+		contact=openapi.Contact(email="contact@school.local"),
+		license=openapi.License(name="BSD License"),
+	),
+	public=True,
+	permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('docs/', SpectacularSwaggerView.as_view(url_name='schema')),
+	path('admin/', admin.site.urls),
+	path('user/', include('user.urls')),
+	path('login/', login),
+	path('logout/', logout),
+	path('register/', register),
+	path('refresh-token/', refresh_token),
+	path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+	path('schema/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
 ]

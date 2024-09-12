@@ -8,6 +8,33 @@ services:
       - ./backend:/app
     networks:
       - app-network
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_PORT=5432
+      - DB_HOST=db
+
+  db:
+    container_name: db
+    image: postgres:latest
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgresuser -d postgresname" ]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+    environment:
+      - POSTGRES_DB=postgresname
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   frontend:
     build: ./frontend
