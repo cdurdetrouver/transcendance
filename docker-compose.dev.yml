@@ -11,7 +11,7 @@ services:
       - dev-network
     depends_on:
       db-dev:
-        condition: service_started
+        condition: service_healthy
     restart: always
     environment:
       - DB_PORT=5433
@@ -22,6 +22,11 @@ services:
   db-dev:
     container_name: db-dev
     image: postgres:latest
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_PASSWORD}" ]
+      interval: 5s
+      retries: 5
+      start_period: 10s
     restart: always
     environment:
       - POSTGRES_DB=${DB_NAME}
