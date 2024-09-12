@@ -61,7 +61,7 @@ jobs:
           git pull
       - name: Add Secrets
         run: |
-          cd /home/ubuntu/transcendance-dev
+          cd /home/ubuntu/transcendance
           mkdir -p secrets
           echo "DB_NAME=${{ secrets.DB_NAME }}" > secrets/backend.env
           echo "DB_USER=${{ secrets.DB_USER }}" >> secrets/backend.env
@@ -69,8 +69,8 @@ jobs:
           echo "BACKEND_SECRET_KEY=${{ secrets.BACKEND_SECRET_KEY }}" >> secrets/backend.env
       - name: Check and remove PostgreSQL data
         run: |
-          if docker compose -f docker-compose.dev.yml -p dev ps | grep -q db; then
-            docker compose -f docker-compose.dev.yml -p dev exec db sh -c "rm -rf /var/lib/postgresql/data/* || true"
+          if docker compose -f docker-compose.prod.yml -p prod ps | grep -q db; then
+            docker compose -f docker-compose.prod.yml -p prod exec db sh -c "rm -rf /var/lib/postgresql/data/* || true"
           else
             echo "Service db is not running"
           fi
