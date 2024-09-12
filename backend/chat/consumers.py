@@ -16,8 +16,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name, self.channel_name)
 
         await self.accept()
+        #check if register
         #if pour join mess
-        await self.send(text_data=json.dumps({"message": "bonjour", "group"}))
+        await self.send(text_data=json.dumps({"message": "bonjour"}))
 
 
     async def disconnect(self, close_code):
@@ -30,7 +31,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
-        current_room = get_object_or_404(Room, id='Room.id')
+        # current_room = get_object_or_404(Room, id='Room.id')
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name, {"type": "chat.message", "message": message}
