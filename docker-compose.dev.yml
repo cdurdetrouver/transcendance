@@ -10,7 +10,7 @@ services:
     networks:
       - dev-network
     depends_on:
-      db:
+      db-dev:
         condition: service_started
     restart: always
     environment:
@@ -19,7 +19,7 @@ services:
     secrets:
       - backend_secret
 
-  db:
+  db-dev:
     container_name: db-dev
     image: postgres:latest
     restart: always
@@ -27,8 +27,11 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
+    expose:
+      - "5433"
     ports:
-      - "5433:5432"
+      - "5433:5433"
+    command: -p 5433
     volumes:
       - ./db:/var/lib/postgresql/data
     networks:
