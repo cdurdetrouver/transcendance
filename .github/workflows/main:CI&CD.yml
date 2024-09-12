@@ -67,7 +67,6 @@ jobs:
           echo "DB_USER=${{ secrets.DB_USER }}" >> secrets/backend.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> secrets/backend.env
           echo "BACKEND_SECRET_KEY=${{ secrets.BACKEND_SECRET_KEY }}" >> secrets/backend.env
-          echo "CHANNELS_DB_NAME=${{ secrets.CHANNELS_DB_NAME }}" >> secrets/backend.env
       - name: Pull and Deploy
         run: |
           cd /home/ubuntu/transcendance
