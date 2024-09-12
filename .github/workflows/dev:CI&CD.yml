@@ -75,7 +75,6 @@ jobs:
           docker pull ghcr.io/cdurdetrouver/backend-dev:latest
           docker pull ghcr.io/cdurdetrouver/frontend-dev:latest
           docker compose -f docker-compose.dev.yml -p dev up -d --remove-orphans
-          echo "$DB_NAME $DB_USER $DB_PASSWORD"
         env:
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_USER: ${{ secrets.DB_USER }}
