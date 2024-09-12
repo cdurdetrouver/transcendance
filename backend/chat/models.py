@@ -1,4 +1,5 @@
 from django.db import models
+from user.models import User
 
 # Create your models here.
 class Message(models.Model):
@@ -14,3 +15,12 @@ class Message(models.Model):
 
 	def __str__(self):
 		return self.content
+
+class Room (models.Model):
+	name = models.CharField(max_length=128)
+	participants = models.ManyToManyField(
+		User, related_name='rooms', blank=True)
+	messages = models.ManyToManyField(Message, blank=True)
+
+	def __str__(self):
+		return self.name
