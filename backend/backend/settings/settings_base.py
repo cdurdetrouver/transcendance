@@ -101,9 +101,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': secrets.get('DB_NAME') or 'postgres',
-        'USER': secrets.get('DB_USER') or 'postgres',
-        'PASSWORD': secrets.get('DB_PASSWORD') or 'postgres',
+        'NAME': secrets.get('DB_NAME') or 'postgresname',
+        'USER': secrets.get('DB_USER') or 'postgresuser',
+        'PASSWORD': secrets.get('DB_PASSWORD') or 'postgrespassword',
         'HOST': os.environ['DB_HOST']  or 'db',
         'PORT': os.environ['DB_PORT'] or '5432',
     }
@@ -156,9 +156,9 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_postgres.core.PostgresChannelLayer',
         'CONFIG': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': secrets.get('DB_NAME') or 'postgres',
-            'USER': secrets.get('DB_USER') or 'postgres',
-            'PASSWORD': secrets.get('DB_PASSWORD') or 'postgres',
+            'NAME': secrets.get('DB_NAME') or 'postgresname',
+            'USER': secrets.get('DB_USER') or 'postgresuser',
+            'PASSWORD': secrets.get('DB_PASSWORD') or 'postgrespassword',
             'HOST': os.environ['DB_HOST']  or 'db',
             'PORT': os.environ['DB_PORT'] or '5432',
         },
