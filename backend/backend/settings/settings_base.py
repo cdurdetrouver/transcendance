@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     # apps
     'user',
     'chat',
+    'pong',
 ]
 
 MIDDLEWARE = [
