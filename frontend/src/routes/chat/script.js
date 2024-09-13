@@ -1,7 +1,7 @@
 import config from "../../env/config.js";
 import { getCookie } from "../../components/storage/script.js";
 
-let acces_token = 42;
+let acces_token = getCookie("acces_token");
 let chatSocket = new WebSocket(config.websocketurl + "/ws/chat/", ["token", acces_token]);
 
 chatSocket.onmessage = function(e)
