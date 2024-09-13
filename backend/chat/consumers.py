@@ -1,25 +1,43 @@
 # chat/consumers.py
 import json
-
+import jwt
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.shortcuts import get_object_or_404
-from .models import Message, Room
+from .models import Message, Room, User
+from django.conf import settings
+from rest_framework import exceptions
+from encodings import undefined
+
+async def get_user(scope):
+        access_token = scope['subprotocols'][1]
+        print(scope)
+        payload = jwt.decode(
+				access_token, settings.SECRET_KEY, algorithms=['HS256'])
+        #error ? 
+        print("access_token : " + access_token)
+        user = await User.objects.filter(id=payload['user_id']).first()
+        return (user)
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = "chat_bonjour"
-        acces_token = self.scope['subprotocols'][1]
-        print("acces_token : " + acces_token)
-        # Join room group
-        await self.channel_layer.group_add(
+        user = await get_user(self.scope)
+        if user is None:
+            raise exceptions.AuthenticationFailed('User not found')
+        elif not user.is_active:
+            raise exceptions.AuthenticationFailed('user is inactive')
+        
+        else:
+            await self.accept()
+                    # Join room group
+            await self.channel_layer.group_add(
             self.room_group_name, self.channel_name)
-
-        await self.accept()
+            await self.send(text_data=json.dumps({"message": "bonjour"}))
         #check if register
         #if pour join mess
-        await self.send(text_data=json.dumps({"message": "bonjour"}))
+        await self.close(code=404)
 
 
     async def disconnect(self, close_code):

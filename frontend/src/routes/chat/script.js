@@ -1,5 +1,6 @@
 import config from "../../env/config.js";
 import { getCookie } from "../../components/storage/script.js";
+import { get_user } from "../../components/user/script.js";
 
 let chatSocket = null;
 
