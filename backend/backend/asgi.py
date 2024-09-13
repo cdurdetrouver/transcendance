@@ -20,13 +20,12 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 # is populated before importing code that may import ORM models.
 
 from chat.routing import websocket_urlpatterns
-from .ws_auth import QueryAuthMiddleware
 
 application = ProtocolTypeRouter(
     {
         "http":  get_asgi_application(),
         "websocket": AllowedHostsOriginValidator(
-            QueryAuthMiddleware(URLRouter(websocket_urlpatterns))
+            AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
         ),
     }
 )
