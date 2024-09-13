@@ -1,8 +1,16 @@
 import config from "../../env/config.js";
 import { getCookie } from "../../components/storage/script.js";
+import { get_user } from "../../components/user/script.js";
 
-let acces_token = getCookie("acces_token");
-let chatSocket = new WebSocket(config.websocketurl + "/ws/chat/", ["token", acces_token]);
+await get_user();
+let userCookie = getCookie('user');
+const user = JSON.parse(userCookie);
+if (!user)
+  window.location.href = '/login';
+
+let access_token = getCookie('access_token');
+console.log(access_token);
+let chatSocket = new WebSocket(config.websocketurl + "/ws/chat/", ["token", access_token]);
 
 chatSocket.onmessage = function(e)
 {
