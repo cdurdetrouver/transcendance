@@ -1,13 +1,39 @@
-<div class="waiting">
-	<div class="waiting__message">
-		<p>Waiting for another player...</p>
+<div class="container">
+	<div class="waiting">
+		<div class="waiting__message">
+			<p>Ready to play ?</p>
+			<div class="users">
+				<div class="user" id="player">
+					<div class="user_picture">
+						<img src="../../static/assets/jpg/default_picture.jpg" alt="player picture">
+					</div>
+					<div class="user__name">
+						<p>Player</p>
+					</div>
+					<div class="user__status">
+						<!-- svg -->
+					</div>
+				</div>
+				<div class="user" id="opponnent">
+					<div class="user_picture">
+						<img src="../../static/assets/jpg/default_picture.jpg" alt="opponnent picture">
+					</div>
+					<div class="user__name">
+						<p>Opponent</p>
+					</div>
+					<div class="user__status">
+						<!-- svg -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="waiting__button">
+			<button id="search">Search</button>
+		</div>
 	</div>
-	<div class="waiting__spinner">
-		<div class="spinner"></div>
-	</div>
-</div>
 
-<div class="game">
-	<canvas id="gameCanvas" width="800" height="400"></canvas>
-	<p>PONG !!!</p>
+	<div class=" game">
+		<canvas id="gameCanvas" width="800" height="400"></canvas>
+		<p>PONG !!!</p>
+	</div>
 </div>
