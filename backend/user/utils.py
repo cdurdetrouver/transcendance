@@ -36,3 +36,16 @@ class AttributeDict(dict):
 			del self[item]
 		except KeyError:
 			raise AttributeError(f"'AttributeDict' object has no attribute '{item}'")
+
+def get_from_cookies(cookies, search_key):
+	if not cookies:
+		return None
+
+	cookie_list = cookies.split('; ')
+
+	cookie_dict = {}
+	for cookie in cookie_list:
+		key, value = cookie.split('=', 1)
+		cookie_dict[key] = value
+
+	return cookie_dict.get(search_key)
