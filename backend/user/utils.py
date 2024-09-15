@@ -1,6 +1,7 @@
 import datetime
 import jwt
 from django.conf import settings
+from user.models import User
 
 def generate_access_token(user):
 	access_token_payload = {
@@ -36,6 +37,27 @@ class AttributeDict(dict):
 			del self[item]
 		except KeyError:
 			raise AttributeError(f"'AttributeDict' object has no attribute '{item}'")
+
+def get_user_by_token(token):
+	try:
+		payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+		user_id = payload.get('user_id')
+		user = User.objects.get(id=user_id)
+		if user is None:
+			return False, 'User not found'
+		return True, user
+	except jwt.ExpiredSignatureError:
+		return False, 'Token expired. Please log in again.'
+	except jwt.InvalidTokenError:
+		return False, 'Invalid token. Please log in again.'
+	except jwt.InvalidSignatureError:
+		return False, 'Invalid signature. Please log in again.'
+	except jwt.InvalidAlgorithmError:
+		return False, 'Invalid algorithm. Please log in again.'
+	except jwt.DecodeError:
+		return False, 'Decode error. Please log in again.'
+	except Exception as e:
+		return False, str(e)
 
 def get_from_cookies(cookies, search_key):
 	if not cookies:

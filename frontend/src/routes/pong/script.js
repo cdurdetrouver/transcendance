@@ -1,6 +1,5 @@
-import { get_user } from '../.././components/user/script.js';
-import { getCookie } from '../.././components/storage/script.js';
 import config from '../../env/config.js';
+import { get_user } from '../.././components/user/script.js';
 
 const svgcheck = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
@@ -23,6 +22,8 @@ const svgcross = `
 </svg>
 `;
 
+let searchButtonTimeoutId = null;
+
 class PongSocket {
   constructor() {
     this.socket = null;
@@ -36,6 +37,28 @@ class PongSocket {
   onmessage(event) {
     let data = JSON.parse(event.data);
     console.log(data);
+    if (data.type == "error") {
+      get_user().then((response) => {
+        if (response.status != 200)
+          window.location.href = `/login`;
+        this.open();
+      });
+    }
+    if (data.type === 'match_found') {
+      toggleSvgStatus(true, true);
+      let opponent = data.opponent;
+      setPlayer(opponent, true);
+      let WaitingTextDiv = document.querySelector('.waiting__message');
+      let WaitingText = WaitingTextDiv.querySelector('p');
+      WaitingText.innerHTML = "Match found!";
+      WaitingTextDiv.classList.remove('show');
+      clearTimeout(searchButtonTimeoutId);
+      SearchButton.style.opacity = "0.2";
+      SearchButton.style.cursor = "not-allowed";
+      setTimeout(() => {
+      window.location.href = '/pong/game?game_id=' + data.game_room;
+      }, 2000);
+    }
   }
 
   onclose() {
@@ -44,7 +67,7 @@ class PongSocket {
 
   open() {
     if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
-      this.socket = new WebSocket(config.websocketurl + "/ws/pong");
+      this.socket = new WebSocket(config.websocketurl + "/ws/pong/");
       this.socket.onopen = this.onopen.bind(this);
       this.socket.onmessage = this.onmessage.bind(this);
       this.socket.onclose = this.onclose.bind(this);
@@ -63,9 +86,9 @@ function setSVGContent(element, svgContent) {
   element.innerHTML = svgContent;
 }
 
-function toggleSvgStatus(opponnent = false, status = false) {
-  if (opponnent == true) {
-    let div = document.getElementById('opponnent');
+function toggleSvgStatus(opponent = false, status = false) {
+  if (opponent == true) {
+    let div = document.getElementById('opponent');
     let userNameDiv = div.querySelector('.user__status');
     setSVGContent(userNameDiv, status ? svgcheck : svgcross);
   }
@@ -76,9 +99,9 @@ function toggleSvgStatus(opponnent = false, status = false) {
   }
 }
 
-function setPlayer(user, opponnent = false) {
-  if (opponnent == true) {
-    let div = document.getElementById('opponnent');
+function setPlayer(user, opponent = false) {
+  if (opponent == true) {
+    let div = document.getElementById('opponent');
     let userNameDiv = div.querySelector('.user__name');
     let pElement = userNameDiv.querySelector('p');
     let imgElement = div.querySelector('img');
@@ -95,12 +118,9 @@ function setPlayer(user, opponnent = false) {
   }
 }
 
-await get_user();
-let userCookie = getCookie('user');
-if (!userCookie)
+const user = await get_user();
+if (!user)
   window.location.href = '/login';
-const user = JSON.parse(userCookie);
-let access_token = getCookie('access_token');
 
 setPlayer(user);
 toggleSvgStatus(false, false);
@@ -117,7 +137,7 @@ SearchButton.addEventListener('click', async function handleClick() {
   let WaitingText = WaitingTextDiv.querySelector('p');
   if (SearchStatus == false) {
     SearchButton.removeEventListener('click', handleClick);
-    setTimeout(() => {
+    searchButtonTimeoutId = setTimeout(() => {
       SearchButton.style.opacity = "1";
       SearchButton.style.cursor = "pointer";
       SearchButton.addEventListener('click', handleClick);
@@ -125,7 +145,6 @@ SearchButton.addEventListener('click', async function handleClick() {
 
     SearchStatus = true;
     SearchButton.innerHTML = "Cancel";
-    SearchButton.style.opacity = "0.2";
     SearchButton.style.opacity = "0.2";
     SearchButton.style.cursor = "not-allowed";
     SearchButton.style.backgroundColor = "red";
