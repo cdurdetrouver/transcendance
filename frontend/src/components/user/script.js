@@ -11,12 +11,6 @@ async function refresh_token()
 		},
 		credentials: "include",
 	});
-	if (response.status === 200)
-	{
-		const data = await response.json();
-
-		setCookie('access_token', data.access_token, 5 / 1440);
-	}
 	return response;
 }
 
@@ -39,7 +33,6 @@ async function login(email, password)
 	{
 		const data = await response.json();
 
-		setCookie('access_token', data.access_token, 5 / 1440);
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
 	}
 	return response;
@@ -66,7 +59,6 @@ async function register(username, email, password)
 	{
 		const data = await response.json();
 
-		setCookie('access_token', data.access_token, 5 / 1440);
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
 	}
 	return response;
@@ -74,11 +66,11 @@ async function register(username, email, password)
 
 async function get_user()
 {
-	let access_token = getCookie('access_token');
-	if (!access_token)
-		await refresh_token();
-	access_token = getCookie('access_token');
-	if (!access_token)
+	let user = getCookie('user');
+	if (user)
+		return JSON.parse(user);
+	let refresh = await refresh_token();
+	if (refresh.status !== 200)
 		return null;
 	const response = await fetch(config.backendUrl + "/user/",
 	{
@@ -86,16 +78,18 @@ async function get_user()
 		headers:
 		{
 			"Content-Type": "application/json",
-			'Authorization': 'Bearer ' + access_token,
 		},
+		credentials: "include",
 	});
 	if (response.status === 200)
 	{
 		const data = await response.json();
 
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+
+		return data.user;
 	}
-	return response;
+	return null;
 }
 
 async function logout()
@@ -108,7 +102,6 @@ async function logout()
 		credentials: "include",
 	});
 
-	deleteCookie('access_token');
 	deleteCookie('user');
 }
 

@@ -23,17 +23,9 @@ import datetime
 			properties={
 				'user': UserSerializer.user_swagger
 			}
-		)
+		),
+		403: "Forbidden"
 	},
-	manual_parameters=[
-		openapi.Parameter(
-			'Authorization',
-			openapi.IN_HEADER,
-			description="Authorization token",
-			type=openapi.TYPE_STRING,
-			default='Bearer <token>'
-		)
-	],
 	operation_description="Retrieve a list of users"
 )
 @api_view(['GET'])
@@ -50,7 +42,6 @@ def user_detail(request):
 		200: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-				'access_token': openapi.Schema(type=openapi.TYPE_STRING, description='Access token for the session'),
 				'user': UserSerializer.user_swagger
 			}
 		),
@@ -75,12 +66,15 @@ def login(request):
 
 		if check_password(password, user.password):
 			user_serializer = UserSerializer(user)
-			access_token = generate_access_token(user)
-			response = JsonResponse({'access_token': access_token, 'user': user_serializer.data}, status=status.HTTP_200_OK)
+			response = JsonResponse({'user': user_serializer.data}, status=status.HTTP_200_OK)
 			refresh_token = generate_refresh_token(user)
 			expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
 			secure_cookie = not settings.DEBUG
 			response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+			access_token = generate_access_token(user)
+			expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+			secure_cookie = not settings.DEBUG
+			response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 			return response
 		else:
 			return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
@@ -94,7 +88,6 @@ def login(request):
 		201: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-				'access_token': openapi.Schema(type=openapi.TYPE_STRING, description='Access token for the session'),
 				'user': UserSerializer.user_swagger
 			}
 		),
@@ -117,12 +110,15 @@ def register(request):
 	if serializer.is_valid():
 		serializer.save()
 		user = AttributeDict(serializer.data)
-		access_token = generate_access_token(user)
-		response = JsonResponse({'access_token': access_token, 'user' : serializer.data}, status=status.HTTP_201_CREATED)
+		response = JsonResponse({'user': serializer.data}, status=status.HTTP_201_CREATED)
 		refresh_token = generate_refresh_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
 		secure_cookie = not settings.DEBUG
 		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+		access_token = generate_access_token(user)
+		expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+		secure_cookie = not settings.DEBUG
+		response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 		return response
 	else:
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -134,7 +130,13 @@ def register(request):
 		200: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-				'access_token': openapi.Schema(type=openapi.TYPE_STRING, description='Access token for the session'),
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='Access token refreshed')
+			}
+		),
+		400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description='Error message')
 			}
 		)
 	},
@@ -154,8 +156,12 @@ def refresh_token(request):
 	if user is None:
 		return Response({'error': 'Invalid refresh token'}, status=status.HTTP_400_BAD_REQUEST)
 
+	response = JsonResponse({'message': 'Access token refreshed'}, status=status.HTTP_200_OK)
 	access_token = generate_access_token(user)
-	return JsonResponse({'access_token': access_token}, status=status.HTTP_200_OK)
+	expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+	secure_cookie = not settings.DEBUG
+	response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+	return response
 
 @swagger_auto_schema(
 	method='post',
@@ -176,4 +182,5 @@ def refresh_token(request):
 def logout(request):
 	response = JsonResponse({'message': 'Logged out successfully'})
 	response.delete_cookie('refresh_token')
+	response.delete_cookie('access_token')
 	return response
