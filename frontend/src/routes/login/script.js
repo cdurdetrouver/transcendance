@@ -1,7 +1,17 @@
-import { login } from '../../components/user/script.js';
+import { get_user, login, logout } from '../../components/user/script.js';
 
-const form = document.querySelector('.login form');
-form.addEventListener('submit', login_form);
+const user = await get_user();
+
+const loginform = document.querySelector('.login form');
+loginform.addEventListener('submit', login_form);
+
+const logoutform = document.querySelector('.logout form');
+logoutform.addEventListener('submit', logout_form);
+
+if (user)
+	loginform.style.display = 'none';
+else
+	logoutform.style.display = 'none';
 
 async function login_form(event)
 {
@@ -15,4 +25,12 @@ async function login_form(event)
 		window.location.href = '/';
 	else
 		alert('Login failed');
+}
+
+async function logout_form(event)
+{
+	event.preventDefault();
+	await logout();
+
+	window.location.href = '/';
 }
