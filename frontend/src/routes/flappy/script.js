@@ -1,11 +1,13 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-const GRAVITY = 0.6;
-const JUMP_STRENGTH = -12;
-const OBSTACLE_WIDTH = 50;
-const OBSTACLE_HEIGHT = 300;
+const GRAVITY = 0.2;
+const JUMP_STRENGTH = -5.5;
+const OBSTACLE_WIDTH = 60;
+const HOLE_HEIGHT = 200;
 const OBSTACLE_SPACING = 300;
+const HOLE_MIN_HEIGHT = 100;
+const HOLE_MAX_HEIGHT = 400;
 
 let player = {
     x: 100,
@@ -37,13 +39,17 @@ let player = {
 let obstacles = [];
 let frameCount = 0;
 let gameRunning = false;
+let score = 0;
+let gameSpeed = 0;
+let nextObstacleX = canvas.width;
 
 function startGame() {
     gameRunning = true;
     obstacles = [];
-    frameCount = 0;
+    score = 0;
     player.y = canvas.height / 2;
     player.velocityY = 0;
+	nextObstacleX = canvas.width;
     requestAnimationFrame(gameLoop);
 }
 
@@ -52,44 +58,59 @@ function gameLoop() {
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    frameCount++;
-    if (frameCount % 100 === 0) {
-        let obstacleHeight = Math.random() * (canvas.height - OBSTACLE_HEIGHT);
+    if (obstacles.length === 0 || obstacles[obstacles.length - 1].x < canvas.width - OBSTACLE_SPACING) {
+        let holeY = HOLE_MIN_HEIGHT + Math.random() * (HOLE_MAX_HEIGHT - HOLE_MIN_HEIGHT);
+
+		nextObstacleX = canvas.width;
+
         obstacles.push({
-            x: canvas.width,
-            y: obstacleHeight,
+            x: nextObstacleX,
             width: OBSTACLE_WIDTH,
-            height: OBSTACLE_HEIGHT
+            holeY: holeY
         });
     }
     
     player.update();
     player.draw();
+
+
     
-    obstacles.forEach((obstacle, index) => {
-        obstacle.x -= 3;
-        ctx.fillStyle = 'black';
-        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-        ctx.fillRect(obstacle.x, obstacle.y + OBSTACLE_HEIGHT + 100, obstacle.width, canvas.height - (obstacle.y + OBSTACLE_HEIGHT + 100));
-        
+    obstacles = obstacles.filter(obstacle => {
+        obstacle.x -= 3 + gameSpeed;
         if (obstacle.x + obstacle.width < 0) {
-            obstacles.splice(index, 1);
+            score++;
+			gameSpeed += 0.1;
+            return false; // Remove the obstacle
         }
+        
+        ctx.fillStyle = 'black';
+        ctx.fillRect(obstacle.x, 0, obstacle.width, obstacle.holeY);
+        ctx.fillRect(obstacle.x, obstacle.holeY + HOLE_HEIGHT, obstacle.width, canvas.height - (obstacle.holeY + HOLE_HEIGHT));
         
         if (collisionDetection(player, obstacle)) {
             gameRunning = false;
-            alert("Game Over!");
+            alert(`Game Over! Your score: ${score}`);
+            return false;
         }
+        
+        return true;
     });
     
     requestAnimationFrame(gameLoop);
 }
 
-function collisionDetection(rect1, rect2) {
-    return rect1.x < rect2.x + rect2.width &&
-           rect1.x + rect1.width > rect2.x &&
-           rect1.y < rect2.y + rect2.height &&
-           rect1.y + rect1.height > rect2.y;
+function collisionDetection(rect1, obstacle) {
+    const topObstacleHeight = obstacle.holeY;
+    const bottomObstacleY = obstacle.holeY + HOLE_HEIGHT;
+
+    return (
+        rect1.x < obstacle.x + obstacle.width &&
+        rect1.x + rect1.width > obstacle.x &&
+        (
+            rect1.y < topObstacleHeight ||
+            rect1.y + rect1.height > bottomObstacleY
+        )
+    );
 }
 
 document.addEventListener('keydown', (e) => {
