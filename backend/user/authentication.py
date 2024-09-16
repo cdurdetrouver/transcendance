@@ -17,7 +17,6 @@ class SafeJWTAuthentication(BaseAuthentication):
 			access_token = get_from_cookies(cookies, 'access_token')
 			if not access_token:
 				return None
-			print(access_token)
 			payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=['HS256'])
 
 		except jwt.ExpiredSignatureError:
