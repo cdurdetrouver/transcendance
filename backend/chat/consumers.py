@@ -1,7 +1,8 @@
 # chat/consumers.py
 import json
 import jwt
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
+from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.shortcuts import get_object_or_404
 from .models import Message, Room, User
@@ -9,14 +10,15 @@ from django.conf import settings
 from rest_framework import exceptions
 from encodings import undefined
 
-async def get_user(scope):
+@database_sync_to_async
+def get_user(scope):
         access_token = scope['subprotocols'][1]
         print(scope)
         payload = jwt.decode(
 				access_token, settings.SECRET_KEY, algorithms=['HS256'])
         #error ? 
         print("access_token : " + access_token)
-        user = await User.objects.filter(id=payload['user_id']).first()
+        user = User.objects.filter(id=payload['user_id']).first()
         return (user)
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -37,8 +39,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({"message": "bonjour"}))
         #check if register
         #if pour join mess
-        await self.close(code=404)
-
 
     async def disconnect(self, close_code):
         # Leave room group
