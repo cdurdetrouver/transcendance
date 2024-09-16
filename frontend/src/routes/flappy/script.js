@@ -80,7 +80,7 @@ function gameLoop() {
         if (obstacle.x + obstacle.width < 0) {
             score++;
 			gameSpeed += 0.1;
-            return false; // Remove the obstacle
+            return false;
         }
         
         ctx.fillStyle = 'black';
@@ -90,6 +90,7 @@ function gameLoop() {
         if (collisionDetection(player, obstacle)) {
             gameRunning = false;
             alert(`Game Over! Your score: ${score}`);
+			gameSpeed = 0;
             return false;
         }
         
