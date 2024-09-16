@@ -43,7 +43,7 @@ class Router {
 	}
 
 	async _loadRoute(pathName) {
-		let route = this.routes.find(r => r.path === pathName);
+		let route = this.routes.find(r => r.path === pathName || r.path + '/' === pathName);
 		if (!route) {
 			route = this.routes.find(r => r.path === '/404');
 			if (!route) {
