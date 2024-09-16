@@ -39,7 +39,7 @@ class PongSocket {
     console.log(data);
     if (data.type == "error") {
       get_user().then((response) => {
-        if (response.status != 200)
+        if (response == null)
           window.location.href = `/login`;
         this.open();
       });
@@ -141,7 +141,7 @@ SearchButton.addEventListener('click', async function handleClick() {
       SearchButton.style.opacity = "1";
       SearchButton.style.cursor = "pointer";
       SearchButton.addEventListener('click', handleClick);
-    }, 10000);
+    }, 15000);
 
     SearchStatus = true;
     SearchButton.innerHTML = "Cancel";
