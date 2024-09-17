@@ -229,6 +229,6 @@ def put_score(request):
 		user.best_score = best_score
 		user.save()
 		response = JsonResponse({"message": "User updated"}, status=status.HTTP_200_OK)
-		return response
 	else:
 		response = JsonResponse({"message": "no update"}, status=status.HTTP_200_OK)
+	return response

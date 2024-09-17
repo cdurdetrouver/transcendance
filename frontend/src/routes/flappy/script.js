@@ -1,5 +1,8 @@
 import { getCookie } from '../../components/storage/script.js';
 import { get_user } from '../../components/user/script.js';
+import { get_score } from '../../components/user/script.js';
+import { update_score } from '../../components/user/script.js';
+
 
 let userCookie = getCookie('user');
 let userElement = document.querySelector('#user_username');
@@ -115,7 +118,7 @@ function gameLoop() {
     player.update();
     player.draw();
 
-    obstacles = obstacles.filter(obstacle => {
+    obstacles = obstacles.filter(obstacle =>  {
         obstacle.x -= 3 + gameSpeed;
         if (obstacle.x + obstacle.width < 0) {
             score++;
@@ -129,9 +132,12 @@ function gameLoop() {
 
         if (collisionDetection(player, obstacle)) {
             stopGame();
-            alert(`Game Over! Your score: ${score}`);
-			gameSpeed = 0;
-            return false;
+			update_score(score).then(response => {
+				console.log(response);
+				alert(`Game Over! Your score: ${score}`);
+				gameSpeed = 0;
+				return false;
+			})
         }
 
         return true;
@@ -157,6 +163,13 @@ document.addEventListener('keydown', (e) => {
         if (gameRunning) {
             player.jump();
         } else if (!gameRunning) {
+			get_score().then(bestScore => {
+				if (bestScore !== null) {
+					console.log('Best Score:', bestScore);
+				} else {
+					console.log('Unable to fetch the best score.');
+				}
+			});
             startGame();
         }
 		else
