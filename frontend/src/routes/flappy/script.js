@@ -1,3 +1,37 @@
+import { getCookie } from '../../components/storage/script.js';
+import { get_user } from '../../components/user/script.js';
+
+let userCookie = getCookie('user');
+let userElement = document.querySelector('#user_username');
+let isConnected = false;
+
+if (userCookie)
+{
+	const user = JSON.parse(userCookie);
+    userElement.innerText = `${user.username} is connected`;
+	isConnected = true;
+}
+else
+{
+	await get_user();
+	let userCookie = getCookie('user');
+
+	if (userCookie)
+	{
+		const user = JSON.parse(userCookie);
+		userElement.innerText = `${user.username} is connected`;
+		isConnected = true;
+	}
+	else
+	{
+		userElement.innerText = 'No user connected';
+		isConnected = false;
+	}
+
+}
+
+
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -118,16 +152,18 @@ document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         if (gameRunning) {
             player.jump();
-        } else {
+        } else if (isConnected == true) {
             startGame();
         }
+		else
+			alert("User need to be connected !");
     }
 });
 
-canvas.addEventListener('click', () => {
-    if (gameRunning) {
-        player.jump();
-    } else {
-        startGame();
-    }
-});
+// canvas.addEventListener('click', () => {
+//     if (gameRunning) {
+//         player.jump();
+//     } else if (isConnected == true){
+//         startGame();
+//     }
+// });
