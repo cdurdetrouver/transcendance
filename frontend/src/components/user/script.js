@@ -92,6 +92,33 @@ async function get_user()
 	return null;
 }
 
+async function get_score()
+{
+	let access_token = getCookie('access_token');
+	if (!access_token)
+		await refresh_token();
+	access_token = getCookie('access_token');
+	if (!access_token)
+		return null;
+	const response = await fetch(config.backendUrl + "/user/",
+	{
+		method: "GET",
+		headers:
+		{
+			"Content-Type": "application/json",
+			'Authorization': 'Bearer ' + access_token,
+		},
+	});
+	if (response.status === 200)
+	{
+		const data = await response.json();
+
+		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+	}
+	return response;
+}
+
+
 async function logout()
 {
 	await fetch(config.backendUrl + "/logout/", {
@@ -105,4 +132,4 @@ async function logout()
 	deleteCookie('user');
 }
 
-export { login, register, get_user, refresh_token, logout};
+export { login, register, get_user, refresh_token, logout, get_score};
