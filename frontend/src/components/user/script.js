@@ -94,28 +94,15 @@ async function get_user()
 
 async function get_score()
 {
-	let access_token = getCookie('access_token');
-	if (!access_token)
-		await refresh_token();
-	access_token = getCookie('access_token');
-	if (!access_token)
-		return null;
-	const response = await fetch(config.backendUrl + "/user/",
+	deleteCookie("user");
+	const user = await get_user();
+	console.log(user);
+	if (user)
 	{
-		method: "GET",
-		headers:
-		{
-			"Content-Type": "application/json",
-			'Authorization': 'Bearer ' + access_token,
-		},
-	});
-	if (response.status === 200)
-	{
-		const data = await response.json();
-
-		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+		const bestScore = user.best_score;
+		return bestScore;
 	}
-	return response;
+	return null;
 }
 
 
@@ -132,4 +119,35 @@ async function logout()
 	deleteCookie('user');
 }
 
-export { login, register, get_user, refresh_token, logout, get_score};
+async function update_score(bestScore) {
+	let user = getCookie('user');
+	if (!user)
+	{
+		let refresh = await refresh_token();
+		if (refresh.status !== 200)
+			return null;
+	}
+
+    const response = await fetch(config.backendUrl + "/user/update/", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            'best_score': bestScore,
+        }),
+        credentials: "include",
+    });
+
+    if (response.status === 200) {
+        const data = await response.json();
+        console.log(data.message);
+    } else {
+        console.error('Failed to update score');
+    }
+	return response;
+}
+
+
+
+export { login, register, get_user, refresh_token, logout, get_score, update_score};

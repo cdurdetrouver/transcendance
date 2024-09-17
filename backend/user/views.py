@@ -50,7 +50,6 @@ def user_detail(request):
 	},
 	operation_description="Authenticate a user and return an access token and user data",
 )
-@ensure_csrf_cookie
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login(request):
@@ -95,7 +94,6 @@ def login(request):
 	},
 	operation_description="Register a user"
 )
-@ensure_csrf_cookie
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -176,7 +174,6 @@ def refresh_token(request):
 	},
 	operation_description="Log out a user"
 )
-@ensure_csrf_cookie
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def logout(request):
@@ -198,7 +195,6 @@ def logout(request):
 	},
 	operation_description="Return leaderboard"
 )
-@ensure_csrf_cookie
 @api_view(['GET'])
 def get_leaderboard(request):
 	users = User.objects.all().order_by(User.best_score)
@@ -209,18 +205,22 @@ def get_leaderboard(request):
 
 @swagger_auto_schema(
 	method='put',
-	request_body=None,
+	request_body=openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'best_score': openapi.Schema(type=openapi.TYPE_INTEGER),
+			}
+		),
 	responses={
 		200: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-				'message': openapi.Schema(type=openapi.TYPE_STRING, description='Logged out successfully'),
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='update'),
 			}
 		)
 	},
-	operation_description="Return leaderboard"
+	operation_description="Authenticate a user and return an access token and user data",
 )
-@ensure_csrf_cookie
 @api_view(['PUT'])
 def put_score(request):
 	user = request.user
