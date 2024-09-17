@@ -31,7 +31,6 @@ else
 }
 
 
-
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -71,11 +70,14 @@ let player = {
 };
 
 let obstacles = [];
-let frameCount = 0;
 let gameRunning = false;
 let score = 0;
 let gameSpeed = 0;
 let nextObstacleX = canvas.width;
+
+let gameInterval;
+const FPS = 60; 
+const intervalTime = 1000 / FPS;  
 
 function startGame() {
     gameRunning = true;
@@ -84,14 +86,20 @@ function startGame() {
     player.y = canvas.height / 2;
     player.velocityY = 0;
 	nextObstacleX = canvas.width;
-    requestAnimationFrame(gameLoop);
+
+    gameInterval = setInterval(gameLoop, intervalTime);
+}
+
+function stopGame() {
+    clearInterval(gameInterval);
+    gameRunning = false;
 }
 
 function gameLoop() {
     if (!gameRunning) return;
-    
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     if (obstacles.length === 0 || obstacles[obstacles.length - 1].x < canvas.width - OBSTACLE_SPACING) {
         let holeY = HOLE_MIN_HEIGHT + Math.random() * (HOLE_MAX_HEIGHT - HOLE_MIN_HEIGHT);
 
@@ -103,12 +111,10 @@ function gameLoop() {
             holeY: holeY
         });
     }
-    
+
     player.update();
     player.draw();
 
-
-    
     obstacles = obstacles.filter(obstacle => {
         obstacle.x -= 3 + gameSpeed;
         if (obstacle.x + obstacle.width < 0) {
@@ -116,22 +122,20 @@ function gameLoop() {
 			gameSpeed += 0.1;
             return false;
         }
-        
+
         ctx.fillStyle = 'black';
         ctx.fillRect(obstacle.x, 0, obstacle.width, obstacle.holeY);
         ctx.fillRect(obstacle.x, obstacle.holeY + HOLE_HEIGHT, obstacle.width, canvas.height - (obstacle.holeY + HOLE_HEIGHT));
-        
+
         if (collisionDetection(player, obstacle)) {
-            gameRunning = false;
+            stopGame();
             alert(`Game Over! Your score: ${score}`);
 			gameSpeed = 0;
             return false;
         }
-        
+
         return true;
     });
-    
-    requestAnimationFrame(gameLoop);
 }
 
 function collisionDetection(rect1, obstacle) {
@@ -152,7 +156,7 @@ document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         if (gameRunning) {
             player.jump();
-        } else if (isConnected == true) {
+        } else if (!gameRunning) {
             startGame();
         }
 		else
