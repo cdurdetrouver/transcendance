@@ -14,22 +14,22 @@ class GameThread(threading.Thread):
 		self.ballRadius = 8
 		self.gameState = {
 			"player1": {
-				"x": 0,
-				"y": 0,
+				"x": self.canvas_width - self.paddleWidth - 10,
+				"y": (self.canvas_height - self.paddleHeight) / 2,
 				"score": 0,
-				"speed": 0
+				"speed": 4
 			},
 			"player2": {
-				"x": 0,
-				"y": 0,
+				"x": self.paddleWidth + 10,
+				"y": (self.canvas_height - self.paddleHeight) / 2,
 				"score": 0,
-				"speed": 0
+				"speed": 4
 			},
 			"ball": {
-				"x": 0,
-				"y": 0,
-				"speed": 0,
-				"angle": 0
+				"x": self.canvas_width / 2,
+				"y": self.canvas_height / 2,
+				"speed_x": 8,
+				"speed_y": 8,
 			}
 		}
 
@@ -47,6 +47,8 @@ class GameThread(threading.Thread):
 		loop.close()
 
 	async def main_loop(self):
+		self.lock_gamestate = asyncio.Lock()
+
 		await self.channel_layer.group_send(
 			self.group_name,
 			{
@@ -55,11 +57,30 @@ class GameThread(threading.Thread):
 			}
 		)
 		while not self.game.finished:
-			await self.channel_layer.group_send(
-				self.group_name,
-				{
-					'type': 'game.update',
-					'message': self.gameState
-				}
-			)
-			await asyncio.sleep(1)
+			async with self.lock_gamestate:
+				self.update_game_state()
+				await self.channel_layer.group_send(
+					self.group_name,
+					{
+						'type': 'game.update',
+						'message': self.gameState
+					}
+				)
+			await asyncio.sleep(1/60)
+
+	def update_game_state(self):
+		self.gameState["ball"]["x"] += self.gameState["ball"]["speed_x"]
+		self.gameState["ball"]["y"] += self.gameState["ball"]["speed_y"]
+
+		if self.gameState["ball"]["x"] < 0 or self.gameState["ball"]["x"] > self.canvas_width:
+			self.gameState["ball"]["speed_x"] *= -1
+		if self.gameState["ball"]["y"] < 0 or self.gameState["ball"]["y"] > self.canvas_height:
+			self.gameState["ball"]["speed_y"] *= -1
+
+	async def set_player_direction(self, player, data):
+		async with self.lock_gamestate:
+			directions = {
+				"up": -self.gameState[player]["speed"],
+				"down": self.gameState[player]["speed"]
+			}
+			self.gameState[player]["y"] += directions[data.direction]

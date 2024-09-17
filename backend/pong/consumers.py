@@ -104,6 +104,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         else:
             self.type = 'player'
             self.game.nb_players += 1
+            self.player = 'player1' if self.user.id == self.game.player1_id else 'player2'
             await sync_to_async(self.game.save)()
             await self.send(text_data=json.dumps({
                 'type': 'waiting',
@@ -133,15 +134,14 @@ class PongConsumer(AsyncWebsocketConsumer):
                 'message': 'Opponent left the game'
             }
         )
-        if self.game.nb_players == 0:
-            del self.GameThread
+        del self.GameThread
 
     async def receive(self, text_data):
         if self.type == 'viewer':
             return
 
         try :
-            self.GameThread.set_player_direction(self.user.id, json.loads(text_data))
+            await self.GameThread.set_player_direction(self.player, json.loads(text_data))
         except Exception as e:
             await self.close()
 
@@ -164,7 +164,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             'message': event['message']
         }))
         self.game.finished = True
-        self.game.save()
+        await sync_to_async(self.game.save)()
         del self.games[self.room_group_name]
         del self.GameThread
-
