@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from .models import Message, Room, User
 from django.conf import settings
 from rest_framework import exceptions
+from rest_framework.response import Response
 from encodings import undefined
 
 @database_sync_to_async
@@ -16,9 +17,9 @@ def get_user(scope):
         print(scope)
         payload = jwt.decode(
 				access_token, settings.SECRET_KEY, algorithms=['HS256'])
-        #error ? 
-        print("access_token : " + access_token)
         user = User.objects.filter(id=payload['user_id']).first()
+        if user is None:
+            return Response({'error': 'Invalid refresh token'}, status=status.HTTP_400_BAD_REQUEST)
         return (user)
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -30,7 +31,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             raise exceptions.AuthenticationFailed('User not found')
         elif not user.is_active:
             raise exceptions.AuthenticationFailed('user is inactive')
-        
         else:
             await self.accept()
                     # Join room group
