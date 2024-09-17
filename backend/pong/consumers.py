@@ -8,7 +8,7 @@ from user.utils import get_user_by_token
 from pong.models import Game
 from asgiref.sync import sync_to_async
 from user.serializers import UserSerializer
-from .game import Game
+from .game import GameThread
 
 class MatchmakingConsumer(AsyncWebsocketConsumer):
 
@@ -57,13 +57,15 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
 class PongConsumer(AsyncWebsocketConsumer):
 
+    games = {}
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = None
         self.room_group_name = None
         self.game = None
         self.type = None
-        self.GameEngine = None
+        self.GameThread = None
 
     async def connect(self):
         access_token = self.scope['cookies'].get('access_token')
@@ -110,8 +112,10 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
         if not self.game.started and self.game.nb_players == 2:
-            self.GameEngine = Game(self.game, self.room_group_name)
-            self.GameEngine.start()
+            self.GameThread = GameThread(self.game, self.room_group_name, self.channel_layer)
+            self.games[self.room_group_name] = self.GameThread
+            self.GameThread.start()
+            print("test", self.GameThread)
 
     async def disconnect(self, close_code):
         if self.type == 'viewer':
@@ -125,19 +129,42 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'game_end',
+                'type': 'game.end',
                 'message': 'Opponent left the game'
             }
         )
-
-        del self.GameEngine
+        if self.game.nb_players == 0:
+            del self.GameThread
 
     async def receive(self, text_data):
         if self.type == 'viewer':
             return
 
         try :
-            self.GameEngine.set_player_direction(self.user.id, json.loads(text_data))
+            self.GameThread.set_player_direction(self.user.id, json.loads(text_data))
         except Exception as e:
             await self.close()
+
+    async def game_started(self, event):
+        self.GameThread = self.games[self.room_group_name]
+        await self.send(text_data=json.dumps({
+            'type': 'game_started',
+            'message': 'Game has started'
+        }))
+
+    async def game_update(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_update',
+            'message': event['message']
+        }))
+
+    async def game_end(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_end',
+            'message': event['message']
+        }))
+        self.game.finished = True
+        self.game.save()
+        del self.games[self.room_group_name]
+        del self.GameThread
 

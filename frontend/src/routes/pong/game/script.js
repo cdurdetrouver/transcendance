@@ -45,12 +45,32 @@ function draw() {
 }
 
 function updateGame(data) {
-	ballX = data.ball_position.x;
-	ballY = data.ball_position.y;
-	paddle1Y = data.paddle_positions.player1;
-	paddle2Y = data.paddle_positions.player2;
-	player1Score = data.player1_score;
-	player2Score = data.player2_score;
+	data = {
+		"player1": {
+			"x": 0,
+			"y": 0,
+			"score": 0,
+			"speed": 0
+		},
+		"player2": {
+			"x": 0,
+			"y": 0,
+			"score": 0,
+			"speed": 0
+		},
+		"ball": {
+			"x": 0,
+			"y": 0,
+			"speed": 0,
+			"angle": 0
+		}
+	}
+	ballX = data.ball.x;
+	ballY = data.ball.y;
+	paddle1Y = data.player1.y;
+	paddle2Y = data.player2.y;
+	player1Score = data.player1.score
+	player2Score = data.player2.score;
 
 	draw();
 }
@@ -63,7 +83,7 @@ if (!socket) {
 
 draw();
 
-socket.onmessage = function(e) {
+socket.onmessage = function (e) {
 	let data = JSON.parse(e.data);
 	console.log(data);
 	if (data.type === 'game_update')
