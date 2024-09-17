@@ -19,4 +19,6 @@ from user import views
 
 urlpatterns = [
     path('', views.user_detail),
+	path('leaderboard', views.get_leaderboard),
+	path('update', views.put_score)
 ]

@@ -16,6 +16,8 @@ class User(AbstractUser):
 	groups = models.ManyToManyField(Group, related_name='custom_user_set')
 	user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set')
 
+	best_score =  models.IntegerField(default=0)
+
 	def save(self, *args, **kwargs):
 		if not self.pk and self.user_type == 'email':
 			self.password = make_password(self.password)

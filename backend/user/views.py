@@ -177,3 +177,51 @@ def logout(request):
 	response = JsonResponse({'message': 'Logged out successfully'})
 	response.delete_cookie('refresh_token')
 	return response
+
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='Logged out successfully'),
+			}
+		)
+	},
+	operation_description="Return leaderboard"
+)
+@ensure_csrf_cookie
+@api_view(['GET'])
+def get_leaderboard(request):
+	users = User.objects.all().order_by(User.best_score)
+	serialized_users = UserSerializer(users)
+	response = JsonResponse({"leaderboard": serialized_users.data}, status=status.HTTP_200_OK)
+	return response
+
+
+@swagger_auto_schema(
+	method='put',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='Logged out successfully'),
+			}
+		)
+	},
+	operation_description="Return leaderboard"
+)
+@ensure_csrf_cookie
+@api_view(['PUT'])
+def put_score(request):
+	user = request.user
+	best_score  = request.data.get('best_score')
+	if best_score > user.best_score:
+		user.best_score = best_score
+		user.save()
+		response = JsonResponse({"message": "User updated"}, status=status.HTTP_200_OK)
+		return response
+	else:
+		response = JsonResponse({"message": "no update"}, status=status.HTTP_200_OK)
