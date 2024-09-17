@@ -1,139 +1,167 @@
-export var leftPaddle;
-export var rightPaddle;
-export var BallVar;
-export var isPlaying = false;
+import config from '../../env/config.js';
+import { get_user } from '../.././components/user/script.js';
 
-console.log("Hello from script.js!");
+const svgcheck = `
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+    <defs>
+        <mask id="ipSCheckOne0">
+            <g fill="none" stroke-linejoin="round" stroke-width="4">
+                <path fill="#fff" stroke="#fff"
+                    d="M24 44a19.94 19.94 0 0 0 14.142-5.858A19.94 19.94 0 0 0 44 24a19.94 19.94 0 0 0-5.858-14.142A19.94 19.94 0 0 0 24 4A19.94 19.94 0 0 0 9.858 9.858A19.94 19.94 0 0 0 4 24a19.94 19.94 0 0 0 5.858 14.142A19.94 19.94 0 0 0 24 44Z" />
+                <path stroke="#000" stroke-linecap="round" d="m16 24l6 6l12-12" />
+            </g>
+        </mask>
+    </defs>
+    <path fill="#12d316" d="M0 0h48v48H0z" mask="url(#ipSCheckOne0)" />
+</svg>
+`;
 
-export function startGame() {
-  myGameArea.start();
-  leftPaddle = new Paddle(30, 105, "w", "s");
-  rightPaddle = new Paddle(440, 105, "ArrowUp", "ArrowDown");
-  BallVar = new Ball();
-  window.addEventListener('keydown', function (e) {
-    if (e.code === "Space" && !isPlaying) {
-      isPlaying = true;
-      myGameArea.startGameLoop();
+const svgcross = `
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 15 15">
+  <path fill="#ce0d0d" d="M3.64 2.27L7.5 6.13l3.84-3.84A.92.92 0 0 1 12 2a1 1 0 0 1 1 1a.9.9 0 0 1-.27.66L8.84 7.5l3.89 3.89A.9.9 0 0 1 13 12a1 1 0 0 1-1 1a.92.92 0 0 1-.69-.27L7.5 8.87l-3.85 3.85A.92.92 0 0 1 3 13a1 1 0 0 1-1-1a.9.9 0 0 1 .27-.66L6.16 7.5L2.27 3.61A.9.9 0 0 1 2 3a1 1 0 0 1 1-1c.24.003.47.1.64.27" />
+</svg>
+`;
+
+let searchButtonTimeoutId = null;
+
+class PongSocket {
+  constructor() {
+    this.socket = null;
+  }
+
+  onopen() {
+    console.log("Connected to the pong websocket");
+    this.socket.send(JSON.stringify({ message: "Hello, server!" }));
+  }
+
+  onmessage(event) {
+    let data = JSON.parse(event.data);
+    console.log(data);
+    if (data.type == "error") {
+      get_user().then((response) => {
+        if (response == null)
+          window.location.href = `/login`;
+        this.open();
+      });
     }
-  });
-}
-
-export var myGameArea = {
-  canvas: document.getElementById("gameCanvas"),
-  start: function () {
-    window.addEventListener('keydown', function (e) {
-      myGameArea.keys = (myGameArea.keys || []);
-      myGameArea.keys[e.key] = true;
-    });
-    window.addEventListener('keyup', function (e) {
-      myGameArea.keys[e.key] = false;
-    });
-    this.canvas.width = 480;
-    this.canvas.height = 270;
-    this.context = this.canvas.getContext("2d");
-  },
-  startGameLoop: function () {
-    this.interval = setInterval(updateGameArea, 20);
-  },
-  clear: function () {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  }
-}
-
-export function Paddle(x, y, upKey, downKey) {
-  this.width = 10;
-  this.height = 60;
-  this.color = "black";
-  this.speedY = 0;
-  this.x = x;
-  this.y = y;
-  this.upKey = upKey;
-  this.downKey = downKey;
-
-  this.update = function () {
-    const ctx = myGameArea.context; // Define ctx within the method
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-  }
-
-  this.newPos = function () {
-    this.y += this.speedY;
-    if (this.y < 0) this.y = 0;
-    if (this.y + this.height > myGameArea.canvas.height) this.y = myGameArea.canvas.height - this.height;
-  }
-
-  this.move = function () {
-    this.speedY = 0;
-    if (myGameArea.keys && myGameArea.keys[this.upKey]) { this.speedY = -4; }
-    if (myGameArea.keys && myGameArea.keys[this.downKey]) { this.speedY = 4; }
-  }
-}
-
-export function ballImpact(ball, paddles) {
-  // Impact with top and bottom walls
-  const nextX = ball.x + ball.vx;
-  const nextY = ball.y + ball.vy;
-  if (nextY > myGameArea.canvas.height - ball.radius || nextY < ball.radius) {
-    ball.vy = -ball.vy;
-  }
-
-  // Impact with paddles front
-  paddles.forEach(function (paddle) {
-    if (nextX < paddle.x + paddle.width + ball.radius &&
-      nextX > paddle.x - ball.radius &&
-      nextY > paddle.y &&
-      nextY < paddle.y + paddle.height) {
-      ball.vx = -ball.vx;
+    if (data.type === 'match_found') {
+      toggleSvgStatus(true, true);
+      let opponent = data.opponent;
+      setPlayer(opponent, true);
+      let WaitingTextDiv = document.querySelector('.waiting__message');
+      let WaitingText = WaitingTextDiv.querySelector('p');
+      WaitingText.innerHTML = "Match found!";
+      WaitingTextDiv.classList.remove('show');
+      clearTimeout(searchButtonTimeoutId);
+      SearchButton.style.opacity = "0.2";
+      SearchButton.style.cursor = "not-allowed";
+      setTimeout(() => {
+      window.location.href = '/pong/game?game_id=' + data.game_room;
+      }, 2000);
     }
-    // Impact with paddles corner
-    var distX = Math.abs(nextX - paddle.x - paddle.width / 2);
-    var distY = Math.abs(nextY - paddle.y - paddle.height / 2);
-    var dx = distX - paddle.width / 2;
-    var dy = distY - paddle.height / 2;
-    if (dx * dx + dy * dy <= (ball.radius * ball.radius)) {
-      ball.vx = -ball.vx;
+  }
+
+  onclose() {
+    console.log("Disconnected from the pong websocket");
+  }
+
+  open() {
+    if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
+      this.socket = new WebSocket(config.websocketurl + "/ws/pong/matchmaking/");
+      this.socket.onopen = this.onopen.bind(this);
+      this.socket.onmessage = this.onmessage.bind(this);
+      this.socket.onclose = this.onclose.bind(this);
     }
-  });
+  }
 
-  // Impact with left and right walls
-  if (nextX > myGameArea.canvas.width - ball.radius || nextX < ball.radius) {
-    ball.vx = -ball.vx;
+  close() {
+    if (this.socket) {
+      this.socket.close();
+      this.socket = null;
+    }
   }
 }
 
-export function Ball() {
-  this.x = 100;
-  this.y = 100;
-  this.vx = 5;
-  this.vy = 5;
-  this.radius = 15;
-  this.color = "blue";
-  this.update = function () {
-    const ctx = myGameArea.context; // Define ctx within the method
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-    ctx.closePath();
-    ctx.fillStyle = this.color;
-    ctx.fill();
+function setSVGContent(element, svgContent) {
+  element.innerHTML = svgContent;
+}
+
+function toggleSvgStatus(opponent = false, status = false) {
+  if (opponent == true) {
+    let div = document.getElementById('opponent');
+    let userNameDiv = div.querySelector('.user__status');
+    setSVGContent(userNameDiv, status ? svgcheck : svgcross);
+  }
+  else {
+    let div = document.getElementById('player');
+    let userNameDiv = div.querySelector('.user__status');
+    setSVGContent(userNameDiv, status ? svgcheck : svgcross);
   }
 }
 
-export function updateGameArea() {
-  myGameArea.clear();
-
-  // Move and update paddles
-  leftPaddle.move();
-  rightPaddle.move();
-
-  leftPaddle.newPos();
-  rightPaddle.newPos();
-  BallVar.x += BallVar.vx;
-  BallVar.y += BallVar.vy;
-  ballImpact(BallVar, [leftPaddle, rightPaddle]);
-
-  leftPaddle.update();
-  rightPaddle.update();
-  BallVar.update();
+function setPlayer(user, opponent = false) {
+  if (opponent == true) {
+    let div = document.getElementById('opponent');
+    let userNameDiv = div.querySelector('.user__name');
+    let pElement = userNameDiv.querySelector('p');
+    let imgElement = div.querySelector('img');
+    pElement.innerHTML = user.username;
+    imgElement.src = "https://cdn.discordapp.com/avatars/734497463171416154/43efebb9355ab2f651a97cd5d368c1b1?size=1024";
+  }
+  else {
+    let div = document.getElementById('player');
+    let userNameDiv = div.querySelector('.user__name');
+    let pElement = userNameDiv.querySelector('p');
+    let imgElement = div.querySelector('img');
+    pElement.innerHTML = user.username;
+    imgElement.src = "https://cdn.discordapp.com/avatars/734497463171416154/43efebb9355ab2f651a97cd5d368c1b1?size=1024";
+  }
 }
 
-startGame();
+const user = await get_user();
+if (!user)
+  window.location.href = '/login';
+
+setPlayer(user);
+toggleSvgStatus(false, false);
+toggleSvgStatus(true, false);
+
+let SearchButton = document.getElementById('search');
+let SearchStatus = false;
+
+let socket = new PongSocket();
+
+SearchButton.addEventListener('click', async function handleClick() {
+
+  let WaitingTextDiv = document.querySelector('.waiting__message');
+  let WaitingText = WaitingTextDiv.querySelector('p');
+  if (SearchStatus == false) {
+    SearchButton.removeEventListener('click', handleClick);
+    searchButtonTimeoutId = setTimeout(() => {
+      SearchButton.style.opacity = "1";
+      SearchButton.style.cursor = "pointer";
+      SearchButton.addEventListener('click', handleClick);
+    }, 15000);
+
+    SearchStatus = true;
+    SearchButton.innerHTML = "Cancel";
+    SearchButton.style.opacity = "0.2";
+    SearchButton.style.cursor = "not-allowed";
+    SearchButton.style.backgroundColor = "red";
+    WaitingText.innerHTML = "Waiting for another player...";
+    WaitingTextDiv.classList.add('show');
+    toggleSvgStatus(false, true);
+
+    socket.open();
+  }
+  else {
+    SearchStatus = false;
+    SearchButton.innerHTML = "Search";
+    SearchButton.style.backgroundColor = "green";
+    WaitingText.innerHTML = "Ready to play ?";
+    WaitingTextDiv.classList.remove('show');
+    toggleSvgStatus(false, false);
+
+    socket.close();
+  }
+});

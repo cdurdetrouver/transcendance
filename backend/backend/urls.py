@@ -37,6 +37,7 @@ schema_view = get_schema_view(
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('user/', include('user.urls')),
+	path('pong/', include('pong.urls')),
 	path('login/', login),
 	path('logout/', logout),
 	path('register/', register),
