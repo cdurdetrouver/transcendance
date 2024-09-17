@@ -12,10 +12,13 @@ let paddle1Y = (canvas.height - paddleHeight) / 2;
 let paddle2Y = (canvas.height - paddleHeight) / 2;
 let ballX = canvas.width / 2;
 let ballY = canvas.height / 2;
+let moveup = false;
+let movedown = false;
 let player1Score = 0;
 let player2Score = 0;
 
 let viewer = false;
+let game_started = false;
 
 const user = await get_user();
 if (!user)
@@ -45,32 +48,17 @@ function draw() {
 }
 
 function updateGame(data) {
-	data = {
-		"player1": {
-			"x": 0,
-			"y": 0,
-			"score": 0,
-			"speed": 0
-		},
-		"player2": {
-			"x": 0,
-			"y": 0,
-			"score": 0,
-			"speed": 0
-		},
-		"ball": {
-			"x": 0,
-			"y": 0,
-			"speed": 0,
-			"angle": 0
-		}
-	}
 	ballX = data.ball.x;
 	ballY = data.ball.y;
 	paddle1Y = data.player1.y;
 	paddle2Y = data.player2.y;
 	player1Score = data.player1.score
 	player2Score = data.player2.score;
+
+	if (moveup)
+		socket.send(JSON.stringify({ message: 'move', direction: 'up' }));
+	else if (movedown)
+		socket.send(JSON.stringify({ message: 'move', direction: 'down' }));
 
 	draw();
 }
@@ -87,9 +75,39 @@ socket.onmessage = function (e) {
 	let data = JSON.parse(e.data);
 	console.log(data);
 	if (data.type === 'game_update')
-		updateGame(data);
+		updateGame(data.message);
+	else if (data.type === 'game_started')
+		game_started = true;
 	else if (data.type === 'viewer')
 		viewer = true;
 	else if (data.type === 'error')
 		window.location.href = '/pong';
 };
+
+document.addEventListener('keydown', function (e) {
+	if (viewer || !game_started)
+		return;
+
+	if (e.key === 'ArrowUp') {
+		moveup = true;
+		console.log('up');
+	}
+	else if (e.key === 'ArrowDown') {
+		movedown = true;
+		console.log('down');
+	}
+});
+
+document.addEventListener('keyup', function (e) {
+	if (viewer || !game_started)
+		return;
+
+	if (e.key === 'ArrowUp') {
+		moveup = false;
+		console.log('up');
+	}
+	else if (e.key === 'ArrowDown') {
+		movedown = false;
+		console.log('down');
+	}
+});
