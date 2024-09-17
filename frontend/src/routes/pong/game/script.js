@@ -1,8 +1,19 @@
 import config from "../../../env/config.js";
 import { get_user } from '../../../../components/user/script.js';
 
-let canvas = document.getElementById("pongCanvas");
-let ctx = canvas.getContext("2d");
+const canvas = document.getElementById("pongCanvas");
+const ctx = canvas.getContext("2d");
+
+const paddleWidth = 10;
+const paddleHeight = 75;
+const ballRadius = 8;
+
+let paddle1Y = (canvas.height - paddleHeight) / 2;
+let paddle2Y = (canvas.height - paddleHeight) / 2;
+let ballX = canvas.width / 2;
+let ballY = canvas.height / 2;
+let player1Score = 0;
+let player2Score = 0;
 
 let viewer = false;
 
@@ -15,21 +26,33 @@ const game_id = urlParams.get('game_id');
 if (!game_id)
 	window.location.href = '/pong';
 
-function interpolate(currentPos, targetPos, speed) {
-	return currentPos + (targetPos - currentPos) * speed;
-}
-
-function drawBall(x, y) {
+function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	ctx.fillStyle = 'black';
+	ctx.fillRect(5, paddle1Y, paddleWidth, paddleHeight);
+	ctx.fillRect(canvas.width - paddleWidth - 5, paddle2Y, paddleWidth, paddleHeight);
+
 	ctx.beginPath();
-	ctx.arc(x, y, 10, 0, Math.PI * 2);
+	ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+	ctx.fillStyle = 'red';
 	ctx.fill();
+	ctx.closePath();
+
+	ctx.font = '20px Arial';
+	ctx.fillText(`Player 1: ${player1Score}`, 20, 20);
+	ctx.fillText(`Player 2: ${player2Score}`, canvas.width - 120, 20);
 }
 
 function updateGame(data) {
-	ball.x = interpolate(ball.x, data.ball.x, 0.1);
-	ball.y = interpolate(ball.y, data.ball.y, 0.1);
-	drawBall(ball.x, ball.y);
+	ballX = data.ball_position.x;
+	ballY = data.ball_position.y;
+	paddle1Y = data.paddle_positions.player1;
+	paddle2Y = data.paddle_positions.player2;
+	player1Score = data.player1_score;
+	player2Score = data.player2_score;
+
+	draw();
 }
 
 const socket = new WebSocket(config.websocketurl + '/ws/pong/' + game_id + '/');
@@ -38,10 +61,12 @@ if (!socket) {
 	window.location.href = '/pong';
 }
 
+draw();
+
 socket.onmessage = function(e) {
 	let data = JSON.parse(e.data);
 	console.log(data);
-	if (data.type === 'game_state')
+	if (data.type === 'game_update')
 		updateGame(data);
 	else if (data.type === 'viewer')
 		viewer = true;

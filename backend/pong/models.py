@@ -5,6 +5,9 @@ class Game(models.Model):
 
 	room_name = models.CharField(max_length=255)
 	finished = models.BooleanField(default=False)
+	started = models.BooleanField(default=False)
+	nb_players = models.IntegerField(default=0)
+	nb_viewers = models.IntegerField(default=0)
 	player1_id = models.IntegerField()
 	player2_id = models.IntegerField()
 	winner_id = models.IntegerField(null=True)

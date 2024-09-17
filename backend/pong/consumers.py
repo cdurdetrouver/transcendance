@@ -1,4 +1,6 @@
 import json
+import re
+import asyncio
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -6,6 +8,7 @@ from user.utils import get_user_by_token
 from pong.models import Game
 from asgiref.sync import sync_to_async
 from user.serializers import UserSerializer
+from .game import Game
 
 class MatchmakingConsumer(AsyncWebsocketConsumer):
 
@@ -31,6 +34,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             player2 = self.waiting_players.pop(0)
 
             game_room_name = f"game_room_{player1.channel_name}_{player2.channel_name}"
+            game_room_name = re.sub(r'[^a-zA-Z0-9._-]', '', game_room_name)[:50]
+            print(game_room_name)
 
             game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1_id=player1.user.id, player2_id=player2.user.id)
             await sync_to_async(game.save)()
@@ -52,6 +57,14 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
 class PongConsumer(AsyncWebsocketConsumer):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = None
+        self.room_group_name = None
+        self.game = None
+        self.type = None
+        self.GameEngine = None
+
     async def connect(self):
         access_token = self.scope['cookies'].get('access_token')
         success, result = await sync_to_async(get_user_by_token)(access_token)
@@ -65,47 +78,66 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
 
         self.user = result
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = f"pong_{self.room_name}"
-        self.game = await sync_to_async(Game.objects.get)(room_name=self.room_name)
+        self.room_group_name = self.scope['url_route']['kwargs']['room_name']
+        self.game = await sync_to_async(Game.objects.get)(room_name=self.room_group_name)
 
-        if self.user.id != self.game.player1_id and self.user.id != self.game.player2_id:
+        if self.game.finished:
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'Game has already finished'
+            }))
+            await self.close()
+            return
+
+        if (self.user.id != self.game.player1_id and self.user.id != self.game.player2_id):
+            self.game.nb_viewers += 1
+            await sync_to_async(self.game.save)()
             await self.send(text_data=json.dumps({
                 'type': 'viewer',
-                'message': 'You are not a player in this game'
+                'message': 'You are not a player in this game',
+                'game_id': self.game.id
             }))
             self.type = 'viewer'
+            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         else:
             self.type = 'player'
+            self.game.nb_players += 1
+            await sync_to_async(self.game.save)()
+            await self.send(text_data=json.dumps({
+                'type': 'waiting',
+                'message': 'Waiting for opponent to join',
+            }))
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
+        if not self.game.started and self.game.nb_players == 2:
+            self.GameEngine = Game(self.game, self.room_group_name)
+            self.GameEngine.start()
+
     async def disconnect(self, close_code):
+        if self.type == 'viewer':
+            self.game.nb_viewers -= 1
+            await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+            return
+
+        self.game.nb_players -= 1
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
-        self.channel_layer.group_send(
+
+        await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'disconnect',
-                'user': self.user.id
+                'type': 'game_end',
+                'message': 'Opponent left the game'
             }
         )
-        self.game.delete()
+
+        del self.GameEngine
 
     async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        game_data = text_data_json['game_data']
+        if self.type == 'viewer':
+            return
 
-        if self.type == 'player':
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'game_update',
-                    'game_data': game_data
-                }
-            )
+        try :
+            self.GameEngine.set_player_direction(self.user.id, json.loads(text_data))
+        except Exception as e:
+            await self.close()
 
-    async def game_update(self, event):
-        game_data = event['game_data']
-        await self.send(text_data=json.dumps({
-            'type': 'game_update',
-            'game_data': game_data
-        }))
