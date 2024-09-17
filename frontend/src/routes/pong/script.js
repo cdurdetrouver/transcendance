@@ -67,7 +67,7 @@ class PongSocket {
 
   open() {
     if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
-      this.socket = new WebSocket(config.websocketurl + "/ws/pong/");
+      this.socket = new WebSocket(config.websocketurl + "/ws/pong/matchmaking/");
       this.socket.onopen = this.onopen.bind(this);
       this.socket.onmessage = this.onmessage.bind(this);
       this.socket.onclose = this.onclose.bind(this);
