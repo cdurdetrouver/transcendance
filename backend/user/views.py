@@ -50,7 +50,6 @@ def user_detail(request):
 	},
 	operation_description="Authenticate a user and return an access token and user data",
 )
-@ensure_csrf_cookie
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login(request):
@@ -59,9 +58,9 @@ def login(request):
 	if serializer.is_valid():
 		email = serializer.validated_data['email']
 		password = serializer.validated_data['password']
-		try:
-			user = User.objects.filter(email=email).first()
-		except User.DoesNotExist:
+
+		user = User.objects.filter(email=email).first()
+		if user is None:
 			return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
 		if check_password(password, user.password):
@@ -77,9 +76,10 @@ def login(request):
 			response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 			return response
 		else:
-			return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
 	else:
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
+		return Response({"error": error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
 @swagger_auto_schema(
 	method='post',
@@ -95,7 +95,6 @@ def login(request):
 	},
 	operation_description="Register a user"
 )
-@ensure_csrf_cookie
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -176,7 +175,6 @@ def refresh_token(request):
 	},
 	operation_description="Log out a user"
 )
-@ensure_csrf_cookie
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def logout(request):
