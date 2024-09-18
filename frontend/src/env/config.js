@@ -1,6 +1,6 @@
 const config = {
-	backendUrl: 'http://localhost:8000',
-	websocketurl: 'ws://localhost:8000'
+	backendUrl: 'http://made-f0ar7s1:8000',
+	websocketurl: 'ws://made-f0ar7s1:8000'
 };
 
 export default config;

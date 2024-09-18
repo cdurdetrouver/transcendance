@@ -1,4 +1,5 @@
 import { get_user, login, logout } from '../../components/user/script.js';
+import { customalert } from '../../components/alert/script.js';
 
 const user = await get_user();
 
@@ -13,8 +14,7 @@ if (user)
 else
 	logoutform.style.display = 'none';
 
-async function login_form(event)
-{
+async function login_form(event) {
 	event.preventDefault();
 	const email = document.querySelector('input[name="email"]').value;
 	const password = document.querySelector('input[name="pswd"]').value;
@@ -23,12 +23,13 @@ async function login_form(event)
 
 	if (response.status === 200)
 		window.location.href = '/';
-	else
-		alert('Login failed');
+	else {
+		const data = await response.json();
+		customalert('Login failed', data.error, true);
+	}
 }
 
-async function logout_form(event)
-{
+async function logout_form(event) {
 	event.preventDefault();
 	await logout();
 
