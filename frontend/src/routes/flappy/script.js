@@ -113,6 +113,12 @@ function gameLoop() {
         ctx.fillRect(obstacle.x, 0, obstacle.width, obstacle.holeY);
         ctx.fillRect(obstacle.x, obstacle.holeY + HOLE_HEIGHT, obstacle.width, canvas.height - (obstacle.holeY + HOLE_HEIGHT));
 
+        ctx.font = "40px flappy"; 
+        ctx.textAlign = "center";                
+
+        ctx.fillStyle = "black";
+        ctx.fillText(score, canvas.width / 2, 50);
+
         if (collisionDetection(player, obstacle)) {
             stopGame();
 			update_score(score).then(response => {
@@ -161,21 +167,16 @@ document.addEventListener('keydown', async (e) => {
     }
 });
 
-// canvas.addEventListener('click', () => {
-//     if (gameRunning) {
-//         player.jump();
-//     } else if (isConnected == true){
-//         startGame();
-//     }
-// });
 
 export function updateLeaderboardUI(leaderboard) {
-	console.log("leaderboard", leaderboard);
     const leaderboardElement = document.getElementById('leaderboardGrid');  
     leaderboardElement.innerHTML = ''; 
 
     if (!leaderboard || leaderboard.length === 0) {
-        leaderboardElement.innerHTML = '<p>No leaderboard data available.</p>';
+		const noPlayerDiv = document.createElement('div');
+        noPlayerDiv.classList.add('noPlayer');
+		noPlayerDiv.textContent = "Login to see the leaderboard and participate ";
+		leaderboardElement.appendChild(noPlayerDiv);
         return;
     }
 
@@ -197,3 +198,5 @@ export function updateLeaderboardUI(leaderboard) {
     });
 }
 
+const leaderboard = await get_leaderboard(); 
+updateLeaderboardUI(leaderboard);  

@@ -2,15 +2,28 @@
     display: flex;
     justify-content: center;    /* Horizontally centers the canvas */
     align-items: center;        /* Vertically centers the canvas */
-    height: 100vh;              /* Full viewport height */
+    height: 90vh;              /* Full viewport height */
     padding-right: 20px;        /* Space for the leaderboard on the right */
 }
 
-/* Styling for the canvas */
+
+.canvasText {
+    display: grid;
+    grid-template-rows: auto 1fr; /* Grid with two rows: one for username, one for canvas */
+    justify-items: center;        /* Center the content horizontally */
+    margin-right: 50px;   
+}
+
 canvas {
     background-color: #f0f0f0;
-
     margin-right: 50px;         /* Spacing between canvas and leaderboard */
+}
+
+#user_username {
+    justify-self: start;         /* Align username to the left */
+
+    font-size: 24px;
+    margin-bottom: 10px;  
 }
 
 /* Leaderboard container */
@@ -18,19 +31,26 @@ canvas {
     width: 250px;               /* Fixed width for the leaderboard */
 	height: 600px;
 	border: solid;
+	-webkit-box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6); 
+	box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6);
 }
-
 
 /* Grid layout for the leaderboard items */
 .grid-leaderboard {
     display: grid;
-    grid-template-columns: 1fr 1fr;    /* Two columns: one for players, one for scores */
-    gap: 10px;                         /* Spacing between grid items */
+    grid-template-columns: 1fr 2fr;    /* Two columns: one for players, one for scores */
+    gap: 10px; 		                    /* Spacing between grid items */
 }
 
 .grid-leaderboard .player {
 	text-overflow: ellipsis;
     text-align: right;                  /* Align player names to the left */
+}
+
+.grid-leaderboard .noPlayer {
+    grid-column: 1 / -1;
+    font-size: 20px;
+    text-align: center;                 /* Center the text */
 }
 
 .grid-leaderboard .score {
