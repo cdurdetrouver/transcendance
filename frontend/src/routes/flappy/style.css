@@ -1,11 +1,44 @@
-body {
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	background: #87CEEB;
+.container {
+    display: flex;
+    justify-content: center;    /* Horizontally centers the canvas */
+    align-items: center;        /* Vertically centers the canvas */
+    height: 100vh;              /* Full viewport height */
+    padding-right: 20px;        /* Space for the leaderboard on the right */
 }
+
+/* Styling for the canvas */
 canvas {
-	border: 1px solid black;
-	display: block;
-	margin: 0 auto;
+    background-color: #f0f0f0;
+
+    margin-right: 50px;         /* Spacing between canvas and leaderboard */
+}
+
+/* Leaderboard container */
+.leaderboard {
+    width: 250px;               /* Fixed width for the leaderboard */
+	height: 600px;
+	border: solid;
+}
+
+
+/* Grid layout for the leaderboard items */
+.grid-leaderboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;    /* Two columns: one for players, one for scores */
+    gap: 10px;                         /* Spacing between grid items */
+}
+
+.grid-leaderboard .player {
+	text-overflow: ellipsis;
+    text-align: right;                  /* Align player names to the left */
+}
+
+.grid-leaderboard .score {
+    text-align: center;                 /* Align scores to the right */
+}
+
+/* Optional: Style for the leaderboard heading */
+.leaderboard h2 {
+    text-align: center;
+    margin-bottom: 20px;
 }

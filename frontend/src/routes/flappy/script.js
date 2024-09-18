@@ -1,4 +1,4 @@
-import { get_user, get_score, update_score } from '../../components/user/script.js';
+import { get_user, get_score, update_score, get_leaderboard} from '../../components/user/script.js';
 
 
 let userElement = document.querySelector('#user_username');
@@ -141,18 +141,19 @@ function collisionDetection(rect1, obstacle) {
     );
 }
 
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', async (e) => {
     if (e.code === 'Space') {
         if (gameRunning) {
             player.jump();
         } else if (!gameRunning) {
-			get_score().then(bestScore => {
-				if (bestScore !== null) {
-					console.log('Best Score:', bestScore);
-				} else {
-					console.log('Unable to fetch the best score.');
-				}
-			});
+			const leaderboard = await get_leaderboard(); 
+			updateLeaderboardUI(leaderboard);  
+			const bestScore = await get_score();
+			if (bestScore !== null) {
+				console.log('Best Score:', bestScore);
+			} else {
+				console.log('Unable to fetch the best score.');
+			}
             startGame();
         }
 		else
@@ -167,3 +168,32 @@ document.addEventListener('keydown', (e) => {
 //         startGame();
 //     }
 // });
+
+export function updateLeaderboardUI(leaderboard) {
+	console.log("leaderboard", leaderboard);
+    const leaderboardElement = document.getElementById('leaderboardGrid');  
+    leaderboardElement.innerHTML = ''; 
+
+    if (!leaderboard || leaderboard.length === 0) {
+        leaderboardElement.innerHTML = '<p>No leaderboard data available.</p>';
+        return;
+    }
+
+    leaderboard.forEach(user => {
+
+
+		const playerDiv = document.createElement('div');
+        playerDiv.classList.add('player');
+        playerDiv.textContent = user.username;
+        
+        // Create player score div
+        const scoreDiv = document.createElement('div');
+        scoreDiv.classList.add('score');
+        scoreDiv.textContent = user.best_score;
+
+        // Append both player and score to the leaderboard grid
+        leaderboardElement.appendChild(playerDiv);
+        leaderboardElement.appendChild(scoreDiv);
+    });
+}
+

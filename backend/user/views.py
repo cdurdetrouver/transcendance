@@ -189,7 +189,7 @@ def logout(request):
 		200: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-				'message': openapi.Schema(type=openapi.TYPE_STRING, description='Logged out successfully'),
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='Leaerboard reached'),
 			}
 		)
 	},
@@ -197,63 +197,10 @@ def logout(request):
 )
 @api_view(['GET'])
 def get_leaderboard(request):
-	users = User.objects.all().order_by(User.best_score)
-	serialized_users = UserSerializer(users)
+	users = User.objects.all().order_by('best_score')[::-1]
+	serialized_users = UserSerializer(users, many=True)
 	response = JsonResponse({"leaderboard": serialized_users.data}, status=status.HTTP_200_OK)
 	return response
-
-
-@swagger_auto_schema(
-	method='put',
-	request_body=openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'best_score': openapi.Schema(type=openapi.TYPE_INTEGER),
-			}
-		),
-	responses={
-		200: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'message': openapi.Schema(type=openapi.TYPE_STRING, description='update'),
-			}
-		)
-	},
-	operation_description="Authenticate a user and return an access token and user data",
-)
-@api_view(['PUT'])
-def put_score(request):
-	user = request.user
-	best_score  = request.data.get('best_score')
-	if best_score > user.best_score:
-		user.best_score = best_score
-		user.save()
-		response = JsonResponse({"message": "User updated"}, status=status.HTTP_200_OK)
-	else:
-		response = JsonResponse({"message": "no update"}, status=status.HTTP_200_OK)
-	return response
-
-@swagger_auto_schema(
-	method='get',
-	request_body=None,
-	responses={
-		200: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'message': openapi.Schema(type=openapi.TYPE_STRING, description='Logged out successfully'),
-			}
-		)
-	},
-	operation_description="Return leaderboard"
-)
-@ensure_csrf_cookie
-@api_view(['GET'])
-def get_leaderboard(request):
-	users = User.objects.all().order_by(User.best_score)
-	serialized_users = UserSerializer(users)
-	response = JsonResponse({"leaderboard": serialized_users.data}, status=status.HTTP_200_OK)
-	return response
-
 
 @swagger_auto_schema(
 	method='put',

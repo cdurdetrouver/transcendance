@@ -96,13 +96,32 @@ async function get_score()
 {
 	deleteCookie("user");
 	const user = await get_user();
-	console.log(user);
 	if (user)
 	{
 		const bestScore = user.best_score;
 		return bestScore;
 	}
 	return null;
+}
+
+async function get_leaderboard()
+{
+	const response = await fetch(config.backendUrl + "/user/leaderboard/",
+	{
+		method: "GET",
+		headers:
+		{
+			"Content-Type": "application/json",
+		},
+		credentials: "include",
+	});
+	if (response.status === 200)
+	{
+		const data = await response.json();
+		return data.leaderboard;
+	}
+	else
+		return null;
 }
 
 
@@ -150,4 +169,4 @@ async function update_score(bestScore) {
 
 
 
-export { login, register, get_user, refresh_token, logout, get_score, update_score};
+export { login, register, get_user, refresh_token, logout, get_score, update_score, get_leaderboard};
