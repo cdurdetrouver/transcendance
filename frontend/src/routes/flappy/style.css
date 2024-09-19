@@ -1,3 +1,8 @@
+@font-face {
+	font-family: flappyFont;
+	src: url(../../static/assets/fonts/flappy.TTF);
+	}
+
 .container {
     display: flex;
     justify-content: center;    /* Horizontally centers the canvas */
@@ -61,4 +66,8 @@ canvas {
 .leaderboard h2 {
     text-align: center;
     margin-bottom: 20px;
+	font-family: flappyFont;
+	letter-spacing: 1px;
 }
+
+

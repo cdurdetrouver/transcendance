@@ -113,10 +113,14 @@ function gameLoop() {
         ctx.fillRect(obstacle.x, 0, obstacle.width, obstacle.holeY);
         ctx.fillRect(obstacle.x, obstacle.holeY + HOLE_HEIGHT, obstacle.width, canvas.height - (obstacle.holeY + HOLE_HEIGHT));
 
-        ctx.font = "40px flappy"; 
+        ctx.font = "40px flappyFont";
         ctx.textAlign = "center";                
 
-        ctx.fillStyle = "black";
+        ctx.lineWidth = 7;
+        ctx.strokeStyle = "black";
+        ctx.strokeText(score, canvas.width / 2, 50);
+
+        ctx.fillStyle = "white";
         ctx.fillText(score, canvas.width / 2, 50);
 
         if (collisionDetection(player, obstacle)) {
