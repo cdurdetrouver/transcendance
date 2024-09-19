@@ -1,25 +1,26 @@
 import threading
 import asyncio
 import time
+import random
 from asgiref.sync import async_to_sync
 
 BALL_RADIUS = 8
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 400
 PADDLE_WIDTH = 10
-PADDLE_HEIGHT = 80
+PADDLE_HEIGHT = 75
 
 class Ball:
 	def __init__(self, x, y, speed):
 		self.default_position = [x, y]
-		self.default_velocity = [speed, speed]
+		self.default_velocity = [speed * random.choice([1, -1]), speed * random.choice([1, -1])]
 
-		self.position = self.default_position
-		self.velocity = self.default_velocity
+		self.position = [x, y]
+		self.velocity = [speed, speed]
 
-	def update(self, delta_time):
-		self.position[0] += self.velocity[0] * delta_time
-		self.position[1] += self.velocity[1] * delta_time
+	def update(self):
+		self.position[0] += self.velocity[0]
+		self.position[1] += self.velocity[1]
 
 	def check_collision(self, paddle):
 		ball_future_pos = [self.position[0] + self.velocity[0], self.position[1] + self.velocity[1]]
@@ -31,23 +32,32 @@ class Ball:
 		return False
 
 	def reset(self):
-		self.position = self.default_position
-		self.velocity = self.default_velocity
+		self.position = self.default_position.copy()
+		self.velocity = self.default_velocity.copy()
+		self.velocity[0] *= random.choice([1, -1])
+		self.velocity[1] *= random.choice([1, -1])
 
 class Paddle:
 	def __init__(self, x, y, speed):
 		self.default_position = [x, y]
-		self.position = self.default_position
+		self.default_speed = speed
+
+		self.position = [x, y]
 		self.speed = speed
 
-	def move(self, delta_time, direction):
-		if direction == 'up' and self.position[1] > 0:
-			self.position[1] -= self.speed * delta_time
-		elif direction == 'down' and self.position[1] < SCREEN_HEIGHT - PADDLE_HEIGHT:
-			self.position[1] += self.speed * delta_time
+	def move(self, direction):
+		if direction == 'up':
+			self.position[1] -= self.speed
+		elif direction == 'down':
+			self.position[1] += self.speed
+		if self.position[1] < 0:
+			self.position[1] = 0
+		if self.position[1] + PADDLE_HEIGHT > SCREEN_HEIGHT:
+			self.position[1] = SCREEN_HEIGHT - PADDLE_HEIGHT
 
 	def reset(self):
-		self.position = self.default_position
+		self.position = self.default_position.copy()
+		self.speed = self.default_speed.copy()
 
 class GameThread(threading.Thread):
 	def __init__(self, game, group_name, channel_layer):
@@ -57,9 +67,9 @@ class GameThread(threading.Thread):
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
 
-		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 200)
-		self.paddle1 = Paddle(0, SCREEN_HEIGHT / 2, 150)
-		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH, SCREEN_HEIGHT / 2, 150)
+		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 4)
+		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
+		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
 
 	def __str__(self):
 		string = f"{self.group_name} - {self.game.player1_id} vs {self.game.player2_id} | score: {self.game.player1_score} - {self.game.player2_score}"
@@ -69,6 +79,7 @@ class GameThread(threading.Thread):
 
 	def serialize(self):
 		return {
+
 			"player1": {
 				"x": self.paddle1.position[0],
 				"y": self.paddle1.position[1],
@@ -105,14 +116,14 @@ class GameThread(threading.Thread):
 				self.delta_time = current_time - last_time
 				last_time = current_time
 
-				self.ball.update(self.delta_time)
+				self.ball.update()
 
 				if self.ball.position[1] - BALL_RADIUS < 0 or self.ball.position[1] + BALL_RADIUS > SCREEN_HEIGHT:
 					self.ball.velocity[1] = -self.ball.velocity[1]
 
 				if self.ball.check_collision(self.paddle1):
 					self.ball.velocity[0] = -self.ball.velocity[0]
-				
+
 				if self.ball.check_collision(self.paddle2):
 					self.ball.velocity[0] = -self.ball.velocity[0]
 
@@ -138,9 +149,9 @@ class GameThread(threading.Thread):
 
 	async def set_player_direction(self, player, data):
 		if player == "player1":
-			self.paddle1.move(self.delta_time, data["direction"])
+			self.paddle1.move(data["direction"])
 		else:
-			self.paddle2.move(self.delta_time, data["direction"])
+			self.paddle2.move(data["direction"])
 
 	def stop(self):
 		self._stop_event.set()

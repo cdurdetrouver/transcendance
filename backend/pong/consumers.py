@@ -112,6 +112,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             }))
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
+        print(not self.game.started, self.game.player1_id in self.waiting_players, self.game.player2_id in self.waiting_players)
+
         if not self.game.started and self.game.player1_id in self.waiting_players and self.game.player2_id in self.waiting_players:
             self.waiting_players.remove(self.game.player1_id)
             self.waiting_players.remove(self.game.player2_id)
