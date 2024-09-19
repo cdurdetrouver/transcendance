@@ -20,6 +20,25 @@ else
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+
+const playerImages = {
+    idle: new Image(),
+    jump1: new Image(),
+    jump2: new Image(),
+    jump3: new Image()
+};
+
+playerImages.idle.src = '../../static/assets/jpg/fly1.png' ;
+playerImages.jump1.src = '../../static/assets/jpg/fly2.png' ;
+playerImages.jump2.src = '../../static/assets/jpg/fly3.png' ;
+playerImages.jump3.src = '../../static/assets/jpg/fly4.png' ;
+
+let currentPlayerImage = playerImages.idle;  // Start with the idle image
+let animationFrame = 0;
+let isAnimating = false;
+let animationInterval;
+
+
 const GRAVITY = 0.2;
 const JUMP_STRENGTH = -5.5;
 const OBSTACLE_WIDTH = 60;
@@ -31,8 +50,8 @@ const HOLE_MAX_HEIGHT = 400;
 let player = {
     x: 100,
     y: canvas.height / 2,
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 42,
     velocityY: 0,
     jump() {
         this.velocityY = JUMP_STRENGTH;
@@ -50,10 +69,30 @@ let player = {
         }
     },
     draw() {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.drawImage(currentPlayerImage, this.x, this.y, this.width, this.height);
     }
 };
+
+function startJumpAnimation() {
+    if (isAnimating) return;
+
+    isAnimating = true;
+    animationFrame = 0;
+
+    const animationImages = [playerImages.jump1, playerImages.jump2, playerImages.jump3];
+    const animationDuration = 100;  // Time in milliseconds between each frame
+
+    animationInterval = setInterval(() => {
+        if (animationFrame < animationImages.length) {
+            currentPlayerImage = animationImages[animationFrame];  // Cycle through jump images
+            animationFrame++;
+        } else {
+            currentPlayerImage = playerImages.idle;  // Return to idle image
+            clearInterval(animationInterval);  // Stop the animation
+            isAnimating = false;
+        }
+    }, animationDuration);
+}
 
 let obstacles = [];
 let gameRunning = false;
@@ -155,6 +194,7 @@ document.addEventListener('keydown', async (e) => {
     if (e.code === 'Space') {
         if (gameRunning) {
             player.jump();
+			startJumpAnimation();
         } else if (!gameRunning) {
 			const leaderboard = await get_leaderboard(); 
 			updateLeaderboardUI(leaderboard);  
