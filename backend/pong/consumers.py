@@ -115,7 +115,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         if not self.game.started and self.game.player1_id in self.waiting_players and self.game.player2_id in self.waiting_players:
             self.waiting_players.remove(self.game.player1_id)
             self.waiting_players.remove(self.game.player2_id)
-            self.GameThread = GameThread(self.game, self.room_group_name, self.channel_layer, asyncio.get_event_loop())
+            self.GameThread = GameThread(self.game, self.room_group_name, self.channel_layer)
             self.games[self.room_group_name] = self.GameThread
             self.GameThread.start()
 
