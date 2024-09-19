@@ -1,26 +1,11 @@
-# chat/consumers.py
 import json
-import jwt
-from asgiref.sync import async_to_sync, sync_to_async
-from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.shortcuts import get_object_or_404
+from channels.db import database_sync_to_async
 from .models import Message, Room, User
 from django.conf import settings
 from rest_framework import exceptions
 from rest_framework.response import Response
-from encodings import undefined
-
-@database_sync_to_async
-def get_user(scope):
-        access_token = scope['subprotocols'][1]
-        print(scope)
-        payload = jwt.decode(
-				access_token, settings.SECRET_KEY, algorithms=['HS256'])
-        user = User.objects.filter(id=payload['user_id']).first()
-        if user is None:
-            return Response({'error': 'Invalid refresh token'}, status=status.HTTP_400_BAD_REQUEST)
-        return (user)
+from .data_handling import get_user, get_room, in_room, add_in_room, get_last_10_messages, save_message
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -36,9 +21,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     # Join room group
             await self.channel_layer.group_add(
             self.room_group_name, self.channel_name)
-            await self.send(text_data=json.dumps({"message": "bonjour"}))
-        #check if register
-        #if pour join mess
+            room = await get_room(self.room_group_name)
+            if (in_room(room, user.username) == False):
+                print("welcome in " + self.room_group_name + " to ")
+                await add_in_room(room, user)
+                await self.send(text_data=json.dumps({"message": "Welcome in chat: " + self.room_group_name}))
+            messages = await get_last_10_messages(room)
+            async for message in messages:
+                print("send history : " + message.content)
+                await self.send_message(message.content)
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -49,16 +40,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-        # current_room = get_object_or_404(Room, id='Room.id')
+        content = text_data_json["message"]
+        # username = text_data_json["username"]
+        room = await get_room(self.room_group_name)
+        await save_message(room, text_data_json)
         # Send message to room group
         await self.channel_layer.group_send(
-            self.room_group_name, {"type": "chat.message", "message": message}
+            self.room_group_name, {"type": "chat.message", "message": content}
         )
+
+    async def send_message(self, message):
+        print("send :" + message)
+        await self.send(text_data=json.dumps({"message": message}))
 
     # Receive message from room group
     async def chat_message(self, event):
         message = event["message"]
-
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"message": message}))
+        await self.send_message(message)
+
