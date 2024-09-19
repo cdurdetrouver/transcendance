@@ -22,7 +22,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add(
             self.room_group_name, self.channel_name)
             room = await get_room(self.room_group_name)
-            if (in_room(room, user.username) == False):
+            if (await in_room(room, user.username) == False):
                 print("welcome in " + self.room_group_name + " to ")
                 await add_in_room(room, user)
                 await self.send(text_data=json.dumps({"message": "Welcome in chat: " + self.room_group_name}))
