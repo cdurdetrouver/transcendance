@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from twisted.application.runner.test.test_pidfile import ifPlatformSupported
-from user.views import 
 from autobahn.wamp import request
 import json
 

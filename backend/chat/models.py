@@ -8,7 +8,7 @@ class Message(models.Model):
 		('announce', 'Announce'),
 	]
 
-	user_id = models.IntegerField()
+	username = models.CharField(max_length=128, default='none')
 	message_type = models.CharField(max_length=10, choices=TYPES, default='chat')
 	content = models.CharField(max_length=128)
 	created_at = models.DateTimeField(auto_now_add=True)
