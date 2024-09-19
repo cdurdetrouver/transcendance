@@ -26,10 +26,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 print("welcome in " + self.room_group_name + " to ")
                 await add_in_room(room, user)
                 await self.send(text_data=json.dumps({"message": "Welcome in chat: " + self.room_group_name}))
-            messages = await get_last_10_messages(room)
-            async for message in messages:
-                print("send history : " + message.content)
-                await self.send_message(message.content)
+            else:
+                messages = await get_last_10_messages(room)
+                async for message in messages:
+                    print("send history : " + message.content)
+                    await self.send_message(message.content)
 
     async def disconnect(self, close_code):
         # Leave room group
