@@ -1,73 +1,92 @@
-@font-face {
-	font-family: flappyFont;
-	src: url(../../static/assets/fonts/flappy.TTF);
-	}
 
+@font-face {
+    font-family: flappyFont;
+    src: url(../../static/assets/fonts/flappy.TTF);
+}
+
+/* Container for canvases and leaderboard */
 .container {
     display: flex;
-    justify-content: center;    /* Horizontally centers the canvas */
-    align-items: center;        /* Vertically centers the canvas */
-    height: 90vh;              /* Full viewport height */
-    padding-right: 20px;        /* Space for the leaderboard on the right */
+    justify-content: center;    /* Center canvasWrapper and leaderboard horizontally */
+    align-items: center;        /* Center canvasWrapper and leaderboard vertically */
+    height: 90vh;               /* Use 90% of viewport height */
+    padding-right: 20px;        /* Space for the leaderboard */
+    position: relative;
 }
 
-
-.canvasText {
-    display: grid;
-    grid-template-rows: auto 1fr; /* Grid with two rows: one for username, one for canvas */
-    justify-items: center;        /* Center the content horizontally */
-    margin-right: 50px;   
+/* Canvas Wrapper for background and game canvases */
+.canvasWrapper {
+    position: relative;
+    width: 800px;               /* Canvas width */
+    height: 600px;              /* Canvas height */
+    display: block;             /* Block-level element to contain canvases */
+    margin-right: 50px;         /* Space between the canvases and the leaderboard */
 }
 
-canvas {
-    background-color: #f0f0f0;
-    margin-right: 50px;         /* Spacing between canvas and leaderboard */
-}
-
-#user_username {
-    justify-self: start;         /* Align username to the left */
-
-    font-size: 24px;
-    margin-bottom: 10px;  
-}
-
-/* Leaderboard container */
-.leaderboard {
-    width: 250px;               /* Fixed width for the leaderboard */
-	height: 600px;
+/* Superposing the canvases */
+#backgroundCanvas, #gameCanvas {
+    position: absolute;         /* Stack canvases on top of each other */
+    top: 0;
+    left: 0;
+    z-index: 0;                 /* Background canvas underneath */
+    width: 100%;                /* Full width of the canvasWrapper */
+    height: 100%;               /* Full height of the canvasWrapper */
 	border: solid;
 	-webkit-box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6); 
 	box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6);
 }
 
+#gameCanvas {
+    z-index: 1;                 /* Game canvas on top */
+}
+
+/* Username positioned at the bottom-left of the canvasWrapper */
+#user_username {
+    position: absolute;          /* Absolute positioning relative to canvasWrapper */
+    top: 5%   ;                /* 10px from the bottom of the canvasWrapper */
+    left: 20%;                  /* Align to the left of the canvasWrapper */
+    font-size: 24px;
+    font-family: flappyFont;
+    color: #000;
+    z-index: 2;                  /* Ensure it's above the canvases */
+    background-color: rgba(255, 255, 255, 0.7); /* Optional: background for better visibility */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* Leaderboard container */
+.leaderboard {
+    width: 250px;               /* Fixed width for the leaderboard */
+    height: 600px;              /* Match height of canvas */
+	border: solid;
+	-webkit-box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6); 
+	box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;        /* Center items within leaderboard */
+    padding: 10px;              /* Padding inside leaderboard */
+}
+
 /* Grid layout for the leaderboard items */
 .grid-leaderboard {
     display: grid;
-    grid-template-columns: 1fr 2fr;    /* Two columns: one for players, one for scores */
-    gap: 10px; 		                    /* Spacing between grid items */
+    grid-template-columns: 1fr 1fr;   /* Two columns: one for players, one for scores */
+    gap: 10px;                        /* Spacing between grid items */
+    width: 100%;
 }
 
 .grid-leaderboard .player {
-	text-overflow: ellipsis;
-    text-align: right;                  /* Align player names to the left */
-}
-
-.grid-leaderboard .noPlayer {
-    grid-column: 1 / -1;
-    font-size: 20px;
-    text-align: center;                 /* Center the text */
+    text-align: left;             /* Align player names to the left */
 }
 
 .grid-leaderboard .score {
-    text-align: center;                 /* Align scores to the right */
+    text-align: right;            /* Align scores to the right */
 }
 
-/* Optional: Style for the leaderboard heading */
+/* Leaderboard heading */
 .leaderboard h2 {
     text-align: center;
+    font-family: flappyFont;
+    letter-spacing: 1px;
     margin-bottom: 20px;
-	font-family: flappyFont;
-	letter-spacing: 1px;
 }
-
-

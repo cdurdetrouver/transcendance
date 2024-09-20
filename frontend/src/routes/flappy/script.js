@@ -15,10 +15,21 @@ else
 	userElement.innerText = 'No user connected';
 	isConnected = false;
 }
-//
+
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+
+const backgroundCanvas = document.getElementById("backgroundCanvas");
+const bgCtx = backgroundCanvas.getContext("2d");
+
+const backgroundImage = new Image();
+backgroundImage.src = '../../static/assets/jpg/bg_flappy.png';
+
+backgroundImage.onload = function() {
+	bgCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+};
+
 
 // Gestion animation
 const playerImages = {
@@ -28,16 +39,17 @@ const playerImages = {
     jump3: new Image()
 };
 
+
 playerImages.idle.src = '../../static/assets/jpg/fly1.png' ;
 playerImages.jump1.src = '../../static/assets/jpg/fly2.png' ;
 playerImages.jump2.src = '../../static/assets/jpg/fly3.png' ;
 playerImages.jump3.src = '../../static/assets/jpg/fly4.png' ;
 
-let currentPlayerImage = playerImages.idle;  // Start with the idle image
+let currentPlayerImage = playerImages.idle;
 let animationFrame = 0;
 let isAnimating = false;
 let animationInterval;
-//
+
 
 const GRAVITY = 0.2;
 const JUMP_STRENGTH = -5.5;
@@ -144,9 +156,13 @@ function gameLoop() {
 			gameSpeed += 0.1;
             return false;
         }
+		// ctx.drawImage(picTop, obstacle.x, 0, obstacle.width, obstacle.holeY);
         ctx.fillStyle = 'black';
         ctx.fillRect(obstacle.x, 0, obstacle.width, obstacle.holeY);
         ctx.fillRect(obstacle.x, obstacle.holeY + HOLE_HEIGHT, obstacle.width, canvas.height - (obstacle.holeY + HOLE_HEIGHT));
+        ctx.fillStyle = 'red';
+        ctx.fillRect(obstacle.x + 3, 0, obstacle.width - 6, obstacle.holeY - 2);
+        ctx.fillRect(obstacle.x + 3, obstacle.holeY + HOLE_HEIGHT + 2, obstacle.width - 6, canvas.height - (obstacle.holeY + HOLE_HEIGHT));
         if (collisionDetection(player, obstacle)) {
             stopGame();
 			update_score(score).then(response => {
