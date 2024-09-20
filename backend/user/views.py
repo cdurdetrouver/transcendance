@@ -36,6 +36,30 @@ def user_detail(request):
 	return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'user': UserSerializer.user_swagger
+			}
+		),
+		403: "Forbidden",
+		404: "User doesn't exist"
+	},
+	operation_description="Retrieve a list of users"
+)
+@api_view(['GET'])
+def user_id(request, user_id):
+
+	user = User.objects.filter(id=user_id).first()
+	if user is None:
+		return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+	serialized_user = UserSerializer(user)
+	return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
+
+@swagger_auto_schema(
 	method='post',
 	request_body=LoginSerializer,
 	responses={
@@ -45,8 +69,18 @@ def user_detail(request):
 				'user': UserSerializer.user_swagger
 			}
 		),
-		400: "Invalid credentials or validation error",
-		404: "User doesn't exist",
+		404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description="User doesn't exist")
+			}
+		),
+		400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description="Invalid credentials or validation error")
+			}
+		)
 	},
 	operation_description="Authenticate a user and return an access token and user data",
 )

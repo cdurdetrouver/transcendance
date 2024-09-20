@@ -17,6 +17,8 @@ let movedown = false;
 let player1Score = 0;
 let player2Score = 0;
 
+let player1 = false;
+let player2 = false;
 let viewer = false;
 let game_started = false;
 
@@ -25,9 +27,53 @@ if (!user)
 	window.location.href = '/login';
 
 const urlParams = new URLSearchParams(window.location.search);
+const game_room = urlParams.get('game_room');
 const game_id = urlParams.get('game_id');
-if (!game_id)
+if (!game_room || !game_id)
 	window.location.href = '/pong';
+
+const response_game = await fetch(config.backendUrl + '/pong/games/' + game_id + '/', {
+	method: 'GET',
+	headers: {
+		'Content-Type': 'application/json',
+	},
+	credentials: 'include'
+});
+
+if (response_game.status !== 200) {
+	console.error('Error connecting to game');
+	window.location.href = '/pong';
+}
+
+let response_game_data = await response_game.json();
+response_game_data = response_game_data.game;
+
+let player1_id = response_game_data.player1_id;
+let player2_id = response_game_data.player2_id;
+
+const responseplayer1 = await fetch(config.backendUrl + '/user/' + player1_id + '/', {
+	method: 'GET',
+	headers: {
+		'Content-Type': 'application/json',
+	},
+	credentials: 'include'
+});
+
+const responseplayer2 = await fetch(config.backendUrl + '/user/' + player2_id + '/', {
+	method: 'GET',
+	headers: {
+		'Content-Type': 'application/json',
+	},
+	credentials: 'include'
+});
+
+if (responseplayer1.status !== 200 || responseplayer2.status !== 200) {
+	console.error('Error connecting to game');
+	window.location.href = '/pong';
+}
+
+player1 = (await responseplayer1.json()).user;
+player2 = (await responseplayer2.json()).user;
 
 function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -43,8 +89,8 @@ function draw() {
 	ctx.closePath();
 
 	ctx.font = '20px Arial';
-	ctx.fillText(`Player 1: ${player1Score}`, 20, 20);
-	ctx.fillText(`Player 2: ${player2Score}`, canvas.width - 120, 20);
+	ctx.fillText(`${player1.username}: ${player1Score}`, 20, 20);
+	ctx.fillText(`${player2.username}: ${player2Score}`, canvas.width - 200, 20);
 }
 
 function updateGame(data) {
@@ -63,7 +109,7 @@ function updateGame(data) {
 	draw();
 }
 
-const socket = new WebSocket(config.websocketurl + '/ws/pong/' + game_id + '/');
+const socket = new WebSocket(config.websocketurl + '/ws/pong/' + game_room + '/');
 if (!socket) {
 	console.error('Error connecting to websocket');
 	window.location.href = '/pong';
@@ -71,7 +117,7 @@ if (!socket) {
 
 draw();
 
-socket.onmessage = function (e) {
+socket.onmessage = async function (e) {
 	let data = JSON.parse(e.data);
 	console.log(data);
 	if (data.type === 'game_update')
