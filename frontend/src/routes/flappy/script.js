@@ -1,6 +1,6 @@
 import { get_user, get_score, update_score, get_leaderboard} from '../../components/user/script.js';
 
-
+//gestion user
 let userElement = document.querySelector('#user_username');
 let isConnected = false;
 const user =await get_user();
@@ -15,12 +15,12 @@ else
 	userElement.innerText = 'No user connected';
 	isConnected = false;
 }
-
+//
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-
+// Gestion animation
 const playerImages = {
     idle: new Image(),
     jump1: new Image(),
@@ -37,7 +37,7 @@ let currentPlayerImage = playerImages.idle;  // Start with the idle image
 let animationFrame = 0;
 let isAnimating = false;
 let animationInterval;
-
+//
 
 const GRAVITY = 0.2;
 const JUMP_STRENGTH = -5.5;
@@ -60,10 +60,7 @@ let player = {
         this.velocityY += GRAVITY;
         this.y += this.velocityY;
         
-        if (this.y + this.height > canvas.height) {
-            this.y = canvas.height - this.height;
-            this.velocityY = 0;
-        } else if (this.y < 0) {
+        if (this.y < 0) {
             this.y = 0;
             this.velocityY = 0;
         }
@@ -80,15 +77,15 @@ function startJumpAnimation() {
     animationFrame = 0;
 
     const animationImages = [playerImages.jump1, playerImages.jump2, playerImages.jump3];
-    const animationDuration = 100;  // Time in milliseconds between each frame
+    const animationDuration = 100;
 
     animationInterval = setInterval(() => {
         if (animationFrame < animationImages.length) {
-            currentPlayerImage = animationImages[animationFrame];  // Cycle through jump images
+            currentPlayerImage = animationImages[animationFrame];
             animationFrame++;
         } else {
-            currentPlayerImage = playerImages.idle;  // Return to idle image
-            clearInterval(animationInterval);  // Stop the animation
+            currentPlayerImage = playerImages.idle;
+            clearInterval(animationInterval);  
             isAnimating = false;
         }
     }, animationDuration);
@@ -147,21 +144,9 @@ function gameLoop() {
 			gameSpeed += 0.1;
             return false;
         }
-
         ctx.fillStyle = 'black';
         ctx.fillRect(obstacle.x, 0, obstacle.width, obstacle.holeY);
         ctx.fillRect(obstacle.x, obstacle.holeY + HOLE_HEIGHT, obstacle.width, canvas.height - (obstacle.holeY + HOLE_HEIGHT));
-
-        ctx.font = "40px flappyFont";
-        ctx.textAlign = "center";                
-
-        ctx.lineWidth = 7;
-        ctx.strokeStyle = "black";
-        ctx.strokeText(score, canvas.width / 2, 50);
-
-        ctx.fillStyle = "white";
-        ctx.fillText(score, canvas.width / 2, 50);
-
         if (collisionDetection(player, obstacle)) {
             stopGame();
 			update_score(score).then(response => {
@@ -171,22 +156,31 @@ function gameLoop() {
 				return false;
 			})
         }
-
         return true;
     });
+
+	//affichage score
+	ctx.font = "40px flappyFont";
+	ctx.textAlign = "center";                
+	ctx.lineWidth = 7;
+	ctx.strokeStyle = "black";
+	ctx.strokeText(score, canvas.width / 2, 50);
+	ctx.fillStyle = "white";
+	ctx.fillText(score, canvas.width / 2, 50);
 }
 
-function collisionDetection(rect1, obstacle) {
+function collisionDetection(player, obstacle) {
     const topObstacleHeight = obstacle.holeY;
     const bottomObstacleY = obstacle.holeY + HOLE_HEIGHT;
 
     return (
-        rect1.x < obstacle.x + obstacle.width &&
-        rect1.x + rect1.width > obstacle.x &&
+        player.x < obstacle.x + obstacle.width &&
+        player.x + player.width > obstacle.x &&
         (
-            rect1.y < topObstacleHeight ||
-            rect1.y + rect1.height > bottomObstacleY
-        )
+            player.y < topObstacleHeight ||
+            player.y + player.height > bottomObstacleY
+        ) 
+		|| player.y >= canvas.height
     );
 }
 
@@ -226,17 +220,14 @@ export function updateLeaderboardUI(leaderboard) {
 
     leaderboard.forEach(user => {
 
-
 		const playerDiv = document.createElement('div');
         playerDiv.classList.add('player');
         playerDiv.textContent = user.username;
         
-        // Create player score div
         const scoreDiv = document.createElement('div');
         scoreDiv.classList.add('score');
         scoreDiv.textContent = user.best_score;
 
-        // Append both player and score to the leaderboard grid
         leaderboardElement.appendChild(playerDiv);
         leaderboardElement.appendChild(scoreDiv);
     });
