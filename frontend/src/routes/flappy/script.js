@@ -59,28 +59,36 @@ const OBSTACLE_SPACING = 300;
 const HOLE_MIN_HEIGHT = 100;
 const HOLE_MAX_HEIGHT = 400;
 
-let player = {
-    x: 100,
-    y: canvas.height / 2,
-    width: 36,
-    height: 42,
-    velocityY: 0,
+class Player {
+    constructor() {
+        this.x = 100;
+        this.y = canvas.height / 2;
+        this.width = 36;
+        this.height = 42;
+        this.velocityY = 0;
+    }
+
     jump() {
         this.velocityY = JUMP_STRENGTH;
-    },
+    }
+
     update() {
         this.velocityY += GRAVITY;
         this.y += this.velocityY;
-        
+
         if (this.y < 0) {
             this.y = 0;
             this.velocityY = 0;
         }
-    },
+    }
+
     draw() {
         ctx.drawImage(currentPlayerImage, this.x, this.y, this.width, this.height);
     }
-};
+}
+
+let player = new Player();
+
 
 function startJumpAnimation() {
     if (isAnimating) return;
