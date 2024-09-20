@@ -24,13 +24,13 @@ const svgcross = `
 
 let searchButtonTimeoutId = null;
 
-class PongSocket {
+class MatchmakingSocket {
   constructor() {
     this.socket = null;
   }
 
   onopen() {
-    console.log("Connected to the pong websocket");
+    console.log("Connected to the Matchmaking websocket");
     this.socket.send(JSON.stringify({ message: "Hello, server!" }));
   }
 
@@ -56,13 +56,13 @@ class PongSocket {
       SearchButton.style.opacity = "0.2";
       SearchButton.style.cursor = "not-allowed";
       setTimeout(() => {
-      window.location.href = '/pong/game?game_id=' + data.game_room;
+        window.location.href = '/pong/game?game_room=' + data.game_room + '&game_id=' + data.game_id;
       }, 2000);
     }
   }
 
   onclose() {
-    console.log("Disconnected from the pong websocket");
+    console.log("Disconnected from the Matchmaking websocket");
   }
 
   open() {
@@ -129,7 +129,7 @@ toggleSvgStatus(true, false);
 let SearchButton = document.getElementById('search');
 let SearchStatus = false;
 
-let socket = new PongSocket();
+let socket = new MatchmakingSocket();
 
 SearchButton.addEventListener('click', async function handleClick() {
 

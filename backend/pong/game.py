@@ -67,7 +67,7 @@ class GameThread(threading.Thread):
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
 
-		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 4)
+		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 3)
 		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
 		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
 
@@ -101,6 +101,7 @@ class GameThread(threading.Thread):
 		}
 
 	def run(self):
+		time.sleep(0.5)
 		async_to_sync(self.channel_layer.group_send)(
 			self.group_name,
 			{
@@ -135,17 +136,47 @@ class GameThread(threading.Thread):
 					self.game.player1_score += 1
 					self.ball.reset()
 
-				async_to_sync(self.channel_layer.group_send)(
-					self.group_name,
-					{
-						'type': 'game.update',
-						'message': self.serialize()
-					}
-				)
+				if self.game.player1_score >= 5:
+					self.game_over(self.game.player1_id)
+				elif self.game.player2_score >= 5:
+					self.game_over(self.game.player2_id)
+				else :
+					async_to_sync(self.channel_layer.group_send)(
+						self.group_name,
+						{
+							'type': 'game.update',
+							'message': self.serialize()
+						}
+					)
+
+				self.game.save()
+
 				time.sleep(max(1.0 / 60 - self.delta_time, 0))
 			except Exception as e:
 				print(e)
 				break
+
+	def game_over(self, Winner):
+		self.game.finished = True
+		self.game.winner_id = Winner
+		self.stop()
+
+		async_to_sync(self.channel_layer.group_send)(
+			self.group_name,
+			{
+				'type': 'game.update',
+				'message': self.serialize()
+			}
+		)
+
+		async_to_sync(self.channel_layer.group_send)(
+			self.group_name,
+			{
+				'type': 'game.end',
+				'message': 'Game has ended',
+				'winner': Winner
+			}
+		)
 
 	async def set_player_direction(self, player, data):
 		if player == "player1":
