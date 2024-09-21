@@ -16,6 +16,7 @@ else {
     chatSocket.onmessage = function(e)
     {
         const data = JSON.parse(e.data);
+        console.log(data);
         document.querySelector('#chat-log').value += (data.message + '\n');
     };
     
@@ -33,11 +34,9 @@ else {
     
     document.querySelector('#chat-message-submit').onclick = function(e)
     {
-        let acces_token = getCookie('acces_token');
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
-            'acces_token': acces_token,
             'message': message
         }));
         messageInputDom.value = '';
