@@ -10,6 +10,7 @@ export async function initComponent() {
 
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
+        console.log(data);
         document.querySelector('#chat-log').value += (data.message + '\n');
     };
 

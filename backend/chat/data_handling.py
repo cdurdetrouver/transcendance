@@ -2,6 +2,7 @@ from .models import Message, Room, User
 from django.conf import settings
 from channels.db import database_sync_to_async
 from rest_framework.response import Response
+from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .serializers import MessageSerializer
 import jwt
@@ -10,7 +11,6 @@ from django.utils import timezone
 @database_sync_to_async
 def get_user(scope):
     access_token = scope['subprotocols'][1]
-    print(scope)
     payload = jwt.decode(
 			access_token, settings.SECRET_KEY, algorithms=['HS256'])
     user = User.objects.filter(id=payload['user_id']).first()
@@ -40,10 +40,10 @@ def add_in_room(room, user):
 
 @database_sync_to_async
 def get_last_10_messages(room):
-    if len(room.messages.all()) > 10:
-        return room.messages.all()[len(room.messages.all())-10:len(room.messages.all())]
-    else:
-        return room.messages.all()
+    # if len(room.messages.all()) > 10:
+    return room.messages.all()
+    # else:
+    #     return room.messages.all()
 
 @database_sync_to_async
 def save_message(room, text_data_json):
