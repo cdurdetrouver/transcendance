@@ -8,13 +8,13 @@ class Message(models.Model):
 		('announce', 'Announce'),
 	]
 
-	author = models.CharField(max_length=128, default='none')
+	author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 	message_type = models.CharField(max_length=10, choices=TYPES, default='chat')
 	content = models.CharField(max_length=128)
-	created_at = models.DateTimeField(auto_now_add=True)
+	send_at = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		return self.content + " Je suis une classe"
+		return self.content
 
 class Room (models.Model):
 	name = models.CharField(max_length=128)

@@ -13,34 +13,6 @@ from user.utils import get_from_cookies
 
 
 @database_sync_to_async
-def get_user(scope):
-    try :
-        cookies = scope["headers"][10]
-    except :
-        return None
-    if not cookies:
-        return None
-    try :
-        cookies = str(cookies[1].decode('utf-8'))
-        access_token = get_from_cookies(cookies, 'access_token')
-        if not access_token:
-            return None
-        payload = jwt.decode(
-			access_token, settings.SECRET_KEY, algorithms=['HS256'])
-    except jwt.ExpiredSignatureError:
-        raise exceptions.AuthenticationFailed('access_token expired')
-    except IndexError:
-        raise exceptions.AuthenticationFailed('Token prefix missing')        
-    user = User.objects.filter(id=payload['user_id']).first()
-    if user is None:
-        raise exceptions.AuthenticationFailed('User not found')
-    if not user.is_active:
-        raise exceptions.AuthenticationFailed('user is inactive')
-    # self.enforce_csrf(scope)
-    return (user)
-
-
-@database_sync_to_async
 def get_room(room_id):
     try:
         room = get_object_or_404(Room, name=room_id)
@@ -68,9 +40,10 @@ def get_last_10_messages(room):
     #     return room.messages.all()
 
 @database_sync_to_async
-def save_message(room, text_data_json):
+def save_message(room, text_data_json, user):
     # message = MessageSerializer(text_data_json)
     content = text_data_json["message"]
-    message = Message.objects.create(username="lol", message_type="chat", content=content)
+    message = Message.objects.create(author=user, message_type="chat", content=content)
     room.messages.add(message)
     room.save()
+    return message
