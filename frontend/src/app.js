@@ -43,7 +43,7 @@ class Router {
 	}
 
 	async _loadRoute(pathName) {
-		let route = this.routes.find(r => r.path === pathName || r.path + '/' === pathName);
+		let route = this.routes.find(r => r.path === pathName.split('?')[0] || r.path + '/' === pathName.split('?')[0]);
 		if (!route) {
 			route = this.routes.find(r => r.path === '/404');
 			if (!route) {
@@ -68,9 +68,9 @@ class Router {
 
 			// Load and execute JS for the route
 			for (const script of this.componentsscripts) {
-				this._loadScript(script);
+				await this._loadScript(script);
 			}
-			this._loadScript(`/routes${files}/script.js`);
+			await this._loadScript(`/routes${files}/script.js`);
 
 			// Load CSS for the route
 			for (const style of this.componentsstyles) {
@@ -106,12 +106,12 @@ class Router {
 	async _fetchComponentHtml(componentName) {
 		try {
 			const html = await fetch(`/components/${componentName.toLowerCase()}/page.html`)
-			.then(res => {
-				if (!res.ok) {
-					throw new Error(`Error loading component "${componentName}": ${res.status}`);
-				}
-				return res.text()
-			});
+				.then(res => {
+					if (!res.ok) {
+						throw new Error(`Error loading component "${componentName}": ${res.status}`);
+					}
+					return res.text()
+				});
 			return html;
 		} catch (error) {
 			console.error(`Error loading component "${componentName}":`, error);
@@ -119,13 +119,16 @@ class Router {
 		}
 	}
 
-	_loadScript(scriptUrl, isModule = true) {
-		const scriptElement = document.createElement('script');
-		scriptElement.src = scriptUrl;
-		scriptElement.type = isModule ? 'module' : 'text/javascript';
-		scriptElement.defer = true;
-		scriptElement.setAttribute('data-dynamic', 'true');
-		document.body.appendChild(scriptElement);
+	async _loadScript(scriptUrl) {
+		try {
+			const module = await import(`${scriptUrl}`);
+
+			if (module && typeof module.initComponent === 'function') {
+				module.initComponent();
+			}
+		} catch (error) {
+			console.error(`Error loading script "${scriptUrl}":`, error);
+		}
 	}
 
 	_loadStyle(styleUrl) {
@@ -146,5 +149,5 @@ class Router {
 }
 
 // Initialize Router
-const router = new Router();
+export const router = new Router();
 router.initRouter();

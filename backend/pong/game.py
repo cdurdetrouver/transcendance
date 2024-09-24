@@ -41,18 +41,21 @@ class Paddle:
 	def __init__(self, x, y, speed):
 		self.default_position = [x, y]
 		self.default_speed = speed
+		self.moveup = False
+		self.movedown = False
+
 
 		self.position = [x, y]
 		self.speed = speed
 
-	def move(self, direction):
-		if direction == 'up':
+	def move(self):
+		if self.moveup:
 			self.position[1] -= self.speed
-		elif direction == 'down':
+		elif self.movedown:
 			self.position[1] += self.speed
 		if self.position[1] < 0:
 			self.position[1] = 0
-		if self.position[1] + PADDLE_HEIGHT > SCREEN_HEIGHT:
+		elif self.position[1] + PADDLE_HEIGHT > SCREEN_HEIGHT:
 			self.position[1] = SCREEN_HEIGHT - PADDLE_HEIGHT
 
 	def reset(self):
@@ -67,7 +70,7 @@ class GameThread(threading.Thread):
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
 
-		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 3)
+		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 4)
 		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
 		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
 
@@ -118,14 +121,32 @@ class GameThread(threading.Thread):
 				last_time = current_time
 
 				self.ball.update()
+				self.paddle1.move()
+				self.paddle2.move()
 
 				if self.ball.position[1] - BALL_RADIUS < 0 or self.ball.position[1] + BALL_RADIUS > SCREEN_HEIGHT:
 					self.ball.velocity[1] = -self.ball.velocity[1]
 
 				if self.ball.check_collision(self.paddle1):
+					# if self.ball.velocity[0] < 0:
+					# 	self.ball.velocity[0] -= 0.5
+					# else:
+					# 	self.ball.velocity[0] += 0.5
+					# if self.ball.velocity[1] < 0:
+					# 	self.ball.velocity[1] -= 0.5
+					# else:
+					# 	self.ball.velocity[1] += 0.5
 					self.ball.velocity[0] = -self.ball.velocity[0]
 
 				if self.ball.check_collision(self.paddle2):
+					# if self.ball.velocity[0] < 0:
+					# 	self.ball.velocity[0] -= 0.5
+					# else:
+					# 	self.ball.velocity[0] += 0.5
+					# if self.ball.velocity[1] < 0:
+					# 	self.ball.velocity[1] -= 0.5
+					# else:
+					# 	self.ball.velocity[1] += 0.5
 					self.ball.velocity[0] = -self.ball.velocity[0]
 
 				if self.ball.position[0] - BALL_RADIUS < 0 :
@@ -180,9 +201,15 @@ class GameThread(threading.Thread):
 
 	async def set_player_direction(self, player, data):
 		if player == "player1":
-			self.paddle1.move(data["direction"])
+			if data["direction"] == "up":
+				self.paddle1.moveup = data["message"] == "keydown"
+			else:
+				self.paddle1.movedown = data["message"] == "keydown"
 		else:
-			self.paddle2.move(data["direction"])
+			if data["direction"] == "up":
+				self.paddle2.moveup= data["message"] == "keydown"
+			else:
+				self.paddle2.movedown = data["message"] == "keydown"
 
 	def stop(self):
 		self._stop_event.set()
