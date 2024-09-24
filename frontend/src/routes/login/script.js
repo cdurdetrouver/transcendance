@@ -1,18 +1,23 @@
 import { get_user, login, logout } from '../../components/user/script.js';
 import { customalert } from '../../components/alert/script.js';
+import { router } from '../../app.js';
 
-const user = await get_user();
+export async function initComponent() {
+	const user = await get_user();
 
-const loginform = document.querySelector('.login form');
-loginform.addEventListener('submit', login_form);
+	const logindiv = document.querySelector('.login');
+	const loginform = logindiv.querySelector('form');
+	loginform.addEventListener('submit', login_form);
 
-const logoutform = document.querySelector('.logout form');
-logoutform.addEventListener('submit', logout_form);
+	const logoutdiv = document.querySelector('.logout');
+	const logoutform = logoutdiv.querySelector('form');
+	logoutform.addEventListener('submit', logout_form);
 
-if (user)
-	loginform.style.display = 'none';
-else
-	logoutform.style.display = 'none';
+	if (user)
+		logindiv.style.display = 'none';
+	else
+		logoutdiv.style.display = 'none';
+}
 
 async function login_form(event) {
 	event.preventDefault();
@@ -21,8 +26,10 @@ async function login_form(event) {
 
 	const response = await login(email, password);
 
-	if (response.status === 200)
-		window.location.href = '/';
+	if (response.status === 200) {
+		router.navigate('/');
+		customalert('Login successful', 'You are now logged in');
+	}
 	else {
 		const data = await response.json();
 		customalert('Login failed', data.error, true);
@@ -32,6 +39,6 @@ async function login_form(event) {
 async function logout_form(event) {
 	event.preventDefault();
 	await logout();
-
-	window.location.href = '/';
+	customalert('Logout successful', 'You are now logged out');
+	router.navigate('/login');
 }

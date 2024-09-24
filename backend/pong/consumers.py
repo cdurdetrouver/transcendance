@@ -86,6 +86,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.game = await sync_to_async(Game.objects.get)(room_name=self.room_group_name)
         print(self.game, self.user.id)
 
+        await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'Failed to start game'
+                }))
+
+        await self.close()
+        return
+
         if self.game.finished:
             await self.send(text_data=json.dumps({
                 'type': 'error',
@@ -145,18 +153,20 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
         else:
             self.game.nb_players -= 1
-            await sync_to_async(self.game.save)()
 
             if self.room_group_name in self.games:
                 self.GameThread.stop()
                 del self.games[self.room_group_name]
             del self.GameThread
 
+            self.game.winner_id = self.game.get_other_player_id(self.user.id)
+            await sync_to_async(self.game.save)()
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'game.end',
-                    'message': 'Opponent left the game'
+                    'message': 'Opponent left the game',
+                    'winner' : self.game.winner_id
                 }
             )
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
@@ -165,7 +175,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         if self.type == 'viewer':
             return
 
-        await self.GameThread.set_player_direction(self.player, json.loads(text_data))
+        data = json.loads(text_data)
+
+        if data["message"] == "ping":
+            await self.send(text_data=json.dumps({
+                'type': 'pong'
+            }))
+        elif data["message"] == "keyup" or data["message"] == "keydown":
+            await self.GameThread.set_player_direction(self.player, data)
 
     async def game_started(self, event):
         self.GameThread = self.games[self.room_group_name]

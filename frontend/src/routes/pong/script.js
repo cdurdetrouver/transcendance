@@ -1,5 +1,7 @@
 import config from '../../env/config.js';
 import { get_user } from '../.././components/user/script.js';
+import { customalert } from '../../components/alert/script.js';
+import { router } from '../../app.js';
 
 const svgcheck = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
@@ -23,6 +25,8 @@ const svgcross = `
 `;
 
 let searchButtonTimeoutId = null;
+let SearchButton = null;
+let SearchStatus = false;
 
 class MatchmakingSocket {
   constructor() {
@@ -39,8 +43,10 @@ class MatchmakingSocket {
     console.log(data);
     if (data.type == "error") {
       get_user().then((response) => {
-        if (response == null)
-          window.location.href = `/login`;
+        if (response == null) {
+          customalert("Error", "You are not logged in", true);
+          router.navigate('/login');
+        }
         this.open();
       });
     }
@@ -56,7 +62,7 @@ class MatchmakingSocket {
       SearchButton.style.opacity = "0.2";
       SearchButton.style.cursor = "not-allowed";
       setTimeout(() => {
-        window.location.href = '/pong/game?game_room=' + data.game_room + '&game_id=' + data.game_id;
+        router.navigate('/pong/game?game_room=' + data.game_room + '&game_id=' + data.game_id);
       }, 2000);
     }
   }
@@ -118,50 +124,54 @@ function setPlayer(user, opponent = false) {
   }
 }
 
-const user = await get_user();
-if (!user)
-  window.location.href = '/login';
-
-setPlayer(user);
-toggleSvgStatus(false, false);
-toggleSvgStatus(true, false);
-
-let SearchButton = document.getElementById('search');
-let SearchStatus = false;
-
-let socket = new MatchmakingSocket();
-
-SearchButton.addEventListener('click', async function handleClick() {
-
-  let WaitingTextDiv = document.querySelector('.waiting__message');
-  let WaitingText = WaitingTextDiv.querySelector('p');
-  if (SearchStatus == false) {
-    SearchButton.removeEventListener('click', handleClick);
-    searchButtonTimeoutId = setTimeout(() => {
-      SearchButton.style.opacity = "1";
-      SearchButton.style.cursor = "pointer";
-      SearchButton.addEventListener('click', handleClick);
-    }, 15000);
-
-    SearchStatus = true;
-    SearchButton.innerHTML = "Cancel";
-    SearchButton.style.opacity = "0.2";
-    SearchButton.style.cursor = "not-allowed";
-    SearchButton.style.backgroundColor = "red";
-    WaitingText.innerHTML = "Waiting for another player...";
-    WaitingTextDiv.classList.add('show');
-    toggleSvgStatus(false, true);
-
-    socket.open();
+export async function initComponent() {
+  const user = await get_user();
+  if (!user) {
+    customalert("Error", "You are not logged in", true);
+    window.location.href = '/login';
   }
-  else {
-    SearchStatus = false;
-    SearchButton.innerHTML = "Search";
-    SearchButton.style.backgroundColor = "green";
-    WaitingText.innerHTML = "Ready to play ?";
-    WaitingTextDiv.classList.remove('show');
-    toggleSvgStatus(false, false);
 
-    socket.close();
-  }
-});
+  setPlayer(user);
+  toggleSvgStatus(false, false);
+  toggleSvgStatus(true, false);
+
+  SearchButton = document.getElementById('search');
+  SearchStatus = false;
+
+  let socket = new MatchmakingSocket();
+
+  SearchButton.addEventListener('click', async function handleClick() {
+
+    let WaitingTextDiv = document.querySelector('.waiting__message');
+    let WaitingText = WaitingTextDiv.querySelector('p');
+    if (SearchStatus == false) {
+      SearchButton.removeEventListener('click', handleClick);
+      searchButtonTimeoutId = setTimeout(() => {
+        SearchButton.style.opacity = "1";
+        SearchButton.style.cursor = "pointer";
+        SearchButton.addEventListener('click', handleClick);
+      }, 15000);
+
+      SearchStatus = true;
+      SearchButton.innerHTML = "Cancel";
+      SearchButton.style.opacity = "0.2";
+      SearchButton.style.cursor = "not-allowed";
+      SearchButton.style.backgroundColor = "red";
+      WaitingText.innerHTML = "Waiting for another player...";
+      WaitingTextDiv.classList.add('show');
+      toggleSvgStatus(false, true);
+
+      socket.open();
+    }
+    else {
+      SearchStatus = false;
+      SearchButton.innerHTML = "Search";
+      SearchButton.style.backgroundColor = "green";
+      WaitingText.innerHTML = "Ready to play ?";
+      WaitingTextDiv.classList.remove('show');
+      toggleSvgStatus(false, false);
+
+      socket.close();
+    }
+  });
+}
