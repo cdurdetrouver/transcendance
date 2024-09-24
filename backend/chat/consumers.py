@@ -7,7 +7,6 @@ from django.conf import settings
 from rest_framework import exceptions
 from asgiref.sync import sync_to_async
 from user.utils import get_user_by_token
-from asgiref.sync import sync_to_async
 from rest_framework.response import Response
 from .data_handling import get_room, in_room, add_in_room, get_last_10_messages, save_message
 
@@ -16,6 +15,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.room = None
+        self.refresh = 0
         self.user = None
 
     async def connect(self):
@@ -32,7 +32,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.user = result
-        print("connect")
         self.room = await get_room(self.room_group_name)
                 # Join room group
         if (await in_room(self.room, self.user.username) == False):
@@ -42,11 +41,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 self.room_group_name, {"type": "announce.message", "announce" : self.user.username + " as joined the chat"})
         else:
-            messages = await get_last_10_messages(self.room)
-            # async for message in messages:
-            #     await self.send_message(message.content)
+            await self.refresh_last_mess()
+            
         await self.channel_layer.group_add(
             self.room_group_name, self.channel_name)
+        self.refresh = 0
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -61,9 +60,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message_serializer = MessageSerializer(message)
         
         # Send message to room group
-        await self.channel_layer.group_send(
-            self.room_group_name, {"type": "chat.message", "message" : message_serializer.data}
-        )
+        if (text_data_json["type"] == "refresh_mess"):
+            await self.refresh_last_mess()
+        else:
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "chat.message", "message" : message_serializer.data})
 
     # Receive message from room group
     async def chat_message(self, event):
@@ -74,3 +75,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def announce_message(self, event):
         announce = event ["announce"]
         await self.send(text_data=json.dumps({"type" : "announce", "content": announce}))
+
+    async def refresh_last_mess(self):
+        self.refresh += 1
+        # messages = await get_last_10_messages(self.room, self.refresh)
+        # print(await get_last_10_messages(self.room, self.refresh))
+        messages = await get_last_10_messages(self.room, self.refresh)
+        messages_s = MessageSerializer(messages, many=True)
+        #  author can't be serialized
+        # await self.send(text_data=json.dumps({"type" : "list-chat", "messages": messages_s.data}))
+

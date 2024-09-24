@@ -10,6 +10,7 @@ from rest_framework import exceptions
 import jwt
 from django.utils import timezone
 from user.utils import get_from_cookies
+from asgiref.sync import sync_to_async
 
 
 @database_sync_to_async
@@ -33,11 +34,15 @@ def add_in_room(room, user):
     room.save()
 
 @database_sync_to_async
-def get_last_10_messages(room):
-    # if len(room.messages.all()) > 10:
-    return room.messages.all() or None
+def get_last_10_messages(room, nb_refresh):
+    # if len(room.messages.all()) > nb_refresh * 10:
+    #     return room.messages.all()[len(room.messages.all()) - (nb_refresh * 10):len(room.messages.all()) - ((nb_refresh - 1) * 10)]
     # else:
-    #     return room.messages.all()
+    messages = []
+    for message in room.messages.all():
+        messages.append(message)
+
+    return messages
 
 @database_sync_to_async
 def save_message(room, text_data_json, user):
