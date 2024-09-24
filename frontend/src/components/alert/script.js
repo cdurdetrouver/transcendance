@@ -21,7 +21,7 @@ function customalert(title, description, error = false) {
 		alertDiv.classList.remove('error');
 		alertDiv.classList.remove('success');
 		display = false;
-	}, 10000);
+	}, 4000);
 }
 
 export { customalert };
