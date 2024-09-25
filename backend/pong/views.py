@@ -69,7 +69,6 @@ def game_detail(request):
 )
 @api_view(['GET'])
 def game_id(request, game_id):
-	print("try get a game", game_id)
 	game = Game.objects.filter(id=game_id).first()
 	if game is None:
 		return Response({"error": "Game doesn't exist"}, status=status.HTTP_404_NOT_FOUND)

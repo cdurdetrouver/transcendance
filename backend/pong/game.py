@@ -87,13 +87,17 @@ class GameThread(threading.Thread):
 				"x": self.paddle1.position[0],
 				"y": self.paddle1.position[1],
 				"speed": self.paddle1.speed,
-				"score": self.game.player1_score
+				"score": self.game.player1_score,
+				"movedown": self.paddle1.movedown,
+				"moveup": self.paddle1.moveup
 			},
 			"player2": {
 				"x": self.paddle2.position[0],
 				"y": self.paddle2.position[1],
 				"speed": self.paddle2.speed,
-				"score": self.game.player2_score
+				"score": self.game.player2_score,
+				"movedown": self.paddle2.movedown,
+				"moveup": self.paddle2.moveup
 			},
 			"ball": {
 				"x": self.ball.position[0],

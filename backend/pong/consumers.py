@@ -86,14 +86,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.game = await sync_to_async(Game.objects.get)(room_name=self.room_group_name)
         print(self.game, self.user.id)
 
-        await self.send(text_data=json.dumps({
-                    'type': 'error',
-                    'message': 'Failed to start game'
-                }))
-
-        await self.close()
-        return
-
         if self.game.finished:
             await self.send(text_data=json.dumps({
                 'type': 'error',
