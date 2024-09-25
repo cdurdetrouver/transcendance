@@ -44,7 +44,6 @@ def get_mess(mess_id):
 @database_sync_to_async
 def get_last_10_messages(room, nb_refresh):
     ids = room.messages_id[-10 * nb_refresh:]
-    print(ids)
     messages = []
     for id in ids:
         messages.append(get_object_or_404(Message, id=id))
