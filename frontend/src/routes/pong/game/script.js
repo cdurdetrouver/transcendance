@@ -10,29 +10,76 @@ const paddleWidth = 10;
 const paddleHeight = 75;
 const ballRadius = 8;
 
-let paddle1Y = (canvas.height - paddleHeight) / 2;
-let paddle2Y = (canvas.height - paddleHeight) / 2;
-let paddle1speed = 4;
-let paddle2speed = 4;
-let ballX = canvas.width / 2;
-let ballY = canvas.height / 2;
-let ballspeedX = 4;
-let ballspeedY = 4;
-let player1Score = 0;
-let player2Score = 0;
+let paddle1Y;
+let paddle2Y;
+let paddle1speed;
+let paddle2speed;
+let paddle1moveup;
+let paddle1movedown;
+let paddle2moveup;
+let paddle2movedown;
+let ballX;
+let ballY;
+let ballspeedX;
+let ballspeedY;
+let player1Score;
+let player2Score;
 
-let player1 = false;
-let player2 = false;
-let viewer = false;
-let game_started = false;
-let game_ended = false;
+let player1;
+let player2;
+let viewer;
+let game_started;
+let game_ended;
 
-let lastUpdateTime = Date.now();
-let lastGameState = null;
+let lastUpdateTime;
+let lastGameState;
 
 let startTime;
+let socket;
+
+let pingIntervalID;
+
+function handleKeydown(e) {
+	if (viewer || !game_started)
+		return;
+
+	if (e.key === 'ArrowUp') {
+		socket.send(JSON.stringify({ message: 'keydown', direction: 'up' }));
+	} else if (e.key === 'ArrowDown') {
+		socket.send(JSON.stringify({ message: 'keydown', direction: 'down' }));
+	}
+}
+
+function handleKeyup(e) {
+	if (viewer || !game_started)
+		return;
+
+	if (e.key === 'ArrowUp') {
+		socket.send(JSON.stringify({ message: 'keyup', direction: 'up' }));
+	} else if (e.key === 'ArrowDown') {
+		socket.send(JSON.stringify({ message: 'keyup', direction: 'down' }));
+	}
+}
 
 export async function initComponent() {
+	paddle1Y = (canvas.height - paddleHeight) / 2;
+	paddle2Y = (canvas.height - paddleHeight) / 2;
+	paddle1speed = 4;
+	paddle2speed = 4;
+	paddle1moveup = false;
+	paddle1movedown = false;
+	paddle2moveup = false;
+	paddle2movedown = false;
+	ballX = canvas.width / 2;
+	ballY = canvas.height / 2;
+	ballspeedX = 4;
+	ballspeedY = 4;
+	player1Score = 0;
+	player2Score = 0;
+
+	lastUpdateTime = Date.now();
+	lastGameState = null;
+
 	const user = await get_user();
 	if (!user)
 		router.navigate('/login');
@@ -88,7 +135,7 @@ export async function initComponent() {
 	player1 = (await responseplayer1.json()).user;
 	player2 = (await responseplayer2.json()).user;
 
-	const socket = new WebSocket(config.websocketurl + '/ws/pong/' + game_room + '/');
+	socket = new WebSocket(config.websocketurl + '/ws/pong/' + game_room + '/');
 	if (!socket) {
 		console.error('Error connecting to websocket');
 		router.navigate('/pong');
@@ -99,9 +146,20 @@ export async function initComponent() {
 		if (data.type === 'game_update')
 			updateGame(data.message);
 		else if (data.type === 'game_started')
+		{
 			game_started = true;
+			pingIntervalID = setInterval(() => {
+				startTime = Date.now();
+				socket.send(JSON.stringify({ message: 'ping' }));
+			}, 100);
+		}
 		else if (data.type === 'game_end')
+		{
+			let winner = data.winner === player1.id ? player1.username : player2.username;
+			customalert('Game Over', data.message + " winner is " + winner);
 			game_ended = true;
+			clearInterval(pingIntervalID);
+		}
 		else if (data.type === 'viewer')
 			viewer = true;
 		else if (data.type === 'error') {
@@ -112,30 +170,8 @@ export async function initComponent() {
 			pingSpan.innerHTML = Date.now() - startTime;
 	};
 
-	setInterval(() => {
-		startTime = Date.now();
-		socket.send(JSON.stringify({ message: 'ping' }));
-	}, 100);
-
-	document.addEventListener('keydown', function (e) {
-		if (viewer || !game_started)
-			return;
-
-		if (e.key === 'ArrowUp')
-			socket.send(JSON.stringify({ message: 'keydown', direction: 'up' }));
-		else if (e.key === 'ArrowDown')
-			socket.send(JSON.stringify({ message: 'keydown', direction: 'down' }));
-	});
-
-	document.addEventListener('keyup', function (e) {
-		if (viewer || !game_started)
-			return;
-
-		if (e.key === 'ArrowUp')
-			socket.send(JSON.stringify({ message: 'keyup', direction: 'up' }));
-		else if (e.key === 'ArrowDown')
-			socket.send(JSON.stringify({ message: 'keyup', direction: 'down' }));
-	});
+	document.addEventListener('keydown', handleKeydown);
+	document.addEventListener('keyup', handleKeyup);
 
 	draw_reset();
 
@@ -184,11 +220,24 @@ function interpolateGameState(currentTime) {
 	const elapsedTime = currentTime - lastUpdateTime;
 	const t = elapsedTime / (1000 / 60);
 
+	let nextpaddle1Y = lastGameState.player1.y;
+	let nextpaddle2Y = lastGameState.player2.y;
+
+	if (paddle1moveup)
+		nextpaddle1Y -= paddle1speed * t;
+	else if (paddle1movedown)
+		nextpaddle1Y += paddle1speed * t;
+
+	if (paddle2moveup)
+		nextpaddle2Y -= paddle2speed * t;
+	else if (paddle2movedown)
+		nextpaddle2Y += paddle2speed * t;
+
 	const interpolatedState = {
 		ballX: lastGameState.ball.x + ballspeedX * t,
 		ballY: lastGameState.ball.y + ballspeedY * t,
-		paddle1Y: paddle1Y,
-		paddle2Y: paddle2Y,
+		paddle1Y: nextpaddle1Y,
+		paddle2Y: nextpaddle2Y,
 	};
 
 	draw(interpolatedState);
@@ -198,8 +247,8 @@ function updateGame(data) {
 	lastUpdateTime = Date.now();
 	lastGameState = {
 		ball: { x: ballX, y: ballY, speed_x: ballspeedX, speed_y: ballspeedY },
-		player1: { y: paddle1Y, score: player1Score, speed: paddle1speed },
-		player2: { y: paddle2Y, score: player2Score, speed: paddle2speed },
+		player1: { y: paddle1Y, score: player1Score, speed: paddle1speed, moveup: paddle1moveup, movedown: paddle1movedown },
+		player2: { y: paddle2Y, score: player2Score, speed: paddle2speed, moveup: paddle2moveup, movedown: paddle2movedown }
 	};
 
 	ballX = data.ball.x;
@@ -208,6 +257,10 @@ function updateGame(data) {
 	ballspeedY = data.ball.speed_y;
 	paddle1Y = data.player1.y;
 	paddle2Y = data.player2.y;
+	paddle1moveup = data.player1.moveup;
+	paddle1movedown = data.player1.movedown;
+	paddle2moveup = data.player2.moveup;
+	paddle2movedown = data.player2.movedown;
 	paddle1speed = data.player1.speed;
 	paddle2speed = data.player2.speed;
 	player1Score = data.player1.score;
@@ -222,4 +275,20 @@ function gameLoop() {
 	}
 	else
 		draw_reset();
+}
+
+export function cleanupComponent() {
+	if (pingIntervalID) {
+		clearInterval(pingIntervalID);
+		pingIntervalID = null;
+	}
+
+	if (socket)
+	{
+		socket.close();
+		socket = null;
+	}
+
+	document.removeEventListener('keydown', handleKeydown);
+	document.removeEventListener('keyup', handleKeyup);
 }

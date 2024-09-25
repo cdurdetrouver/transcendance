@@ -4,6 +4,7 @@ class Router {
 		this.components = {};
 		this.componentsscripts = [];
 		this.componentsstyles = [];
+		this.activeScripts = [];
 	}
 
 	async initRouter() {
@@ -126,6 +127,8 @@ class Router {
 			if (module && typeof module.initComponent === 'function') {
 				module.initComponent();
 			}
+
+			this.activeScripts.push(module);
 		} catch (error) {
 			console.error(`Error loading script "${scriptUrl}":`, error);
 		}
@@ -140,6 +143,14 @@ class Router {
 	}
 
 	_clearDynamicAssets() {
+		for (const script of this.activeScripts) {
+			if (script && typeof script.cleanupComponent === 'function') {
+				script.cleanupComponent();
+			}
+		}
+
+		this.activeScripts = [];
+
 		// Remove previously loaded scripts
 		Array.from(document.querySelectorAll('script[data-dynamic]')).forEach(script => script.remove());
 
