@@ -12,6 +12,9 @@ from django.utils import timezone
 from user.utils import get_from_cookies
 from asgiref.sync import sync_to_async
 
+@database_sync_to_async
+def get_user(user_id):
+    return get_object_or_404(User, id=user_id)
 
 @database_sync_to_async
 def get_room(room_id):
@@ -22,33 +25,37 @@ def get_room(room_id):
     return room
 
 @database_sync_to_async
-def in_room(room, user_name):
-    name = room.participants.filter(username=user_name).first()
-    if (name):
+def in_room(room, user_id):
+    try:
+        room.participants_id.index(user_id)
         return True
-    return False
+    except:
+        return False
 
 @database_sync_to_async
-def add_in_room(room, user):
-    room.participants.add(user)
+def add_in_room(room, user_id):
+    room.participants_id.append(user_id)
     room.save()
+
+@database_sync_to_async
+def get_mess(mess_id):
+    return get_object_or_404(Message, id=mess_id)
 
 @database_sync_to_async
 def get_last_10_messages(room, nb_refresh):
-    # if len(room.messages.all()) > nb_refresh * 10:
-    #     return room.messages.all()[len(room.messages.all()) - (nb_refresh * 10):len(room.messages.all()) - ((nb_refresh - 1) * 10)]
-    # else:
+    ids = room.messages_id[-10 * nb_refresh:]
+    print(ids)
     messages = []
-    for message in room.messages.all():
-        messages.append(message)
-
-    return messages
+    for id in ids:
+        messages.append(get_mess(id))
+    messages_s = MessageSerializer(messages, many=True)
+    return messages_s.data
 
 @database_sync_to_async
 def save_message(room, text_data_json, user):
-    # message = MessageSerializer(text_data_json)
     content = text_data_json["message"]
-    message = Message.objects.create(author=user, message_type="chat", content=content)
-    room.messages.add(message)
+    message = Message.objects.create(author_id=user.id, message_type="chat", content=content)
+    room.messages_id.append(message.id)
     room.save()
+    message.save()
     return message

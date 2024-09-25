@@ -1,5 +1,7 @@
 from django.db import models
+
 from user.models import User
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 class Message(models.Model):
@@ -8,7 +10,7 @@ class Message(models.Model):
 		('announce', 'Announce'),
 	]
 
-	author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+	author_id =  models.IntegerField(blank=False) 
 	message_type = models.CharField(max_length=10, choices=TYPES, default='chat')
 	content = models.CharField(max_length=128)
 	send_at = models.DateTimeField(auto_now_add=True)
@@ -18,9 +20,8 @@ class Message(models.Model):
 
 class Room (models.Model):
 	name = models.CharField(max_length=128)
-	participants = models.ManyToManyField(
-		User, related_name='rooms', blank=True)
-	messages = models.ManyToManyField(Message, blank=True)
+	participants_id = ArrayField(models.IntegerField(null=True, blank=False), blank=True, default=list)
+	messages_id = ArrayField(models.IntegerField(null=True, blank=False), blank=True, default=list)
 
 	def __str__(self):
 		return self.name

@@ -3,8 +3,7 @@ from .models import Message
 from user.serializers import UserSerializer
 
 class MessageSerializer(serializers.ModelSerializer):
-	author = UserSerializer()
 	class Meta:
 		model = Message
-		fields = ['id', 'author', 'message_type', 'content', 'send_at']
+		fields = ['id', 'author_id', 'message_type', 'content', 'send_at']
 
