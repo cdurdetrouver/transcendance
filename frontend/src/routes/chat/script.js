@@ -14,6 +14,12 @@ chatSocket.onmessage = function(e)
         document.querySelector('#chat-log').value += (data.content + '\n');
     else if (data.type == 'chat')
         document.querySelector('#chat-log').value += (data.message.content + '\n');
+    else if (data.type == 'list-chat') {
+        for (const message in data.messages)
+            // console.log(data.messages[message]);
+            document.querySelector('#chat-log').value += (data.messages[message].content + '\n');
+    }
+        // document.querySelector('#chat-log').value += (data.message.content + '\n');
 };
 
 chatSocket.onclose = function(e)
