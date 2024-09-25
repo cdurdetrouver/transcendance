@@ -80,6 +80,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def refresh_last_mess(self):
         self.refresh += 1
-        # messages = await get_last_10_messages(self.room, self.refresh)
+        messages = await get_last_10_messages(self.room, self.refresh)
         # print(messages)
-        # await self.send(text_data=json.dumps({"type" : "list-chat", "messages": messages}))
+        await self.send(text_data=json.dumps({"type" : "list-chat", "messages": messages}))

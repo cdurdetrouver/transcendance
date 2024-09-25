@@ -47,7 +47,7 @@ def get_last_10_messages(room, nb_refresh):
     print(ids)
     messages = []
     for id in ids:
-        messages.append(get_mess(id))
+        messages.append(get_object_or_404(Message, id=id))
     messages_s = MessageSerializer(messages, many=True)
     return messages_s.data
 
