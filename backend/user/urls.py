@@ -20,4 +20,5 @@ from user import views
 urlpatterns = [
     path('', views.user_detail),
     path('<int:user_id>/', views.user_id),
+    path('games/<int:user_id>/', views.user_games),
 ]
