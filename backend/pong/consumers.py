@@ -29,6 +29,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         self.user = result
         self.waiting_players.append(self)
 
+        print(self.waiting_players)
+
         if len(self.waiting_players) >= 2:
             player1 = self.waiting_players.pop(0)
             player2 = self.waiting_players.pop(0)
@@ -36,7 +38,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             game_room_name = f"game_room_{player1.channel_name}_{player2.channel_name}"
             game_room_name = re.sub(r'[^a-zA-Z0-9._-]', '', game_room_name)[:50]
 
-            game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1_id=player1.user.id, player2_id=player2.user.id)
+            game = await sync_to_async(Game.objects.create(room_name=game_room_name , player1=player1.user, player2=player2.user))
             await sync_to_async(game.save)()
 
             await player1.send(text_data=json.dumps({
@@ -84,7 +86,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.user = result
         self.room_group_name = self.scope['url_route']['kwargs']['room_name']
         self.game = await sync_to_async(Game.objects.get)(room_name=self.room_group_name)
-        print(self.game, self.user.id)
+        print(self.game, self.user)
 
         if self.game.finished:
             await self.send(text_data=json.dumps({
@@ -94,7 +96,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
-        if (self.user.id != self.game.player1_id and self.user.id != self.game.player2_id):
+        if (self.user != self.game.player1 and self.user != self.game.player2):
             self.game.nb_viewers += 1
             await sync_to_async(self.game.save)()
             await self.send(text_data=json.dumps({
@@ -107,7 +109,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         else:
             self.type = 'player'
             self.waiting_players.append(self.user.id)
-            self.player = 'player1' if self.user.id == self.game.player1_id else 'player2'
+            self.player = 'player1' if self.user == self.game.player1 else 'player2'
             await sync_to_async(self.game.save)()
             await self.send(text_data=json.dumps({
                 'type': 'waiting',
@@ -116,11 +118,11 @@ class PongConsumer(AsyncWebsocketConsumer):
             }))
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
-        print(not self.game.started, self.game.player1_id in self.waiting_players, self.game.player2_id in self.waiting_players)
+        print(not self.game.started, self.game.player1.id in self.waiting_players, self.game.player2.id in self.waiting_players)
 
-        if not self.game.started and self.game.player1_id in self.waiting_players and self.game.player2_id in self.waiting_players:
-            self.waiting_players.remove(self.game.player1_id)
-            self.waiting_players.remove(self.game.player2_id)
+        if not self.game.started and self.game.player1.id in self.waiting_players and self.game.player2.id in self.waiting_players:
+            self.waiting_players.remove(self.game.player1.id)
+            self.waiting_players.remove(self.game.player2.id)
             print("Try to start game")
             try :
                 self.GameThread = GameThread(self.game, self.room_group_name, self.channel_layer)
@@ -153,7 +155,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 del self.games[self.room_group_name]
             del self.GameThread
 
-            self.game.winner_id = self.game.get_other_player_id(self.user.id)
+            self.game.winner = self.game.get_other_player(self.user)
             self.game.finished = True
             await sync_to_async(self.game.save)()
             await self.channel_layer.group_send(
@@ -161,7 +163,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'game.end',
                     'message': 'Opponent left the game',
-                    'winner' : self.game.winner_id
+                    'winner' : self.game.winner.id
                 }
             )
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
