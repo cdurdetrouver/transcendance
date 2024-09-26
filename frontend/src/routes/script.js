@@ -1,5 +1,5 @@
 import { get_user } from '../components/user/script.js';
-import { customalert } from '../components/alert/script.js';
+import { customalert, clearalert } from '../components/alert/script.js';
 
 export async function initComponent() {
 	let user = await get_user();
@@ -13,6 +13,10 @@ export async function initComponent() {
 
 	let buttonError = document.querySelector('#button_error');
 	buttonError.addEventListener('click', () => {
-		customalert('Error', 'This is an error message', true);
+		const delay = clearalert() ? 200 : 0;
+		setTimeout(() => {
+			customalert('Error', 'This is an error message', true);
+		}, delay);
 	});
 }
+
