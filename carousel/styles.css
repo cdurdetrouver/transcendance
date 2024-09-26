@@ -14,14 +14,14 @@ body {
 
   .background {
     position: absolute;
-    top: 0;
-    left: 0;
+	top: 0;
+	left: 0;
     width: 100%;
     height: 100%;
     background-image: url('assets/images/character_sheet.png'); /* Add your background image path */
     background-position: center;
 	background-repeat: no-repeat;
-	background-size: 1200px;
+	background-size: 35%;
     z-index: 0;
 	display: flex;
     justify-content: center;
@@ -30,10 +30,10 @@ body {
 
 .container {
 	position: relative;
-	top: -150px;
-	width: 250px;
-	height: 200px;
+	width: 25vw;
+	height: 20vh;
 	perspective: 1000px;
+
 }
   
   .carousel {
@@ -43,70 +43,93 @@ body {
 	transform-style: preserve-3d;
 	transition: transform 1s;
 	transform: rotateX(-20deg);
-
-
+	
   }
   
+  .item img {
+    width: 20%;  
+    height: auto; 
+    max-width: 20%;
+}
+
   .item {
 	display: block;
 	position: absolute;
 	background: transparent;
-	width: 250px;
-	height: 200px;
-	line-height: 200px;
-	font-size: 5em;
+	width: 25vw;
+	height: 20vh;
 	text-align: center;
-	color: #FFF;
-	opacity: 0.95;
-	border-radius: 10px;
   }
   
-  .a { transition: transform 1s; 
-	transform: rotateY(0deg) translateZ(350px); }
-  .b { 	transition: transform 1s; 
-	transform: rotateY(60deg)  translateZ(350px) rotateY(-60deg); }
-  .c { transition: transform 1s; 
-	transform: rotateY(120deg) translateZ(350px) rotateY(60deg); }
-  .d { transition: transform 1s; 
-	transform: rotateY(180deg) translateZ(350px); }
-  .e { transition: transform 1s; 
-	transform: rotateY(240deg) translateZ(350px) rotateY(-60deg); }
-  .f {transition: transform 1s;  
-	transform: rotateY(300deg) translateZ(350px) rotateY(60deg); }
+  .a {
+	transition: transform 1s; 
+	transform: rotateY(0deg) translateZ(11vw); }
+  .b {
+	transition: transform 1s; 
+	transform: rotateY(60deg)  translateZ(11vw) rotateY(-60deg); }
+  .c {
+	transition: transform 1s; 
+	transform: rotateY(120deg) translateZ(11vw) rotateY(60deg); }
+  .d {
+	transition: transform 1s; 
+	transform: rotateY(180deg) translateZ(11vw); }
+  .e {
+	transition: transform 1s; 
+	transform: rotateY(240deg) translateZ(11vw) rotateY(-60deg); }
+  .f {
+	transition: transform 1s;  
+	transform: rotateY(300deg) translateZ(11vw) rotateY(60deg); }
   
-	.controls {
-		position: absolute;
-		width: 100%;
-		bottom: -300px; /* Positioning the buttons slightly below the container */
-		left: -250px; /* Positioning the buttons slightly below the container */
-		display: flex;
-		justify-content: space-between; /* To space the "Next" and "Prev" buttons */
-		padding: 0 20px; /* Add padding to move the buttons inwards */
-	}
-
-.name {
-	margin: 0 150px; /* Space the name between the prev and next buttons */
-	font-family: IsaacFont;
-	font-size: 4.5em;
-	color: #444;
+.controls {
+	position: relative;
+	width: 25vw;
+	height: 35vh;
+	align-items: end;
+	display: flex;
 }
 
-	.next, .prev {
+	.name {
+		width: 6vw;
+		left: 50%;
+		font-family: IsaacFont;
+		font-size:4vh;
 		color: #444;
-		padding: 1em 2em;
+		position: relative;
+		transform: translateX(-50%); /* Move it to the left by half of its own width */
+	}
+
+	.next, .prev {
+		border: 2px solid black;
+		width: 100%;
+		height: 100%;
+		padding: 10%;
 		cursor: pointer;
-		background: #CCC;
-		border-radius: 5px;
-		border-top: 1px solid #FFF;
-		box-shadow: 0 5px 0 #999;
-		transition: box-shadow 0.1s, top 0.1s;
+		position: absolute; /* Make them absolute for positioning relative to .controls */
+		top: 50%; /* Center vertically */
+		transform: translateY(-50%); /* Adjust for vertical centering */
+	}
+
+	.prev {
+		top: 50%; /* Center vertically */
+		transform: translateY(-50%); /* Adjust for vertical centering */
+
+	}
+
+	.next {
+		top: 50%; /* Center vertically */
+	}
+
+	.next img, .prev img {
+		width: 50%;
+		/* max-width: auto;
+		max-height: auto;  */
 	}
 	
-	.next:hover, .prev:hover { color: #000; }
+	/* .next:hover, .prev:hover { color: #000; }
 	
 	.next:active, .prev:active {
 		top: 4px;
 		box-shadow: 0 1px 0 #999;
-	}
+	} */
   .next { right: 5em; }
   .prev { left: 5em; }
