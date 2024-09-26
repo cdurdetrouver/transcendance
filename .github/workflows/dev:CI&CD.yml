@@ -19,6 +19,7 @@ jobs:
         run: |
           docker compose -f docker-compose.yml build
           docker compose -f docker-compose.yml up -d
+          docker compose -f docker-compose.yml exec backend python3 manage.py flush --no-input
           docker compose -f docker-compose.yml exec backend python3 manage.py makemigrations
           docker compose -f docker-compose.yml exec backend python3 manage.py migrate
           docker compose -f docker-compose.yml exec backend python3 manage.py test
