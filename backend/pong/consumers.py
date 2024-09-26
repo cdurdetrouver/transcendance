@@ -29,8 +29,6 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         self.user = result
         self.waiting_players.append(self)
 
-        print(self.waiting_players)
-
         if len(self.waiting_players) >= 2:
             player1 = self.waiting_players.pop(0)
             player2 = self.waiting_players.pop(0)
