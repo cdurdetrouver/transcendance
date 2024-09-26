@@ -26,6 +26,8 @@ body {
 	display: flex;
     justify-content: center;
     align-items: center;
+	flex-direction: column;
+
 }
 
 .container {
@@ -33,6 +35,7 @@ body {
 	width: 25vw;
 	height: 20vh;
 	perspective: 1000px;
+
 
 }
   
@@ -81,41 +84,61 @@ body {
 	transform: rotateY(300deg) translateZ(11vw) rotateY(60deg); }
   
 .controls {
+    margin-top: 3vh; /* Add spacing between the container and the stats */
+
 	position: relative;
 	width: 25vw;
-	height: 30vh;
 	align-items: end;
 	display: flex;
 }
 
-	.name {
-		width: 6vw;
-		left: 50%;
-		font-family: IsaacFont;
-		font-size:4vh;
-		color: #444;
-		position: relative;
-		transform: translateX(-50%); /* Move it to the left by half of its own width */
-	}
+.name {
+	width: 6vw;
+	left: 50%;
+	font-family: IsaacFont;
+	font-size:4vh;
+	color: #444;
+	position: relative;
+	transform: translateX(-50%); /* Move it to the left by half of its own width */
+}
 
-	.next, .prev {
-		width: 35%;
-		height: 100%;
-		cursor: pointer;
-		position: absolute; /* Make them absolute for positioning relative to .controls */
-		top: 0%; /* Center vertically */
-		transform: translateY(-70%); 
-	}
+.next, .prev {
+	width: 35%;
+	height: 100%;
+	cursor: pointer;
+	position: absolute; /* Make them absolute for positioning relative to .controls */
+	top: 0%; /* Center vertically */
+	transform: translateY(-70%); 
+}
 
-	.prev {
-		left: -7vw; /* Position to the left of .name */
-	}
-	
-	.next {
-		right: -7vw; /* Position to the right of .name */
-	}
-	
-	.next img, .prev img {
-		width: 100%; /* Ensure the images fill their parent container */
-		height: auto; /* Maintain aspect ratio */
-	}
+.prev {
+	left: -7vw; /* Position to the left of .name */
+}
+
+.next {
+	right: -7vw; /* Position to the right of .name */
+}
+
+.next img, .prev img {
+	width: 100%; /* Ensure the images fill their parent container */
+	height: auto; /* Maintain aspect ratio */
+}
+
+
+
+.stats {
+
+    display: flex;
+    width: 30%; /* Adjust based on your layout */
+    margin-top: 4vh; /* Add spacing between the container and the stats */
+	font-family: IsaacFont;
+    font-size: 2vh;
+    color: #444;
+    /* text-align: center; */
+}
+
+.stats > div {
+    flex: 1; 
+}
+
+/* Faire en sorte que le block controlv soient un block en dessous de container
