@@ -27,6 +27,7 @@ const svgcross = `
 let searchButtonTimeoutId = null;
 let SearchButton = null;
 let SearchStatus = false;
+let socket = null;
 
 class MatchmakingSocket {
   constructor() {
@@ -124,11 +125,46 @@ function setPlayer(user, opponent = false) {
   }
 }
 
+async function handleClick() {
+
+  let WaitingTextDiv = document.querySelector('.waiting__message');
+  let WaitingText = WaitingTextDiv.querySelector('p');
+  if (SearchStatus == false) {
+    SearchButton.removeEventListener('click', handleClick);
+    searchButtonTimeoutId = setTimeout(() => {
+      SearchButton.style.opacity = "1";
+      SearchButton.style.cursor = "pointer";
+      SearchButton.addEventListener('click', handleClick);
+    }, 15000);
+
+    SearchStatus = true;
+    SearchButton.innerHTML = "Cancel";
+    SearchButton.style.opacity = "0.2";
+    SearchButton.style.cursor = "not-allowed";
+    SearchButton.style.backgroundColor = "red";
+    WaitingText.innerHTML = "Waiting for another player...";
+    WaitingTextDiv.classList.add('show');
+    toggleSvgStatus(false, true);
+
+    socket.open();
+  }
+  else {
+    SearchStatus = false;
+    SearchButton.innerHTML = "Search";
+    SearchButton.style.backgroundColor = "green";
+    WaitingText.innerHTML = "Ready to play ?";
+    WaitingTextDiv.classList.remove('show');
+    toggleSvgStatus(false, false);
+
+    socket.close();
+  }
+}
+
 export async function initComponent() {
   const user = await get_user();
   if (!user) {
     customalert("Error", "You are not logged in", true);
-    window.location.href = '/login';
+    router.navigate('/login?return=/pong');
   }
 
   setPlayer(user);
@@ -138,40 +174,17 @@ export async function initComponent() {
   SearchButton = document.getElementById('search');
   SearchStatus = false;
 
-  let socket = new MatchmakingSocket();
+  socket = new MatchmakingSocket();
 
-  SearchButton.addEventListener('click', async function handleClick() {
+  SearchButton.addEventListener('click', handleClick);
+}
 
-    let WaitingTextDiv = document.querySelector('.waiting__message');
-    let WaitingText = WaitingTextDiv.querySelector('p');
-    if (SearchStatus == false) {
-      SearchButton.removeEventListener('click', handleClick);
-      searchButtonTimeoutId = setTimeout(() => {
-        SearchButton.style.opacity = "1";
-        SearchButton.style.cursor = "pointer";
-        SearchButton.addEventListener('click', handleClick);
-      }, 15000);
-
-      SearchStatus = true;
-      SearchButton.innerHTML = "Cancel";
-      SearchButton.style.opacity = "0.2";
-      SearchButton.style.cursor = "not-allowed";
-      SearchButton.style.backgroundColor = "red";
-      WaitingText.innerHTML = "Waiting for another player...";
-      WaitingTextDiv.classList.add('show');
-      toggleSvgStatus(false, true);
-
-      socket.open();
-    }
-    else {
-      SearchStatus = false;
-      SearchButton.innerHTML = "Search";
-      SearchButton.style.backgroundColor = "green";
-      WaitingText.innerHTML = "Ready to play ?";
-      WaitingTextDiv.classList.remove('show');
-      toggleSvgStatus(false, false);
-
-      socket.close();
-    }
-  });
+export async function cleanupComponent() {
+  SearchButton.removeEventListener('click', handleClick);
+  SearchButton = null;
+  SearchStatus = false;
+  clearTimeout(searchButtonTimeoutId);
+  searchButtonTimeoutId = null;
+  if (socket)
+    socket.close();
 }
