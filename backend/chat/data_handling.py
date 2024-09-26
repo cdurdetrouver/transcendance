@@ -5,6 +5,7 @@ from channels.db import database_sync_to_async
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from user.serializers import UserSerializer
 from .serializers import MessageSerializer
 from rest_framework import exceptions
 import jwt
@@ -42,13 +43,33 @@ def get_mess(mess_id):
     return get_object_or_404(Message, id=mess_id)
 
 @database_sync_to_async
-def get_last_10_messages(room, nb_refresh):
-    ids = room.messages_id[-10 * nb_refresh:]
+def get_last_10_messages(room, nb_refresh, starts):
     messages = []
+    empty = False
+
+    if (nb_refresh == 1):
+        ids = room.messages_id[-10 * nb_refresh:]
+        starts = room.messages_id[-1]
+    else:
+        start = (room.messages_id.index(starts) + 1) - (10 * nb_refresh) #room.messages_id[-10 * nb_refresh:]
+        end = (room.messages_id.index(starts) + 1) - ((nb_refresh - 1) * 10)
+        if (start < 0 and end > 0):
+            start = 0
+        ids = room.messages_id[start:end]
     for id in ids:
-        messages.append(get_object_or_404(Message, id=id))
-    messages_s = MessageSerializer(messages, many=True)
-    return messages_s.data
+        message = get_object_or_404(Message, id=id)
+        user = get_object_or_404(User, id=message.author_id)
+        message_s =  MessageSerializer(message)
+        user_s = UserSerializer(user)
+        messages.append(
+            {
+                'message': message_s.data,
+                'user': user_s.data
+            }
+        )
+    if not messages:
+        empty = True
+    return messages, starts, empty
 
 @database_sync_to_async
 def save_message(room, text_data_json, user):

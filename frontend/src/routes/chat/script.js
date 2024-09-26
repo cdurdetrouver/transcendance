@@ -4,8 +4,11 @@ import { get_user } from "../../components/user/script.js";
 let user = await get_user();
 if (!user)
     window.location.href = '/login';
- 
-let chatSocket = new WebSocket(config.websocketurl + "/ws/chat/");
+
+const urlParams = new URLSearchParams(window.location.search);
+const room_id = urlParams.get('room_id');
+
+let chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + room_id + "/");
 chatSocket.onmessage = function(e)
 {
     const data = JSON.parse(e.data);
@@ -16,7 +19,7 @@ chatSocket.onmessage = function(e)
         document.querySelector('#chat-log').value += (data.message.content + '\n');
     else if (data.type == 'list-chat') {
         for (const message in data.messages)
-            document.querySelector('#chat-log').value += (data.messages[message].content + '\n');
+            document.querySelector('#chat-log').value += (data.messages[message].message.content + '\n');
     }
 };
 
@@ -41,4 +44,11 @@ document.querySelector('#chat-message-submit').onclick = function(e)
         'message': message
     }));
     messageInputDom.value = '';
+};
+
+document.querySelector('#chat-message-refresh').onclick = function(e)
+{
+    chatSocket.send(JSON.stringify({
+        'type': "refresh_mess",
+    }));
 };
