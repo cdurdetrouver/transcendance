@@ -61,23 +61,23 @@ function rotate(e)
     "transform": "rotateX(-20deg) rotateY("+currdeg+"deg)"
   });
   a.css({
-	"transform": "rotateY(0deg) translateZ(350px) rotateY("+currdegA+"deg)"
+	"transform": "rotateY(0deg) translateZ(11vw) rotateY("+currdegA+"deg)"
   });
   b.css({
-	"transform": "rotateY(60deg) translateZ(350px) rotateY("+currdegB+"deg)"
+	"transform": "rotateY(60deg) translateZ(11vw) rotateY("+currdegB+"deg)"
   });
   c.css({
-	"transform": "rotateY(120deg) translateZ(350px) rotateY("+currdegC+"deg)"
+	"transform": "rotateY(120deg) translateZ(11vw) rotateY("+currdegC+"deg)"
   });
   d.css({
-	"transform": "rotateY(180deg) translateZ(350px) rotateY("+currdegA+"deg)"
+	"transform": "rotateY(180deg) translateZ(11vw) rotateY("+currdegA+"deg)"
   });
   t.css({
-	"transform": "rotateY(240deg) translateZ(350px) rotateY("+currdegB+"deg)"
+	"transform": "rotateY(240deg) translateZ(11vw) rotateY("+currdegB+"deg)"
   });
   f.css({
-	"transform": "rotateY(300deg) translateZ(350px) rotateY("+currdegC+"deg)"
+	"transform": "rotateY(300deg) translateZ(11vw) rotateY("+currdegC+"deg)"
   });
 
-  $(".name").text(names[currentIndex]);
+  $(".name-text").text(names[currentIndex]);
 }
