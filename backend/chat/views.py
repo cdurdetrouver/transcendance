@@ -1,33 +1,44 @@
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
+from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from twisted.application.runner.test.test_pidfile import ifPlatformSupported
 from autobahn.wamp import request
+from django.http import JsonResponse
+from .serializers import RoomSerializer
+from user.serializers import UserSerializer
+from .models import Room
+from rest_framework.response import Response
 import json
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 @swagger_auto_schema(
 	method='get',
 	request_body=None,
 	responses={
-		200:"ok"
-	},
-	manual_parameters=[
-		openapi.Parameter(
-			'Authorization',
-			openapi.IN_HEADER,
-			description="Authorization token",
-			type=openapi.TYPE_STRING,
-			default='Bearer <token>'
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'rooms': openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=RoomSerializer.room_swagger
+				)
+			}
 		)
-	],
+	},
 	operation_description="Retrieve a list of chat for user"
 )
-
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def get_user_chats(request):
-    if request.method == 'GET':
-        user = request.user
-        print(user)
+    user = request.user
+    rooms = Room.objects.filter(participants_id__contains=[user.id]).all()
+    print(rooms)
+    if (not rooms.exists()):
+        return Response({"error": "not room found"}, status=status.HTTP_404_NOT_FOUND)
+    rooms_s = RoomSerializer(rooms, many=True)
+    response = JsonResponse({'rooms': rooms_s.data}, status=status.HTTP_200_OK)
+    return response
 
 @api_view()
 def websocket_connect(request):

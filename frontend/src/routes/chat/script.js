@@ -1,5 +1,6 @@
 import config from "../../env/config.js";
 import { get_user } from "../../components/user/script.js";
+import { get_user_chats } from "../../components/chat/script.js";
 
 let user = await get_user();
 if (!user)
@@ -9,6 +10,12 @@ const urlParams = new URLSearchParams(window.location.search);
 const room_id = urlParams.get('room_id');
 
 let chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + room_id + "/");
+
+chatSocket.onopen = function(e)
+{
+    rooms = get_user_chats()
+}
+
 chatSocket.onmessage = function(e)
 {
     const data = JSON.parse(e.data);

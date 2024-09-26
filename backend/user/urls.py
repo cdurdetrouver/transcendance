@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.urls import path
 from user import views
+from chat.views import get_user_chats
 
 urlpatterns = [
     path('', views.user_detail),
+    path('chats/', get_user_chats)
 ]
