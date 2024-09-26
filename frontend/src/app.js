@@ -54,7 +54,7 @@ class Router {
 		}
 
 		// Remove previously loaded scripts and styles
-		this._clearDynamicAssets();
+		await this._clearDynamicAssets();
 
 		const files = route.files;
 
@@ -125,7 +125,7 @@ class Router {
 			const module = await import(`${scriptUrl}`);
 
 			if (module && typeof module.initComponent === 'function') {
-				module.initComponent();
+				await module.initComponent();
 			}
 
 			this.activeScripts.push(module);
@@ -142,10 +142,10 @@ class Router {
 		document.head.appendChild(styleElement);
 	}
 
-	_clearDynamicAssets() {
+	async _clearDynamicAssets() {
 		for (const script of this.activeScripts) {
 			if (script && typeof script.cleanupComponent === 'function') {
-				script.cleanupComponent();
+				await script.cleanupComponent();
 			}
 		}
 
