@@ -11,6 +11,8 @@ from drf_yasg import openapi
 from .utils import generate_access_token, generate_refresh_token, AttributeDict
 from .models import User
 from .serializers import UserSerializer, LoginSerializer
+from pong.models import Game
+from pong.serializers import GameSerializer
 import jwt
 import datetime
 
@@ -216,3 +218,37 @@ def logout(request):
 	response.delete_cookie('refresh_token')
 	response.delete_cookie('access_token')
 	return response
+
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'games': openapi.Schema(
+					type=openapi.TYPE_ARRAY,
+					items=GameSerializer.game_swagger
+				)
+			}
+		),
+		404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description="User doesn't exist")
+			}
+		)
+	},
+	operation_description="Retrieve a list of games for a user"
+)
+@api_view(['GET'])
+def user_games(request, user_id):
+	user = User.objects.filter(id=user_id).first()
+	if user is None:
+		return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+	games = Game.objects.filter(player1_id=user.id)
+	games_s = GameSerializer(games, many=True).data
+	games = Game.objects.filter(player2_id=user.id)
+	games_s += GameSerializer(games, many=True).data
+	print(games_s)
+	return JsonResponse({'games': games_s}, status=status.HTTP_200_OK)
