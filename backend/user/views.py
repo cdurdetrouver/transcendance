@@ -246,9 +246,8 @@ def user_games(request, user_id):
 	user = User.objects.filter(id=user_id).first()
 	if user is None:
 		return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-	games = Game.objects.filter(player1_id=user.id)
+	games = Game.objects.filter(player1=user)
 	games_s = GameSerializer(games, many=True).data
-	games = Game.objects.filter(player2_id=user.id)
+	games = Game.objects.filter(player2=user)
 	games_s += GameSerializer(games, many=True).data
-	print(games_s)
 	return JsonResponse({'games': games_s}, status=status.HTTP_200_OK)

@@ -3,8 +3,6 @@ import config from '../../env/config.js';
 import { get_user } from '../../components/user/script.js';
 import { router } from '../../app.js';
 
-let users = {};
-
 async function get_games(user_id) {
 	const response = await fetch(config.backendUrl + '/user/games/' + user_id, {
 		method: 'GET',
