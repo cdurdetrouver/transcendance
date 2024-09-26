@@ -26,9 +26,9 @@ function addGame(player1, player1_score, player2, player2_score, game_id) {
 	const game = document.createElement('li');
 	game.innerHTML = `
 		<div class="game-info">
-			<div>${player1}</div>
+			<div>${player1.username}</div>
 			<div class="score">${player1_score} - ${player2_score}</div>
-			<div>${player2}</div>
+			<div>${player2.username}</div>
 		</div>
 		<a href="#" class="show-game" data-game-id="${game_id}">
 			Show
