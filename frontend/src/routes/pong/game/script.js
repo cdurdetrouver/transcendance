@@ -38,6 +38,7 @@ let startTime;
 let socket;
 
 let pingIntervalID;
+let pingSpan;
 
 function handleKeydown(e) {
 	if (viewer || !game_started)
@@ -59,123 +60,6 @@ function handleKeyup(e) {
 	} else if (e.key === 'ArrowDown') {
 		socket.send(JSON.stringify({ message: 'keyup', direction: 'down' }));
 	}
-}
-
-export async function initComponent() {
-	paddle1Y = (canvas.height - paddleHeight) / 2;
-	paddle2Y = (canvas.height - paddleHeight) / 2;
-	paddle1speed = 4;
-	paddle2speed = 4;
-	paddle1moveup = false;
-	paddle1movedown = false;
-	paddle2moveup = false;
-	paddle2movedown = false;
-	ballX = canvas.width / 2;
-	ballY = canvas.height / 2;
-	ballspeedX = 4;
-	ballspeedY = 4;
-	player1Score = 0;
-	player2Score = 0;
-
-	lastUpdateTime = Date.now();
-	lastGameState = null;
-
-	const user = await get_user();
-	if (!user)
-		router.navigate('/login');
-
-	let pingSpan = document.getElementById("ping");
-
-	const urlParams = new URLSearchParams(window.location.search);
-	const game_room = urlParams.get('game_room');
-	const game_id = urlParams.get('game_id');
-	if (!game_room || !game_id)
-		router.navigate('/pong');
-
-	const response_game = await fetch(config.backendUrl + '/pong/games/' + game_id + '/', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		credentials: 'include'
-	});
-
-	if (response_game.status !== 200) {
-		console.error('Error connecting to game');
-		router.navigate('/pong');
-	}
-
-	let response_game_data = await response_game.json();
-	response_game_data = response_game_data.game;
-
-	let player1_id = response_game_data.player1_id;
-	let player2_id = response_game_data.player2_id;
-
-	const responseplayer1 = await fetch(config.backendUrl + '/user/' + player1_id + '/', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		credentials: 'include'
-	});
-
-	const responseplayer2 = await fetch(config.backendUrl + '/user/' + player2_id + '/', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		credentials: 'include'
-	});
-
-	if (responseplayer1.status !== 200 || responseplayer2.status !== 200) {
-		console.error('Error connecting to game');
-		router.navigate('/pong');
-	}
-
-	player1 = (await responseplayer1.json()).user;
-	player2 = (await responseplayer2.json()).user;
-
-	socket = new WebSocket(config.websocketurl + '/ws/pong/' + game_room + '/');
-	if (!socket) {
-		console.error('Error connecting to websocket');
-		router.navigate('/pong');
-	}
-
-	socket.onmessage = async function (e) {
-		let data = JSON.parse(e.data);
-		if (data.type === 'game_update')
-			updateGame(data.message);
-		else if (data.type === 'game_started')
-		{
-			game_started = true;
-			pingIntervalID = setInterval(() => {
-				startTime = Date.now();
-				socket.send(JSON.stringify({ message: 'ping' }));
-			}, 100);
-		}
-		else if (data.type === 'game_end')
-		{
-			let winner = data.winner === player1.id ? player1.username : player2.username;
-			customalert('Game Over', data.message + " winner is " + winner);
-			game_ended = true;
-			clearInterval(pingIntervalID);
-		}
-		else if (data.type === 'viewer')
-			viewer = true;
-		else if (data.type === 'error') {
-			customalert('Error', data.message, true);
-			router.navigate('/pong');
-		}
-		else if (data.type === 'pong')
-			pingSpan.innerHTML = Date.now() - startTime;
-	};
-
-	document.addEventListener('keydown', handleKeydown);
-	document.addEventListener('keyup', handleKeyup);
-
-	draw_reset();
-
-	gameLoop();
 }
 
 function draw(interpolatedState) {
@@ -277,17 +161,181 @@ function gameLoop() {
 		draw_reset();
 }
 
+class PongSocket {
+	constructor(game_room) {
+		this.socket = null;
+		this.game_room = game_room;
+	}
+
+	onopen() {
+		console.log("Connected to the Pong websocket");
+		pingIntervalID = setInterval(() => {
+			startTime = Date.now();
+			this.socket.send(JSON.stringify({ message: 'ping' }));
+		}, 100);
+	}
+
+	onmessage(event) {
+		let data = JSON.parse(event.data);
+		console.log(data);
+		if (data.type === 'game_update')
+			updateGame(data.message);
+		else if (data.type === 'game_started') {
+			game_started = true;
+		}
+		else if (data.type === 'game_end') {
+			let winner = data.winner === player1.id ? player1.username : player2.username;
+			customalert('Game Over', data.message + " winner is " + winner);
+			game_ended = true;
+			clearInterval(pingIntervalID);
+		}
+		else if (data.type === 'viewer')
+			viewer = true;
+		else if (data.type === 'error') {
+			customalert('Error', data.message, true);
+			router.navigate('/pong');
+		}
+		else if (data.type === 'pong')
+			pingSpan.innerHTML = Date.now() - startTime;
+	}
+
+	onclose() {
+		console.log("Disconnected from the Pong websocket");
+	}
+
+	send(data) {
+		this.socket.send(data);
+	}
+
+	open() {
+		if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
+			this.socket = new WebSocket(config.websocketurl + '/ws/pong/' + this.game_room + '/');
+			this.socket.onopen = this.onopen.bind(this);
+			this.socket.onmessage = this.onmessage.bind(this);
+			this.socket.onclose = this.onclose.bind(this);
+		}
+	}
+
+	close() {
+		if (this.socket) {
+			this.socket.close();
+			this.socket = null;
+		}
+	}
+}
+
+async function get_game_players(game_id) {
+	const response_game = await fetch(config.backendUrl + '/pong/games/' + game_id + '/', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		credentials: 'include'
+	});
+
+	if (response_game.status !== 200) {
+		console.error('Error connecting to game');
+		router.navigate('/pong');
+	}
+
+	let response_game_data = await response_game.json();
+	response_game_data = response_game_data.game;
+
+	let player1_id = response_game_data.player1_id;
+	let player2_id = response_game_data.player2_id;
+
+	const responseplayer1 = await fetch(config.backendUrl + '/user/' + player1_id + '/', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		credentials: 'include'
+	});
+
+	const responseplayer2 = await fetch(config.backendUrl + '/user/' + player2_id + '/', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		credentials: 'include'
+	});
+
+	if (responseplayer1.status !== 200 || responseplayer2.status !== 200) {
+		console.error('Error connecting to game');
+		router.navigate('/pong');
+	}
+
+	player1 = (await responseplayer1.json()).user;
+	player2 = (await responseplayer2.json()).user;
+}
+
+export async function initComponent() {
+	paddle1Y = (canvas.height - paddleHeight) / 2;
+	paddle2Y = (canvas.height - paddleHeight) / 2;
+	paddle1speed = 4;
+	paddle2speed = 4;
+	paddle1moveup = false;
+	paddle1movedown = false;
+	paddle2moveup = false;
+	paddle2movedown = false;
+	ballX = canvas.width / 2;
+	ballY = canvas.height / 2;
+	ballspeedX = 4;
+	ballspeedY = 4;
+	player1Score = 0;
+	player2Score = 0;
+
+	lastUpdateTime = Date.now();
+	lastGameState = null;
+
+	const user = await get_user();
+	if (!user)
+		router.navigate('/login?return=/pong');
+
+	pingSpan = document.getElementById("ping");
+
+	const urlParams = new URLSearchParams(window.location.search);
+	const game_room = urlParams.get('game_room');
+	const game_id = urlParams.get('game_id');
+	if (!game_room || !game_id)
+		router.navigate('/pong');
+
+	await get_game_players(game_id);
+	if (!player1 || !player2) {
+		console.error('Error getting the game');
+		customalert('Error', 'Error connecting to the game', true);
+		router.navigate('/pong');
+	}
+
+	try {
+		socket = new PongSocket(game_room);
+		socket.open();
+	} catch (error) {
+		console.error(error);
+		customalert('Error', 'Error connecting to the game', true);
+		router.navigate('/pong');
+	}
+
+	document.addEventListener('keydown', handleKeydown);
+	document.addEventListener('keyup', handleKeyup);
+
+	draw_reset();
+
+	gameLoop();
+}
+
 export function cleanupComponent() {
 	if (pingIntervalID) {
 		clearInterval(pingIntervalID);
 		pingIntervalID = null;
 	}
 
-	if (socket)
-	{
+	if (socket) {
 		socket.close();
 		socket = null;
 	}
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	document.removeEventListener('keydown', handleKeydown);
 	document.removeEventListener('keyup', handleKeyup);
