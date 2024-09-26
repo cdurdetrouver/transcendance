@@ -36,6 +36,30 @@ def user_detail(request):
 	return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'user': UserSerializer.user_swagger
+			}
+		),
+		403: "Forbidden",
+		404: "User doesn't exist"
+	},
+	operation_description="Retrieve a list of users"
+)
+@api_view(['GET'])
+def user_id(request, user_id):
+
+	user = User.objects.filter(id=user_id).first()
+	if user is None:
+		return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+	serialized_user = UserSerializer(user)
+	return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
+
+@swagger_auto_schema(
 	method='post',
 	request_body=LoginSerializer,
 	responses={
@@ -45,12 +69,21 @@ def user_detail(request):
 				'user': UserSerializer.user_swagger
 			}
 		),
-		400: "Invalid credentials or validation error",
-		404: "User doesn't exist",
+		404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description="User doesn't exist")
+			}
+		),
+		400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description="Invalid credentials or validation error")
+			}
+		)
 	},
 	operation_description="Authenticate a user and return an access token and user data",
 )
-@ensure_csrf_cookie
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login(request):
@@ -59,9 +92,9 @@ def login(request):
 	if serializer.is_valid():
 		email = serializer.validated_data['email']
 		password = serializer.validated_data['password']
-		try:
-			user = User.objects.filter(email=email).first()
-		except User.DoesNotExist:
+
+		user = User.objects.filter(email=email).first()
+		if user is None:
 			return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
 		if check_password(password, user.password):
@@ -77,9 +110,10 @@ def login(request):
 			response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 			return response
 		else:
-			return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
 	else:
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
+		return Response({"error": error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
 @swagger_auto_schema(
 	method='post',
@@ -95,7 +129,6 @@ def login(request):
 	},
 	operation_description="Register a user"
 )
-@ensure_csrf_cookie
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -176,7 +209,6 @@ def refresh_token(request):
 	},
 	operation_description="Log out a user"
 )
-@ensure_csrf_cookie
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def logout(request):

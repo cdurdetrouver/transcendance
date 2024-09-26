@@ -1,31 +1,37 @@
 import config from "../../env/config.js";
 
-let chatSocket = new WebSocket(config.websocketurl + "/ws/chat/");
+let chatSocket = null;
 
-chatSocket.onmessage = function(e)
-{
-    const data = JSON.parse(e.data);
-    document.querySelector('#chat-log').value += (data.message + '\n');
-};
+export async function initComponent() {
+    chatSocket = new WebSocket(config.websocketurl + '/ws/chat/');
 
-chatSocket.onclose = function(e)
-{
-    console.error('Chat socket closed unexpectedly');
-};
 
-document.querySelector('#chat-message-input').focus();
-document.querySelector('#chat-message-input').onkeyup = function(e)
-{
-    if (e.key === 'Enter')
-        document.querySelector('#chat-message-submit').click();
-};
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat-log').value += (data.message + '\n');
+    };
 
-document.querySelector('#chat-message-submit').onclick = function(e)
-{
-    const messageInputDom = document.querySelector('#chat-message-input');
-    const message = messageInputDom.value;
-    chatSocket.send(JSON.stringify({
-        'message': message
-    }));
-    messageInputDom.value = '';
-};
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function (e) {
+        if (e.key === 'Enter')
+            document.querySelector('#chat-message-submit').click();
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function (e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
+}
+
+export async function cleanupComponent() {
+    chatSocket.close();
+    chatSocket = null;
+}
