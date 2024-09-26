@@ -83,7 +83,7 @@ body {
 .controls {
 	position: relative;
 	width: 25vw;
-	height: 35vh;
+	height: 30vh;
 	align-items: end;
 	display: flex;
 }
@@ -99,37 +99,23 @@ body {
 	}
 
 	.next, .prev {
-		border: 2px solid black;
-		width: 100%;
+		width: 35%;
 		height: 100%;
-		padding: 10%;
 		cursor: pointer;
 		position: absolute; /* Make them absolute for positioning relative to .controls */
-		top: 50%; /* Center vertically */
-		transform: translateY(-50%); /* Adjust for vertical centering */
+		top: 0%; /* Center vertically */
+		transform: translateY(-70%); 
 	}
 
 	.prev {
-		top: 50%; /* Center vertically */
-		transform: translateY(-50%); /* Adjust for vertical centering */
-
+		left: -7vw; /* Position to the left of .name */
 	}
-
+	
 	.next {
-		top: 50%; /* Center vertically */
+		right: -7vw; /* Position to the right of .name */
 	}
-
+	
 	.next img, .prev img {
-		width: 50%;
-		/* max-width: auto;
-		max-height: auto;  */
+		width: 100%; /* Ensure the images fill their parent container */
+		height: auto; /* Maintain aspect ratio */
 	}
-	
-	/* .next:hover, .prev:hover { color: #000; }
-	
-	.next:active, .prev:active {
-		top: 4px;
-		box-shadow: 0 1px 0 #999;
-	} */
-  .next { right: 5em; }
-  .prev { left: 5em; }
