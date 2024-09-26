@@ -184,6 +184,7 @@ class GameThread(threading.Thread):
 	def game_over(self, Winner):
 		self.game.finished = True
 		self.game.winner_id = Winner
+		self.game.save()
 		self.stop()
 
 		async_to_sync(self.channel_layer.group_send)(

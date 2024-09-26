@@ -126,6 +126,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.GameThread = GameThread(self.game, self.room_group_name, self.channel_layer)
                 self.games[self.room_group_name] = self.GameThread
                 self.GameThread.start()
+                self.game.started = True
+                await sync_to_async(self.game.save)()
             except Exception as e:
                 print(e)
                 await self.send(text_data=json.dumps({
@@ -152,6 +154,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             del self.GameThread
 
             self.game.winner_id = self.game.get_other_player_id(self.user.id)
+            self.game.finished = True
             await sync_to_async(self.game.save)()
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -164,8 +167,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data):
-        if self.type == 'viewer':
-            return
 
         data = json.loads(text_data)
 
@@ -173,7 +174,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'pong'
             }))
-        elif data["message"] == "keyup" or data["message"] == "keydown":
+        elif (data["message"] == "keyup" or data["message"] == "keydown") and self.type != 'viewer':
             await self.GameThread.set_player_direction(self.player, data)
 
     async def game_started(self, event):
