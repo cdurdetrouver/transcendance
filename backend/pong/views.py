@@ -36,7 +36,7 @@ from .serializers import GameSerializer
 @api_view(['GET'])
 def game_detail(request):
 
-	games = Game.objects.filter(finished=False)
+	games = Game.objects.filter(finished=False, started=True)
 	serialized_games = GameSerializer(games, many=True)
 
 	return JsonResponse({'games': serialized_games.data}, status=status.HTTP_200_OK)
