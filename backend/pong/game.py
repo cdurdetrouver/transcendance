@@ -69,6 +69,7 @@ class GameThread(threading.Thread):
 		self.group_name = group_name
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
+		self.nb_viewer = 0
 
 		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 4)
 		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
@@ -123,6 +124,8 @@ class GameThread(threading.Thread):
 				current_time = time.time()
 				self.delta_time = current_time - last_time
 				last_time = current_time
+
+				self.game.nb_viewers = self.nb_viewer
 
 				self.ball.update()
 				self.paddle1.move()
@@ -190,11 +193,22 @@ class GameThread(threading.Thread):
 		async_to_sync(self.channel_layer.group_send)(
 			self.group_name,
 			{
+				'type': 'game.update',
+				'message': self.serialize()
+			}
+		)
+
+		async_to_sync(self.channel_layer.group_send)(
+			self.group_name,
+			{
 				'type': 'game.end',
 				'message': 'Game has ended',
 				'winner': Winner.id
 			}
 		)
+
+	async def add_viewer(self):
+		self.nb_viewer += 1
 
 	async def set_player_direction(self, player, data):
 		if player == "player1":
@@ -209,4 +223,5 @@ class GameThread(threading.Thread):
 				self.paddle2.movedown = data["message"] == "keydown"
 
 	def stop(self):
+		print("Game stopped")
 		self._stop_event.set()
