@@ -241,32 +241,8 @@ async function get_game_players(game_id) {
 	let response_game_data = await response_game.json();
 	response_game_data = response_game_data.game;
 
-	let player1_id = response_game_data.player1_id;
-	let player2_id = response_game_data.player2_id;
-
-	const responseplayer1 = await fetch(config.backendUrl + '/user/' + player1_id + '/', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		credentials: 'include'
-	});
-
-	const responseplayer2 = await fetch(config.backendUrl + '/user/' + player2_id + '/', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		credentials: 'include'
-	});
-
-	if (responseplayer1.status !== 200 || responseplayer2.status !== 200) {
-		console.error('Error connecting to game');
-		router.navigate('/pong');
-	}
-
-	player1 = (await responseplayer1.json()).user;
-	player2 = (await responseplayer2.json()).user;
+	player1 = response_game_data.player1;
+	player2 = response_game_data.player2;
 }
 
 export async function initComponent() {
