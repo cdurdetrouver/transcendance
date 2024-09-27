@@ -56,7 +56,6 @@ function updateStats(character)
 	$(".speed-stat").html('<img src="' + characterStats.speed + '" alt="speed stat">');
 }
 
-
 $(document).ready(function() {
 	$(".next").on("click", { d: "n" }, rotate);
 	$(".prev").on("click", { d: "p" }, rotate);
@@ -68,30 +67,6 @@ $(document).ready(function() {
 			rotate({ data: { d: "p" } });
 		}
 	});
-
-	const lines = $(".line");
-    let currentLineIndex = 0;
-
-    function updateArrowPosition() {
-        const arrowTop = 1 + currentLineIndex * 5; //5vh
-        $('.arrow').css('top', `${arrowTop}vh`);
-    }
-
-    updateArrowPosition();
-
-    $(document).on('keydown', function(e) {
-        if (e.key === 'ArrowUp') {
-            if (currentLineIndex > 0) {
-                currentLineIndex--; 
-                updateArrowPosition(); 
-            }
-        } else if (e.key === 'ArrowDown') {
-            if (currentLineIndex < lines.length - 1) {
-                currentLineIndex++;
-                updateArrowPosition();
-            }
-        }
-    });
 });
 
 function rotate(e)
@@ -155,16 +130,3 @@ function rotate(e)
   $(".name-text").text(names[currentIndex]);
   updateStats(names[currentIndex]);
 }
-
-
-
-
-const arrow = document.querySelector('.arrow');
-const lines = document.querySelectorAll('.line');
-
-lines.forEach((line, index) => {
-    line.addEventListener('mouseenter', () => {
-        const lineHeight = line.getBoundingClientRect().height;
-        arrow.style.top = `${index * lineHeight}px`; // Adjust top position based on actual line height
-    });
-});
