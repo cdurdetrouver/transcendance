@@ -13,6 +13,7 @@ body {
   
 
   .background {
+	/* border: solid 1px red; */
     position: absolute;
 	top: 0;
 	left: 0;
@@ -27,10 +28,10 @@ body {
     justify-content: center;
     align-items: center;
 	flex-direction: column;
-
 }
 
 .container {
+    margin-top: 15vh; /* Add spacing between the container and the stats */
 	position: relative;
 	width: 25vw;
 	height: 20vh;
@@ -83,62 +84,123 @@ body {
 	transition: transform 1s;  
 	transform: rotateY(300deg) translateZ(11vw) rotateY(60deg); }
   
-.controls {
-    margin-top: 3vh; /* Add spacing between the container and the stats */
 
-	position: relative;
-	width: 25vw;
-	align-items: end;
-	display: flex;
-}
+	.controls {
+		margin-top: 10vh;
+		position: relative;
+		display: flex;
+		justify-content: center; /* Center the name horizontally */
+		align-items: center;
+	}
 
-.name {
-	width: 6vw;
-	left: 50%;
-	font-family: IsaacFont;
-	font-size:4vh;
-	color: #444;
-	position: relative;
-	transform: translateX(-50%); /* Move it to the left by half of its own width */
-}
+	.name {
+		font-family: IsaacFont;
+		font-size: 6vh;
+		color: #2d2d2d;
+		width: 13vw; /* Let the width adjust automatically based on the content */
+		text-align: center; /* Center the text within its container */
+		position: relative;
+		display: inline-block;
+	}
+	
+	.prev, .next {
+		width: 20%;
+		cursor: pointer;
+		position: absolute;
+	}
+	
+	.prev {
+		left: -7vw; /* Position to the left of the centered name */
+		top: -0.5vh;
+	}
+	
+	.next {
+		right: -7vw; /* Position to the right of the centered name */
+		top: -1vh;
+	}
+	
+	.next img, .prev img {
+		width: 100%;
+		height: auto;
+		transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition for hover effects */
+	}
 
-.next, .prev {
-	width: 35%;
-	height: 100%;
-	cursor: pointer;
-	position: absolute; /* Make them absolute for positioning relative to .controls */
-	top: 0%; /* Center vertically */
-	transform: translateY(-70%); 
-}
-
-.prev {
-	left: -7vw; /* Position to the left of .name */
-}
-
-.next {
-	right: -7vw; /* Position to the right of .name */
-}
-
-.next img, .prev img {
-	width: 100%; /* Ensure the images fill their parent container */
-	height: auto; /* Maintain aspect ratio */
-}
-
-
+	.prev img:hover, .next img:hover {
+		transform: scale(1.1); /* Slightly increase the size of the image on hover */
+	}
 
 .stats {
 
+	margin-left: 2vw;
+	height: 15%;
     display: flex;
     width: 30%; /* Adjust based on your layout */
-    margin-top: 4vh; /* Add spacing between the container and the stats */
+    margin-top: 7vh; 
 	font-family: IsaacFont;
     font-size: 2vh;
     color: #444;
-    /* text-align: center; */
 }
 
-.stats > div {
-    flex: 1; 
+.life, .speed, .str {
+	/* border: solid 1px red; */
+    width: 15%;
 }
 
-/* Faire en sorte que le block controlv soient un block en dessous de container
+.life img,  .speed img,  .str img  {
+	width: 100%; /* Ensure the images fill their parent container */
+	height: auto;
+}
+
+.life-stat img,.speed-stat img, .str-stat img
+{
+	height: 50%;
+}
+
+.life-stat,.speed-stat, .str-stat  {
+	/* border: solid 1px red; */
+	margin-left: 1dvw;
+	width: 30%;
+}
+
+.game_sheet {
+    position: absolute;
+    top: 50vh;
+    left: 63vw;
+    width: 30%;
+    height: 30%;
+    background-image: url('assets/character/game_sheet.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.text {
+    position: relative;
+    margin-top: 3vh;
+    font-family: IsaacFont;
+    font-size: 4vh;
+    color: #2d2d2d;
+    transform: rotate(7deg);
+}
+
+.arrow {
+    position: absolute;
+    left: -1vw; /* Position the arrow to the left of the text */
+    top: 1vh;
+    width: 1vw; /* Arrow size is responsive based on viewport width */
+    height: auto; /* Maintain the aspect ratio of the arrow */
+    max-width: 100%;
+    transition: top 0.3s ease; /* Smooth transition for the arrow movement */
+}
+
+.line {
+    margin: 1vh;
+    padding: 1vh;
+    position: relative;
+    cursor: pointer;
+}
