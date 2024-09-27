@@ -13,13 +13,12 @@ body {
   
 
   .background {
-	/* border: solid 1px red; */
     position: absolute;
 	top: 0;
 	left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('assets/images/character_sheet.png'); /* Add your background image path */
+    background-image: url('assets/images/character_sheet.png'); 
     background-position: center;
 	background-repeat: no-repeat;
 	background-size: 35%;
@@ -31,7 +30,7 @@ body {
 }
 
 .container {
-    margin-top: 15vh; /* Add spacing between the container and the stats */
+    margin-top: 15vh; 
 	position: relative;
 	width: 25vw;
 	height: 20vh;
@@ -89,7 +88,7 @@ body {
 		margin-top: 10vh;
 		position: relative;
 		display: flex;
-		justify-content: center; /* Center the name horizontally */
+		justify-content: center; 
 		align-items: center;
 	}
 
@@ -97,8 +96,8 @@ body {
 		font-family: IsaacFont;
 		font-size: 6vh;
 		color: #2d2d2d;
-		width: 13vw; /* Let the width adjust automatically based on the content */
-		text-align: center; /* Center the text within its container */
+		width: 13vw; 
+		text-align: center; 
 		position: relative;
 		display: inline-block;
 	}
@@ -110,23 +109,23 @@ body {
 	}
 	
 	.prev {
-		left: -7vw; /* Position to the left of the centered name */
+		left: -7vw; 
 		top: -0.5vh;
 	}
 	
 	.next {
-		right: -7vw; /* Position to the right of the centered name */
+		right: -7vw; 
 		top: -1vh;
 	}
 	
 	.next img, .prev img {
 		width: 100%;
 		height: auto;
-		transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition for hover effects */
+		transition: transform 0.3s ease, opacity 0.3s ease; 
 	}
 
 	.prev img:hover, .next img:hover {
-		transform: scale(1.1); /* Slightly increase the size of the image on hover */
+		transform: scale(1.1); 
 	}
 
 .stats {
@@ -134,7 +133,7 @@ body {
 	margin-left: 2vw;
 	height: 15%;
     display: flex;
-    width: 30%; /* Adjust based on your layout */
+    width: 30%; 
     margin-top: 7vh; 
 	font-family: IsaacFont;
     font-size: 2vh;
@@ -142,12 +141,11 @@ body {
 }
 
 .life, .speed, .str {
-	/* border: solid 1px red; */
     width: 15%;
 }
 
 .life img,  .speed img,  .str img  {
-	width: 100%; /* Ensure the images fill their parent container */
+	width: 100%; 
 	height: auto;
 }
 
@@ -157,7 +155,6 @@ body {
 }
 
 .life-stat,.speed-stat, .str-stat  {
-	/* border: solid 1px red; */
 	margin-left: 1dvw;
 	width: 30%;
 }
@@ -181,26 +178,23 @@ body {
 
 .text {
     position: relative;
-    margin-top: 3vh;
+    margin-top: -1vh;
     font-family: IsaacFont;
     font-size: 4vh;
     color: #2d2d2d;
     transform: rotate(7deg);
 }
 
-.arrow {
-    position: absolute;
-    left: -1vw; /* Position the arrow to the left of the text */
-    top: 1vh;
-    width: 1vw; /* Arrow size is responsive based on viewport width */
-    height: auto; /* Maintain the aspect ratio of the arrow */
-    max-width: 100%;
-    transition: top 0.3s ease; /* Smooth transition for the arrow movement */
-}
 
-.line {
-    margin: 1vh;
-    padding: 1vh;
+.game {
     position: relative;
     cursor: pointer;
+    color: #7a7a7a;
+	transition: transform 0.3s ease, opacity 0.3s ease; 
+
+}
+
+.game:hover {
+    color: #2d2d2d;
+	transform: scale(1.1); 
 }
