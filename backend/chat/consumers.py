@@ -22,7 +22,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.user = None
 
     async def connect(self):
-        self.room_group_name = self.scope["url_route"]["kwargs"]["room_id"]
+        self.room_group_id = self.scope["url_route"]["kwargs"]["room_id"]
         access_token = self.scope['cookies'].get('access_token')
         success, result = await sync_to_async(get_user_by_token)(access_token)
         await self.accept()
@@ -34,7 +34,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.user = result
-        self.room = await get_room(self.room_group_name)
+        self.room = await get_room(self.room_group_id)
+        if (not self.room):
+            self.disconnect(404)
+        self.room_group_name = self.room.name
         if (await in_room(self.room, self.user.id) == False):
             await add_in_room(self.room, self.user.id)
             self.room = await get_room(self.room_group_name)

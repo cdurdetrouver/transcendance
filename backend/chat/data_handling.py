@@ -20,10 +20,10 @@ def get_user(user_id):
 @database_sync_to_async
 def get_room(room_id):
     try:
-        room = get_object_or_404(Room, name=room_id)
+        room = get_object_or_404(Room, id=room_id)
+        return room
     except:
-        room = Room.objects.create(name=room_id)
-    return room
+        return None
 
 @database_sync_to_async
 def in_room(room, user_id):
@@ -49,9 +49,12 @@ def get_last_10_messages(room, nb_refresh, starts):
 
     if (nb_refresh == 1):
         ids = room.messages_id[-10 * nb_refresh:]
+        if not ids:
+            empty = True
+            return messages, starts, empty
         starts = room.messages_id[-1]
     else:
-        start = (room.messages_id.index(starts) + 1) - (10 * nb_refresh) #room.messages_id[-10 * nb_refresh:]
+        start = (room.messages_id.index(starts) + 1) - (10 * nb_refresh)
         end = (room.messages_id.index(starts) + 1) - ((nb_refresh - 1) * 10)
         if (start < 0 and end > 0):
             start = 0

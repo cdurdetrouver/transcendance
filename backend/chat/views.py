@@ -32,12 +32,13 @@ from drf_yasg.utils import swagger_auto_schema
 @api_view(['GET'])
 def get_user_chats(request):
     user = request.user
-    rooms = Room.objects.filter(participants_id__contains=[user.id]).all()
+    rooms = Room.objects.filter(participants_id__contains=[user.id])
     print(rooms)
     if (not rooms.exists()):
         return Response({"error": "not room found"}, status=status.HTTP_404_NOT_FOUND)
-    rooms_s = RoomSerializer(rooms, many=True)
-    response = JsonResponse({'rooms': rooms_s.data}, status=status.HTTP_200_OK)
+    rooms_s = (RoomSerializer(rooms, many=True)).data
+    print(rooms_s)
+    response = JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
     return response
 
 @api_view()
