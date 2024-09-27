@@ -4,6 +4,7 @@ import asyncio
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
+import time
 
 from user.utils import get_user_by_token
 from user.serializers import UserSerializer
@@ -36,7 +37,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             game_room_name = f"game_room_{player1.channel_name}_{player2.channel_name}"
             game_room_name = re.sub(r'[^a-zA-Z0-9._-]', '', game_room_name)[:50]
 
-            game = await sync_to_async(Game.objects.create(room_name=game_room_name , player1=player1.user, player2=player2.user))
+            game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1=player1.user, player2=player2.user)
             await sync_to_async(game.save)()
 
             await player1.send(text_data=json.dumps({
@@ -84,7 +85,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.user = result
         self.room_group_name = self.scope['url_route']['kwargs']['room_name']
         self.game = await sync_to_async(Game.objects.get)(room_name=self.room_group_name)
-        print(self.game, self.user)
+        await sync_to_async(lambda: self.game.player1)()
+        await sync_to_async(lambda: self.game.player2)()
+        await sync_to_async(lambda: self.game.winner)()
 
         if self.game.finished:
             await self.send(text_data=json.dumps({
@@ -94,9 +97,10 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
-        if (self.user != self.game.player1 and self.user != self.game.player2):
-            self.game.nb_viewers += 1
-            await sync_to_async(self.game.save)()
+        if ((self.user != self.game.player1 and self.user != self.game.player2) or self.game.started):
+            print(self.games)
+            self.GameThread = self.games[self.room_group_name]
+            await self.GameThread.add_viewer()
             await self.send(text_data=json.dumps({
                 'type': 'viewer',
                 'message': 'You are not a player in this game',
@@ -116,9 +120,8 @@ class PongConsumer(AsyncWebsocketConsumer):
             }))
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
-        print(not self.game.started, self.game.player1.id in self.waiting_players, self.game.player2.id in self.waiting_players)
-
         if not self.game.started and self.game.player1.id in self.waiting_players and self.game.player2.id in self.waiting_players:
+            time.sleep(0.1)
             self.waiting_players.remove(self.game.player1.id)
             self.waiting_players.remove(self.game.player2.id)
             print("Try to start game")
@@ -174,7 +177,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'pong'
             }))
-        elif (data["message"] == "keyup" or data["message"] == "keydown") and self.type != 'viewer':
+        elif self.type != 'viewer' and (data["message"] == "keyup" or data["message"] == "keydown"):
             await self.GameThread.set_player_direction(self.player, data)
 
     async def game_started(self, event):
@@ -191,7 +194,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         }))
 
     async def game_end(self, event):
-        print("Game end and winner is ", event['winner'])
         await self.send(text_data=json.dumps({
             'type': 'game_end',
             'message': event['message'],

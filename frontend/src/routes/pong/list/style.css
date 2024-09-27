@@ -3,7 +3,6 @@
 	justify-content: center;
 	align-items: center;
 	height: 100vh;
-	overflow-y: scroll;
 }
 
 ul {
@@ -12,6 +11,8 @@ ul {
 	margin: 0;
 	width: 80%;
 	max-width: 600px;
+	height: 50vh;
+	overflow-y: scroll;
 }
 
 li {
