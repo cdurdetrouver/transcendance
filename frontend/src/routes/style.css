@@ -1,3 +1,138 @@
-body {
-	background-color: lightblue;
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background-color: #d2c7c3;
+
+}
+
+@font-face {
+	font-family: isaac;
+	src: url(../routes/assets/font/IsaacGame.ttf);
+  }
+
+#container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #d2c7c3;
+}
+
+#game-container {
+    position: relative;
+}
+
+#menu-image {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#start {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s ease;
+}
+
+#start {
+    width: 100%;
+    height: 100%;
+	background-image: url('../routes/assets/images/bg_doodle.png');
+    z-index: 2;
+}
+
+#post-it-1 {
+    z-index: 3;
+}
+
+#header {
+    width: 100%;
+    height: 100%;
+
+}
+
+.centered-image {
+	max-width: 2000px;
+	position: relative;
+    display: inline-block;
+	display: block;
+}
+
+.button-mode {
+    padding: 10px 20px;
+    background: transparent;
+    color: rgba(69,57,59,255);
+    cursor: pointer;
+	font-family: isaac;
+    font-size: 3.5vw;
+    text-decoration: none;
+}
+
+#select-mode {
+    position: absolute;
+    top: 12%;
+    left: 33%;
+    /* background-color: red; */
+    transform: translate(10%, 10%) rotate(-5deg);
+    width: 34%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4%; /*pas sur que ca soit le mieux pour que ca soit responsive*/
+}
+
+#login-page {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    /* background-color: blue; */
+    transform: translate(10%, 10%) rotate(12deg);
+    width: 15%;
+    height: 29%;
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: center;
+    align-items: center;
+}
+
+#login {
+    padding: 10px 20px;
+    background: transparent;
+    color: rgba(69,57,59,255);
+    cursor: pointer;
+	font-family: isaac;
+    font-size: 3vw;
+    text-decoration: none;
+}
+
+a:hover {
+    font-size: 3.8vw;
+}
+
+#openPageButton {
+    position: absolute;
+    top: calc(50% + 210px); /* adjust vertical position (e.g., 20px below the center) */
+    left: calc(50%);
+    transform: translate(-50%, -50%) rotate(7deg); /* center the button exactly */
+    padding: 10px 20px;
+    background: transparent; /* remove background */
+    color: rgba(69,57,59,255);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: isaac;
+    font-size: 55px;
+
+ /* adjust horizontal position (e.g., 30px to the right of the center) */
 }

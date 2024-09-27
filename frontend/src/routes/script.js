@@ -18,3 +18,10 @@ else
 	else
 		window.location.href = '/login';
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('openPageButton').addEventListener('click', function () {
+        document.getElementById('start').style.transform = 'translateY(-100%)';
+        document.getElementById('page').style.transform = 'translateY(0)';
+    });
+});
