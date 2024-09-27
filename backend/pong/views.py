@@ -23,23 +23,54 @@ from .serializers import GameSerializer
 					items=GameSerializer.game_swagger
 				)
 			}
+		),
+		400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description="Invalid credentials or validation error")
+			}
 		)
 	},
-	manual_parameters=[
-		openapi.Parameter(
-			'Authorization',
-			openapi.IN_HEADER,
-			description="Authorization token",
-			type=openapi.TYPE_STRING,
-			default='Bearer <token>'
-		)
-	],
 	operation_description="Retrieve a list of games where the winner is not yet determined"
 )
 @api_view(['GET'])
 def game_detail(request):
 
-	games = Game.objects.filter(finished=False)
+	games = Game.objects.filter(finished=False, started=True)
 	serialized_games = GameSerializer(games, many=True)
 
 	return JsonResponse({'games': serialized_games.data}, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'game':GameSerializer.game_swagger
+			}
+		),
+		404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description="Game doesn't exist")
+			}
+		),
+		400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description="Invalid credentials or validation error")
+			}
+		)
+	},
+	operation_description="Retrieve a game by id"
+)
+@api_view(['GET'])
+def game_id(request, game_id):
+	game = Game.objects.filter(id=game_id).first()
+	if game is None:
+		return Response({"error": "Game doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+	serialized_game = GameSerializer(game)
+	return JsonResponse({'game': serialized_game.data}, status=status.HTTP_200_OK)

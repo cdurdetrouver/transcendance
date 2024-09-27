@@ -16,6 +16,10 @@
 		"files": "/pong/game"
 	},
 	{
+		"path": "/pong/list",
+		"files": "/pong/list"
+	},
+	{
 		"path": "/chat",
 		"files": "/chat"
 	},

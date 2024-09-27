@@ -1,5 +1,7 @@
 import config from '../../env/config.js';
 import { get_user } from '../.././components/user/script.js';
+import { customalert } from '../../components/alert/script.js';
+import { router } from '../../app.js';
 
 const svgcheck = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
@@ -23,14 +25,17 @@ const svgcross = `
 `;
 
 let searchButtonTimeoutId = null;
+let SearchButton = null;
+let SearchStatus = false;
+let socket = null;
 
-class PongSocket {
+class MatchmakingSocket {
   constructor() {
     this.socket = null;
   }
 
   onopen() {
-    console.log("Connected to the pong websocket");
+    console.log("Connected to the Matchmaking websocket");
     this.socket.send(JSON.stringify({ message: "Hello, server!" }));
   }
 
@@ -39,8 +44,10 @@ class PongSocket {
     console.log(data);
     if (data.type == "error") {
       get_user().then((response) => {
-        if (response == null)
-          window.location.href = `/login`;
+        if (response == null) {
+          customalert("Error", "You are not logged in", true);
+          router.navigate('/login');
+        }
         this.open();
       });
     }
@@ -56,13 +63,13 @@ class PongSocket {
       SearchButton.style.opacity = "0.2";
       SearchButton.style.cursor = "not-allowed";
       setTimeout(() => {
-      window.location.href = '/pong/game?game_id=' + data.game_room;
+        router.navigate('/pong/game?game_room=' + data.game_room + '&game_id=' + data.game_id);
       }, 2000);
     }
   }
 
   onclose() {
-    console.log("Disconnected from the pong websocket");
+    console.log("Disconnected from the Matchmaking websocket");
   }
 
   open() {
@@ -118,20 +125,7 @@ function setPlayer(user, opponent = false) {
   }
 }
 
-const user = await get_user();
-if (!user)
-  window.location.href = '/login';
-
-setPlayer(user);
-toggleSvgStatus(false, false);
-toggleSvgStatus(true, false);
-
-let SearchButton = document.getElementById('search');
-let SearchStatus = false;
-
-let socket = new PongSocket();
-
-SearchButton.addEventListener('click', async function handleClick() {
+async function handleClick() {
 
   let WaitingTextDiv = document.querySelector('.waiting__message');
   let WaitingText = WaitingTextDiv.querySelector('p');
@@ -164,4 +158,33 @@ SearchButton.addEventListener('click', async function handleClick() {
 
     socket.close();
   }
-});
+}
+
+export async function initComponent() {
+  const user = await get_user();
+  if (!user) {
+    customalert("Error", "You are not logged in", true);
+    router.navigate('/login?return=/pong');
+  }
+
+  setPlayer(user);
+  toggleSvgStatus(false, false);
+  toggleSvgStatus(true, false);
+
+  SearchButton = document.getElementById('search');
+  SearchStatus = false;
+
+  socket = new MatchmakingSocket();
+
+  SearchButton.addEventListener('click', handleClick);
+}
+
+export async function cleanupComponent() {
+  SearchButton.removeEventListener('click', handleClick);
+  SearchButton = null;
+  SearchStatus = false;
+  clearTimeout(searchButtonTimeoutId);
+  searchButtonTimeoutId = null;
+  if (socket)
+    socket.close();
+}

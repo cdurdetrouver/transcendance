@@ -21,4 +21,5 @@ from chat.views import get_user_chats
 urlpatterns = [
     path('', views.user_detail),
     path('chats/', get_user_chats)
+    path('<int:user_id>/', views.user_id),
 ]

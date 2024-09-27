@@ -21,3 +21,11 @@ class Game(models.Model):
 		if self.finished:
 			string += f" - Winner: {self.winner_id}"
 		return string
+
+	def get_other_player_id(self, user_id):
+		if user_id == self.player1_id:
+			return self.player2_id
+		elif user_id == self.player2_id:
+			return self.player1_id
+		else:
+			return None

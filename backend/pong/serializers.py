@@ -3,8 +3,6 @@ from .models import Game
 from drf_yasg import openapi
 
 class GameSerializer(serializers.ModelSerializer):
-	password = serializers.CharField(write_only=True)
-
 	game_swagger=openapi.Schema(
 		type=openapi.TYPE_OBJECT,
 		properties={
