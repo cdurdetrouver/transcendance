@@ -30,12 +30,50 @@ import datetime
 	},
 	operation_description="Retrieve a list of users"
 )
-@api_view(['GET'])
+@swagger_auto_schema(
+	method='put',
+	request_body=UserSerializer,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'user': UserSerializer.user_swagger
+			}
+		),
+		400: 'User not valid'
+	},
+	operation_description="Update a user"
+)
+@swagger_auto_schema(
+	method='delete',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='User deleted')
+			}
+		)
+	},
+	operation_description="Delete a user"
+)
+@api_view(['GET', 'PUT', 'DELETE'])
 def user_detail(request):
-
-	user = request.user
-	serialized_user = UserSerializer(user)
-	return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
+	if request.method == 'PUT':
+		user = request.user
+		serializer = UserSerializer(user, data=request.data, partial=True)
+		if serializer.is_valid():
+			serializer.save()
+			return JsonResponse({'user': serializer.data}, status=status.HTTP_200_OK)
+		return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	elif request.method == 'DELETE':
+		user = request.user
+		user.delete()
+		return JsonResponse({'message': 'User deleted'}, status=status.HTTP_200_OK)
+	else :
+		user = request.user
+		serialized_user = UserSerializer(user)
+		return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(
 	method='get',
