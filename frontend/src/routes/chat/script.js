@@ -1,8 +1,6 @@
 import config from "../../env/config.js";
 import { get_user } from "../../components/user/script.js";
 
-//get chats -> chat box empty
-//select chat -> print chat box
 //create chat with a username or more -> upload a photo to the chat
 //create a conf chat
 //p'tit close chat 
@@ -78,6 +76,7 @@ async function open_chat(chat_id) {
             <input id="chat-message-input" type="text" size="100"><br>
             <input id="chat-message-submit" type="button" value="Send">
             <input id="chat-message-refresh" type="button" value="refresh">
+            <input id="chat-message-close" type="button" value="close chat">
         `;
     }
 
@@ -117,7 +116,13 @@ async function open_chat(chat_id) {
         }));
         messageInputDom.value = '';
     };
-    
+    document.querySelector('#chat-message-close').onclick = function(e)
+    {
+        if (chatSocket)
+            chatSocket.close();
+        const chat_box = document.querySelector('.chat-box');
+        chat_box.innerHTML = ``;
+    };
     document.querySelector('#chat-message-refresh').onclick = function(e)
     {
         chatSocket.send(JSON.stringify({
