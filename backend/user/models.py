@@ -13,6 +13,8 @@ class User(AbstractUser):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+
 	groups = models.ManyToManyField(Group, related_name='custom_user_set')
 	user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set')
 

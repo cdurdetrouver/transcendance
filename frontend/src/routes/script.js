@@ -1,11 +1,6 @@
 import { get_user } from '../components/user/script.js';
 import { customalert, clearalert } from '../components/alert/script.js';
 
-function test(event) {
-	console.log(event.target.id);
-	console.log('test');
-}
-
 export async function initComponent() {
 	let user = await get_user();
 	if (user)
@@ -17,6 +12,11 @@ export async function initComponent() {
 	});
 
 	let buttonError = document.querySelector('#button_error');
-	buttonError.addEventListener('click', test);
+	buttonError.addEventListener('click', () => {
+		const delay = clearalert() ? 200 : 0;
+		setTimeout(() => {
+			customalert('Error', 'This is an error message', true);
+		}, delay);
+	});
 }
 
