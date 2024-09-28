@@ -91,10 +91,6 @@ async function register_form(event) {
 	const email = document.querySelector('input[name="emailRegister"]').value;
 	const password = document.querySelector('input[name="passwordRegister"]').value;
 
-<<<<<<< HEAD
-	console.log("username = ", username, "email = ", email, "password = ", password);
-	const response = await register(username, email, password);
-=======
 	let buttonError = document.querySelector('#button_error');
 	buttonError.addEventListener('click', () => {
 		const delay = clearalert() ? 200 : 0;
@@ -103,7 +99,6 @@ async function register_form(event) {
 		}, delay);
 	});
 }
->>>>>>> 86f7d7a (feat: start auth with intra)
 
 	const data = await response.json();
 	console.log(data);

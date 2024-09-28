@@ -1,22 +1,4 @@
-<<<<<<< HEAD
-let carousel;
-let	a;
-let	b;
-let	c;
-let	d;
-let	t;
-let	f;
-let	currdeg;
-let	currdegA;
-let	currdegB;
-let	currdegC;
-let	turn;
-let currentIndex;
-
-const stats = {
-=======
 var stats = {
->>>>>>> ac19d0a (add: final front)
 	"ISAAC": {
 	  life: "../../static/assets/character/3.png",
 	  str: "../../static/assets/character/2.png",
