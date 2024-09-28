@@ -20,3 +20,40 @@ export async function initComponent() {
 	});
 }
 
+const popup = document.getElementById("login-popin");
+const openPopupBtn = document.getElementById("login");
+const closePopupBtn = document.getElementById("closePopupBtn");
+
+openPopupBtn.addEventListener("click", function() {
+    popup.style.display = "flex"; // Make the popup visible
+});
+
+closePopupBtn.addEventListener("click", function() {
+    popup.style.display = "none";
+});
+
+window.addEventListener("click", function(event) {
+    if (event.target === popup) {
+        popup.style.display = "none";
+    }
+});
+
+
+
+const register = document.getElementById("register-window");
+const openPopinBtn = document.getElementById("register");
+const closePopinBtn = document.getElementById("closePopupBtn");
+
+openPopupBtn.addEventListener("click", function() {
+    popup.style.display = "flex"; // Make the popup visible
+});
+
+closePopupBtn.addEventListener("click", function() {
+    popup.style.display = "none";
+});
+
+window.addEventListener("click", function(event) {
+    if (event.target === popup) {
+        popup.style.display = "none";
+    }
+});

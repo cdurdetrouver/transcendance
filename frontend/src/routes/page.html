@@ -20,8 +20,37 @@
 			<a href="" class="button-mode" id="stats">STATS</a>
 		</div>
 		<div id="login-page">
-			<a href="" class="login-mode" id="login">LOGIN</a>
+			<a class="login-mode" id="login">LOGIN</a>
 		</div>
+			<div id="login-popin" class="login-popin">
+				<div class="popin-content">
+					<span id="closePopupBtn" class="close">&times;</span>
+					<h2>Login</h2>
+					<form>
+						<label for="username">Username:</label>
+						<input type="text" id="username" name="username" required><br><br>
+						<label for="password">Password:</label>
+						<input type="password" id="password" name="password" required><br><br>
+						<input type="submit" value="Submit">
+					</form>
+					<p>Don't have an account? <button id="register">Register</button></p>
+					<div id="register-window">
+						<div id="register-content">
+							<span id="closePopupBtn" class="close">&times;</span>
+							<h2>Register</h2>
+							<form>
+								<label for="username">Username:</label>
+								<input type="text" id="username" name="username" required><br><br>
+								<label for="email">Email:</label>
+								<input type="text" id="email" name="email" required><br><br>
+								<label for="password">Password:</label>
+								<input type="password" id="password" name="password" required><br><br>
+								<input type="submit" value="Submit">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 
 	</div>
 </div>
