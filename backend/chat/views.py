@@ -7,6 +7,8 @@ from autobahn.wamp import request
 from django.http import JsonResponse
 from .serializers import RoomSerializer
 from user.serializers import UserSerializer
+from django.shortcuts import get_object_or_404
+from .data_handling import room_exists
 from .models import Room
 from rest_framework.response import Response
 import json
@@ -39,6 +41,52 @@ def get_user_chats(request):
     rooms_s = (RoomSerializer(rooms, many=True)).data
     print(rooms_s)
     response = JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
+    return response
+
+@swagger_auto_schema(
+	method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'room_name': openapi.Schema(
+                type=openapi.TYPE_STRING,
+                description='The name of the room'),
+        },
+        required=['room_name']
+    ),
+    responses={
+        200: openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'room_statuts': openapi.Schema(
+                    type=openapi.TYPE_STRING, 
+                    description='Status of room creation'),
+            }
+        ),
+        303: openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'room_statuts': openapi.Schema(
+                    type=openapi.TYPE_STRING, 
+                    description='Status indicating room already exists'),
+            }
+        ),
+    },
+	operation_description="Create a room"
+)
+@api_view(['POST'])
+def create_room(request):
+    user = request.user
+    data = json.loads(request.body)
+    room_name = data['room_name']
+
+    room = Room.objects.filter(name=room_name).all()
+    if room:
+        response = JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
+        return response
+    room = Room.objects.create(name=room_name, participants_id=[user.id])
+    room.save()
+    response = JsonResponse({'room_statuts': 'created'}, status=status.HTTP_200_OK)
     return response
 
 @api_view()

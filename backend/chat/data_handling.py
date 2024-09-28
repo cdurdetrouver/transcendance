@@ -17,6 +17,14 @@ from asgiref.sync import sync_to_async
 def get_user(user_id):
     return get_object_or_404(User, id=user_id)
 
+def room_exists(room_name):
+    print(room_name)
+    try:
+        room = get_object_or_404(Room, name=room_name)
+        return True
+    except:
+        return False
+
 @database_sync_to_async
 def get_room(room_id):
     try:

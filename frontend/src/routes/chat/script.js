@@ -5,6 +5,7 @@ import { get_user } from "../../components/user/script.js";
 //select chat -> print chat box
 //create chat with a username or more -> upload a photo to the chat
 //create a conf chat
+//p'tit close chat 
 //put gif in chat ? 
 let chatSocket;
 
@@ -24,8 +25,46 @@ async function get_user_chats()
         }
         return null;
 }
-//load html in chat box and open a connection with the backend to start the chat
 
+async function send_conf_room(room_name) {
+    
+    console.log(room_name);
+    const response = await fetch(config.backendUrl + "/chat/create_room/", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+		},
+		credentials: "include",
+        body: JSON.stringify({
+             "room_name": room_name
+        })
+	});
+    if (response.status === 200)
+        {
+            const data = await response.json();
+            console.log(data);
+            return ;
+        }
+        return null;
+}
+
+async function create_room() {
+    const chat_container = document.querySelector('.create-box');
+    const chat_btn = document.querySelector('.li-create-room-btn');
+    const chat_conf = document.createElement('li');
+    chat_btn.innerHTML=``;
+    chat_conf.innerHTML=`
+         <input class="chat-room-name" id="name" type="text" size="100"><br>
+         <input class="chat-room-submit" id=""submit type="button" value="Create">
+    `;
+    chat_container.appendChild(chat_conf);
+    const room_name = document.querySelector('.chat-room-name')
+    document.querySelector('.chat-room-submit').addEventListener('click', function(event) {
+        send_conf_room(room_name.value);
+    });
+}
+
+//load html in chat box and open a connection with the backend to start the chat
 async function open_chat(chat_id) {
     if (chatSocket) {
         chatSocket.close();
@@ -41,6 +80,7 @@ async function open_chat(chat_id) {
             <input id="chat-message-refresh" type="button" value="refresh">
         `;
     }
+
     chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + chat_id + "/");
     chatSocket.onmessage = function(e)
     {
@@ -94,13 +134,12 @@ async function print_chats() {
     {
         const chat_error = document.querySelector('.chat-list');
         const error = document.createElement('li');
-        chat.innerHTML = `
+        error.innerHTML = `
         <div class="chat-info">
         <div>${"no chat found"}</div>
         </div>
         `;
-        chat_error.appendChild(chat);
-        console.log(room);
+        chat_error.appendChild(error);
     }
     else {
         for (const room of rooms.rooms)
@@ -121,6 +160,11 @@ async function print_chats() {
             };
         }//load html in chat box and open a connection with the backend to start the chat
 }
+
 print_chats()
+const create_room_btn = document.querySelector('.li-create-room-btn');
+create_room_btn.addEventListener('click', function(event) {
+    create_room();
+});
 
 
