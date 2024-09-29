@@ -105,6 +105,7 @@ def get_intra_user(code):
 	return User.objects.create(
 		username=user.login,
 		email=user.email,
+		picture_remote=user.image.get('link'),
 		user_type='intra'
 	)
 
@@ -139,6 +140,7 @@ def get_github_user(code):
 	return User.objects.create(
 		username=user.login,
 		email=user.email,
+		picture_remote=user.avatar_url,
 		user_type='github'
 	)
 
@@ -156,7 +158,6 @@ def get_google_user(code):
 	}
 
 	response = requests.post(url, data=data)
-	print(response.json())
 	if response.status_code != 200:
 		return None
 	data = response.json()
@@ -166,7 +167,6 @@ def get_google_user(code):
 		'Authorization': f'Bearer {access_token}'
 	}
 	response = requests.get(url, headers=headers)
-	print(response.json())
 	if response.status_code != 200:
 		return None
 	user_info = response.json()
@@ -177,5 +177,6 @@ def get_google_user(code):
 	return User.objects.create(
 		username=user.name,
 		email=user.email,
+		picture_remote=user.picture,
 		user_type='google'
 	)

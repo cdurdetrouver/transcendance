@@ -26,9 +26,9 @@ function addGame(player1, player1_score, player2, player2_score) {
 	const game = document.createElement('li');
 	game.innerHTML = `
 		<div class="game-info">
-			<div>${player1}</div>
+			<div>${player1.username}</div>
 			<div class="score">${player1_score} - ${player2_score}</div>
-			<div>${player2}</div>
+			<div>${player2.username}</div>
 		</div>
 	`;
 	game_list.appendChild(game);
@@ -39,10 +39,12 @@ function setPersonalUser(user) {
 	const userDiv = document.createElement('div');
 	const username = user.username;
 	const email = user.email;
+	const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
 	const userHtml = `
 		<div class="user__info">
 			<p class="user__info__username">${username}</p>
 			<p class="user__info__email">${email}</p>
+			<img src="${profile_picture}" alt="Profile Picture">
 		</div>
 		<div class="user__buttons">
 			<button class="user__buttons__edit" onclick="router.navigate('/user/edit')">Edit</button>
@@ -83,7 +85,7 @@ export async function initComponent() {
 	if (!games)
 		router.navigate('/');
 	for (const game of games) {
-		addGame(game.player1_id, game.player1_score, game.player2_id, game.player2_score);
+		addGame(game.player1, game.player1_score, game.player2, game.player2_score);
 	}
 
 	if (!id || id === me.id) {

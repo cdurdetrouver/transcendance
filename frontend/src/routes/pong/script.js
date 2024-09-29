@@ -113,7 +113,8 @@ function setPlayer(user, opponent = false) {
     let pElement = userNameDiv.querySelector('p');
     let imgElement = div.querySelector('img');
     pElement.innerHTML = user.username;
-    imgElement.src = "https://cdn.discordapp.com/avatars/734497463171416154/43efebb9355ab2f651a97cd5d368c1b1?size=1024";
+    const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+    imgElement.src = profile_picture;
   }
   else {
     let div = document.getElementById('player');
@@ -121,7 +122,8 @@ function setPlayer(user, opponent = false) {
     let pElement = userNameDiv.querySelector('p');
     let imgElement = div.querySelector('img');
     pElement.innerHTML = user.username;
-    imgElement.src = "https://cdn.discordapp.com/avatars/734497463171416154/43efebb9355ab2f651a97cd5d368c1b1?size=1024";
+    const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+    imgElement.src = profile_picture;
   }
 }
 
