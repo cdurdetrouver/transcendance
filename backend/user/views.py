@@ -1,5 +1,4 @@
-from django.contrib.auth.hashers import check_password, make_password
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
 from django.conf import settings
 from rest_framework.permissions import AllowAny
@@ -61,11 +60,28 @@ import datetime
 def user_detail(request):
 	user = request.user
 	if request.method == 'PUT':
-		serializer = UserSerializer(user, data=request.data, partial=True)
+		username = request.data.get('username')
+		profile_picture = request.FILES.get('profilePicture')
+
+		data = {}
+		if profile_picture is not None:
+			data['profile_picture'] = profile_picture
+
+		if username is not None:
+			data['username'] = username
+
+		serializer = UserSerializer(user, data=data, partial=True)
+		print(serializer)
 		if serializer.is_valid():
+			if profile_picture is not None and user.picture_remote is not None:
+				serializer.validated_data['picture_remote'] = None
+			if profile_picture is not None:
+				id = user.id
+				profile_picture.name = f'{id}.png'
 			serializer.save()
 			return JsonResponse({'user': serializer.data}, status=status.HTTP_200_OK)
-		return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
+		return JsonResponse({'error':error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 	elif request.method == 'DELETE':
 		user.delete()
 		return JsonResponse({'message': 'User deleted'}, status=status.HTTP_200_OK)
@@ -204,14 +220,12 @@ def login(request):
 @permission_classes([AllowAny])
 def register(request):
 	user_data = request.data.copy()
-	password = user_data.get('password')
-
-	if not password:
-		return Response({'error': 'Password is required'}, status=status.HTTP_400_BAD_REQUEST)
 
 	serializer = UserSerializer(data=user_data)
 
 	if serializer.is_valid():
+		id = User.objects.all().count() + 1
+		serializer.validated_data['profile_picture'].name = f'{id}.png'
 		serializer.save()
 		user = AttributeDict(serializer.data)
 		response = JsonResponse({'user': serializer.data}, status=status.HTTP_201_CREATED)

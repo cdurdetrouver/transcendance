@@ -1,6 +1,7 @@
 import { customalert } from '../../../components/alert/script.js';
 import { get_user, update_user, delete_user } from '../../../components/user/script.js';
 import { router } from '../../../app.js';
+import { deleteCookie, setCookie } from '../../../components/storage/script.js';
 
 function setPersonalUser(user) {
 	const userDiv = document.querySelector('.container');
@@ -32,14 +33,18 @@ async function handleFormSubmit(event) {
 	event.preventDefault();
 	const form = event.target;
 	const formData = new FormData(form);
-	const username = formData.get('username');
-	const profilePicture = formData.get('profilePicture');
-
-	try {
-		await update_user({ username, profilePicture });
+	console.log(formData);
+	let response = await update_user(formData);
+	if (response.status === 200) {
 		customalert('Success', 'User updated successfully', false);
-	} catch (error) {
-		customalert('Error', 'Failed to update user', true);
+		let user = await response.json();
+		setPersonalUser(user.user);
+		deleteCookie('user');
+		setCookie('user', JSON.stringify(user.user), 5 / 1440);
+	}
+	else {
+		let data = await response.json();
+		customalert('Error', data.error, true);
 	}
 }
 
