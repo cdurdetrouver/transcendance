@@ -58,19 +58,16 @@ async function login_tierce(code, user_type) {
 	return response;
 }
 
-async function register(username, email, password) {
+async function register(username, email, password, profile_picture) {
+	const formData = new FormData();
+	formData.append('username', username);
+	formData.append('email', email);
+	formData.append('password', password);
+	formData.append('profile_picture', profile_picture);
+	formData.append('user_type', 'email');
 	const response = await fetch(config.backendUrl + "/register/", {
 		method: "POST",
-		headers:
-		{
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			'username': username,
-			'email': email,
-			'password': password,
-			'user_type': 'email'
-		}),
+		body: formData,
 		credentials: "include",
 	});
 
@@ -111,13 +108,10 @@ async function get_user() {
 	return null;
 }
 
-async function update_user(data) {
+async function update_user(formData) {
 	const response = await fetch(config.backendUrl + "/user/", {
 		method: "PUT",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(data),
+		body: formData,
 		credentials: "include",
 	});
 	return response;

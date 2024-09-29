@@ -11,6 +11,8 @@ class UserSerializer(serializers.ModelSerializer):
 			'id': openapi.Schema(type=openapi.TYPE_INTEGER),
 			'username': openapi.Schema(type=openapi.TYPE_STRING),
 			'email': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_EMAIL),
+			'profile_picture': openapi.Schema(type=openapi.TYPE_STRING),
+			'picture_remote': openapi.Schema(type=openapi.TYPE_STRING),
 			'user_type': openapi.Schema(type=openapi.TYPE_STRING),
 			'created_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME),
 			'updated_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME),
@@ -19,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User
-		fields = ['id', 'username', 'password', 'email', 'user_type', 'created_at', 'updated_at']
+		fields = ['id', 'username', 'profile_picture','picture_remote', 'password', 'email', 'user_type', 'created_at', 'updated_at']
 
 class LoginSerializer(serializers.ModelSerializer):
 	email = serializers.EmailField(required=False)
