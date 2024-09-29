@@ -31,6 +31,29 @@ async function login(email, password) {
 		const data = await response.json();
 
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+		return response;
+	}
+	return response;
+}
+
+async function login_tierce(code, user_type) {
+	const response = await fetch(config.backendUrl + "/login/", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			'code': code,
+			'user_type': user_type
+		}),
+		credentials: "include",
+	});
+
+	if (response.status === 200) {
+		const data = await response.json();
+
+		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+		return response;
 	}
 	return response;
 }
@@ -54,6 +77,7 @@ async function register(username, email, password) {
 	if (response.status === 201) {
 		const data = await response.json();
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+		return response;
 	}
 	else {
         console.error('Registration failed with status:', response.status);
@@ -122,4 +146,4 @@ async function logout() {
 	deleteCookie('user');
 }
 
-export { login, register, get_user, update_user, delete_user, refresh_token, logout };
+export { login, register, get_user, update_user, delete_user, refresh_token, logout, login_tierce };

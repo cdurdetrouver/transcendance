@@ -5,8 +5,9 @@ from django.contrib.auth.hashers import make_password
 class User(AbstractUser):
 	USER_TYPE_CHOICES = [
 		('email', 'Email'),
+		('intra', 'Intra'),
+		('github', 'Github'),
 		('google', 'Google'),
-		('github', 'GitHub'),
 	]
 
 	user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='email')

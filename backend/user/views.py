@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from .utils import generate_access_token, generate_refresh_token, AttributeDict
+from .utils import generate_access_token, generate_refresh_token, AttributeDict, get_intra_user, get_github_user, get_google_user
 from .models import User
 from .serializers import UserSerializer, LoginSerializer
 from pong.models import Game
@@ -59,19 +59,17 @@ import datetime
 )
 @api_view(['GET', 'PUT', 'DELETE'])
 def user_detail(request):
+	user = request.user
 	if request.method == 'PUT':
-		user = request.user
 		serializer = UserSerializer(user, data=request.data, partial=True)
 		if serializer.is_valid():
 			serializer.save()
 			return JsonResponse({'user': serializer.data}, status=status.HTTP_200_OK)
 		return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	elif request.method == 'DELETE':
-		user = request.user
 		user.delete()
 		return JsonResponse({'message': 'User deleted'}, status=status.HTTP_200_OK)
 	else :
-		user = request.user
 		serialized_user = UserSerializer(user)
 		return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
 
@@ -130,27 +128,60 @@ def login(request):
 	serializer = LoginSerializer(data=request.data)
 
 	if serializer.is_valid():
-		email = serializer.validated_data['email']
-		password = serializer.validated_data['password']
-
-		user = User.objects.filter(email=email).first()
-		if user is None:
-			return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-
-		if check_password(password, user.password):
+		if serializer.validated_data['user_type'] == 'intra':
+			# Connexion par intra
+			code = serializer.validated_data['code']
+			user = get_intra_user(code)
+			if user is None:
+				return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+			elif user.user_type != 'intra':
+				return Response({"error": "User is not an intra user"}, status=status.HTTP_400_BAD_REQUEST)
 			user_serializer = UserSerializer(user)
-			response = JsonResponse({'user': user_serializer.data}, status=status.HTTP_200_OK)
-			refresh_token = generate_refresh_token(user)
-			expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
-			secure_cookie = not settings.DEBUG
-			response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
-			access_token = generate_access_token(user)
-			expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
-			secure_cookie = not settings.DEBUG
-			response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
-			return response
-		else:
-			return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
+		elif serializer.validated_data['user_type'] == 'github':
+			# Connexion par github
+			code = serializer.validated_data['code']
+			user = get_github_user(code)
+			if user is None:
+				return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+			elif user.user_type != 'github':
+				return Response({"error": "User is not a github user"}, status=status.HTTP_400_BAD_REQUEST)
+			user_serializer = UserSerializer(user)
+		elif serializer.validated_data['user_type'] == 'google':
+			# Connexion par google
+			code = serializer.validated_data['code']
+			user = get_google_user(code)
+			if user is None:
+				return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+			elif user.user_type != 'google':
+				return Response({"error": "User is not a google user"}, status=status.HTTP_400_BAD_REQUEST)
+			user_serializer = UserSerializer(user)
+		elif serializer.validated_data['user_type'] == 'email':
+			# Connexion par email et mot de passe
+			email = serializer.validated_data['email']
+			password = serializer.validated_data['password']
+
+			if email is None or password is None:
+				return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+			user = User.objects.filter(email=email, user_type='email').first()
+			if user is None:
+				return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+
+			if check_password(password, user.password):
+				user_serializer = UserSerializer(user)
+			else:
+				return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
+
+		# Generate response
+		response = JsonResponse({'user': user_serializer.data}, status=status.HTTP_200_OK)
+		refresh_token = generate_refresh_token(user)
+		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
+		secure_cookie = not settings.DEBUG
+		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+		access_token = generate_access_token(user)
+		expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+		secure_cookie = not settings.DEBUG
+		response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+		return response
 	else:
 		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
 		return Response({"error": error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)

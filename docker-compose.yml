@@ -12,8 +12,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DB_PORT=5432
-      - DB_HOST=db
+      - .env
 
   db:
     container_name: db
