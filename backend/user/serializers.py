@@ -22,8 +22,10 @@ class UserSerializer(serializers.ModelSerializer):
 		fields = ['id', 'username', 'password', 'email', 'user_type', 'created_at', 'updated_at']
 
 class LoginSerializer(serializers.ModelSerializer):
-	password = serializers.CharField(write_only=True)
+	email = serializers.EmailField(required=False)
+	password = serializers.CharField(write_only=True, required=False)
+	code = serializers.CharField(required=False)
 
 	class Meta:
 		model = User
-		fields = ['email', 'password', 'user_type']
+		fields = ['email', 'password', 'code', 'user_type']

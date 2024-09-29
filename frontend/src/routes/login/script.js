@@ -1,4 +1,4 @@
-import { get_user, login, logout } from '../../components/user/script.js';
+import { get_user, login, logout, login_tierce } from '../../components/user/script.js';
 import { customalert } from '../../components/alert/script.js';
 import { router } from '../../app.js';
 import config from '../../env/config.js';
@@ -14,13 +14,33 @@ export async function initComponent() {
 	const logoutform = logoutdiv.querySelector('form');
 	logoutform.addEventListener('submit', logout_form);
 
+	const ButtonIntra = document.querySelector('.intra_button');
+	ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login')}&response_type=code`;
+	const ButtonGithub = document.querySelector('.github_button');
+	ButtonGithub.href = `https://github.com/login/oauth/authorize?client_id=${config.github_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=github')}&scope=user`;
+	const ButtonGoogle = document.querySelector('.google_button');
+	ButtonGoogle.href = `https://accounts.google.com/o/oauth2/auth?client_id=${config.google_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=google')}&response_type=code&scope=openid%20email%20profile`;
+
 	if (user)
 		logindiv.style.display = 'none';
 	else
 		logoutdiv.style.display = 'none';
 
-	const ButtonIntra = document.querySelector('.intra_button');
-	ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${config.frontendUrl}/login&response_type=code`;
+	const urlParams = new URLSearchParams(window.location.search);
+	const code = urlParams.get('code');
+	const source = urlParams.get('source');
+
+	if (code) {
+		const response = await login_tierce(code, source??'intra');
+		if (response.status !== 200) {
+			const data = await response.json();
+			customalert('Login failed', data.error, true);
+		} else {
+			customalert('Login successful', 'You are now logged in');
+			router.navigate('/');
+			return;
+		}
+	}
 }
 
 export async function cleanupComponent() {
