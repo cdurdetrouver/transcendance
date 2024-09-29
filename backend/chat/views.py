@@ -86,7 +86,7 @@ def create_room(request):
         return response
     room = Room.objects.create(name=room_name, participants_id=[user.id])
     room.save()
-    response = JsonResponse({'room_statuts': 'created'}, status=status.HTTP_200_OK)
+    response = JsonResponse({'room_statuts': 'created', 'room_name' : room_name}, status=status.HTTP_200_OK)
     return response
 
 @api_view()
