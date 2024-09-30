@@ -209,7 +209,7 @@ nltk.download('words')
 nltk.download('names')
 
 en_nlp = spacy.load('en_core_web_sm')
-fr_nlp = spacy.load('en_core_web_sm')
+fr_nlp = spacy.load('fr_core_web_sm')
 
 word_list = set(words.words())
 name_list = set(names.words())
