@@ -30,3 +30,7 @@ span.buttonText {
 	font-size: 14px;
 	font-weight: bold;
 }
+
+.div_2fa {
+	display: none;
+}

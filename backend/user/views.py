@@ -14,6 +14,10 @@ from pong.models import Game
 from pong.serializers import GameSerializer
 import jwt
 import datetime
+import pyotp
+import qrcode
+from io import BytesIO
+import base64
 
 @swagger_auto_schema(
 	method='get',
@@ -122,6 +126,13 @@ def user_id(request, user_id):
 			properties={
 				'user': UserSerializer.user_swagger
 			}
+		),200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='2FA required'),
+				'two_factor_enabled': openapi.Schema(type=openapi.TYPE_BOOLEAN),
+				'user_id': openapi.Schema(type=openapi.TYPE_INTEGER)
+			}
 		),
 		404: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
@@ -144,60 +155,47 @@ def login(request):
 	serializer = LoginSerializer(data=request.data)
 
 	if serializer.is_valid():
-		if serializer.validated_data['user_type'] == 'intra':
+		user_type = serializer.validated_data['user_type']
+		user = None
+
+		if user_type == 'intra':
 			# Connexion par intra
 			code = serializer.validated_data['code']
 			user = get_intra_user(code)
-			if user is None:
-				return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-			elif user.user_type != 'intra':
-				return Response({"error": "User is not an intra user"}, status=status.HTTP_400_BAD_REQUEST)
-			user_serializer = UserSerializer(user)
-		elif serializer.validated_data['user_type'] == 'github':
+		elif user_type == 'github':
 			# Connexion par github
 			code = serializer.validated_data['code']
 			user = get_github_user(code)
-			if user is None:
-				return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-			elif user.user_type != 'github':
-				return Response({"error": "User is not a github user"}, status=status.HTTP_400_BAD_REQUEST)
-			user_serializer = UserSerializer(user)
-		elif serializer.validated_data['user_type'] == 'google':
+		elif user_type == 'google':
 			# Connexion par google
 			code = serializer.validated_data['code']
 			user = get_google_user(code)
-			if user is None:
-				return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-			elif user.user_type != 'google':
-				return Response({"error": "User is not a google user"}, status=status.HTTP_400_BAD_REQUEST)
-			user_serializer = UserSerializer(user)
-		elif serializer.validated_data['user_type'] == 'email':
+		elif user_type == 'email':
 			# Connexion par email et mot de passe
 			email = serializer.validated_data['email']
 			password = serializer.validated_data['password']
 
-			if email is None or password is None:
-				return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 			user = User.objects.filter(email=email, user_type='email').first()
-			if user is None:
-				return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-
-			if check_password(password, user.password):
-				user_serializer = UserSerializer(user)
-			else:
+			if user and not check_password(password, user.password):
 				return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
+		else:
+			return Response({"error": "User type not supported"}, status=status.HTTP_400_BAD_REQUEST)
+
+		if user is None:
+			return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+		if user.user_type != user_type:
+			return Response({"error": "User type doesn't match"}, status=status.HTTP_400_BAD_REQUEST)
+
+		# 2FA
+		if user.is_two_factor_enabled:
+			return Response({
+				'message': '2FA required',
+				'two_factor_enabled': True,
+				'user_id': user.id
+			}, status=status.HTTP_200_OK)
 
 		# Generate response
-		response = JsonResponse({'user': user_serializer.data}, status=status.HTTP_200_OK)
-		refresh_token = generate_refresh_token(user)
-		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
-		secure_cookie = not settings.DEBUG
-		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
-		access_token = generate_access_token(user)
-		expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
-		secure_cookie = not settings.DEBUG
-		response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
-		return response
+		return complete_login(user)
 	else:
 		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
 		return Response({"error": error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -224,19 +222,19 @@ def register(request):
 	serializer = UserSerializer(data=user_data)
 
 	if serializer.is_valid():
+		# Profile picture
 		id = User.objects.all().count() + 1
 		serializer.validated_data['profile_picture'].name = f'{id}.png'
-		serializer.save()
-		user = AttributeDict(serializer.data)
+		user = serializer.save()
+
+		# Generate response
 		response = JsonResponse({'user': serializer.data}, status=status.HTTP_201_CREATED)
 		refresh_token = generate_refresh_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
-		secure_cookie = not settings.DEBUG
-		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=False, samesite='Strict', expires=expires)
 		access_token = generate_access_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
-		secure_cookie = not settings.DEBUG
-		response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+		response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='Strict', expires=expires)
 		return response
 	else:
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -334,3 +332,127 @@ def user_games(request, user_id):
 	games = Game.objects.filter(player2=user)
 	games_s += GameSerializer(games, many=True).data
 	return JsonResponse({'games': games_s}, status=status.HTTP_200_OK)
+
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'qr_code': openapi.Schema(type=openapi.TYPE_STRING),
+				'secret': openapi.Schema(type=openapi.TYPE_STRING)
+			}
+		)
+	},
+	operation_description="Generate a QR code and a secret for 2FA"
+)
+@api_view(['GET'])
+def generate_2fa_qr_code(request):
+	user = request.user
+
+	secret = pyotp.random_base32()
+
+	totp_uri = pyotp.TOTP(secret).provisioning_uri(
+		name=f"{user.username}@yourapp.com", issuer_name="YourAppName"
+	)
+
+	qr = qrcode.make(totp_uri)
+	img = BytesIO()
+	qr.save(img, format="PNG")
+	qr_b64 = base64.b64encode(img.getvalue()).decode('utf-8')
+
+	return Response({
+		'qr_code': qr_b64,
+		'secret': secret
+	}, status=status.HTTP_200_OK)
+
+@swagger_auto_schema(
+	method='post',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='2FA enabled successfully')
+			}
+		),
+		400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description='Invalid 2FA token')
+			}
+		)
+	}
+)
+@api_view(['POST'])
+def enable_2fa(request):
+	user = request.user
+	token = request.data.get('token')
+	secret = request.data.get('secret')
+
+	print(secret, token)
+
+	totp = pyotp.TOTP(secret)
+	if totp.verify(token):
+		user.two_factor_secret = secret
+		user.is_two_factor_enabled = True
+		user.save()
+
+		return Response({'message': '2FA enabled successfully'}, status=status.HTTP_200_OK)
+	else:
+		return Response({'error': 'Invalid 2FA token'}, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+	method='post',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'user': UserSerializer.user_swagger
+			}
+		),
+		400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description='Invalid 2FA token')
+			}
+		)
+	}
+)
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def verify_2fa_token(request):
+	user_id = request.data.get('user_id')
+	token = request.data.get('token')
+
+	user = User.objects.filter(id=user_id).first()
+
+	if user is None:
+		return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+
+	if not user.is_two_factor_enabled:
+		return Response({"error": "2FA is not enabled for this user"}, status=status.HTTP_400_BAD_REQUEST)
+
+	totp = pyotp.TOTP(user.two_factor_secret)
+	if totp.verify(token):
+		return complete_login(user)
+	else:
+		return Response({"error": "Invalid 2FA token"}, status=status.HTTP_400_BAD_REQUEST)
+
+def complete_login(user):
+	user_serializer = UserSerializer(user)
+
+	response = JsonResponse({'user': user_serializer.data}, status=status.HTTP_200_OK)
+	refresh_token = generate_refresh_token(user)
+	expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
+	secure_cookie = not settings.DEBUG
+	response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+
+	access_token = generate_access_token(user)
+	expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+	secure_cookie = not settings.DEBUG
+	response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+
+	return response
