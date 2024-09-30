@@ -37,10 +37,10 @@ async function handleFormSubmit(event) {
 	let response = await update_user(formData);
 	if (response.status === 200) {
 		customalert('Success', 'User updated successfully', false);
-		let user = await response.json();
-		setPersonalUser(user.user);
+		let data = await response.json();
+		setPersonalUser(data.user);
 		deleteCookie('user');
-		setCookie('user', JSON.stringify(user.user), 5 / 1440);
+		setCookie('user', JSON.stringify(data.user), 5 / 1440);
 	}
 	else {
 		let data = await response.json();

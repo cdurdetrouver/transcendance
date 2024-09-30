@@ -27,12 +27,6 @@ async function login(email, password) {
 		credentials: "include",
 	});
 
-	if (response.status === 200) {
-		const data = await response.json();
-
-		setCookie('user', JSON.stringify(data.user), 5 / 1440);
-		return response;
-	}
 	return response;
 }
 
@@ -49,12 +43,6 @@ async function login_tierce(code, user_type) {
 		credentials: "include",
 	});
 
-	if (response.status === 200) {
-		const data = await response.json();
-
-		setCookie('user', JSON.stringify(data.user), 5 / 1440);
-		return response;
-	}
 	return response;
 }
 

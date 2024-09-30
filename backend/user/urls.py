@@ -21,4 +21,7 @@ urlpatterns = [
     path('', views.user_detail),
     path('<int:user_id>/', views.user_id),
     path('games/<int:user_id>/', views.user_games),
+    path('generate-2fa-qr/', views.generate_2fa_qr_code),
+    path('enable-2fa/', views.enable_2fa),
+    path('verify-2fa/', views.verify_2fa_token),
 ]

@@ -9,3 +9,5 @@ channels==4.0.0
 channels_postgres
 PyJWT==2.3.0
 pillow==10.4.0
+pyotp==2.9.0
+qrcode==7.4.2
