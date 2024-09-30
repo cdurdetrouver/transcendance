@@ -20,6 +20,9 @@ class User(AbstractUser):
 	groups = models.ManyToManyField(Group, related_name='custom_user_set')
 	user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set')
 
+	two_factor_secret = models.CharField(max_length=32, blank=True, null=True)
+	is_two_factor_enabled = models.BooleanField(default=False)
+
 	def save(self, *args, **kwargs):
 		if not self.pk and self.user_type == 'email' and self.password:
 			self.password = make_password(self.password)
