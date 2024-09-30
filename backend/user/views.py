@@ -354,7 +354,7 @@ def generate_2fa_qr_code(request):
 	secret = pyotp.random_base32()
 
 	totp_uri = pyotp.TOTP(secret).provisioning_uri(
-		name=f"{user.username}@yourapp.com", issuer_name="YourAppName"
+		name=user.email, issuer_name="Transcendence"
 	)
 
 	qr = qrcode.make(totp_uri)
