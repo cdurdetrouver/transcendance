@@ -1,4 +1,5 @@
 import { router } from "../../app.js";
+import { customalert } from "../../components/alert/script.js";
 import { register } from "../../components/user/script.js";
 
 export async function initComponent() {
@@ -23,7 +24,7 @@ async function register_form(event) {
 	const profile_picture = document.querySelector('input[name="profilePicture"]').files[0];
 
 	if (password !== confirm_password) {
-		alert('Passwords do not match');
+		customalert('Error', 'Password do not match.', true);
 		return
 	}
 
@@ -31,6 +32,8 @@ async function register_form(event) {
 
 	if (response.status === 201)
 		router.navigate(href);
-	else
-		alert('Registration failed');
+	else {
+		const data = await response.json();
+		customalert('Error', data.error, true);
+	}
 }

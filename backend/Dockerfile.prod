@@ -13,6 +13,8 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip setuptools wheel
 RUN pip install -r requirements.txt
+RUN python -m spacy download en_core_web_sm
+RUN python -m spacy download fr_core_news_sm
 
 # Copy project
 COPY . .

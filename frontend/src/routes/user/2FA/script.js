@@ -6,52 +6,47 @@ import config from '../../../env/config.js';
 
 let secret = '';
 
-async function enable2FA()
-{
+async function enable2FA() {
 	let token = document.getElementById('2fa_code').value;
-	if (token === '')
-	{
+	if (token === '') {
 		customalert('Error', 'Token cannot be empty', true);
 		return;
 	}
 	console.log(secret, token);
-	const response = await fetch(config.backendUrl + '/user/enable-2fa/' , {
+	const response = await fetch(config.backendUrl + '/user/enable-2fa/', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ 
+		body: JSON.stringify({
 			'token': token,
 			'secret': secret
 		}),
 		credentials: 'include',
 	});
 
-	if (response.status === 200)
-	{
+	if (response.status === 200) {
 		const data = await response.json();
 		deleteCookie('user');
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
 		customalert('Success', '2FA enabled successfully', false);
 		router.navigate('/user/edit');
 	}
-	else
-	{
+	else {
 		customalert('Error', 'Failed to enable 2FA', true);
 	}
 }
 
-async function getQrcode()
-{
+async function getQrcode() {
 	console.log('getQrcode');
-	const response = await fetch(config.backendUrl + '/user/generate-2fa-qr/' , {
+	const response = await fetch(config.backendUrl + '/user/generate-2fa-qr/', {
 		method: 'GET',
 		credentials: 'include',
 	});
 
-	if (response.status === 200)
-	{
-		const data = await response.json();
+	const data = await response.json();
+
+	if (response.status === 200) {
 		const qr_code = data.qr_code;
 		secret = data.secret;
 		const button_qr_code = document.getElementById('gen-qrcode');
@@ -61,17 +56,14 @@ async function getQrcode()
 		const qr_code_img = document.getElementById('img_qr_code');
 		qr_code_img.src = `data:image/png;base64,${qr_code}`
 	}
-	else
-	{
-		customalert('Error', 'Failed to get QR code', true);
+	else {
+		customalert('Error', data.error, true);
 	}
 }
 
-export async function initComponent()
-{
+export async function initComponent() {
 	let user = await get_user();
-	if (!user)
-	{
+	if (!user) {
 		customalert('Error', 'You are not logged in', true);
 		router.navigate('/login?return=/user/edit');
 	}
@@ -82,8 +74,7 @@ export async function initComponent()
 	button_verify_2fa.addEventListener('click', enable2FA);
 }
 
-export async function clearComponent()
-{
+export async function clearComponent() {
 	const button_qr_code = document.getElementById('gen-qrcode');
 	button_qr_code.removeEventListener('click', getQrcode);
 
