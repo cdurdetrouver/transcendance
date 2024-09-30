@@ -2,6 +2,11 @@ import datetime
 import jwt
 import requests
 import os
+import re
+import nltk
+from nltk.corpus import words, names
+from difflib import SequenceMatcher
+import spacy
 from django.conf import settings
 from user.models import User
 
@@ -180,3 +185,89 @@ def get_google_user(code):
 		picture_remote=user.picture,
 		user_type='google'
 	)
+
+def is_valid_username(username):
+	message = ""
+	if len(username) < 3:
+		message = "Username is too short. It should be at least 3 characters long."
+		return False, message
+	if len(username) > 20:
+		message ="Username is too long. It should be no more than 20 characters long."
+		return False, message
+
+	if not username[0].isalpha():
+		message ="Username should start with a letter."
+		return False, message
+
+	if not re.match("^[A-Za-z0-9_]+$", username):
+		message ="Username should only contain letters, digits, and underscores (_)."
+		return False, message
+
+	return True, message
+
+nltk.download('words')
+nltk.download('names')
+
+en_nlp = spacy.load('en_core_web_sm')
+fr_nlp = spacy.load('en_core_web_sm')
+
+word_list = set(words.words())
+name_list = set(names.words())
+
+def is_dictionary_word_or_name(token):
+	clean_token = token.lower()
+	for word in word_list:
+		if word in clean_token and len(word) > 4:
+			print(word)
+			return True
+	for name in name_list:
+		if name in clean_token and len(name) > 4:
+			print(name)
+			return True
+	return False
+
+def is_named_entity(token):
+	doc = en_nlp(token)
+	for ent in doc.ents:
+		if ent.label_ in ["PERSON", "ORG", "PRODUCT", "GPE"]:
+			return True
+	doc = fr_nlp(token)
+	for ent in doc.ents:
+		if ent.label_ in ["PERSON", "ORG", "PRODUCT", "GPE"]:
+			return True
+	return False
+
+def is_valid_password(password, last_password, username):
+	message = ""
+
+	if len(password) < 10:
+		message = "Password is too short. It should be at least 10 characters long."
+		return False, message
+
+	if not re.search(r'[A-Z]', password):
+		message = "Password should contain at least one uppercase letter."
+		return False, message
+	if not re.search(r'[a-z]', password):
+		message = "Password should contain at least one lowercase letter."
+		return False, message
+	if not re.search(r'\d', password):
+		message = "Password should contain at least one number."
+		return False, message
+	if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+		message = "Password should contain at least one special character (e.g., !, @, #, $, etc.)."
+		return False, message
+
+	if last_password and SequenceMatcher(None, password, last_password).ratio() > 0.7:
+		message = "Password is not significantly different from your previous password."
+		return False, message
+
+	clean_password = re.sub(r'[^A-Za-z\s]', '', password)
+	if is_dictionary_word_or_name(clean_password) or is_named_entity(clean_password):
+		message = "Password is a dictionary word, or a name, or a product/organization name."
+		return False, message
+
+	if SequenceMatcher(None, username.lower(), clean_password.lower()).ratio() > 0.7:
+		message = "Password should not contain username."
+		return False, message
+
+	return True, message

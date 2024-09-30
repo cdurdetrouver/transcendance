@@ -7,10 +7,12 @@ function setPersonalUser(user) {
 	const userDiv = document.querySelector('.container');
 	const username = user.username;
 	const email = user.email;
+	const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
 	const userHtml = `
 		<div class="user__info">
 			<p class="user__info__username">${username}</p>
 			<p class="user__info__email">${email}</p>
+			<img src="${profile_picture}" alt="Profile Picture">
 		</div>
 		<form id="userForm" class="user__form">
 			<label for="username">Username:</label>

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from .utils import generate_access_token, generate_refresh_token, AttributeDict, get_intra_user, get_github_user, get_google_user
+from .utils import generate_access_token, generate_refresh_token, get_intra_user, get_github_user, get_google_user, is_valid_username, is_valid_password
 from .models import User
 from .serializers import UserSerializer, LoginSerializer
 from pong.models import Game
@@ -56,7 +56,13 @@ import base64
 			properties={
 				'message': openapi.Schema(type=openapi.TYPE_STRING, description='User deleted')
 			}
-		)
+		),
+		400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description='username error')
+			}
+		),
 	},
 	operation_description="Delete a user"
 )
@@ -67,15 +73,18 @@ def user_detail(request):
 		username = request.data.get('username')
 		profile_picture = request.FILES.get('profilePicture')
 
+		succes, error = is_valid_username(username)
+		if not succes:
+			return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
+
 		data = {}
 		if profile_picture is not None:
 			data['profile_picture'] = profile_picture
 
-		if username is not None:
+		if username is not None and username != user.username:
 			data['username'] = username
 
 		serializer = UserSerializer(user, data=data, partial=True)
-		print(serializer)
 		if serializer.is_valid():
 			if profile_picture is not None and user.picture_remote is not None:
 				serializer.validated_data['picture_remote'] = None
@@ -222,6 +231,12 @@ def register(request):
 	serializer = UserSerializer(data=user_data)
 
 	if serializer.is_valid():
+		succes, error = is_valid_username(serializer.validated_data['username'])
+		if not succes:
+			return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
+		succes, error = is_valid_password(serializer.validated_data['password'], None, serializer.validated_data['username'])
+		if not succes:
+			return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
 		# Profile picture
 		id = User.objects.all().count() + 1
 		serializer.validated_data['profile_picture'].name = f'{id}.png'
@@ -237,7 +252,8 @@ def register(request):
 		response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='Strict', expires=expires)
 		return response
 	else:
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
+		return Response({"error": error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
 @swagger_auto_schema(
 	method='post',
@@ -343,6 +359,12 @@ def user_games(request, user_id):
 				'qr_code': openapi.Schema(type=openapi.TYPE_STRING),
 				'secret': openapi.Schema(type=openapi.TYPE_STRING)
 			}
+		),
+		400 : openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description='2FA is already enabled')
+			}
 		)
 	},
 	operation_description="Generate a QR code and a secret for 2FA"
@@ -350,6 +372,9 @@ def user_games(request, user_id):
 @api_view(['GET'])
 def generate_2fa_qr_code(request):
 	user = request.user
+
+	if user.is_two_factor_enabled:
+		return Response({'error': '2FA is already enabled'}, status=status.HTTP_400_BAD_REQUEST)
 
 	secret = pyotp.random_base32()
 
@@ -380,7 +405,7 @@ def generate_2fa_qr_code(request):
 		400: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-				'error': openapi.Schema(type=openapi.TYPE_STRING, description='Invalid 2FA token')
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description='Invalid 2FA token or 2FA is already enabled')
 			}
 		)
 	}
@@ -391,7 +416,8 @@ def enable_2fa(request):
 	token = request.data.get('token')
 	secret = request.data.get('secret')
 
-	print(secret, token)
+	if user.is_two_factor_enabled:
+		return Response({'error': '2FA is already enabled'}, status=status.HTTP_400_BAD_REQUEST)
 
 	totp = pyotp.TOTP(secret)
 	if totp.verify(token):
@@ -416,7 +442,7 @@ def enable_2fa(request):
 		400: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-				'error': openapi.Schema(type=openapi.TYPE_STRING, description='Invalid 2FA token')
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description='Invalid 2FA token or 2FA is not enabled for this user or User doesn\'t exist')
 			}
 		)
 	}
