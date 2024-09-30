@@ -32,7 +32,7 @@ export async function initComponent() {
 	const source = urlParams.get('source');
 
 	if (code) {
-		const response = await login_tierce(code, source??'intra');
+		const response = await login_tierce(code, source ?? 'intra');
 		const data = await response.json();
 		if (response.status !== 200)
 			customalert('Login failed', data.error, true);
