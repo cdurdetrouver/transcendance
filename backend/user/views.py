@@ -505,6 +505,33 @@ def change_password(request):
 		return JsonResponse({'success': 'Password changed successfully'}, status=status.HTTP_200_OK)
 	else:
 		return JsonResponse({'error': 'Current password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+	
+@swagger_auto_schema(
+	method='post',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='User blocked successfully')
+			}
+		)
+	},
+	operation_description="Block a user"
+)
+@api_view(['POST'])
+def block_user(request, user_id):
+	user = request.user
+	user_to_block = User.objects.filter(id=user_id).first()
+
+	if user_to_block is None:
+		return Response({"error": "User doesn'texist"}, status=status.HTTP_404_NOT_FOUND)
+	
+	user.blocked_users.add(user_to_block)
+	user.save()
+	return JsonResponse({'message': 'User blocked successfully'}, status=status.HTTP_200_OK)
+
+
 
 
 def complete_login(user):

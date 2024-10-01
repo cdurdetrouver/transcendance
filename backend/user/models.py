@@ -22,6 +22,8 @@ class User(AbstractUser):
 
 	two_factor_secret = models.CharField(max_length=32, blank=True, null=True)
 	is_two_factor_enabled = models.BooleanField(default=False)
+	blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
+	friends = models.ManyToManyField('self', symmetrical=False, related_name='friends_with', blank=True)
 
 	def save(self, *args, **kwargs):
 		if not self.pk and self.user_type == 'email' and self.password:
