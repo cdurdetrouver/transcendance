@@ -1,0 +1,200 @@
+@font-face {
+	font-family: 'IsaacFont';
+	src: url(../../static/assets/font/IsaacGame.ttf);
+}
+
+body {
+	padding: 70px 0;
+	font: 15px/20px Arial, sans-serif;
+	background-image: url('../../static/assets/background/background_1.png'); /* Add your background image path */
+	background-repeat: no-repeat;
+	background-size: cover;
+  }
+  
+
+  .background {
+    position: absolute;
+	top: 0;
+	left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../static/assets/sheets/character_sheet.png'); 
+    background-position: center;
+	background-repeat: no-repeat;
+	background-size: 35%;
+    z-index: 0;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	flex-direction: column;
+}
+
+.container {
+    margin-top: 15vh; 
+	position: relative;
+	width: 25vw;
+	height: 20vh;
+	perspective: 1000px;
+
+
+}
+  
+  .carousel {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	transform-style: preserve-3d;
+	transition: transform 1s;
+	transform: rotateX(-20deg);
+	
+  }
+  
+  .item img {
+    width: 20%;  
+    height: auto; 
+    max-width: 20%;
+}
+
+  .item {
+	display: block;
+	position: absolute;
+	background: transparent;
+	width: 25vw;
+	height: 20vh;
+	text-align: center;
+  }
+  
+  .a {
+	transition: transform 1s; 
+	transform: rotateY(0deg) translateZ(11vw); }
+  .b {
+	transition: transform 1s; 
+	transform: rotateY(60deg)  translateZ(11vw) rotateY(-60deg); }
+  .c {
+	transition: transform 1s; 
+	transform: rotateY(120deg) translateZ(11vw) rotateY(60deg); }
+  .d {
+	transition: transform 1s; 
+	transform: rotateY(180deg) translateZ(11vw); }
+  .e {
+	transition: transform 1s; 
+	transform: rotateY(240deg) translateZ(11vw) rotateY(-60deg); }
+  .f {
+	transition: transform 1s;  
+	transform: rotateY(300deg) translateZ(11vw) rotateY(60deg); }
+  
+
+	.controls {
+		margin-top: 10vh;
+		position: relative;
+		display: flex;
+		justify-content: center; 
+		align-items: center;
+	}
+
+	.name {
+		font-family: IsaacFont;
+		font-size: 6vh;
+		color: #2d2d2d;
+		width: 13vw; 
+		text-align: center; 
+		position: relative;
+		display: inline-block;
+	}
+	
+	.prev, .next {
+		width: 20%;
+		cursor: pointer;
+		position: absolute;
+	}
+	
+	.prev {
+		left: -7vw; 
+		top: -0.5vh;
+	}
+	
+	.next {
+		right: -7vw; 
+		top: -1vh;
+	}
+	
+	.next img, .prev img {
+		width: 100%;
+		height: auto;
+		transition: transform 0.3s ease, opacity 0.3s ease; 
+	}
+
+	.prev img:hover, .next img:hover {
+		transform: scale(1.1); 
+	}
+
+.stats {
+
+	margin-left: 2vw;
+	height: 15%;
+    display: flex;
+    width: 30%; 
+    margin-top: 7vh; 
+	font-family: IsaacFont;
+    font-size: 2vh;
+    color: #444;
+}
+
+.life, .speed, .str {
+    width: 15%;
+}
+
+.life img,  .speed img,  .str img  {
+	width: 100%; 
+	height: auto;
+}
+
+.life-stat img,.speed-stat img, .str-stat img
+{
+	height: 50%;
+}
+
+.life-stat,.speed-stat, .str-stat  {
+	margin-left: 1dvw;
+	width: 30%;
+}
+
+.game_sheet {
+    position: absolute;
+    top: 50vh;
+    left: 63vw;
+    width: 30%;
+    height: 30%;
+    background-image: url('../../static/assets/sheets/game_sheet.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.text {
+    position: relative;
+    margin-top: -1vh;
+    font-family: IsaacFont;
+    font-size: 4vh;
+    color: #2d2d2d;
+    transform: rotate(7deg);
+}
+
+
+.game {
+    position: relative;
+    cursor: pointer;
+    color: #7a7a7a;
+	transition: transform 0.3s ease, opacity 0.3s ease; 
+
+}
+
+.game:hover {
+    color: #2d2d2d;
+	transform: scale(1.1); 
+}
