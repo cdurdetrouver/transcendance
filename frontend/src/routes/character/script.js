@@ -31,6 +31,8 @@ var stats = {
 	}
   };
 
+
+  
 var carousel = $(".carousel"),
   a = $(".a"),
   b = $(".b"),
@@ -47,6 +49,22 @@ var carousel = $(".carousel"),
 const names = ["ISAAC", "CAIN", "MAGGIE", "JUDAS", "?????", "EVE"]; 
 let currentIndex = 0;
 
+window.addEventListener('popstate', function() {
+	initCarousel();
+  });
+  
+
+function initCarousel() {
+	currentIndex = 0; 
+	currdeg = 0;
+	currdegA = 0;
+	currdegB = 0;
+	currdegC = 0;
+	turn = 0;
+  }
+
+
+
 function updateStats(character)
 {
 	var characterStats = stats[character];
@@ -57,6 +75,7 @@ function updateStats(character)
 }
 
 $(document).ready(function() {
+	initCarousel();
 	$(".next").on("click", { d: "n" }, rotate);
 	$(".prev").on("click", { d: "p" }, rotate);
 
