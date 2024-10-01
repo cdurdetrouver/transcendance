@@ -34,16 +34,14 @@ def get_room(room_id):
         return None
 
 @database_sync_to_async
-def in_room(room, user_id):
-    try:
-        room.participants_id.index(user_id)
+def in_room(room, user):
+    if (room.participants.filter(id=user.id).exists()):
         return True
-    except:
-        return False
+    return False
 
 @database_sync_to_async
-def add_in_room(room, user_id):
-    room.participants_id.append(user_id)
+def add_in_room(room, user):
+    room.participants.add(user)
     room.save()
 
 @database_sync_to_async
@@ -51,42 +49,15 @@ def get_mess(mess_id):
     return get_object_or_404(Message, id=mess_id)
 
 @database_sync_to_async
+#refresh a partir de start 
 def get_last_10_messages(room, nb_refresh, starts):
-    messages = []
-    empty = False
-
-    if (nb_refresh == 1):
-        ids = room.messages_id[-10 * nb_refresh:]
-        if not ids:
-            empty = True
-            return messages, starts, empty
-        starts = room.messages_id[-1]
-    else:
-        start = (room.messages_id.index(starts) + 1) - (10 * nb_refresh)
-        end = (room.messages_id.index(starts) + 1) - ((nb_refresh - 1) * 10)
-        if (start < 0 and end > 0):
-            start = 0
-        ids = room.messages_id[start:end]
-    for id in ids:
-        message = get_object_or_404(Message, id=id)
-        user = get_object_or_404(User, id=message.author_id)
-        message_s =  MessageSerializer(message)
-        user_s = UserSerializer(user)
-        messages.append(
-            {
-                'message': message_s.data,
-                'user': user_s.data
-            }
-        )
-    if not messages:
-        empty = True
-    return messages, starts, empty
+    return 1
 
 @database_sync_to_async
 def save_message(room, text_data_json, user):
     content = text_data_json["message"]
-    message = Message.objects.create(author_id=user.id, message_type="chat", content=content)
-    room.messages_id.append(message.id)
+    message = Message.objects.create(author=user, message_type="chat", content=content)
+    room.messages.add(message)
     room.save()
     message.save()
     return message

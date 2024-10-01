@@ -34,14 +34,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.user = result
-        self.room = await get_room(self.room_group_id)
+        self.room = await get_room(self.room_group_id) #sync_to_async(lambda: 
+        self.room_group_name = await sync_to_async(lambda: self.room.name)()
         if (not self.room):
             self.disconnect(404)
-        self.room_group_name = self.room.name
-        if (await in_room(self.room, self.user.id) == False):
-            await add_in_room(self.room, self.user.id)
-            self.room = await get_room(self.room_group_name)
-            self.room_group_name = self.room.name
+        if (await in_room(self.room, self.user) == False):
+            await add_in_room(self.room, self.user)
             await self.channel_layer.group_add(
                 self.room_group_name, self.channel_name)
             await self.send(text_data=json.dumps({"type": "announce", "content": "Welcome in chat: " + self.room_group_name}))
@@ -61,7 +59,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        
+
         # Send message to room group
         if (text_data_json["type"] == "refresh_mess"):
             await self.refresh_last_mess()
@@ -74,9 +72,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from room group
     async def chat_message(self, event):
         message = event["message"]
-        user_s = UserSerializer(await get_user(message['author_id']))
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"type" : "chat", "user" : user_s.data, "message": message}))
+        await self.send(text_data=json.dumps({"type" : "chat", "message": message}))
 
     async def announce_message(self, event):
         announce = event ["announce"]

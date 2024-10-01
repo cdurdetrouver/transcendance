@@ -34,13 +34,25 @@ from drf_yasg.utils import swagger_auto_schema
 @api_view(['GET'])
 def get_user_chats(request):
     user = request.user
-    rooms = Room.objects.filter(participants_id__contains=[user.id])
+    rooms = Room.objects.filter(participants=user)
     print(rooms)
     if (not rooms.exists()):
         return Response({"error": "not room found"}, status=status.HTTP_404_NOT_FOUND)
     rooms_s = (RoomSerializer(rooms, many=True)).data
     print(rooms_s)
     response = JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
+    return response
+
+def create_room(data, user):
+    room_name = data['room_name']
+    room = Room.objects.filter(name=room_name).all()
+    if room:
+        response = JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
+        return response
+    room = Room.objects.create(created_by=user, name=room_name)
+    room.participants.set([user])
+    room.save()
+    response = JsonResponse({'room_statuts': 'created', 'room_name' : room_name}, status=status.HTTP_200_OK)
     return response
 
 @swagger_auto_schema(
@@ -50,7 +62,7 @@ def get_user_chats(request):
         properties={
             'room_name': openapi.Schema(
                 type=openapi.TYPE_STRING,
-                description='The name of the room'),
+                description='The name of the room')
         },
         required=['room_name']
     ),
@@ -74,20 +86,13 @@ def get_user_chats(request):
     },
 	operation_description="Create a room"
 )
-@api_view(['POST'])
-def create_room(request):
+@api_view(['POST', 'PUT', 'DELETE', 'GET'])
+def room(request):
     user = request.user
     data = json.loads(request.body)
-    room_name = data['room_name']
 
-    room = Room.objects.filter(name=room_name).all()
-    if room:
-        response = JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
-        return response
-    room = Room.objects.create(name=room_name, participants_id=[user.id])
-    room.save()
-    response = JsonResponse({'room_statuts': 'created', 'room_name' : room_name}, status=status.HTTP_200_OK)
-    return response
+    if (request.method == 'POST'):
+        return create_room(data, user)
 
 @api_view()
 def websocket_connect(request):

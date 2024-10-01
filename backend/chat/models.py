@@ -10,7 +10,7 @@ class Message(models.Model):
 		('announce', 'Announce'),
 	]
 
-	author_id =  models.IntegerField(blank=False) 
+	author =  models.ForeignKey(User, related_name='message_author', on_delete=models.SET_NULL, null=True, blank=True)
 	message_type = models.CharField(max_length=10, choices=TYPES, default='chat')
 	content = models.CharField(max_length=128)
 	send_at = models.DateTimeField(auto_now_add=True)
@@ -20,8 +20,9 @@ class Message(models.Model):
 
 class Room (models.Model):
 	name = models.CharField(max_length=128)
-	participants_id = ArrayField(models.IntegerField(null=True, blank=False), blank=True, default=list)
-	messages_id = ArrayField(models.IntegerField(null=True, blank=False), blank=True, default=list)
+	created_by =  models.ForeignKey(User, related_name='room_admin', on_delete=models.SET_NULL, null=True, blank=True)
+	messages = models.ManyToManyField(Message, blank=True)
+	participants =  models.ManyToManyField(User, blank=True, related_name='room_participant')
 
 	def __str__(self):
 		return self.name
