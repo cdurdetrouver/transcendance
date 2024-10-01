@@ -97,7 +97,10 @@ def user_detail(request):
 		return JsonResponse({'error':error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 	elif request.method == 'DELETE':
 		user.delete()
-		return JsonResponse({'message': 'User deleted'}, status=status.HTTP_200_OK)
+		response = JsonResponse({'message': 'User deleted'}, status=status.HTTP_200_OK)
+		response.delete_cookie('refresh_token')
+		response.delete_cookie('access_token')
+		return response
 	else :
 		serialized_user = UserSerializer(user)
 		return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
@@ -408,7 +411,8 @@ def generate_2fa_qr_code(request):
 				'error': openapi.Schema(type=openapi.TYPE_STRING, description='Invalid 2FA token or 2FA is already enabled')
 			}
 		)
-	}
+	},
+	description="Enable 2FA for a user."
 )
 @api_view(['POST'])
 def enable_2fa(request):
