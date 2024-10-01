@@ -78,6 +78,7 @@ async function close_conf_room() {
     `;
     const create_room_btn = document.querySelector('.li-create-room-btn');
     create_room_btn.addEventListener('click', create_room);
+    print_chats();
 }
 
 async function create_room() {
@@ -95,22 +96,26 @@ async function create_room() {
 }
 
 //load html in chat box and open a connection with the backend to start the chat
-async function open_chat(chat_id) {
+async function open_chat(chat_id, chat_name) {
     if (chatSocket) {
         chatSocket.close();
         const chatLog = document.getElementById('chat-log');
-        chatLog.value = '';
+        if (chatLog)
+            chatLog.value = '';
     }
-    else {
-        const chat_box = document.querySelector('.chat-box');
-        chat_box.innerHTML = `
-            <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-            <input id="chat-message-input" type="text" size="100"><br>
-            <input id="chat-message-submit" type="button" value="Send">
-            <input id="chat-message-refresh" type="button" value="refresh">
-            <input id="chat-message-close" type="button" value="close chat">
-        `;
-    }
+    const chat_box = document.querySelector('.chat-box');
+    chat_box.innerHTML = `
+        <li>
+        <t1>Chat ${chat_name} selected</t1>
+		</li>
+        <li>
+        <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+        <input id="chat-message-input" type="text" size="100"><br>
+        <input id="chat-message-submit" type="button" value="Send">
+        <input id="chat-message-refresh" type="button" value="refresh">
+        <input id="chat-message-close" type="button" value="close chat">
+		</li>
+    `;
 
     chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + chat_id + "/");
     chatSocket.onmessage = function(e)
@@ -153,7 +158,7 @@ async function open_chat(chat_id) {
         if (chatSocket)
             chatSocket.close();
         const chat_box = document.querySelector('.chat-box');
-        chat_box.innerHTML = ``;
+        chat_box.innerHTML = `<t1>No chat selected</t1>`;
     };
     document.querySelector('#chat-message-refresh').onclick = function(e)
     {
@@ -191,9 +196,12 @@ async function print_chats() {
         chat_error.appendChild(error);
     }
     else {
+        const chat_list = document.querySelector('.chat-list');
+        chat_list.innerHTML=`
+            <t1>List of chat</t1>
+        `;
         for (const room of rooms.rooms)
             {
-                const chat_list = document.querySelector('.chat-list');
                 const chat = document.createElement('li');
                 chat.id = room.id
                 chat.innerHTML = `
@@ -202,7 +210,7 @@ async function print_chats() {
                 </div>
                 `;
                 chat.addEventListener('click', function(event) {
-                    open_chat(room.id);
+                    open_chat(room.id, room.name);
             });
                 chat_list.appendChild(chat);
                 console.log(room);
