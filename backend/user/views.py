@@ -1,4 +1,4 @@
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 from django.http import JsonResponse
 from django.conf import settings
 from rest_framework.permissions import AllowAny
@@ -470,6 +470,42 @@ def verify_2fa_token(request):
 		return complete_login(user)
 	else:
 		return Response({"error": "Invalid 2FA token"}, status=status.HTTP_400_BAD_REQUEST)
+	
+@swagger_auto_schema(
+	method='put',
+	operation_description="Change user password",
+	request_body=openapi.Schema(
+		type=openapi.TYPE_OBJECT,
+		properties={
+			'password': openapi.Schema(type=openapi.TYPE_STRING, description='Current password'),
+			'new_password': openapi.Schema(type=openapi.TYPE_STRING, description='New password'),
+		},
+		required=['password', 'new_password']
+	),
+	responses={
+		200: openapi.Response(description="Password changed successfully"),
+		400: openapi.Response(description="Invalid user type or incorrect current password"),
+	}
+)
+@api_view(['PUT'])
+def change_password(request):
+	user = request.user
+	password = request.data.get('password')
+	new_password = request.data.get('new_password')
+
+	if user.user_type != "email":
+		return JsonResponse({'error': 'Invalid user type'}, status=status.HTTP_400_BAD_REQUEST)
+	
+	if not password or not new_password:
+		return JsonResponse({'error': 'Password fields cannot be empty'}, status=status.HTTP_400_BAD_REQUEST)
+	
+	if check_password(password, user.password):
+		user.password = make_password(new_password)
+		user.save()
+		return JsonResponse({'success': 'Password changed successfully'}, status=status.HTTP_200_OK)
+	else:
+		return JsonResponse({'error': 'Current password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 def complete_login(user):
 	user_serializer = UserSerializer(user)
