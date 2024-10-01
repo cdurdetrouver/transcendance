@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 let carousel;
 let	a;
 let	b;
@@ -13,6 +14,9 @@ let	turn;
 let currentIndex;
 
 const stats = {
+=======
+var stats = {
+>>>>>>> ac19d0a (add: final front)
 	"ISAAC": {
 	  life: "../../static/assets/character/3.png",
 	  str: "../../static/assets/character/2.png",
@@ -45,16 +49,21 @@ const stats = {
 	}
   };
 
+var carousel = $(".carousel"),
+  a = $(".a"),
+  b = $(".b"),
+  c = $(".c"),
+  d = $(".d"),
+  t = $(".e"),
+  f = $(".f"),
+  currdeg  = 0,
+  currdegA  = 0,
+  currdegB  = 0,
+  currdegC  = 0,
+  turn = 0;
+
 const names = ["ISAAC", "CAIN", "MAGGIE", "JUDAS", "?????", "EVE"]; 
-
-function handleKeydown(e) {
-	if (e.key === "ArrowRight") {
-		rotate({ data: { d: "n" } });
-	} else if (e.key === "ArrowLeft") {
-		rotate({ data: { d: "p" } });
-	}
-}
-
+let currentIndex = 0;
 
 function updateStats(character)
 {
@@ -65,6 +74,18 @@ function updateStats(character)
 	$(".speed-stat").html('<img src="' + characterStats.speed + '" alt="speed stat">');
 }
 
+$(document).ready(function() {
+	$(".next").on("click", { d: "n" }, rotate);
+	$(".prev").on("click", { d: "p" }, rotate);
+
+	$(document).on("keydown", function(e) {
+		if (e.key === "ArrowRight") {
+			rotate({ data: { d: "n" } });
+		} else if (e.key === "ArrowLeft") {
+			rotate({ data: { d: "p" } });
+		}
+	});
+});
 
 function rotate(e)
 {
@@ -127,33 +148,3 @@ function rotate(e)
   $(".name-text").text(names[currentIndex]);
   updateStats(names[currentIndex]);
 }
-
-export async function initComponent() {
-	carousel = $(".carousel");
-	a = $(".a");
-	b = $(".b");
-	c = $(".c");
-	d = $(".d");
-	t = $(".e");
-	f = $(".f");
-	currdeg  = 0;
-	currdegA  = 0;
-	currdegB  = 0;
-	currdegC  = 0;
-	turn = 0;
-	currentIndex = 0;
-
-	document.querySelector(".next").addEventListener("click", function() {
-		rotate({ data: { d: "n" } });
-	});
-
-	document.querySelector(".prev").addEventListener("click", function() {
-		rotate({ data: { d: "p" } });
-	});
-
-	document.addEventListener('keydown', handleKeydown);
-  }
-  
-  export async function cleanupComponent() {
-	document.removeEventListener('keydown', handleKeydown);
-  }
