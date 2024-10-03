@@ -35,9 +35,9 @@ def get_room(room_id):
 
 @database_sync_to_async
 def in_room(room, user):
-    if (room.participants.filter(id=user.id).exists()):
-        return True
-    return False
+    if not room.participants.filter(id=user.id).first():
+        return False
+    return True
 
 @database_sync_to_async
 def add_in_room(room, user):
@@ -54,7 +54,7 @@ def get_last_10_messages(room, nb_refresh, starts):
     start = None
     end_history = False
 
-    all_mess = Message.objects.order_by('send_at').all()
+    all_mess = room.messages.order_by('send_at').all()
     if (nb_refresh == 1):
         starts = start = len(all_mess)
     if ((starts - (10 * nb_refresh)) < 0 and  (starts - (10 * (nb_refresh - 1))) < 0):

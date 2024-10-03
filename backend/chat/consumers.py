@@ -21,8 +21,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.refresh_stop = False
         self.user = None
 
-    async def connect(self):
-        self.room_group_id = self.scope["url_route"]["kwargs"]["room_id"]
+    async def set_user(self):
+        await add_in_room(self.room, self.user)
+        await self.channel_layer.group_add(
+            self.room_group_name, self.channel_name)
+        await self.send(text_data=json.dumps({"type": "announce", "content": "Welcome in chat: " + self.room_group_name}))
+        await self.channel_layer.group_send(
+            self.room_group_name, {"type": "announce.message", "announce" : self.user.username + " as joined the chat"})
+
+    async def check_user(self):
         access_token = self.scope['cookies'].get('access_token')
         success, result = await sync_to_async(get_user_by_token)(access_token)
         await self.accept()
@@ -33,19 +40,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }))
             self.room_group_name = 'failed'
             await self.close()
-            return
+            return -1
         self.user = result
-        self.room = await get_room(self.room_group_id) #sync_to_async(lambda: 
+
+    async def connect(self):
+        self.room_group_id = self.scope["url_route"]["kwargs"]["room_id"]
+        if (await self.check_user() == -1):
+            return
+        self.room = await get_room(self.room_group_id)
         self.room_group_name = await sync_to_async(lambda: self.room.name)()
         if (not self.room):
-            self.disconnect(404)
+            await self.disconnect(404)
+            return
         if (await in_room(self.room, self.user) == False):
-            await add_in_room(self.room, self.user)
-            await self.channel_layer.group_add(
-                self.room_group_name, self.channel_name)
-            await self.send(text_data=json.dumps({"type": "announce", "content": "Welcome in chat: " + self.room_group_name}))
-            await self.channel_layer.group_send(
-                self.room_group_name, {"type": "announce.message", "announce" : self.user.username + " as joined the chat"})
+            await self.set_user()
         else:
             await self.refresh_last_mess()
         await self.channel_layer.group_add(
