@@ -11,6 +11,57 @@ from user.serializers import UserSerializer
 from .game import GameThread
 from .models import Game
 
+class PrivateMatchmakingConsumer(AsyncWebsocketConsumer):
+
+    waiting_players = []
+
+    async def connect(self):
+        access_token = self.scope['cookies'].get('access_token')
+
+        success, result = await sync_to_async(get_user_by_token)(access_token)
+        await self.accept()
+        if not success:
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': result
+            }))
+            await self.close()
+            return
+        self.user = result
+        game_room_name = self.scope['url_route']['kwargs']['room_name']
+        if not self.friends:
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'You have no friends'
+            }))
+            await self.close()
+            return
+        self.waiting_players.append(self)
+
+        if len(self.waiting_players) >= 2:
+            player1 = self.waiting_players.pop(0)
+            player2 = self.waiting_players.pop(0)
+
+            game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1=player1.user, player2=player2.user)
+            await sync_to_async(game.save)()
+
+            await player1.send(text_data=json.dumps({
+                'type': 'match_found',
+                'game_room': game_room_name,
+                'game_id': game.id,
+                'opponent': UserSerializer(player2.user).data,
+            }))
+            await player2.send(text_data=json.dumps({
+                'type': 'match_found',
+                'game_room': game_room_name,
+                'game_id': game.id,
+                'opponent': UserSerializer(player1.user).data,
+            }))
+
+    async def disconnect(self, close_code):
+        if self in self.waiting_players:
+            self.waiting_players.remove(self)
+
 class MatchmakingConsumer(AsyncWebsocketConsumer):
 
     waiting_players = []
@@ -34,8 +85,10 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         if len(self.waiting_players) >= 2:
             if self.waiting_players[0].user in self.waiting_players[1].blocked_users or self.waiting_players[1].user in self.waiting_players[0].blocked_users:
                 return
-            player1 = self.waiting_players.pop(0)
-            player2 = self.waiting_players.pop(0)
+            player1 = self.find_and_remove_unblocked_player()
+            if player1 is None:
+                return
+            player2 = self.waiting_players.remove(self)
 
             game_room_name = f"game_room_{player1.channel_name}_{player2.channel_name}"
             game_room_name = re.sub(r'[^a-zA-Z0-9._-]', '', game_room_name)[:50]
@@ -59,6 +112,15 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         if self in self.waiting_players:
             self.waiting_players.remove(self)
+
+    def find_and_remove_unblocked_player(self):
+        for i, player in enumerate(self.waiting_players):
+            blocked = False
+            if self.user in player.blocked_users:
+                blocked = True
+            if not blocked:
+                return self.waiting_players.pop(i)
+        return None
 
 class PongConsumer(AsyncWebsocketConsumer):
 
