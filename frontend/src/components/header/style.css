@@ -14,7 +14,7 @@
 	transform: translateX(calc(var(--sidebar-width) * -1));
 	background: url('../../static/assets/sheets/header_sheet.png')  no-repeat  right;
 	background-size: 100% 150%;
-	display: flex;
+	display: flex-start;
 	justify-content: center;
 	align-items: center;
 	position: absolute;
@@ -25,25 +25,21 @@
 	transition: transform .6s
 }
 
-.sidebar:hover
-{
+.sidebar:hover,
+.logo:hover + .sidebar {
+
 	transform: translateX(0);
 }
 
-.sidebar:hover .menu {
+.sidebar:hover .side-wrapper .title,
+.logo:hover + .sidebar .side-wrapper .title,
+.sidebar:hover .menu,
+.logo:hover + .sidebar .menu {
 	opacity: 1;
 	pointer-events: all;
 }
 
-.content, .content div {
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-}
-
- .menu {
+ .menu, .title{
 	font-family: IsaacFont;
 	list-style-type: none;
 	opacity: 0;
@@ -51,19 +47,47 @@
 	transition: opacity 0.6s ease;
   }
   
-  .menu__link {
+  .logo {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	width: 50px; /* Set a width for the logo */
+	height: 50px; /* Set a height for the logo */
+	background: url('../../static/assets/jpg/head.png') no-repeat center/contain;
+	z-index: 2;
+	transition: background-image 0.3s ease;
+}
+
+.logo img {
+	width: 70%;  
+    height: auto; 
+    max-width: 70%;
+}
+
+.logo:hover {
+	background-image: url('../../static/assets/jpg/head_cry.png'); /* Change to the new image on hover */
+}
+
+.title {
+	font-size: 1.2rem;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 30%;
+	padding: 27px;
+	color: #2d2d2d;
+}
+
+	.menu__link {
 	color: #2d2d2d;
 	font-weight: 100;
 	text-decoration: none;
 	font-size: 2rem;
 	line-height: 5rem;
-	
   }
 
   
   .input-toggler {
 	display: none;
-  
   }
 
 
