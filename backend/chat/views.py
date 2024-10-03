@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from .data_handling import add_in_room, remove_from_room, get_user_by_name
 from .models import Room
 from rest_framework.response import Response
+from asgiref.sync import sync_to_async, async_to_sync
 import json
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -102,18 +103,14 @@ def find_user(data):
     except:
         return None
 
-def add_user(data, room):
-    user = find_user(data)
-    if not user:
-        return Response({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
-    add_in_room(room, user)
-    return 1
+def add_user(user, room):
+    async_to_sync(add_in_room(room, user))
+    return Response({"User status": "Added in {} successfully".format(room.name)}, status=status.HTTP_200_OK)
 
-def delete_user(data, user, room):
-    user = find_user(data)
-    if not user:
-        return Response({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
-    return 1
+
+def delete_user(user, room):
+    async_to_sync(remove_from_room(user, room))
+    return Response({"User status": "Deleted from {} successfully.".format(room.name)}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST', 'DELETE'])
 def user(request):
@@ -124,20 +121,10 @@ def user(request):
 
     if not room:
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+    user_add = find_user(data)
+    if not user:
+        return Response({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
     if (request.method == 'POST'):
-        return add_user(data, user, room)
+        return add_user(user_add, room)
     elif (request.method == 'DELETE'):
-        return delete_user(data, user, room)
-
-@api_view()
-def websocket_connect(request):
-    # Vérifiez si la requête est bien une connexion WebSocket
-    if not request.is_web_socket():
-        return HttpResponse(status=400)
-
-    # Récupérez l'access token du payload
-    try:
-        data = json.loads(request.body)
-        access_token = data['accessToken']
-    except (KeyError, json.JSONDecodeError):
-        return HttpResponse(status=400)
+        return delete_user(user_add, room)

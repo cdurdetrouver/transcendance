@@ -10,6 +10,7 @@ import { get_user } from "../../components/user/script.js";
 //create chat with a username or more -> upload a photo to the chat
 //put gif in chat ? 
 let chatSocket;
+let room_name;
 
 async function get_user_chats()
 {
@@ -28,21 +29,21 @@ async function get_user_chats()
         return null;
 }
 
-async function created_room(room_name) {
+async function created_room(room_name_created) {
     const create_box = document.querySelector('.create-box');
     create_box.innerHTML=`
 		 <li class="li-create-room-btn">
-			 <t1>Chat ${room_name} succesfully created</t1>
+			 <t1>Chat ${room_name_created} succesfully created</t1>
             <input class="chat-conf-close" id=""submit type="button" value="Close">
 		 </li>
     `;
-    document.querySelector('.chat-conf-close').addEventListener('click', close_conf_room);
+    document.querySelector('.chat-conf-close').addEventListener('click', close_create_room);
 
 }
 
-async function send_conf_room(room_name) {
+async function send_create_room(chat_room_name) {
     
-    console.log(room_name);
+    console.log(chat_room_name);
     const response = await fetch(config.backendUrl + "/chat/create_room/", {
         method: "POST",
         headers: {
@@ -50,7 +51,7 @@ async function send_conf_room(room_name) {
 		},
 		credentials: "include",
         body: JSON.stringify({
-             "room_name": room_name
+             "room_name": chat_room_name
         })
 	});
     if (response.status === 200)
@@ -88,33 +89,86 @@ async function create_room() {
             <input class="chat-conf-close" id=""submit type="button" value="Close">
 		</li>
     `;
-    const room_name = document.querySelector('.chat-room-name')
-    document.querySelector('.chat-room-submit').addEventListener('click', function(event) {send_conf_room(room_name.value)});
+    const chat_room_name = document.querySelector('.chat-room-name')
+    document.querySelector('.chat-room-submit').addEventListener('click', function(event) {send_create_room(chat_room_name.value)});
     document.querySelector('.chat-conf-close').addEventListener('click', close_create_room);
 }
 
 async function add_user(username) {
+    console.log(room_name);
+    const response = await fetch(config.backendUrl + "/chat/users_management/", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+		},
+		credentials: "include",
+        body: JSON.stringify({
+            "room_name" : room_name,
+            "username": username
+        })
+	});
+    if (response.status === 200)
+        {
+            const data = await response.json();
+            console.log("add user request succes: " + data);
+            return ;
+        }
+        else if (response.status === 404)
+        {
+            const data = await response.json();
+            console.log(data['error']);
+            return;
+        }
+}
+
+async function chat_add_user() {
+    let chat_conf = document.querySelector('.chat-conf');
+    chat_conf.innerHTML = `
+    <input id="chat-user-input" type="text" size="100" value="username"><br>
+    <input id="chat-user-submit" type="button" value="add user">
+    <input id="chat-conf-close" type="button" value="close">
+    `;
+    let input_user = document.querySelector('#chat-user-input');
+    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {add_user(input_user.value)});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
     
 }
 
-async function chat_add_user(params) {
-    const chat_conf = document.querySelector('.chat-conf');
-    chat_conf.innerHTML = `
-        <input id="chat-user-input" type="text" size="100" value="username"><br>
-        <input id="chat-user-submit" type="button" value="add user">
-        <input id="chat-user-add-close" type="button" value="close">
-    `;
-    input_user = document.querySelector('#id_chat-user-submit')
-    document.querySelector('#id_chat-user-submit').addEventListener('click', function(event) {add_user(input_user.value)});
-    document.querySelector('#id_chat-user-add-close').addEventListener('click', function(event) {open_conf()});
+async function remove_user(username) {
+    const response = await fetch(config.backendUrl + "/chat/user/users_management", {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+		},
+		credentials: "include",
+        body: JSON.stringify({
+            "room_name" : room_name,
+             "username": username
+        })
+	});
+    if (response.status === 200)
+        {
+            const data = await response.json();
+            console.log("remove user request succes: " + data);
+            return ;
+        }
+        else if (response.status === 404)
+        {
+            const data = await response.json();
+            console.log(data['error']);
+            return;
+        }
 }
 
 async function chat_remove_user(params) {
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-     <input id="chat-conf" type="button" value="chat conf">
+        <input id="chat-user-input" type="text" size="100" value="username"><br>
+        <input id="chat-user-submit" type="button" value="remove user">
+        <input id="chat-conf-close" type="button" value="close">
     `;
-    document.querySelector('.chat-conf').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {remove_user(input_user.value)});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
 }
 
 async function chat_change_name(params) {
@@ -149,7 +203,7 @@ async function chat_close_conf(params) {
     document.querySelector('.chat-conf').addEventListener('click', function(event) {open_conf()});
 }
 
-async function open_conf(params) {
+async function open_conf() {
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
         <input id="chat-add-user" type="button" value="Add user">
@@ -159,12 +213,12 @@ async function open_conf(params) {
         <input id="chat-delete" type="button" value="Delete chat">
         <input id="chat-conf-close" type="button" value="Close conf chat">
     `;
-    document.querySelector('#id_chat-add-user').addEventListener('click', function(event) {chat_add_user()});
-    document.querySelector('#id_chat-remove-user').addEventListener('click', function(event) {chat_remove_user()});
-    document.querySelector('#id_chat-change-name').addEventListener('click', function(event) {chat_change_name()});
-    document.querySelector('#id_chat-change-photo').addEventListener('click', function(event) {chat_change_photo()});
-    document.querySelector('#id_chat-delete').addEventListener('click', function(event) {chat_delete()});
-    document.querySelector('#id_chat-conf-close').addEventListener('click', function(event) {chat_close_conf()});
+    document.querySelector('#chat-add-user').addEventListener('click', function(event) {chat_add_user()});
+    document.querySelector('#chat-remove-user').addEventListener('click', function(event) {chat_remove_user()});
+    document.querySelector('#chat-change-name').addEventListener('click', function(event) {chat_change_name()});
+    document.querySelector('#chat-change-photo').addEventListener('click', function(event) {chat_change_photo()});
+    document.querySelector('#chat-delete').addEventListener('click', function(event) {chat_delete()});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {chat_close_conf()});
 }
 
 //load html in chat box and open a connection with the backend to start the chat
@@ -178,21 +232,24 @@ async function open_chat(chat_id, chat_name) {
     const chat_box = document.querySelector('.chat-box');
     chat_box.innerHTML = `
         <li>
-        <t1>Chat ${chat_name} selected</t1>
-		</li>
-        <li class="chat-conf">
-        <input id="chat-conf" type="button" value="chat conf">
+            <t1>Chat ${chat_name} selected</t1>
 		</li>
         <li>
-        <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-        <input id="chat-message-input" type="text" size="100"><br>
-        <input id="chat-message-submit" type="button" value="Send">
-        <input id="chat-message-refresh" type="button" value="refresh">
-        <input id="chat-message-close" type="button" value="close chat">
+            <div class="chat-conf">
+                <input id="chat-conf-btn" type="button" value="chat conf">
+            <div>
+		</li>
+        <li>
+            <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+            <input id="chat-message-input" type="text" size="100"><br>
+            <input id="chat-message-submit" type="button" value="Send">
+            <input id="chat-message-refresh" type="button" value="refresh">
+            <input id="chat-message-close" type="button" value="close chat">
 		</li>
     `;
-    document.querySelector('.chat-conf').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-conf-btn').addEventListener('click', function(event) {open_conf()});
 
+    room_name = chat_name;
     chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + chat_id + "/");
     chatSocket.onmessage = function(e)
     {
