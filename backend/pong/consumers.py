@@ -28,9 +28,12 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.user = result
+        self.blocked_users = await sync_to_async(list)(self.user.blocked_users.all())
         self.waiting_players.append(self)
 
         if len(self.waiting_players) >= 2:
+            if self.waiting_players[0].user in self.waiting_players[1].blocked_users or self.waiting_players[1].user in self.waiting_players[0].blocked_users:
+                return
             player1 = self.waiting_players.pop(0)
             player2 = self.waiting_players.pop(0)
 
