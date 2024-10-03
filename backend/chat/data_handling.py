@@ -17,6 +17,10 @@ from asgiref.sync import sync_to_async
 def get_user(user_id):
     return get_object_or_404(User, id=user_id)
 
+@database_sync_to_async
+def get_user_by_name(username):
+    return get_object_or_404(User, username=username)
+
 def room_exists(room_name):
     print(room_name)
     try:
@@ -42,6 +46,11 @@ def in_room(room, user):
 @database_sync_to_async
 def add_in_room(room, user):
     room.participants.add(user)
+    room.save()
+
+@database_sync_to_async
+def remove_from_room(room, user):
+    room.participants.exclude(id=user.id)
     room.save()
 
 @database_sync_to_async

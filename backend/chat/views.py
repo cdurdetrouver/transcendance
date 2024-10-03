@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from .serializers import RoomSerializer
 from user.serializers import UserSerializer
 from django.shortcuts import get_object_or_404
-from .data_handling import room_exists
+from .data_handling import add_in_room, remove_from_room, get_user_by_name
 from .models import Room
 from rest_framework.response import Response
 import json
@@ -37,7 +37,7 @@ def get_user_chats(request):
     rooms = Room.objects.filter(participants=user)
     print(rooms)
     if (not rooms.exists()):
-        return Response({"error": "not room found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     rooms_s = (RoomSerializer(rooms, many=True)).data
     print(rooms_s)
     response = JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
@@ -93,6 +93,41 @@ def room(request):
 
     if (request.method == 'POST'):
         return create_room(data, user)
+
+def find_user(data):
+    username = data['username']
+    try:
+        user = get_user_by_name(username)
+        return user
+    except:
+        return None
+
+def add_user(data, room):
+    user = find_user(data)
+    if not user:
+        return Response({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
+    add_in_room(room, user)
+    return 1
+
+def delete_user(data, user, room):
+    user = find_user(data)
+    if not user:
+        return Response({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
+    return 1
+
+@api_view(['POST', 'DELETE'])
+def user(request):
+    user = request.user
+    data = json.loads(request.body)
+    room_name = data['room_name']
+    room = Room.objects.filter(name=room_name).all().first()
+
+    if not room:
+        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+    if (request.method == 'POST'):
+        return add_user(data, user, room)
+    elif (request.method == 'DELETE'):
+        return delete_user(data, user, room)
 
 @api_view()
 def websocket_connect(request):

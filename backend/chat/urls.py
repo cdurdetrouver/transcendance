@@ -19,4 +19,5 @@ from chat import views
 
 urlpatterns = [
     path('create_room/', views.room),
+    path('users_management/', views.user),
 ]
