@@ -83,6 +83,24 @@ export async function initComponent() {
 	const urlparams = new URLSearchParams(window.location.search);
 	const id = urlparams.get('id');
 
+	let user = null;
+
+	if (id) {
+		const response = await fetch(config.backendUrl + '/user/' + id, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		});
+		if (response.status !== 200) {
+			console.error('Error connecting to user');
+			customalert('Error', 'Error get user', true);
+			router.navigate('/');
+		}
+		user = await response.json();
+	}
+
 	const games = await get_games(id || me.id);
 	if (!games)
 		router.navigate('/');
@@ -90,27 +108,11 @@ export async function initComponent() {
 		addGame(game.player1, game.player1_score, game.player2, game.player2_score);
 	}
 
-	if (!id || id === me.id) {
+	if (user)
+		setUser(user.user);
+	else
 		setPersonalUser(me);
-		return;
-	}
-
-	const response = await fetch(config.backendUrl + '/user/' + id, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		credentials: 'include'
-	});
-	if (response.status !== 200) {
-		console.error('Error connecting to user');
-		customalert('Error', 'Error get user', true);
-		router.navigate('/');
-	}
-	const user = await response.json();
-	setUser(user.user);
 }
 
 export async function cleanupComponent() {
-	users = {};
 }

@@ -505,7 +505,23 @@ def change_password(request):
 		return JsonResponse({'success': 'Password changed successfully'}, status=status.HTTP_200_OK)
 	else:
 		return JsonResponse({'error': 'Current password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
-	
+
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'blockeds': openapi.Schema(
+					type=openapi.TYPE_ARRAY,
+					items=UserSerializer.user_swagger
+				)
+			}
+		)
+	},
+	operation_description="Retrieve a list of blocked users from user_id"
+)
 @swagger_auto_schema(
 	method='post',
 	request_body=None,
@@ -517,20 +533,101 @@ def change_password(request):
 			}
 		)
 	},
-	operation_description="Block a user"
+	operation_description="Block user_id"
 )
-@api_view(['POST'])
+@swagger_auto_schema(
+	method='delete',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='User unblocked successfully')
+			}
+		)
+	},
+	operation_description="Unblock user_id"
+)
+@api_view(['GET', 'POST', 'DELETE'])
 def block_user(request, user_id):
 	user = request.user
 	user_to_block = User.objects.filter(id=user_id).first()
 
 	if user_to_block is None:
 		return Response({"error": "User doesn'texist"}, status=status.HTTP_404_NOT_FOUND)
-	
-	user.blocked_users.add(user_to_block)
-	user.save()
-	return JsonResponse({'message': 'User blocked successfully'}, status=status.HTTP_200_OK)
 
+	if request.method == 'GET':
+		users_serializer = UserSerializer(user.blocked_users.all(), many=True)
+		return JsonResponse({'blockeds': users_serializer}, status=status.HTTP_200_OK)
+	if request.method == 'DELETE':
+		user.blocked_users.remove(user_to_block)
+		user.save()
+		return JsonResponse({'message': 'User unblocked successfully'}, status=status.HTTP_200_OK)
+	else :
+		user.blocked_users.add(user_to_block)
+		user.save()
+		return JsonResponse({'message': 'User blocked successfully'}, status=status.HTTP_200_OK)
+
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'friends': openapi.Schema(
+					type=openapi.TYPE_ARRAY,
+					items=UserSerializer.user_swagger
+				)
+			}
+		)
+	},
+	operation_description="Retrieve a list of friends from user_id"
+)
+@swagger_auto_schema(
+	method='post',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='User blocked successfully')
+			}
+		)
+	},
+	operation_description="Add user_id as friend"
+)
+@swagger_auto_schema(
+	method='delete',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'message': openapi.Schema(type=openapi.TYPE_STRING, description='User blocked successfully')
+			}
+		)
+	},
+	operation_description="Remove user_id from friends"
+)
+@api_view(['GET', 'POST', 'DELETE'])
+def friend_user(request, user_id):
+	user = request.user
+	user_to_friend = User.objects.filter(id=user_id).first()
+	if user_to_friend is None:
+		return Response({"error": "User doesn'texist"}, status=status.HTTP_404_NOT_FOUND)
+
+	if request.method == 'GET':
+		users_serializer = UserSerializer(user_to_friend.friends.all(), many=True)
+		return JsonResponse({'friends': users_serializer}, status=status.HTTP_200_OK)
+	elif request.method == 'POST':
+		user.friends.add(user_to_friend)
+		user.save()
+		return JsonResponse({'message': 'User blocked successfully'}, status=status.HTTP_200_OK)
+	else:
+		user.friends.remove(user_to_friend)
+		user.save()
+		return JsonResponse({'message': 'User blocked successfully'}, status=status.HTTP_200_OK)
 
 
 
