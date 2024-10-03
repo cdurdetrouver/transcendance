@@ -31,6 +31,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'type': 'error',
                 'message': result
             }))
+            self.room_group_name = 'failed'
             await self.close()
             return
         self.user = result

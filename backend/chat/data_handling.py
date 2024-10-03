@@ -48,10 +48,25 @@ def add_in_room(room, user):
 def get_mess(mess_id):
     return get_object_or_404(Message, id=mess_id)
 
-@database_sync_to_async
 #refresh a partir de start 
+@database_sync_to_async
 def get_last_10_messages(room, nb_refresh, starts):
-    return 1
+    start = None
+    end_history = False
+
+    all_mess = Message.objects.order_by('send_at').all()
+    if (nb_refresh == 1):
+        starts = start = len(all_mess)
+    if ((starts - (10 * nb_refresh)) < 0 and  (starts - (10 * (nb_refresh - 1))) < 0):
+            return [], starts, True
+    if (starts > 10):
+        begin = starts - (10 * nb_refresh) if starts - (10 * nb_refresh) >= 0 else  0
+        last_mess = all_mess[begin: starts - (10 * (nb_refresh - 1))]
+    else:
+        last_mess = all_mess
+        end_history = True
+    mess_s = MessageSerializer(last_mess, many=True)
+    return mess_s.data,start, end_history
 
 @database_sync_to_async
 def save_message(room, text_data_json, user):
