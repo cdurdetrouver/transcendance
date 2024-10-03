@@ -22,7 +22,7 @@ body {
     background-position: center;
 	background-repeat: no-repeat;
 	background-size: 35%;
-    z-index: 0;
+    /* z-index: 0; */
 	display: flex;
     justify-content: center;
     align-items: center;
