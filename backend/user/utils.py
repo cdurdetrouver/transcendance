@@ -93,6 +93,7 @@ def get_intra_user(code):
 	}
 	response = requests.post(url, data=data)
 	if response.status_code != 200:
+		print(response.json())
 		return None
 	token = response.json().get('access_token')
 	url = 'https://api.intra.42.fr/v2/me'
