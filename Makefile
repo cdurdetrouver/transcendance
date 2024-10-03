@@ -16,6 +16,7 @@ rm:
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down -v --rmi all --remove-orphans
 
 test-backend: build
+	@if [ ! -f .env ]; then cp .env.sample .env; fi
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec backend python3 manage.py flush --no-input
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) exec backend python3 manage.py makemigrations
