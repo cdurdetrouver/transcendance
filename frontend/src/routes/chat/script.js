@@ -1,15 +1,13 @@
 import config from "../../env/config.js";
 import { get_user } from "../../components/user/script.js";
 
-//check si possible de modifier -> created_by
-//create a view room :  post create room  (add view add_user in create room function in front) 
+//create a conf chat
+//create a view room :  post create room  (add view add_user in create room function in front) check_si admin
 //                      put modify room
 //                      get:  get les infos de la room
 //                      delete: remove room
-//leave room 
+//leave / join room
 //create chat with a username or more -> upload a photo to the chat
-//create a conf chat
-//p'tit close chat 
 //put gif in chat ? 
 let chatSocket;
 
