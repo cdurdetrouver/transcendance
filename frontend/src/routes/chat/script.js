@@ -127,8 +127,8 @@ async function open_chat(chat_id, chat_name) {
         else if (data.type == 'chat')
             document.querySelector('#chat-log').value += (data.message.content + '\n');
         else if (data.type == 'list-chat') {
-            for (const message in data.messages)
-                document.querySelector('#chat-log').value += (data.messages[message].message.content + '\n');
+            for (const index in data.messages)
+                document.querySelector('#chat-log').value += (data.messages[index].content + '\n');
         }
     };
     
