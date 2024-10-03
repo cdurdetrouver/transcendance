@@ -13,6 +13,8 @@ class Game(models.Model):
 	winner = models.ForeignKey(User, related_name='games_won', on_delete=models.SET_NULL, null=True, blank=True)
 	player1_score = models.IntegerField(default=0)
 	player2_score = models.IntegerField(default=0)
+	player1_character = models.TextField(default='0')
+	player2_character = models.TextField(default='0')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
