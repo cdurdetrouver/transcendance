@@ -126,6 +126,8 @@ def user_id(request, user_id):
 	user = User.objects.filter(id=user_id).first()
 	if user is None:
 		return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+	if user.blocked_users.filter(id=request.user.id).exists():
+		return Response({"error": "Forbidden"}, status=status.HTTP_403_FORBIDDEN)
 	serialized_user = UserSerializer(user)
 	return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
 
