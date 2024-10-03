@@ -26,4 +26,5 @@ urlpatterns = [
     path('verify-2fa/', views.verify_2fa_token),
     path('change_password/', views.change_password),
     path('block/<int:user_id>/', views.block_user),
+    path('friend/<int:user_id>/', views.friend_user),
 ]
