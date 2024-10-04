@@ -21,6 +21,7 @@ def get_user(user_id):
 def get_user_by_name(username):
     return get_object_or_404(User, username=username)
 
+@database_sync_to_async
 def room_exists(room_name):
     try:
         room = get_object_or_404(Room, name=room_name)

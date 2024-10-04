@@ -42,16 +42,20 @@ def get_user_chats(request):
     response = JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
     return response
 
-def create_room(data, user):
-    room_name = data['room_name']
-    room = Room.objects.filter(name=room_name).all()
+def check_admin(user, room):
+    if (room.created_by.id == user.id):
+        return True
+    return False
+
+def create_room(room, user):
+
     if room:
         response = JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
         return response
-    room = Room.objects.create(created_by=user, name=room_name)
+    room = Room.objects.create(created_by=user, name=room.name)
     room.participants.set([user])
     room.save()
-    response = JsonResponse({'room_statuts': 'created', 'room_name' : room_name}, status=status.HTTP_200_OK)
+    response = JsonResponse({'room_statuts': 'created', 'room_name' : room.name}, status=status.HTTP_200_OK)
     return response
 
 @swagger_auto_schema(
@@ -89,9 +93,13 @@ def create_room(data, user):
 def room(request):
     user = request.user
     data = json.loads(request.body)
+    room_name = data['room_name']
+    room = Room.objects.filter(name=room_name).all()
 
+    if (check_admin(user, room) == False):
+        return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     if (request.method == 'POST'):
-        return create_room(data, user)
+        return create_room(room, user)
 
 def find_user(data):
     username = data['username']
@@ -102,15 +110,20 @@ def find_user(data):
         return None
 
 def add_user(user, room):
-    print(user.id)
+    if room.participants.filter(id=user.id).first():
+        return JsonResponse({'User status': 'Already in the {}'.format(room.name)}, status=status.HTTP_303_SEE_OTHER)
     room.participants.add(user)
     room.save()
     return Response({"User status": "Added in {} successfully".format(room.name)}, status=status.HTTP_200_OK)
 
 
 def delete_user(user, room):
-    async_to_sync(remove_from_room(user, room))
-    return Response({"User status": "Deleted from {} successfully.".format(room.name)}, status=status.HTTP_204_NO_CONTENT)
+    if not room.participants.filter(id=user.id).first():
+        return JsonResponse({'User status': 'Not found in room {}'.format(room.name)},  status=status.HTTP_404_NOT_FOUND)
+    room.participants.set(room.participants.exclude(id=user.id))
+    room.save()
+    print("User status ", "Deleted from {} successfully.".format(room.name))
+    return Response({"User status": "Deleted from {} successfully.".format(room.name)}, status=status.HTTP_200_OK)
 
 @api_view(['POST', 'DELETE'])
 def user(request):
@@ -119,14 +132,28 @@ def user(request):
     room_name = data['room_name']
     room = Room.objects.filter(name=room_name).all().first()
 
-    print("user: ", user)
     if not room:
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+    if (check_admin(user, room) == False):
+        return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     user_add = find_user(data)
     if not user:
         return Response({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
     if (request.method == 'POST'):
-        print("user post : ", user.id)
         return add_user(user_add, room)
     elif (request.method == 'DELETE'):
-        return delete_user(user_add, room)                                                                                                                                                                                                   
+        return delete_user(user_add, room)
+
+@api_view(['POST'])
+def is_admin(request):
+    user = request.user
+    data = json.loads(request.body)
+    room_name = data['room_name']
+    room = Room.objects.filter(name=room_name).all().first()
+
+    if not room:
+        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+    if (check_admin(user, room) == False):
+        return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
+    else:
+        return JsonResponse({"User status": "Your are admin of {}".format(room.name)}, status=status.HTTP_200_OK)                                                                                                                                                                                                 
