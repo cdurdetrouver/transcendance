@@ -42,5 +42,9 @@
 	{
 		"path": "/flappy",
 		"files": "/flappy"
+	},
+	{
+		"path": "/account",
+		"files": "/account"
 	}
 ]

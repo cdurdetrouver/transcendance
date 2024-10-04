@@ -17,13 +17,14 @@
 			<a href="/pong" class="button-mode" id="newruntest">NEW RUN TEST</a>
 			<button disabled href="/pong" class="button-mode" id="newrun">NEW RUN</button>
 
-			<a href="" class="button-mode" id="account">ACCOUNT</a>
+			<a href="/account" class="button-mode" id="account">ACCOUNT</a>
 			<a href="" class="button-mode" id="chat">CHAT</a>
 			<a href="" class="button-mode" id="options">OPTIONS</a>
 			<a href="" class="button-mode" id="stats">STATS</a>
 		</div>
 		<div id="login-page">
 			<a class="login-mode" id="login">LOGIN</a>
+			<!-- <a href="/login" class="login-mode" id="login">LOGIN</a> -->
 			<a id="user-info"></a>
 		</div>
 		<div id="popin" class="popin">
@@ -32,17 +33,18 @@
 				<div id="login-content">
 					<h2>Login</h2>
 					<form>
-						<label for="username">Username:</label>
-						<input type="text" id="username" name="username" required><br><br>
+						<label for="email">email:</label>
+						<input type="text" id="email" name="email" required><br><br>
 						<label for="password">Password:</label>
 						<input type="password" id="password" name="password" required><br><br>
 						<input id="submit-login" type="submit" value="Submit">
+						<button id="google-login">Login with Google
+							<img src="path/to/google-logo.png" alt="Google logo">
+						</button>
 					</form>
 					<p>Don't have an account? <button id="register">Register</button></p>
 				</div>
-				<!-- <div id="register-window"> -->
 					<div id="register-content">
-						<!-- <span id="closePopupBtn" class="close">&times;</span> -->
 						<h2>Register</h2>
 						<form>
 							<label for="username">Username:</label>
@@ -54,10 +56,10 @@
 							<input id="submit-register" type="submit" value="Submit">
 						</form>
 					</div>
-				<!-- </div> -->
 			</div>
 		</div>
 
 	</div>
 </div>
 <script src="js/index.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
