@@ -1,10 +1,10 @@
 let carousel;
-let	a;
-let	b;
-let	c;
-let	d;
-let	t;
-let	f;
+let	item_a;
+let	item_b;
+let	item_c;
+let	item_d;
+let	item_e;
+let	item_f;
 let	currdeg;
 let	currdegA;
 let	currdegB;
@@ -105,22 +105,22 @@ function rotate(e)
   carousel.css({
     "transform": "rotateX(-20deg) rotateY("+currdeg+"deg)"
   });
-  a.css({
+  item_a.css({
 	"transform": "rotateY(0deg) translateZ(11vw) rotateY("+currdegA+"deg)"
   });
-  b.css({
+  item_b.css({
 	"transform": "rotateY(60deg) translateZ(11vw) rotateY("+currdegB+"deg)"
   });
-  c.css({
+  item_c.css({
 	"transform": "rotateY(120deg) translateZ(11vw) rotateY("+currdegC+"deg)"
   });
-  d.css({
+  item_d.css({
 	"transform": "rotateY(180deg) translateZ(11vw) rotateY("+currdegA+"deg)"
   });
-  t.css({
+  item_e.css({
 	"transform": "rotateY(240deg) translateZ(11vw) rotateY("+currdegB+"deg)"
   });
-  f.css({
+  item_f.css({
 	"transform": "rotateY(300deg) translateZ(11vw) rotateY("+currdegC+"deg)"
   });
 
@@ -130,12 +130,12 @@ function rotate(e)
 
 export async function initComponent() {
 	carousel = $(".carousel");
-	a = $(".a");
-	b = $(".b");
-	c = $(".c");
-	d = $(".d");
-	t = $(".e");
-	f = $(".f");
+	item_a = $(".item_a");
+	item_b = $(".item_b");
+	item_c = $(".item_c");
+	item_d = $(".item_d");
+	item_e = $(".item_e");
+	item_f = $(".item_f");
 	currdeg  = 0;
 	currdegA  = 0;
 	currdegB  = 0;

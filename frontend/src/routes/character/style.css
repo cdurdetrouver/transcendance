@@ -64,22 +64,22 @@ body {
 	text-align: center;
   }
   
-  .a {
+  .item_a {
 	transition: transform 1s; 
 	transform: rotateY(0deg) translateZ(11vw); }
-  .b {
+  .item_b {
 	transition: transform 1s; 
 	transform: rotateY(60deg)  translateZ(11vw) rotateY(-60deg); }
-  .c {
+  .item_c {
 	transition: transform 1s; 
 	transform: rotateY(120deg) translateZ(11vw) rotateY(60deg); }
-  .d {
+  .item_d {
 	transition: transform 1s; 
 	transform: rotateY(180deg) translateZ(11vw); }
-  .e {
+  .item_e {
 	transition: transform 1s; 
 	transform: rotateY(240deg) translateZ(11vw) rotateY(-60deg); }
-  .f {
+  .item_f {
 	transition: transform 1s;  
 	transform: rotateY(300deg) translateZ(11vw) rotateY(60deg); }
   
