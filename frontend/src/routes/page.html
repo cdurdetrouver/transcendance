@@ -32,15 +32,17 @@
 				<span id="closePopupBtn" class="close">&times;</span>
 				<div id="login-content">
 					<h2>Login</h2>
-					<form>
-						<label for="email">email:</label>
+					<form class="form">
+						<label class="email" for="email">email:</label>
 						<input type="text" id="email" name="email" required><br><br>
 						<label for="password">Password:</label>
 						<input type="password" id="password" name="password" required><br><br>
+						<div id="buttons"> 
 						<input id="submit-login" type="submit" value="Submit">
-						<button id="google-login">Login with Google
-							<img src="path/to/google-logo.png" alt="Google logo">
+						<button id="google-login">Google
+							<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
 						</button>
+						</div>
 					</form>
 					<p>Don't have an account? <button id="register">Register</button></p>
 				</div>

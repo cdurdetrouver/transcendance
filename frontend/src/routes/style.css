@@ -163,8 +163,19 @@ a:hover {
     position: relative;
 }
 
+#buttons {
+    display: flex;
+    flex-direction: row;
+    align-items:  center;
+    gap: 10px;
+
+}
+
 #login-content {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items:  center;
+
 }
 /* Style for the close button */
 .close {
@@ -203,6 +214,27 @@ button:disabled {
     background-color: blue;
 }
 
-#google-login: {
-    
+.email {
+    margin-left: calc(32px);
+}
+
+#google-logo {
+    width: 30%;
+    height: 20%;
+}
+
+#google-login {
+    width: 30%;
+    background-color: #fffcfc; /* Couleur de fond de Google */
+    color: black; /* Couleur du texte */
+    border: none; /* Pas de bordure */
+    padding: 10px 15px; /* Espacement interne */
+    border-radius: 5px; /* Coins arrondis */
+    cursor: pointer; /* Curseur en main */
+    display: flex; /* Utilisation de flexbox pour aligner l'image et le texte */
+    align-items: center; /* Alignement vertical */
+}
+
+#google-login img {
+    margin-right: 10px; /* Espace entre l'image et le texte */
 }
