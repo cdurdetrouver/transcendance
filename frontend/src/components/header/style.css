@@ -10,85 +10,74 @@
   
 
 .sidebar {
-	width:  calc(90px + var(--sidebar-width));
-	transform: translateX(calc(var(--sidebar-width) * -1));
-	background: url('../../static/assets/sheets/header_sheet.png')  no-repeat  right;
-	background-size: 100% 150%;
-	display: flex-start;
-	justify-content: center;
-	align-items: center;
+	z-index: 1;
 	position: absolute;
 	top: 0;
-	bottom: 0;
-    z-index: 1;
-	/* opacity: .5; */
-	transition: transform .6s
+	width:  60px;
+	height: 100vh;
+	background: url('../../static/assets/sheets/header_sheet.png')  no-repeat  right;
+	background-size: 100% 150%;
+	overflow: hidden;
+	transition: .6s;
 }
 
-.sidebar:hover,
-.logo:hover + .sidebar {
-
-	transform: translateX(0);
+.sidebar:hover
+{
+	width: 300px;
 }
 
-.sidebar:hover .side-wrapper .title,
-.logo:hover + .sidebar .side-wrapper .title,
-.sidebar:hover .menu,
-.logo:hover + .sidebar .menu {
-	opacity: 1;
-	pointer-events: all;
+
+.sidebar ul 
+{
+	position: relative;
+	left: -15px;
+	height: 100vh;
+	display: flex; 
+    flex-direction: column; /* Aligner les éléments verticalement */
 }
 
- .menu, .title{
-	font-family: IsaacFont;
-	list-style-type: none;
-	opacity: 0;
-	pointer-events: none; /* Prevent clicking on hidden links */
-	transition: opacity 0.6s ease;
-  }
-  
-  .logo {
-	position: fixed;
-	top: 10px;
-	left: 10px;
-	width: 50px; /* Set a width for the logo */
-	height: 50px; /* Set a height for the logo */
-	background: url('../../static/assets/jpg/head.png') no-repeat center/contain;
-	z-index: 2;
-	transition: background-image 0.3s ease;
+.sidebar ul li
+{
+	list-style: none;
 }
 
-.logo img {
-	width: 70%;  
-    height: auto; 
-    max-width: 70%;
+  .icon img {
+    width: 24px; /* Adjust the width to fit your design */
+    height: auto; /* Maintain aspect ratio */
 }
 
-.logo:hover {
-	background-image: url('../../static/assets/jpg/head_cry.png'); /* Change to the new image on hover */
-}
 
-.title {
-	font-size: 1.2rem;
-	font-weight: bold;
-	text-align: center;
-	margin-bottom: 30%;
-	padding: 27px;
-	color: #2d2d2d;
-}
 
-	.menu__link {
-	color: #2d2d2d;
-	font-weight: 100;
+.sidebar ul li
+{
+	position: relative;
+	display: flex;
+	white-space: nowrap;
 	text-decoration: none;
-	font-size: 2rem;
-	line-height: 5rem;
+	min-width: 60px;
+	height: 80px;
+}
+
+.sidebar .text
+{
+	margin-left: 50px;
+}
+
+.logo {
+	margin-bottom: 150px;
+}
+
+
+
+a:link { 
+	text-decoration: none; 
+  } 
+  a:visited { 
+	text-decoration: none; 
+  } 
+  a:hover { 
+	text-decoration: none; 
+  } 
+  a:active { 
+	text-decoration: none; 
   }
-
-  
-  .input-toggler {
-	display: none;
-  }
-
-
-
