@@ -8,10 +8,10 @@ from django.http import JsonResponse
 from .serializers import RoomSerializer
 from user.serializers import UserSerializer
 from django.shortcuts import get_object_or_404
-from .data_handling import add_in_room, remove_from_room, get_user_by_name
-from .models import Room
+from .data_handling import remove_from_room, get_user_by_name
+from .models import Room, User
 from rest_framework.response import Response
-from asgiref.sync import sync_to_async, async_to_sync
+from asgiref.sync import async_to_sync
 import json
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -36,11 +36,9 @@ from drf_yasg.utils import swagger_auto_schema
 def get_user_chats(request):
     user = request.user
     rooms = Room.objects.filter(participants=user)
-    print(rooms)
     if (not rooms.exists()):
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     rooms_s = (RoomSerializer(rooms, many=True)).data
-    print(rooms_s)
     response = JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
     return response
 
@@ -98,13 +96,15 @@ def room(request):
 def find_user(data):
     username = data['username']
     try:
-        user = get_user_by_name(username)
+        user = get_object_or_404(User, username=username)
         return user
     except:
         return None
 
 def add_user(user, room):
-    async_to_sync(add_in_room(room, user))
+    print(user.id)
+    room.participants.add(user)
+    room.save()
     return Response({"User status": "Added in {} successfully".format(room.name)}, status=status.HTTP_200_OK)
 
 
@@ -119,12 +119,14 @@ def user(request):
     room_name = data['room_name']
     room = Room.objects.filter(name=room_name).all().first()
 
+    print("user: ", user)
     if not room:
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     user_add = find_user(data)
     if not user:
         return Response({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
     if (request.method == 'POST'):
+        print("user post : ", user.id)
         return add_user(user_add, room)
     elif (request.method == 'DELETE'):
-        return delete_user(user_add, room)
+        return delete_user(user_add, room)                                                                                                                                                                                                   
