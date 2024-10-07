@@ -39,24 +39,39 @@ def get_user_chats(request):
     if (not rooms.exists()):
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     rooms_s = (RoomSerializer(rooms, many=True)).data
-    response = JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
-    return response
+    return JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
 
 def check_admin(user, room):
     if (room.created_by.id == user.id):
         return True
     return False
 
-def create_room(room, user):
+def create_room(room, user, room_name):
 
     if room:
-        response = JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
-        return response
-    room = Room.objects.create(created_by=user, name=room.name)
+        return JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
+    room = Room.objects.create(created_by=user, name=room_name)
     room.participants.set([user])
     room.save()
-    response = JsonResponse({'room_statuts': 'created', 'room_name' : room.name}, status=status.HTTP_200_OK)
-    return response
+    return  JsonResponse({'room_statuts': 'created', 'room_name' : room_name}, status=status.HTTP_200_OK)
+
+def change_room_info(data, room):
+
+    try:
+        new_name = data['new_name']
+        if Room.objects.filter(name=new_name).all().first():
+            return JsonResponse({'room_statuts': 'room name already in use'}, status=status.HTTP_303_SEE_OTHER)
+        room.name = new_name
+        room.save()
+        return JsonResponse({'room_statuts': 'name changed', 'room_name' : room.name}, status=status.HTTP_200_OK)
+    except:
+        pass
+    try:
+        new_photo = data['new_photo']
+        return JsonResponse({'room_statuts': 'photo changed'}, status=status.HTTP_200_OK)
+    except:
+        pass
+    return JsonResponse({'error': 'This feature is not implemented yet.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
 
 @swagger_auto_schema(
 	method='post',
@@ -94,12 +109,18 @@ def room(request):
     user = request.user
     data = json.loads(request.body)
     room_name = data['room_name']
-    room = Room.objects.filter(name=room_name).all()
+    if (not room_name):
+        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+    room = Room.objects.filter(name=room_name).all().first()
 
+    if (request.method == 'POST'):
+        return create_room(room, user, room_name)
+    if (not room):
+        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     if (check_admin(user, room) == False):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
-    if (request.method == 'POST'):
-        return create_room(room, user)
+    if (request.method == 'PUT'):
+        return change_room_info(data, room)
 
 def find_user(data):
     username = data['username']
@@ -130,6 +151,8 @@ def user(request):
     user = request.user
     data = json.loads(request.body)
     room_name = data['room_name']
+    if (not room_name):
+        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     room = Room.objects.filter(name=room_name).all().first()
 
     if not room:
@@ -149,6 +172,8 @@ def is_admin(request):
     user = request.user
     data = json.loads(request.body)
     room_name = data['room_name']
+    if (not room_name):
+        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     room = Room.objects.filter(name=room_name).all().first()
 
     if not room:
