@@ -241,37 +241,37 @@ async function change_name(new_name) {
 async function chat_change_name() {
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-     <input id="chat-new-name-input" type="text" size="100" placeholder="room name"><br>
-     <input id="chat-user-submit" type="button" value="change room name">
-     <input id="chat-conf" type="button" value="chat conf">
+    <input id="chat-new-name-input" type="text" size="100" placeholder="room name"><br>
+    <input id="chat-user-submit" type="button" value="change room name">
+    <input id="chat-conf-close" type="button" value="chat conf">
     `;
     const input_name = document.querySelector('#chat-new-name-input');
-    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {change_name(input_name.value)});
-    document.querySelector('.chat-conf').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {add_user(input_name.value)});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
 }
 
 async function chat_change_photo(params) {
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-     <input id="chat-conf" type="button" value="chat conf">
+     <input id="chat-conf-close" type="button" value="close chat conf">
     `;
-    document.querySelector('.chat-conf').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
 }
 
 async function chat_delete(params) {
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-     <input id="chat-conf" type="button" value="chat conf">
+     <input id="chat-conf-close" type="button" value="close chat conf">
     `;
-    document.querySelector('.chat-conf').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
 }
 
 async function chat_close_conf(params) {
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-     <input id="chat-conf" type="button" value="chat conf">
+     <input id="chat-conf-close" type="button" value="close chat conf">
     `;
-    document.querySelector('.chat-conf').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
 }
 
 async function open_conf() {
@@ -279,14 +279,14 @@ async function open_conf() {
     chat_conf.innerHTML = `
         <input id="chat-add-user" type="button" value="Add user">
         <input id="chat-remove-user" type="button" value="Remove user">
-        <input class="chat-change-name" type="button" value="Change name">
+        <input id="chat-change-name" type="button" value="Change name">
         <input id="chat-change-photo" type="button" value="Change photo">
         <input id="chat-delete" type="button" value="Delete chat">
         <input id="chat-conf-close" type="button" value="Close conf chat">
     `;
     document.querySelector('#chat-add-user').addEventListener('click', function(event) {chat_add_user()});
     document.querySelector('#chat-remove-user').addEventListener('click', function(event) {chat_remove_user()});
-    document.querySelector('.chat-change-name').addEventListener('click', function(event) {chat_change_name()});
+    document.querySelector('#chat-change-name').addEventListener('click', function(event) {chat_change_name()});
     document.querySelector('#chat-change-photo').addEventListener('click', function(event) {chat_change_photo()});
     document.querySelector('#chat-delete').addEventListener('click', function(event) {chat_delete()});
     document.querySelector('#chat-conf-close').addEventListener('click', function(event) {chat_close_conf()});
@@ -335,7 +335,7 @@ async function open_chat(chat_id, chat_name) {
         <li>
             <div class="chat-conf">
                 <input id="chat-conf-btn" type="button" value="chat conf">
-            <div>
+            </div>
 		</li>
         <li>
             <textarea id="chat-log" cols="100" rows="20"></textarea><br>
