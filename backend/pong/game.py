@@ -69,15 +69,16 @@ class GameThread(threading.Thread):
 		self.group_name = group_name
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
+		self.nb_viewer = 0
 
 		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 4)
 		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
 		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
 
 	def __str__(self):
-		string = f"{self.group_name} - {self.game.player1_id} vs {self.game.player2_id} | score: {self.game.player1_score} - {self.game.player2_score}"
+		string = f"{self.group_name} - {self.game.player1} vs {self.game.player2} | score: {self.game.player1_score} - {self.game.player2_score}"
 		if self.game.finished:
-			string += f" - Winner: {self.game.winner_id}"
+			string += f" - Winner: {self.game.winner}"
 		return string
 
 	def serialize(self):
@@ -124,6 +125,8 @@ class GameThread(threading.Thread):
 				self.delta_time = current_time - last_time
 				last_time = current_time
 
+				self.game.nb_viewers = self.nb_viewer
+
 				self.ball.update()
 				self.paddle1.move()
 				self.paddle2.move()
@@ -162,9 +165,9 @@ class GameThread(threading.Thread):
 					self.ball.reset()
 
 				if self.game.player1_score >= 5:
-					self.game_over(self.game.player1_id)
+					self.game_over(self.game.player1)
 				elif self.game.player2_score >= 5:
-					self.game_over(self.game.player2_id)
+					self.game_over(self.game.player2)
 				else :
 					async_to_sync(self.channel_layer.group_send)(
 						self.group_name,
@@ -183,7 +186,7 @@ class GameThread(threading.Thread):
 
 	def game_over(self, Winner):
 		self.game.finished = True
-		self.game.winner_id = Winner
+		self.game.winner = Winner
 		self.game.save()
 		self.stop()
 
@@ -200,9 +203,12 @@ class GameThread(threading.Thread):
 			{
 				'type': 'game.end',
 				'message': 'Game has ended',
-				'winner': Winner
+				'winner': Winner.id
 			}
 		)
+
+	async def add_viewer(self):
+		self.nb_viewer += 1
 
 	async def set_player_direction(self, player, data):
 		if player == "player1":
@@ -217,4 +223,5 @@ class GameThread(threading.Thread):
 				self.paddle2.movedown = data["message"] == "keydown"
 
 	def stop(self):
+		print("Game stopped")
 		self._stop_event.set()

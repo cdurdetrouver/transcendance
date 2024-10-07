@@ -5,6 +5,16 @@
 		<input type="password" name="pswd" placeholder="Password" required="">
 		<button>Login</button>
 	</form>
+	<a class="intra_button" rel="noreferrer">
+		Log in with 42
+	</a>
+	<a class="github_button" rel="noreferrer">
+		Log in with Github
+	</a>
+	<a class="google_button">
+		Log in with Google
+	</a>
+	<div id="name"></div>
 	<p>Don't have an account? <a href="/register">Register</a></p>
 </div>
 
@@ -12,5 +22,13 @@
 	<h1>You're already log in</h1>
 	<form>
 		<button>Logout</button>
+	</form>
+</div>
+
+<div class="div_2fa">
+	<h1>Need 2fa to log in</h1>
+	<form>
+		<input type="text" name="token_2fa" placeholder="2fa code" required="">
+		<button>Submit</button>
 	</form>
 </div>

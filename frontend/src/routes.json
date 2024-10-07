@@ -36,8 +36,8 @@
 		"files": "/logout"
 	},
 	{
-		"path": "/404",
-		"files": "/404"
+		"path": "/user",
+		"files": "/user"
 	},
 	{
 		"path": "/flappy",
@@ -46,5 +46,17 @@
 	{
 		"path": "/character",
 		"files": "/character"
+	},
+	{
+		"path": "/user/edit",
+		"files": "/user/edit"
+	},
+	{
+		"path": "/user/2FA",
+		"files": "/user/2FA"
+	},
+	{
+		"path": "/404",
+		"files": "/404"
 	}
 ]

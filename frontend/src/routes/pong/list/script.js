@@ -21,14 +21,18 @@ async function navigate_to_game(game_id) {
 		console.error('Error connecting to game');
 }
 
-function addGame(player1, player1_score, player2, player2_score, game_id) {
+function addGame(player1, player1_score, player2, player2_score, game_id, nb_viewers) {
 	const game_list = document.querySelector('.game-list');
 	const game = document.createElement('li');
 	game.innerHTML = `
 		<div class="game-info">
-			<div>${player1}</div>
+			<div>${player1.username}</div>
 			<div class="score">${player1_score} - ${player2_score}</div>
-			<div>${player2}</div>
+			<div>${player2.username}</div>
+		</div>
+		<div class="viewers">
+			${nb_viewers}
+			<span class="viewers-icon">👁️</span>
 		</div>
 		<a href="#" class="show-game" data-game-id="${game_id}">
 			Show
@@ -54,7 +58,7 @@ async function get_all_game() {
 			return;
 		}
 		for (const game of games.games) {
-			addGame(game.player1, game.player1_score, game.player2, game.player2_score, game.id);
+			addGame(game.player1, game.player1_score, game.player2, game.player2_score, game.id, game.nb_viewers);
 		}
 		document.querySelectorAll('.show-game').forEach(anchor => {
 			anchor.addEventListener('click', function (event) {

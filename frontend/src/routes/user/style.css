@@ -1,18 +1,9 @@
-.container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-}
-
 ul {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 	width: 80%;
 	max-width: 600px;
-	height: 50vh;
-	overflow-y: scroll;
 }
 
 li {
@@ -37,22 +28,4 @@ li {
 
 .score {
 	font-weight: bold;
-}
-
-a {
-	background-color: #4CAF50;
-	color: white;
-	text-decoration: none;
-	padding: 10px 20px;
-	border-radius: 5px;
-	display: flex;
-	align-items: center;
-}
-
-a:hover {
-	background-color: #45a049;
-}
-
-.play-icon {
-	margin-left: 10px;
 }

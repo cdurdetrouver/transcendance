@@ -8,7 +8,8 @@ class UserModelTest(TestCase):
         self.user = User.objects.create(
             username='testuser',
             email='testuser@example.com',
-            password='\MVwbDjln('
+            password='\MVwbDjln(',
+            user_type='email'
         )
 
     def test_user_creation(self):
