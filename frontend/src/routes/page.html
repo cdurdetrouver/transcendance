@@ -31,16 +31,22 @@
 			<div class="log-popin">
 				<span id="closePopupBtn" class="close">&times;</span>
 				<div id="login-content">
-					<h2>Login</h2>
+					<!-- <h2>Login</h2> -->
 					<form class="form">
 						<label class="email" for="email">email:</label>
 						<input type="text" id="email" name="email" required><br><br>
 						<label for="password">Password:</label>
 						<input type="password" id="password" name="password" required><br><br>
+						<input id="submit-login" type="submit" value="Submit"> Or login with:
 						<div id="buttons"> 
-						<input id="submit-login" type="submit" value="Submit">
-						<button id="google-login">Google
+						<button class="login-buttons" id="google-login">Google
 							<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
+						</button>
+						<button class="login-buttons" id="github-login"> GitHub
+							<img src="../routes/assets/logo/github_logo.png" id="github-logo" alt="Github logo">
+						  </button>
+						<button class="login-buttons" id="42-login"> 
+						<img src="../routes/assets/logo/42.png" id="intra-logo" alt="42 logo">
 						</button>
 						</div>
 					</form>

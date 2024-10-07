@@ -155,19 +155,24 @@ a:hover {
 /* Style for the popup content */
 .log-popin {
     
-    background-color:rgb(212, 183, 239);
+    /* background-color:rgb(184, 173, 163); */
+	background-image: url('../routes/assets/images/login-postit.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
+
     padding: 20px;
     border-radius: 5px;
-    width: 300px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 600px;
+    height:400px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
     position: relative;
 }
 
 #buttons {
     display: flex;
     flex-direction: row;
-    align-items:  center;
-    gap: 10px;
+    gap: 30px;
 
 }
 
@@ -175,6 +180,9 @@ a:hover {
     display: flex;
     flex-direction: column;
     align-items:  center;
+    padding: 95px 110px 0px 100px;
+    transform: rotate(5deg);
+
 
 }
 /* Style for the close button */
@@ -219,22 +227,49 @@ button:disabled {
 }
 
 #google-logo {
-    width: 30%;
-    height: 20%;
+    width: 20%;
 }
 
-#google-login {
-    width: 30%;
-    background-color: #fffcfc; /* Couleur de fond de Google */
-    color: black; /* Couleur du texte */
-    border: none; /* Pas de bordure */
-    padding: 10px 15px; /* Espacement interne */
-    border-radius: 5px; /* Coins arrondis */
-    cursor: pointer; /* Curseur en main */
-    display: flex; /* Utilisation de flexbox pour aligner l'image et le texte */
-    align-items: center; /* Alignement vertical */
+#submit-login {
+    padding: 5px 15px;
+    margin: 10px;
+    background-color: #fffcfc;
+    border: none;
+    border-radius: 0.5rem;
+}
+.login-buttons {
+    flex: 1;
+    background-color: #fffcfc;
+    color: black;
+    border: none;
+    padding: 5px 15px;
+    /* gap: 10px; */
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 0.5rem;
+
 }
 
-#google-login img {
-    margin-right: 10px; /* Espace entre l'image et le texte */
+#github-logo {
+    width: 20%;
+}
+
+#github-login {
+    width:30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2b2e31;
+    color: white;
+    text-align: center;
+
+}
+
+#intra-logo {
+    width:40px;
+
 }
