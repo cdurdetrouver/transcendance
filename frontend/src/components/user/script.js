@@ -126,4 +126,15 @@ async function logout() {
 	deleteCookie('user');
 }
 
-export { login, register, get_user, update_user, delete_user, refresh_token, logout, login_tierce };
+async function searchUsers(query, size = 30) {
+	const response = await fetch(`${config.backendUrl}/user/search/?q=${query}&size=${size}`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		credentials: 'include',
+	});
+	return response;
+}
+
+export { login, register, get_user, update_user, delete_user, refresh_token, logout, login_tierce, searchUsers };

@@ -1,5 +1,6 @@
-import { get_user } from '../components/user/script.js';
+import { get_user, searchUsers } from '../components/user/script.js';
 import { customalert, clearalert } from '../components/alert/script.js';
+import { router } from '../app.js';
 
 export async function initComponent() {
 	let user = await get_user();
@@ -18,5 +19,32 @@ export async function initComponent() {
 			customalert('Error', 'This is an error message', true);
 		}, delay);
 	});
+
+	document.getElementById('user-search').addEventListener('input', async function() {
+		const query = this.value;
+		if (query.length > 0) {
+			const response = await searchUsers(query, 5);
+			if (response.status === 200) {
+				const data = await response.json();
+				updateUserList(data.users);
+			} else {
+				updateUserList([]);
+			}
+		} else {
+			updateUserList([]);
+		}
+	});
 }
 
+function updateUserList(users) {
+	const userList = document.getElementById('user-list');
+	userList.innerHTML = '';
+	users.forEach(user => {
+		const userItem = document.createElement('li');
+		userItem.textContent = user.username;
+		userItem.onclick = () => {
+			router.navigate(`/user?id=${user.id}`);
+		};
+		userList.appendChild(userItem);
+	});
+}
