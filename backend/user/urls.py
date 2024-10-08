@@ -27,4 +27,5 @@ urlpatterns = [
     path('change_password/', views.change_password),
     path('block/<int:user_id>/', views.block_user),
     path('friend/<int:user_id>/', views.friend_user),
+    path('search/', views.search_user),
 ]
