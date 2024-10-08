@@ -41,18 +41,16 @@ async function created_room(room_name_created) {
 
 }
 
-async function send_create_room(chat_room_name) {
-    
-    console.log(chat_room_name);
+async function send_create_room(event) {
+	event.preventDefault();
+    const form = event.target
+    const form_data = new FormData(form);
+
+    console.log(event.target);
     const response = await fetch(config.backendUrl + "/chat/create_room/", {
         method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-		},
+        body: form_data,
 		credentials: "include",
-        body: JSON.stringify({
-             "room_name": chat_room_name
-        })
 	});
     if (response.status === 200)
     {
@@ -83,14 +81,20 @@ async function close_create_room() {
 async function create_room() {
     const create_box = document.querySelector('.create-box');
     create_box.innerHTML=`
-        <li class="li-create-room-btn">
-            <input class="chat-room-name" id="name" type="text" size="100"><br>
-            <input class="chat-room-submit" id=""submit type="button" value="Create">
+        <li class="li-create-room-form">
+            <form id="roomForm" class="room__form">
+			    <label for="room_name">Room name:</label>
+			    <input type="text" id="room_name" name="name" required>
+
+			    <label for="room_picture">Profile Picture:</label>
+			    <input type="file" id="room_picture" name="room_picture" accept="image/*">
+
+			    <button type="submit">Create</button>
+	        </form>
             <input class="chat-conf-close" id=""submit type="button" value="Close">
 		</li>
     `;
-    const chat_room_name = document.querySelector('.chat-room-name')
-    document.querySelector('.chat-room-submit').addEventListener('click', function(event) {send_create_room(chat_room_name.value)});
+	document.getElementById('roomForm').addEventListener('submit', send_create_room);
     document.querySelector('.chat-conf-close').addEventListener('click', close_create_room);
 }
 
@@ -419,6 +423,7 @@ async function print_chats() {
     {
         const chat_error = document.querySelector('.chat-list');
         chat_error.innerHTML = `
+        <t1>List of chat</t1>
         <div class="chat-info">
         <div>${"no chat found"}</div>
         </div>

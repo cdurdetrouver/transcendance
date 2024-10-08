@@ -46,14 +46,20 @@ def check_admin(user, room):
         return True
     return False
 
-def create_room(room, user, room_name):
+def create_room(room, user, data):
 
     if room:
         return JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
-    room = Room.objects.create(created_by=user, name=room_name)
-    room.participants.set([user])
-    room.save()
-    return  JsonResponse({'room_statuts': 'created', 'room_name' : room_name}, status=status.HTTP_200_OK)
+    new_room = Room.objects.create(created_by=user)
+    new_room.participants.set([user])
+    room_s = RoomSerializer(new_room, data=data, partial=True)
+    if room_s.is_valid():
+        room_s.save()
+        print("room name: ", new_room.name)
+        return  JsonResponse({'room_statuts': 'created', 'room_name' : room_s.data['name']}, status=status.HTTP_200_OK)
+    new_room.delete()
+    error_messages = [str(error) for errors in room_s.errors.values() for error in errors]
+    return JsonResponse({'error':error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
 def change_room_info(data, room):
 
@@ -107,20 +113,17 @@ def change_room_info(data, room):
 @api_view(['POST', 'PUT', 'DELETE', 'GET'])
 def room(request):
     user = request.user
-    data = json.loads(request.body)
-    room_name = data['room_name']
-    if (not room_name):
-        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+    room_name = request.data.get('room_name')
     room = Room.objects.filter(name=room_name).all().first()
 
     if (request.method == 'POST'):
-        return create_room(room, user, room_name)
+        return create_room(room, user, request.data)
     if (not room):
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     if (check_admin(user, room) == False):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     if (request.method == 'PUT'):
-        return change_room_info(data, room)
+        return change_room_info(request.data, room)
 
 def find_user(data):
     username = data['username']
