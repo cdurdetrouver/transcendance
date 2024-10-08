@@ -7,27 +7,39 @@ body {
 	padding: 70px 0;
 	font: 15px/20px Arial, sans-serif;
 	background-image: url('../../static/assets/background/background_1.png'); /* Add your background image path */
-	background-repeat: no-repeat;
+	background-repeat: repeat;
 	background-size: cover;
   }
   
 
   .background {
-    position: absolute;
-	top: 0;
-	left: 0;
-    width: 100%;
-    height: 100%;
+    position: relative;
+    width: 600px;
+    height: 80vh;
     background-image: url('../../static/assets/sheets/character_sheet.png'); 
     background-position: center;
 	background-repeat: no-repeat;
-	background-size: 35%;
-    /* z-index: 0; */
+	background-size:contain;
+	left: 50%;
+	transform: translateX(-50%);
 	display: flex;
     justify-content: center;
     align-items: center;
 	flex-direction: column;
 }
+
+.stats {
+
+	margin-left: 2vw;
+	height: auto;
+    display: flex;
+    width: auto; 
+    margin-top: 7vh; 
+	font-family: IsaacFont;
+    font-size: 2vh;
+    color: #444;
+}
+
 
 .container {
     margin-top: 15vh; 
@@ -50,9 +62,9 @@ body {
   }
   
   .item img {
-    width: 20%;  
+    width: 20%;
     height: auto; 
-    max-width: 20%;
+	min-width: 20%;
 }
 
   .item {
@@ -62,6 +74,7 @@ body {
 	width: 25vw;
 	height: 20vh;
 	text-align: center;
+
   }
   
   .item_a {
@@ -96,7 +109,7 @@ body {
 		font-family: IsaacFont;
 		font-size: 6vh;
 		color: #2d2d2d;
-		width: 13vw; 
+		width: 13vw;
 		text-align: center; 
 		position: relative;
 		display: inline-block;
@@ -119,7 +132,8 @@ body {
 	}
 	
 	.next img, .prev img {
-		width: 100%;
+		width: 7vh; 
+		max-width: 100px; 
 		height: auto;
 		transition: transform 0.3s ease, opacity 0.3s ease; 
 	}
@@ -128,35 +142,25 @@ body {
 		transform: scale(1.1); 
 	}
 
-.stats {
 
-	margin-left: 2vw;
-	height: 15%;
+.stats {
     display: flex;
-    width: 30%; 
-    margin-top: 7vh; 
 	font-family: IsaacFont;
     font-size: 2vh;
     color: #444;
+
 }
 
-.life, .speed, .str {
-    width: 15%;
-}
-
-.life img,  .speed img,  .str img  {
-	width: 100%; 
-	height: auto;
-}
-
-.life-stat img,.speed-stat img, .str-stat img
-{
-	height: 50%;
+.stats img {
+    width: 7vh; 
+    max-width: 100px; 
+    height: auto;
 }
 
 .life-stat,.speed-stat, .str-stat  {
+	margin-right: 2dvw;
 	margin-left: 1dvw;
-	width: 30%;
+
 }
 
 .game_sheet {
