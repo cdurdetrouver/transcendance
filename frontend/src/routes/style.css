@@ -206,8 +206,8 @@ a:hover {
 #register-content {
     display: none;
     flex-direction: column;
-
 }
+
 
 button:disabled {
     /* background-color: #ccc;  */
@@ -230,7 +230,7 @@ button:disabled {
     width: 20%;
 }
 
-#submit-login {
+.confirm-button {
     padding: 5px 15px;
     margin: 10px;
     background-color: #fffcfc;
@@ -273,3 +273,18 @@ button:disabled {
     width:40px;
 
 }
+
+.custom-input {
+    border: none;
+}
+
+#email {
+    border: none;
+    /* background-color: transparent; */
+}
+
+#password {
+    border: none;
+    /* background-color: transparent; */
+}
+
