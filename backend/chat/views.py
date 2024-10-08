@@ -60,23 +60,15 @@ def create_room(room, user, data):
     error_messages = [str(error) for errors in room_s.errors.values() for error in errors]
     return JsonResponse({'error':error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
-def change_room_info(data, room):
-
-    try:
-        new_name = data['new_name']
-        if Room.objects.filter(name=new_name).all().first():
+def update_room(data, room):
+    if Room.objects.filter(name=data.get('new_name')).all().first():
             return JsonResponse({'room_statuts': 'room name already in use'}, status=status.HTTP_303_SEE_OTHER)
-        room.name = new_name
-        room.save()
-        return JsonResponse({'room_statuts': 'name changed', 'room_name' : room.name}, status=status.HTTP_200_OK)
-    except:
-        pass
-    try:
-        new_photo = data['new_photo']
-        return JsonResponse({'room_statuts': 'photo changed'}, status=status.HTTP_200_OK)
-    except:
-        pass
-    return JsonResponse({'error': 'This feature is not implemented yet.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    room_s = RoomSerializer(room, data=data, partial=True)
+    if room_s.is_valid():
+        room_s.save()
+        return  JsonResponse({'room_statuts': 'updated', 'room_name' : room_s.data['name']}, status=status.HTTP_200_OK)
+    error_messages = [str(error) for errors in room_s.errors.values() for error in errors]
+    return JsonResponse({'error':error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
 @swagger_auto_schema(
 	method='post',
@@ -110,9 +102,10 @@ def change_room_info(data, room):
 	operation_description="Create a room"
 )
 @api_view(['POST', 'PUT', 'DELETE', 'GET'])
-def room(request):
+def room(request, room_name):
     user = request.user
-    room_name = request.data.get('room_name')
+    if not room_name:
+        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     room = Room.objects.filter(name=room_name).all().first()
 
     if (request.method == 'POST'):
@@ -122,7 +115,7 @@ def room(request):
     if (check_admin(user, room) == False):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     if (request.method == 'PUT'):
-        return change_room_info(request.data, room)
+        return update_room(request.data, room)
 
 def find_user(data):
     username = data['username']

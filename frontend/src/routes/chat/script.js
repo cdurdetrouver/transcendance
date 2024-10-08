@@ -11,6 +11,7 @@ import { get_user } from "../../components/user/script.js";
 //put gif in chat ? 
 let chatSocket;
 let room_name;
+let rooms;
 
 async function get_user_chats()
 {
@@ -47,7 +48,7 @@ async function send_create_room(event) {
     const form_data = new FormData(form);
 
     console.log(event.target);
-    const response = await fetch(config.backendUrl + "/chat/create_room/", {
+    const response = await fetch(config.backendUrl + "/chat/room/", {
         method: "POST",
         body: form_data,
 		credentials: "include",
@@ -211,23 +212,25 @@ async function chat_remove_user(params) {
     document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
 }
 
-async function change_name(new_name) {
-    const response = await fetch(config.backendUrl + "/chat/create_room/", {
+async function update_room(event) {
+    event.preventDefault();
+    const form = event.target
+    const form_data = new FormData(form);
+
+    const response = await fetch(config.backendUrl + "/chat/room/" + room_name + "/", {
         method: "PUT",
-        headers: {
-            'Content-Type': 'application/json',
-		},
+        body: form_data,
 		credentials: "include",
-        body: JSON.stringify({
-             "new_name": new_name,
-             "room_name": room_name
-        })
 	});
     const data = await response.json();
     if (response.status === 200)
     {
-        created_room(data['room_status']);
-        // print_chats();
+        room_name = data['room_name'];
+	    const chat_title = document.getElementById('chat-name-title');
+        chat_title.innerHTML = `
+        <t1>Chat ${room_name} selected</t1>
+        `;
+        print_chats();
         return ;
     }
     else if (response.status === 303)
@@ -250,7 +253,7 @@ async function chat_change_name() {
     <input id="chat-conf-close" type="button" value="chat conf">
     `;
     const input_name = document.querySelector('#chat-new-name-input');
-    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {add_user(input_name.value)});
+    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {change_name(input_name.value)});
     document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
 }
 
@@ -283,17 +286,23 @@ async function open_conf() {
     chat_conf.innerHTML = `
         <input id="chat-add-user" type="button" value="Add user">
         <input id="chat-remove-user" type="button" value="Remove user">
-        <input id="chat-change-name" type="button" value="Change name">
-        <input id="chat-change-photo" type="button" value="Change photo">
+        <form id="roomConfForm" class="room__form">
+			<label for="room_name">Room name:</label>
+			<input type="text" id="room_name" name="name" value=${room_name}>
+
+			<label for="room_picture">Profile Picture:</label>
+			<input type="file" id="room_picture" name="room_picture" value="${}" accept="image/*">
+
+			<button type="submit">Update</button>
+	    </form>
         <input id="chat-delete" type="button" value="Delete chat">
         <input id="chat-conf-close" type="button" value="Close conf chat">
-    `;
-    document.querySelector('#chat-add-user').addEventListener('click', function(event) {chat_add_user()});
-    document.querySelector('#chat-remove-user').addEventListener('click', function(event) {chat_remove_user()});
-    document.querySelector('#chat-change-name').addEventListener('click', function(event) {chat_change_name()});
-    document.querySelector('#chat-change-photo').addEventListener('click', function(event) {chat_change_photo()});
-    document.querySelector('#chat-delete').addEventListener('click', function(event) {chat_delete()});
-    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {chat_close_conf()});
+        `;
+	document.getElementById('roomConfForm').addEventListener('submit', update_room);
+    document.querySelector('#chat-add-user').addEventListener('click', chat_add_user);
+    document.querySelector('#chat-remove-user').addEventListener('click', chat_remove_user);
+    document.querySelector('#chat-delete').addEventListener('click', chat_delete);
+    document.querySelector('#chat-conf-close').addEventListener('click', chat_close_conf);
 }
 
 async function check_admin() {
@@ -333,7 +342,7 @@ async function open_chat(chat_id, chat_name) {
     }
     const chat_box = document.querySelector('.chat-box');
     chat_box.innerHTML = `
-        <li>
+        <li id='chat-name-title'>
             <t1>Chat ${chat_name} selected</t1>
 		</li>
         <li>
@@ -417,8 +426,8 @@ async function open_chat(chat_id, chat_name) {
 
 //here we get the list of chat from user and load it to the html
 async function print_chats() {
-    let rooms = await get_user_chats();
-
+    ret_rooms = await get_user_chats();
+    rooms = ret_rooms.rooms
     if (!rooms)
     {
         const chat_error = document.querySelector('.chat-list');
@@ -434,7 +443,7 @@ async function print_chats() {
         chat_list.innerHTML=`
             <t1>List of chat</t1>
         `;
-        for (const room of rooms.rooms)
+        for (const room of rooms)
             {
                 const chat = document.createElement('li');
                 chat.id = room.id
