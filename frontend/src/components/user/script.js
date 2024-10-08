@@ -40,6 +40,8 @@ async function login(email, password)
 
 async function register(username, email, password)
 {
+	console.log("ICI username = ", username, "email = ", email, "password = ", password);
+
 	const response = await fetch(config.backendUrl + "/register/", {
 		method: "POST",
 		headers:
@@ -55,11 +57,12 @@ async function register(username, email, password)
 		credentials: "include",
 	});
 
-	if (response.status === 201)
-	{
+	if (response.status === 201) {
 		const data = await response.json();
-
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+	}
+	else {
+        console.error('Registration failed with status:', response.status);
 	}
 	return response;
 }

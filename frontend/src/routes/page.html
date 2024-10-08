@@ -1,39 +1,27 @@
 <div id="container">
-	<!-- <div id="start">
-		<img src="../routes/assets/images/start_sheet.png" alt="Centered Image" class="centered-image">
-
-		<a href="https://www.example.com" class="clickable-area"></a>
-		<button id="openPageButton">PRESS START</button>
-	</div> -->
-
 	<div id="game-container">
 		<img src="../routes/assets/images/menu.png" alt="Menu" id="menu-image">
-
 		<div id="select-mode">
-			<!-- <a href="" class="button-mode" id="singleplayer">SINGLEPLAYER</a> -->
-			<a href="/pong" class="button-mode" id="newruntest">NEW RUN TEST</a>
-			<button disabled href="/pong" class="button-mode" id="newrun">NEW RUN</button>
-
-			<a href="/account" class="button-mode" id="account">ACCOUNT</a>
-			<a href="" class="button-mode" id="chat">CHAT</a>
-			<a href="" class="button-mode" id="options">OPTIONS</a>
-			<a href="" class="button-mode" id="stats">STATS</a>
+			<a href="/pong" class="button-mode" id="newruntest">NEW RUN TMP</a>
+			<button disabled href="/pong" class="button-mode" id="LOCAL">LOCAL</button>
+			<button href="" class="button-mode" id="online">ONLINE</button>
+			<button href="/account" class="button-mode" id="account">ACCOUNT</button>
+			<button href="" class="button-mode" id="chat">CHAT</button>
+			<button href="" class="button-mode" id="stats">STATS</bitton>
 		</div>
 		<div id="login-page">
-			<a class="login-mode" id="login">LOGIN</a>
-			<!-- <a href="/login" class="login-mode" id="login">LOGIN</a> -->
+			<button class="login-mode" id="login">LOGIN</button>
 			<a id="user-info"></a>
 		</div>
 		<div id="popin" class="popin">
 			<div class="log-popin">
 				<span id="closePopupBtn" class="close">&times;</span>
 				<div id="login-content">
-					<!-- <h2>Login</h2> -->
 					<form class="form">
 						<label class="email" for="email"> email:</label>
-						<input type="text" id="email" name="email" required><br><br>
+						<input type="text" class="custom-input" id="email" name="email" required><br><br>
 						<label for="password">Password:</label>
-						<input type="password" id="password" name="password" required><br><br>
+						<input type="password" class="custom-input" id="password" name="password" required><br><br>
 						<input class="confirm-button" type="submit" value="Submit"> Or login with:
 						<div id="buttons"> 
 						<button class="login-buttons" id="google-login">Google
@@ -47,17 +35,17 @@
 						</button>
 						</div>
 					</form>
-					<p>Don't have an account? <button class="confirm-button">Register</button></p>
+					<p>Don't have an account? <button class="confirm-button" id="register-button">Register</button></p>
 				</div>
 					<div id="register-content">
 						<h2>Register</h2>
-						<form>
-							<label for="username">Username:</label>
-							<input type="text" class="custom-input" id="username" name="username" required><br><br>
-							<label for="email">Email:</label>
-							<input type="text" class="custom-input" id="email" name="email" required><br><br>
-							<label for="password">Password:</label>
-							<input type="password" id="password" name="password" required><br><br>
+						<form class="form">
+							<label for="usernameRegister">Username:</label>
+							<input type="text" class="custom-input" id="usernameRegister" name="usernameRegister" required><br><br>
+							<label for="emailRegister">Email:</label>
+							<input type="text" class="custom-input" id="emailRegister" name="emailRegister" required><br><br>
+							<label for="passwordRegister">Password:</label>
+							<input type="password" class="custom-input" id="passwordRegister" name="passwordRegister" required><br><br>
 							<input class="confirm-button" type="submit" value="Submit">
 						</form>
 					</div>

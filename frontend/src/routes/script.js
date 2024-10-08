@@ -1,7 +1,8 @@
 
 import { getCookie } from '../../components/storage/script.js';
 import { get_user } from '../../components/user/script.js';
-import { login } from '../components/user/script.js';
+import { login, register } from '../components/user/script.js';
+
 import {customalert} from '../components/alert/script.js'
 
 
@@ -23,17 +24,17 @@ window.addEventListener("click", function(event) {
     }
 });
 
-// const register = document.getElementById("register-content");
-// const login = document.getElementById("login-content");
+const registerPopin = document.getElementById("register-content");
+const loginPopin = document.getElementById("login-content");
 
-const openPopinBtn = document.getElementById("register");
+const openPopinBtn = document.getElementById("register-button");
 const closePopinBtn = document.getElementById("closePopupBtn");
 
-openPopupBtn.addEventListener("click", function() {
+openPopinBtn.addEventListener("click", function() {
     popup.style.display = "flex"; // Make the popup visible
 });
 
-closePopupBtn.addEventListener("click", function() {
+closePopinBtn.addEventListener("click", function() {
 	popup.style.display = "none";
 });
 
@@ -46,8 +47,8 @@ window.addEventListener("click", function(event) {
 let userElement = document.querySelector('user-info');
 
 openPopinBtn.addEventListener('click', function (event) {
-	login.style.display = "none";
-	register.style.display = "flex";
+	loginPopin.style.display = "none";
+	registerPopin.style.display = "flex";
 });
 
 const submitLoginButton = document.getElementById("submit-login");
@@ -59,9 +60,7 @@ loginform.addEventListener('submit', login_form);
 
 async function login_form(event) {
 	event.preventDefault();
-	// const urlParams = new URLSearchParams(window.location.search);
-	// const return_path = urlParams.get('return');
-	// const href = return_path ?? '/';
+
 	const email = document.querySelector('input[name="username"]').value;
 	const password = document.querySelector('input[name="password"]').value;
 
@@ -76,5 +75,31 @@ async function login_form(event) {
 	else {
 		const data = await response.json();
 		customalert('Login failed', data.error, true);
+		
 	}
+}
+
+const registerDiv = document.getElementById("register-content");
+const registerForm = registerDiv.querySelector('form');
+registerForm.addEventListener('submit', register_form);
+
+async function register_form(event) {
+	event.preventDefault();
+	
+	
+	const username = document.querySelector('input[name="usernameRegister"]').value;
+	const email = document.querySelector('input[name="emailRegister"]').value;
+	const password = document.querySelector('input[name="passwordRegister"]').value;
+
+	console.log("username = ", username, "email = ", email, "password = ", password);
+	const response = await register(username, email, password);
+
+	const data = await response.json();
+	console.log(data);
+
+	if (response.status === 201) {
+		customalert('Registration successful', 'You are now registered');
+	}
+	else
+		alert(data.error);
 }
