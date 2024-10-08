@@ -330,3 +330,5 @@ backend/*/migrations/*
 
 # Ignore png files
 *.png
+
+.vscode/
