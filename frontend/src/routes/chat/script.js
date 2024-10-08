@@ -438,9 +438,11 @@ async function print_chats() {
             {
                 const chat = document.createElement('li');
                 chat.id = room.id
+                const room_picture = config.backendUrl + room.room_picture;
                 chat.innerHTML = `
-                <div class="chat-block">
-			    <div id=${room.id}>${room.name}</div>
+                <div class="chat-block-${room.id}">
+			        <t1>${room.name}</t1>
+                    <img src="${room_picture}" height=100 alt="Room Picture">
                 </div>
                 `;
                 chat.addEventListener('click', function(event) {

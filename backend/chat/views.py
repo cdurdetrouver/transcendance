@@ -55,7 +55,6 @@ def create_room(room, user, data):
     room_s = RoomSerializer(new_room, data=data, partial=True)
     if room_s.is_valid():
         room_s.save()
-        print("room name: ", new_room.name)
         return  JsonResponse({'room_statuts': 'created', 'room_name' : room_s.data['name']}, status=status.HTTP_200_OK)
     new_room.delete()
     error_messages = [str(error) for errors in room_s.errors.values() for error in errors]
