@@ -1,6 +1,7 @@
 import { get_user, login, logout } from '../../components/user/script.js';
 import { customalert } from '../../components/alert/script.js';
 import { router } from '../../app.js';
+import config from '../../env/config.js';
 
 export async function initComponent() {
 	const user = await get_user();
@@ -17,6 +18,9 @@ export async function initComponent() {
 		logindiv.style.display = 'none';
 	else
 		logoutdiv.style.display = 'none';
+
+	const ButtonIntra = document.querySelector('.intra_button');
+	ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${config.frontendUrl}/login&response_type=code`;
 }
 
 export async function cleanupComponent() {

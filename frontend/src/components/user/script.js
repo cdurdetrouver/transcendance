@@ -1,8 +1,7 @@
 import config from "../../env/config.js";
 import { setCookie, getCookie, deleteCookie } from "../storage/script.js";
 
-async function refresh_token()
-{
+async function refresh_token() {
 	const response = await fetch(config.backendUrl + "/refresh-token/", {
 		method: "POST",
 		headers:
@@ -14,8 +13,7 @@ async function refresh_token()
 	return response;
 }
 
-async function login(email, password)
-{
+async function login(email, password) {
 	const response = await fetch(config.backendUrl + "/login/", {
 		method: "POST",
 		headers: {
@@ -29,8 +27,7 @@ async function login(email, password)
 		credentials: "include",
 	});
 
-	if (response.status === 200)
-	{
+	if (response.status === 200) {
 		const data = await response.json();
 
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
@@ -38,10 +35,7 @@ async function login(email, password)
 	return response;
 }
 
-async function register(username, email, password)
-{
-	console.log("ICI username = ", username, "email = ", email, "password = ", password);
-
+async function register(username, email, password) {
 	const response = await fetch(config.backendUrl + "/register/", {
 		method: "POST",
 		headers:
@@ -67,8 +61,7 @@ async function register(username, email, password)
 	return response;
 }
 
-async function get_user()
-{
+async function get_user() {
 	let user = getCookie('user');
 	if (user)
 		return JSON.parse(user);
@@ -76,16 +69,15 @@ async function get_user()
 	if (refresh.status !== 200)
 		return null;
 	const response = await fetch(config.backendUrl + "/user/",
-	{
-		method: "GET",
-		headers:
 		{
-			"Content-Type": "application/json",
-		},
-		credentials: "include",
-	});
-	if (response.status === 200)
-	{
+			method: "GET",
+			headers:
+			{
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+		});
+	if (response.status === 200) {
 		const data = await response.json();
 
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
@@ -95,8 +87,30 @@ async function get_user()
 	return null;
 }
 
-async function logout()
-{
+async function update_user(data) {
+	const response = await fetch(config.backendUrl + "/user/", {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(data),
+		credentials: "include",
+	});
+	return response;
+}
+
+async function delete_user() {
+	const response = await fetch(config.backendUrl + "/user/", {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		credentials: "include",
+	});
+	return response;
+}
+
+async function logout() {
 	await fetch(config.backendUrl + "/logout/", {
 		method: "POST",
 		headers: {
@@ -108,4 +122,4 @@ async function logout()
 	deleteCookie('user');
 }
 
-export { login, register, get_user, refresh_token, logout};
+export { login, register, get_user, update_user, delete_user, refresh_token, logout };
