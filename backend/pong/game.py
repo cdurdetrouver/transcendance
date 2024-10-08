@@ -18,6 +18,10 @@ class Ball:
 		self.position = [x, y]
 		self.velocity = [speed, speed]
 
+	def change_force(self, force):
+		self.velocity[0] = force
+		self.velocity[1] = force
+
 	def update(self):
 		self.position[0] += self.velocity[0]
 		self.position[1] += self.velocity[1]
@@ -38,15 +42,51 @@ class Ball:
 		self.velocity[1] *= random.choice([1, -1])
 
 class Paddle:
-	def __init__(self, x, y, speed):
+	characters = [
+		{
+			'force': 2,
+			'life': 3,
+			'speed': 2
+		},
+		{
+			'force': 3,
+			'life': 2,
+			'speed': 3
+		},
+		{
+			'force': 2,
+			'life': 4,
+			'speed': 1
+		},
+		{
+			'force': 4,
+			'life': 1,
+			'speed': 2
+		},
+		{
+			'force': 2,
+			'life': 1,
+			'speed': 2
+		},
+		{
+			'life': 3,
+			'speed': 2,
+			'force': 1
+		}
+	]
+	def __init__(self, x, y, character):
+		self.character = self.characters[int(character)]
+
 		self.default_position = [x, y]
-		self.default_speed = speed
+		self.default_speed = self.character['speed']
+		self.default_force = self.character['force']
+		self.life = self.character['life']
 		self.moveup = False
 		self.movedown = False
 
-
 		self.position = [x, y]
-		self.speed = speed
+		self.speed = self.character['speed']
+		self.force = self.character['force']
 
 	def move(self):
 		if self.moveup:
@@ -71,9 +111,14 @@ class GameThread(threading.Thread):
 		self._stop_event = threading.Event()
 		self.nb_viewer = 0
 
-		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 4)
-		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
-		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 4)
+		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1)
+		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, self.game.player1_character)
+		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, self.game.player2_character)
+
+		self.game.player1_score = self.paddle1.life
+		self.game.player2_score = self.paddle2.life
+
+		self.game.save()
 
 	def __str__(self):
 		string = f"{self.group_name} - {self.game.player1} vs {self.game.player2} | score: {self.game.player1_score} - {self.game.player2_score}"
@@ -88,7 +133,7 @@ class GameThread(threading.Thread):
 				"x": self.paddle1.position[0],
 				"y": self.paddle1.position[1],
 				"speed": self.paddle1.speed,
-				"score": self.game.player1_score,
+				"score": self.paddle1.life,
 				"movedown": self.paddle1.movedown,
 				"moveup": self.paddle1.moveup
 			},
@@ -96,7 +141,7 @@ class GameThread(threading.Thread):
 				"x": self.paddle2.position[0],
 				"y": self.paddle2.position[1],
 				"speed": self.paddle2.speed,
-				"score": self.game.player2_score,
+				"score": self.paddle2.life,
 				"movedown": self.paddle2.movedown,
 				"moveup": self.paddle2.moveup
 			},
@@ -135,38 +180,24 @@ class GameThread(threading.Thread):
 					self.ball.velocity[1] = -self.ball.velocity[1]
 
 				if self.ball.check_collision(self.paddle1):
-					# if self.ball.velocity[0] < 0:
-					# 	self.ball.velocity[0] -= 0.5
-					# else:
-					# 	self.ball.velocity[0] += 0.5
-					# if self.ball.velocity[1] < 0:
-					# 	self.ball.velocity[1] -= 0.5
-					# else:
-					# 	self.ball.velocity[1] += 0.5
+					self.ball.change_force(self.paddle1.force)
 					self.ball.velocity[0] = -self.ball.velocity[0]
 
 				if self.ball.check_collision(self.paddle2):
-					# if self.ball.velocity[0] < 0:
-					# 	self.ball.velocity[0] -= 0.5
-					# else:
-					# 	self.ball.velocity[0] += 0.5
-					# if self.ball.velocity[1] < 0:
-					# 	self.ball.velocity[1] -= 0.5
-					# else:
-					# 	self.ball.velocity[1] += 0.5
+					self.ball.change_force(self.paddle2.force)
 					self.ball.velocity[0] = -self.ball.velocity[0]
 
 				if self.ball.position[0] - BALL_RADIUS < 0 :
-					self.game.player2_score += 1
+					self.paddle2.life -= 1
 					self.ball.reset()
 
 				if self.ball.position[0] + BALL_RADIUS > SCREEN_WIDTH:
-					self.game.player1_score += 1
+					self.paddle1.life -= 1
 					self.ball.reset()
 
-				if self.game.player1_score >= 5:
+				if self.paddle1.life <= 0:
 					self.game_over(self.game.player1)
-				elif self.game.player2_score >= 5:
+				elif self.paddle2.life <= 0:
 					self.game_over(self.game.player2)
 				else :
 					async_to_sync(self.channel_layer.group_send)(

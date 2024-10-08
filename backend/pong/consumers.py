@@ -36,13 +36,17 @@ class PrivateMatchmakingConsumer(AsyncWebsocketConsumer):
             }))
             await self.close()
             return
+        
+        url_params = self.scope['url_route']['kwargs']
+        self.character = url_params.get('character', '0')
+
         self.waiting_players.append(self)
 
         if len(self.waiting_players) >= 2:
             player1 = self.waiting_players.pop(0)
             player2 = self.waiting_players.pop(0)
 
-            game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1=player1.user, player2=player2.user)
+            game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1=player1.user, player2=player2.user, player1_character=player1.character, player2_character=player2.character)
             await sync_to_async(game.save)()
 
             await player1.send(text_data=json.dumps({
@@ -88,7 +92,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             player1 = self.find_and_remove_unblocked_player()
             if player1 is None:
                 return
-            player2 = self.waiting_players.remove(self)
+            self.waiting_players.remove(self)
+            player2 = self
 
             game_room_name = f"game_room_{player1.channel_name}_{player2.channel_name}"
             game_room_name = re.sub(r'[^a-zA-Z0-9._-]', '', game_room_name)[:50]
