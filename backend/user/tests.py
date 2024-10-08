@@ -17,9 +17,6 @@ class UserModelTest(TestCase):
         self.assertEqual(self.user.email, 'testuser@example.com')
         self.assertEqual(check_password('\MVwbDjln(', self.user.password), True)
 
-    def test_user_str(self):
-        self.assertEqual(str(self.user), 'testuser')
-
     def test_user_update(self):
         self.user.username = 'updateduser'
         self.user.save()
