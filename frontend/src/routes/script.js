@@ -56,12 +56,14 @@ const submitRegisterButton = document.getElementById("submit-register");
 
 const logindiv = document.getElementById("login-content");
 const loginform = logindiv.querySelector('form');
+const localButton = document.getElementById("local");
+
 loginform.addEventListener('submit', login_form);
 
 async function login_form(event) {
 	event.preventDefault();
 
-	const email = document.querySelector('input[name="username"]').value;
+	const email = document.querySelector('input[name="email"]').value;
 	const password = document.querySelector('input[name="password"]').value;
 
     console.log(email, password);
@@ -71,6 +73,7 @@ async function login_form(event) {
 	if (response.status === 200) {
 		// router.navigate(href);
 		customalert('Login successful', 'You are now logged in');
+		localButton.disabled = false;
 	}
 	else {
 		const data = await response.json();
@@ -98,7 +101,6 @@ async function register_form(event) {
 			customalert('Error', 'This is an error message', true);
 		}, delay);
 	});
-}
 
 	const data = await response.json();
 	console.log(data);

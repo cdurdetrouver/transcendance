@@ -191,7 +191,7 @@ body, html {
     transform: rotate(5deg);
 }
 
-button:disabled {
+#local:disabled {
     cursor: not-allowed; /*if login cursor: allowed */
     border: none;
 }
