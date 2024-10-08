@@ -3,17 +3,12 @@
 	src: url(../../static/assets/font/IsaacGame.ttf);
 }
 
-:root {
-	--sidebar-width: 200px;
-	--toggler-size: 40px;
-  }
-  
 
 .sidebar {
 	z-index: 1;
 	position: absolute;
 	top: 0;
-	width:  60px;
+	width:  80px;
 	height: 100vh;
 	background: url('../../static/assets/sheets/header_sheet.png')  no-repeat  right;
 	background-size: 100% 150%;
@@ -30,44 +25,64 @@
 .sidebar ul 
 {
 	position: relative;
-	left: -15px;
+	left: -20px;
 	height: 100vh;
 	display: flex; 
     flex-direction: column; /* Aligner les éléments verticalement */
 }
 
-.sidebar ul li
+.sidebar li:hover
 {
-	list-style: none;
+	transform: scale(1.1) translateX(12px);
 }
 
   .icon img {
-    width: 24px; /* Adjust the width to fit your design */
-    height: auto; /* Maintain aspect ratio */
+	width: 30px;
+    height: auto;
 }
 
-
+.title img {
+	width: 185px;
+    height: auto;
+	margin-left: 30px;
+}
 
 .sidebar ul li
 {
-	position: relative;
-	display: flex;
+	list-style: none;
 	white-space: nowrap;
 	text-decoration: none;
+	width: auto;
 	min-width: 60px;
-	height: 80px;
+	height: 60px;
+	align-items: center;
 }
 
 .sidebar .text
 {
-	margin-left: 50px;
+	margin-left: 35px;
 }
 
-.logo {
-	margin-bottom: 150px;
+.top .icon img
+{
+	top: 30px;
+	width: 45px;
 }
 
+.logo{
+	margin-bottom: 10vh;
+}
 
+.top .logo:hover
+{
+	transform: none;
+    cursor: default; /* Optionally, prevent the hover cursor */
+}
+
+.sidebar .bottom {
+    margin-top: auto;
+	margin-bottom: 30px;
+}
 
 a:link { 
 	text-decoration: none; 
