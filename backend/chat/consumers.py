@@ -82,6 +82,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event["message"]
         # Send message to WebSocket
+        print(message['author'])
+        # if self.user.blocked_users.filter(id=message[])
         await self.send(text_data=json.dumps({"type" : "chat", "message": message}))
 
     async def announce_message(self, event):

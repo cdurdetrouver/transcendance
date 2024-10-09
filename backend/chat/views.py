@@ -70,6 +70,10 @@ def update_room(data, room):
     error_messages = [str(error) for errors in room_s.errors.values() for error in errors]
     return JsonResponse({'error':error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
+def delete_room(room):
+    room.delete()
+    return Response({"Room status": "{} deleted successfully.".format(room.name)}, status=status.HTTP_200_OK)
+
 @swagger_auto_schema(
 	method='post',
     request_body=openapi.Schema(
@@ -114,8 +118,10 @@ def room(request, room_name):
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     if (check_admin(user, room) == False):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
-    if (request.method == 'PUT'):
+    elif (request.method == 'PUT'):
         return update_room(request.data, room)
+    elif (request.method == 'DELETE'):
+        return delete_room(room)
 
 def find_user(data):
     username = data['username']
@@ -138,7 +144,6 @@ def delete_user(user, room):
         return JsonResponse({'User status': 'Not found in room {}'.format(room.name)},  status=status.HTTP_404_NOT_FOUND)
     room.participants.set(room.participants.exclude(id=user.id))
     room.save()
-    print("User status ", "Deleted from {} successfully.".format(room.name))
     return Response({"User status": "Deleted from {} successfully.".format(room.name)}, status=status.HTTP_200_OK)
 
 @api_view(['POST', 'DELETE'])
@@ -176,4 +181,5 @@ def is_admin(request):
     if (check_admin(user, room) == False):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     else:
-        return JsonResponse({"User status": "Your are admin of {}".format(room.name)}, status=status.HTTP_200_OK)                                                                                                                                                                                                 
+        room_s = RoomSerializer(room)
+        return JsonResponse({"User status": "Your are admin of {}".format(room.name), 'room' : room_s.data}, status=status.HTTP_200_OK)                                                                                                                                                                                                 

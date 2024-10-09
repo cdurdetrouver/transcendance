@@ -34,6 +34,12 @@ class Room (models.Model):
 					this.room_picture.delete()
 			except:
 				pass
+		elif not self.room_picture:
+			try:
+				this = Room.objects.get(id=self.id)
+				self.room_picture = this.room_picture
+			except:
+				pass
 		super().save(*args, **kwargs)
 
 	def __str__(self):
