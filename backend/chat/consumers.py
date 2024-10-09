@@ -8,8 +8,7 @@ from rest_framework import exceptions
 from asgiref.sync import sync_to_async
 from user.utils import get_user_by_token
 from user.serializers import UserSerializer
-from rest_framework.response import Response
-from .data_handling import get_room, in_room, add_in_room, get_last_10_messages, save_message, get_user
+from .data_handling import get_room, in_room, add_in_room, get_last_10_messages, save_message, is_blocked
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
@@ -82,9 +81,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event["message"]
         # Send message to WebSocket
-        print(message['author'])
-        # if self.user.blocked_users.filter(id=message[])
-        await self.send(text_data=json.dumps({"type" : "chat", "message": message}))
+        if not await is_blocked(self.user, message['author']['id']):
+            await self.send(text_data=json.dumps({"type" : "chat", "message": message}))
 
     async def announce_message(self, event):
         announce = event ["announce"]

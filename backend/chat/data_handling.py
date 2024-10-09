@@ -18,6 +18,13 @@ def get_user(user_id):
     return get_object_or_404(User, id=user_id)
 
 @database_sync_to_async
+def is_blocked(user, author_id):
+    if user.blocked_users.filter(id=author_id).exists():
+        return True
+    return False
+
+
+@database_sync_to_async
 def get_user_by_name(username):
     return get_object_or_404(User, username=username)
 
