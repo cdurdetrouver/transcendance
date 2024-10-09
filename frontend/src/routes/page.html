@@ -3,7 +3,7 @@
 		<img src="../routes/assets/images/menu.png" alt="Menu" id="menu-image">
 		<div id="select-mode">
 			<a href="/pong" class="button-mode" id="newruntest">NEW RUN TMP</a>
-			<button disabled href="/pong" class="button-mode" id="LOCAL">LOCAL</button>
+			<a disabled href="/pong" class="button-mode" id="LOCAL">LOCAL</a>
 			<button href="" class="button-mode" id="online">ONLINE</button>
 			<button href="/account" class="button-mode" id="account">ACCOUNT</button>
 			<button href="" class="button-mode" id="chat">CHAT</button>
@@ -11,7 +11,9 @@
 		</div>
 		<div id="login-page">
 			<button class="login-mode" id="login">LOGIN</button>
-			<a id="user-info"></a>
+			<!-- <div id="logout-button">
+				<button id="logout">LOGOUT</button>
+			</div> -->
 		</div>
 		<div id="popin" class="popin">
 			<div class="log-popin">
@@ -46,6 +48,12 @@
 							<input type="text" class="custom-input" id="emailRegister" name="emailRegister" required><br><br>
 							<label for="passwordRegister">Password:</label>
 							<input type="password" class="custom-input" id="passwordRegister" name="passwordRegister" required><br><br>
+							
+							<input type="password" name="confirmPasswordRegister" placeholder="Confirm password " required>
+
+							<input type="file" name="profilePicture" id="chk" required>
+							
+							
 							<input class="confirm-button" type="submit" value="Submit">
 						</form>
 					</div>

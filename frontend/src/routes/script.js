@@ -51,36 +51,61 @@ openPopinBtn.addEventListener('click', function (event) {
 	registerPopin.style.display = "flex";
 });
 
-const submitLoginButton = document.getElementById("submit-login");
-const submitRegisterButton = document.getElementById("submit-register");
+document.addEventListener("DOMContentLoaded", () => {
 
-const logindiv = document.getElementById("login-content");
-const loginform = logindiv.querySelector('form');
-const localButton = document.getElementById("local");
+	const submitLoginButton = document.getElementById("submit-login");
+	const submitRegisterButton = document.getElementById("submit-register");
 
-loginform.addEventListener('submit', login_form);
+	const logindiv = document.getElementById("login-content");
+	const loginform = logindiv.querySelector('form');
+	const localButton = document.getElementById("local");
+	const loginButton = document.getElementById("login");
+	console.log(loginButton);
 
-async function login_form(event) {
-	event.preventDefault();
+	let isLoggedIn = false;
 
-	const email = document.querySelector('input[name="email"]').value;
-	const password = document.querySelector('input[name="password"]').value;
+	loginform.addEventListener('submit', login_form);
 
-    console.log(email, password);
+	async function login_form(event) {
+		event.preventDefault();
 
-	const response = await login(email, password);
+		const email = document.querySelector('input[name="email"]').value;
+		const password = document.querySelector('input[name="password"]').value;
 
-	if (response.status === 200) {
-		// router.navigate(href);
-		customalert('Login successful', 'You are now logged in');
-		localButton.disabled = false;
+		// console.log(email, password);
+
+		const response = await login(email, password);
+
+		console.log('Response Status:', response.status);
+
+		if (response.status === 200) {
+			// router.navigate(href);
+			customalert('Login successful', 'You are now logged in');
+			localButton.disabled = false;
+			loginButton.textContent = 'LOGOUT';
+			isLoggedIn = true;
+			console.log('Login Button text changed to:', loginButton.textContent);
+		}
+		else {
+			const data = await response.json();
+			customalert('Login failed', data.error, true);
+			
+		}
 	}
-	else {
-		const data = await response.json();
-		customalert('Login failed', data.error, true);
-		
-	}
-}
+
+	loginButton.addEventListener('click', () => {
+		if (isLoggedIn) {
+			customalert('Logout successful', 'You are now logged out');
+			localButton.disabled = true; // Désactiver le bouton local
+			loginButton.textContent = 'LOGIN'; // Changer le texte du bouton
+			isLoggedIn = false; 
+		} else {
+			// Si l'utilisateur n'est pas connecté, ouvrir la popin de connexion
+			const popin = document.getElementById('popin');
+			popin.style.display = 'flex'; // Afficher la popin
+		}
+	});
+});
 
 const registerDiv = document.getElementById("register-content");
 const registerForm = registerDiv.querySelector('form');
@@ -93,21 +118,24 @@ async function register_form(event) {
 	const username = document.querySelector('input[name="usernameRegister"]').value;
 	const email = document.querySelector('input[name="emailRegister"]').value;
 	const password = document.querySelector('input[name="passwordRegister"]').value;
+	const confirmPassword = document.querySelector('input[name="confirmPasswordRegister"]').value;
+	const profile_picture = document.querySelector('input[name="profilePicture').files[0];
 
-	let buttonError = document.querySelector('#button_error');
-	buttonError.addEventListener('click', () => {
-		const delay = clearalert() ? 200 : 0;
-		setTimeout(() => {
-			customalert('Error', 'This is an error message', true);
-		}, delay);
-	});
+	if (password !== confirmPassword) {
+		customalert('Error', 'Password do not match.', true);
+		return
+	}
 
-	const data = await response.json();
-	console.log(data);
+	const response = await register(username, email, password, profile_picture);
 
 	if (response.status === 201) {
 		customalert('Registration successful', 'You are now registered');
+		loginPopin.style.display = "flex";
+		registerPopin.style.display = "none";
+
 	}
-	else
-		alert(data.error);
+	else {
+		const data = await response.json();
+		customalert('Error', data.error, true);
+	}
 }
