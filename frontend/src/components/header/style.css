@@ -42,7 +42,6 @@
 }
 
 
-
 .sidebar ul li
 {
 	list-style: none;
@@ -88,16 +87,8 @@
 .sidebar .bottom {
     margin-top: auto;
 	margin-bottom: 30px;
+	
 }
-
-/* .bottom .avatar
-{
-	position: relative;
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	overflow: hidden;
-} */
 
 .bottom .icon img 
 {
