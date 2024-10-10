@@ -44,5 +44,4 @@ export async function initComponent() {
 
 
 export async function cleanupComponent() {
-
 }
