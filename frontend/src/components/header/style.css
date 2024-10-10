@@ -111,15 +111,6 @@ header.preload *{
 	overflow: hidden;
 }
 
-/* .bottom .avatar
-{
-	position: relative;
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	overflow: hidden;
-} */
-
 .bottom .icon img 
 {
 	position: relative;
