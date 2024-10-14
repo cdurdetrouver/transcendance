@@ -117,11 +117,18 @@ function interpolateGameState(currentTime) {
 	else if (paddle2movedown)
 		nextpaddle2Y += paddle2speed * t;
 
+	// const interpolatedState = {
+	// 	ballX: lastGameState.ball.x + ballspeedX * t,
+	// 	ballY: lastGameState.ball.y + ballspeedY * t,
+	// 	paddle1Y: nextpaddle1Y,
+	// 	paddle2Y: nextpaddle2Y,
+	// };
+
 	const interpolatedState = {
-		ballX: lastGameState.ball.x + ballspeedX * t,
-		ballY: lastGameState.ball.y + ballspeedY * t,
-		paddle1Y: nextpaddle1Y,
-		paddle2Y: nextpaddle2Y,
+		ballX: lastGameState.ball.x,
+		ballY: lastGameState.ball.y,
+		paddle1Y: lastGameState.player1.y,
+		paddle2Y: lastGameState.player2.y,
 	};
 
 	draw(interpolatedState);
