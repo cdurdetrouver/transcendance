@@ -1,41 +1,33 @@
 
 import { getCookie } from '../../components/storage/script.js';
 import { get_user } from '../../components/user/script.js';
-import { login, register } from '../components/user/script.js';
+import { login, register, logout } from '../components/user/script.js';
 import {customalert} from '../components/alert/script.js'
 
 const loginPopin = document.getElementById("login-popin");
 const logoutPopin = document.getElementById("logout-popin");
 
+
 let userElement = document.querySelector('#user_username');
 
-let isConnected = false;
 let userCookie = getCookie('user');
 
-if (userCookie)
-{
+if (userCookie) {
 	const user = JSON.parse(userCookie);
-    // userElement.innerText = `${user.username} is connected`;
-	isConnected = true;
 }
 await get_user();
 
-	if (userCookie)
-	{
-		const user = JSON.parse(userCookie);
-		isConnected = true;
-		loginPopin.style.display = 'none';
-		logoutPopin.style.display = "flex";
-		logoutPopin.className = "log-buttons";
-		logoutPopin.fontFamily = "isaac";
-		logoutPopin.innerText = `LOGGED AS ${user.username}`;
-	}
-	else
-	{
-		
-		loginPopin.style.display = 'flex';
-		isConnected = false;
-	}
+if (userCookie) {
+	const user = JSON.parse(userCookie);
+	loginPopin.style.display = 'none';
+	logoutPopin.style.display = "flex";
+	logoutPopin.className = "log-buttons";
+	logoutPopin.fontFamily = "isaac";
+	logoutPopin.innerHTML += `LOGGED AS ${user.username}`;
+}
+else {
+	loginPopin.style.display = 'flex';
+}
 
 const popin = document.getElementById("popin");
 const openPopupBtn = document.getElementById("login");
@@ -108,8 +100,10 @@ async function login_form(event) {
 		popinLogin.style.display = "none";
 		popinLogout.style.display = "flex";
 		popin.style.display ="none";
-		popinLogout.textContent = 'LOGGED AS ';
-		displayUsername(username);
+		logoutPopin.className = "log-buttons";
+		logoutPopin.fontFamily = "isaac";
+		// logoutPopin.innerHTML += `LOGGED AS`;
+		// logoutPopin.innerHTML += `LOGGED AS ${user.username}`;
 
 	}
 	else {
@@ -152,8 +146,15 @@ async function register_form(event) {
 	}
 }
 
-// const logoutButton= document.getElementById("logout");
+const logoutButton= document.getElementById("logout");
 
-// logoutButton.addEventListener("click", function() {
-    
-// });
+
+logoutButton.addEventListener("click", logoutUser);
+
+async function logoutUser(event) {
+
+	logout();
+	loginPopin.style.display = 'flex';
+	logoutPopin.style.display = 'none';
+
+}
