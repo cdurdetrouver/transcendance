@@ -67,33 +67,7 @@ body, html {
     border: none;
 }
 
-#select-mode {
-    position: absolute;
-    top: 12%;
-    left: 33%;
-    transform: translate(10%, 10%) rotate(-5deg);
-    width: 34%;
-    height: 70%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 4%;
-}
-
-#login-page {
-    position: absolute;
-    top: 20%;
-    left: 10%;
-    transform: translate(10%, 10%) rotate(12deg);
-    width: 15%;
-    height: 29%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#login {
+.log-buttons {
     padding: 10px 20px;
     background: transparent;
     color: rgba(69,57,59,255);
@@ -101,15 +75,13 @@ body, html {
 	font-family: isaac;
     font-size: 3vw;
     text-decoration: none;
+    border: none;
 }
 
 /* button:hover {
     font-size: 3.8vw;
 } */
 
-.login-mode {
-    border: none;
-}
 
 #openPageButton {
     position: absolute;
@@ -126,16 +98,45 @@ body, html {
     font-size: 55px;
 }
 
-#popin-login-logout {
-    background-color: red;
+#select-mode {
+    position: absolute;
+    top: 12%;
+    left: 33%;
+    width: 34%;
+    height: 70%;
+    transform: translate(10%, 10%) rotate(-5deg);
     display: flex;
-    /* padding: 95px 110px 0px 100px; */
-    width: 145px;
-    height: 155px;
-    transform: rotate(12deg);
-    top: 13%;
-    left: 11%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4%;
 }
+
+#log-page {
+    position: absolute;
+    /* background-color: red; */
+    top: 22%;
+    left: 12%;
+    width: 14%;
+    height: 29%;
+    transform: rotate(12deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#login-popin {
+    /* background-color:purple; */
+
+    /* display: flex; */
+    display: none;
+}
+
+#logout-popin {
+    /* background-color:rgb(94, 255, 0); */
+    display: none;
+}
+
 .popin {
     display: none;
     position: fixed;

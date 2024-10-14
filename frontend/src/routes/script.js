@@ -2,110 +2,121 @@
 import { getCookie } from '../../components/storage/script.js';
 import { get_user } from '../../components/user/script.js';
 import { login, register } from '../components/user/script.js';
-
 import {customalert} from '../components/alert/script.js'
 
+const loginPopin = document.getElementById("login-popin");
+const logoutPopin = document.getElementById("logout-popin");
 
-const popup = document.getElementById("popin");
+let userElement = document.querySelector('#user_username');
+
+let isConnected = false;
+let userCookie = getCookie('user');
+
+if (userCookie)
+{
+	const user = JSON.parse(userCookie);
+    // userElement.innerText = `${user.username} is connected`;
+	isConnected = true;
+}
+await get_user();
+
+	if (userCookie)
+	{
+		const user = JSON.parse(userCookie);
+		isConnected = true;
+		loginPopin.style.display = 'none';
+		logoutPopin.style.display = "flex";
+		logoutPopin.className = "log-buttons";
+		logoutPopin.fontFamily = "isaac";
+		logoutPopin.innerText = `LOGGED AS ${user.username}`;
+	}
+	else
+	{
+		
+		loginPopin.style.display = 'flex';
+		isConnected = false;
+	}
+
+const popin = document.getElementById("popin");
 const openPopupBtn = document.getElementById("login");
 const closePopupBtn = document.getElementById("closePopupBtn");
 
 openPopupBtn.addEventListener("click", function() {
-    popup.style.display = "flex"; // Make the popup visible
+    popin.style.display = "flex";
 });
 
 closePopupBtn.addEventListener("click", function() {
-    popup.style.display = "none";
+    popin.style.display = "none";
 });
 
 window.addEventListener("click", function(event) {
-    if (event.target === popup) {
-        popup.style.display = "none";
+    if (event.target === popin) {
+        popin.style.display = "none";
     }
 });
 
 const registerPopin = document.getElementById("register-content");
-const loginPopin = document.getElementById("login-content");
+// const loginPopin = document.getElementById("login-content");
 
 const openPopinBtn = document.getElementById("register-button");
 const closePopinBtn = document.getElementById("closePopupBtn");
 
 openPopinBtn.addEventListener("click", function() {
-    popup.style.display = "flex"; // Make the popup visible
+    popin.style.display = "flex"; // Make the popup visible
 });
 
 closePopinBtn.addEventListener("click", function() {
-	popup.style.display = "none";
+	popin.style.display = "none";
 });
 
 window.addEventListener("click", function(event) {
-	if (event.target === popup) {
-		popup.style.display = "none";
+	if (event.target === popin) {
+		popin.style.display = "none";
     }
 });
 
-let userElement = document.querySelector('user-info');
 
 openPopinBtn.addEventListener('click', function (event) {
 	loginPopin.style.display = "none";
 	registerPopin.style.display = "flex";
 });
 
-document.addEventListener("DOMContentLoaded", () => {
 
-	const submitLoginButton = document.getElementById("submit-login");
-	const submitRegisterButton = document.getElementById("submit-register");
+const submitLoginButton = document.getElementById("submit-login");
+const submitRegisterButton = document.getElementById("submit-register");
 
-	const logindiv = document.getElementById("login-content");
-	const loginform = logindiv.querySelector('form');
-	const localButton = document.getElementById("local");
-	const loginButton = document.getElementById("login");
-	console.log(loginButton);
+const logindiv = document.getElementById("login-content");
+const loginform = logindiv.querySelector('form');
 
-	let isLoggedIn = false;
+loginform.addEventListener('submit', login_form);
 
-	loginform.addEventListener('submit', login_form);
+async function login_form(event) {
+	event.preventDefault();
+	
+	const email = document.querySelector('input[name="email"]').value;
+	const password = document.querySelector('input[name="password"]').value;
+	
+	const popinLogin = document.getElementById("login-popin");
+	const popinLogout = document.getElementById("logout-popin");
+	
+	const response = await login(email, password);
+	
+	console.log('Response Status:', response.status);
+	
+	if (response.status === 200) {
+		customalert('Login successful', 'You are now logged in');
+		popinLogin.style.display = "none";
+		popinLogout.style.display = "flex";
+		popin.style.display ="none";
+		popinLogout.textContent = 'LOGGED AS ';
+		displayUsername(username);
 
-	async function login_form(event) {
-		event.preventDefault();
-
-		const email = document.querySelector('input[name="email"]').value;
-		const password = document.querySelector('input[name="password"]').value;
-
-		// console.log(email, password);
-
-		const response = await login(email, password);
-
-		console.log('Response Status:', response.status);
-
-		if (response.status === 200) {
-			// router.navigate(href);
-			customalert('Login successful', 'You are now logged in');
-			localButton.disabled = false;
-			loginButton.textContent = 'LOGOUT';
-			isLoggedIn = true;
-			console.log('Login Button text changed to:', loginButton.textContent);
-		}
-		else {
-			const data = await response.json();
-			customalert('Login failed', data.error, true);
-			
-		}
 	}
-
-	loginButton.addEventListener('click', () => {
-		if (isLoggedIn) {
-			customalert('Logout successful', 'You are now logged out');
-			localButton.disabled = true; // Désactiver le bouton local
-			loginButton.textContent = 'LOGIN'; // Changer le texte du bouton
-			isLoggedIn = false; 
-		} else {
-			// Si l'utilisateur n'est pas connecté, ouvrir la popin de connexion
-			const popin = document.getElementById('popin');
-			popin.style.display = 'flex'; // Afficher la popin
-		}
-	});
-});
+	else {
+		const data = await response.json();
+		customalert('Login failed', data.error, true);
+	}
+}
 
 const registerDiv = document.getElementById("register-content");
 const registerForm = registerDiv.querySelector('form');
@@ -132,6 +143,7 @@ async function register_form(event) {
 		customalert('Registration successful', 'You are now registered');
 		loginPopin.style.display = "flex";
 		registerPopin.style.display = "none";
+		popinLog.style.display = 'flex'; 
 
 	}
 	else {
@@ -139,3 +151,9 @@ async function register_form(event) {
 		customalert('Error', data.error, true);
 	}
 }
+
+// const logoutButton= document.getElementById("logout");
+
+// logoutButton.addEventListener("click", function() {
+    
+// });
