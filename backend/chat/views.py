@@ -46,6 +46,27 @@ def check_admin(user, room):
         return True
     return False
 
+def check_id(room_name):
+    if not isinstance(room_name, str):
+        error_mess = "Input must be a string"
+        return error_mess
+
+    if not room_name.isascii():
+        error_mess = "String must be ASCII-encoded"
+        return error_mess
+
+    if len(room_name) >= 100:
+        error_mess = "String length must be less than 100"
+        return error_mess
+
+    allowed_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.')
+
+    if set(room_name).issubset(allowed_chars):
+        return True
+    else:
+        error_mess = "String contains invalid characters"
+        return error_mess
+
 def create_room(room, user, data):
 
     if room:

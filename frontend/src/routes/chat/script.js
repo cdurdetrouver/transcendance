@@ -1,14 +1,9 @@
 import config from "../../env/config.js";
 import { get_user } from "../../components/user/script.js";
 
-//create a conf chat
-//create a view room :  post create room  (add view add_user in create room function in front) check_si admin
-//                      put modify room
-//                      get:  get les infos de la room
-//                      delete: remove room
-//leave / join room
-//create chat with a username or more -> upload a photo to the chat
-//put gif in chat ? 
+// put blocked on blocked mess just undifined in place of content
+//TypeError: Group name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods, not tu peux pas rentrer //id fuck yeah
+//leave button for user  / join room only invite accept or
 let chatSocket;
 let room_name;
 let room;

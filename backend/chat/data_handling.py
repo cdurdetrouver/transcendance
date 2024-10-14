@@ -82,6 +82,9 @@ def get_last_10_messages(room, nb_refresh, starts):
     else:
         last_mess = all_mess
         end_history = True
+    for mess in last_mess:
+        if is_blocked(mess.author):
+            mess.content = "undefined"
     mess_s = MessageSerializer(last_mess, many=True)
     return mess_s.data,start, end_history
 

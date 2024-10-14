@@ -28,22 +28,50 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name, {"type": "announce.message", "announce" : self.user.username + " as joined the chat"})
 
+    async def error(self, error):
+        if not error:
+            error = self.error_mess
+        await self.send(text_data=json.dumps({
+            'type': 'error',
+            'message': error
+        }))
+        self.room_group_name = 'failed'
+        await self.close()
+        return -1
+
     async def check_user(self):
         access_token = self.scope['cookies'].get('access_token')
         success, result = await sync_to_async(get_user_by_token)(access_token)
         await self.accept()
         if not success:
-            await self.send(text_data=json.dumps({
-                'type': 'error',
-                'message': result
-            }))
-            self.room_group_name = 'failed'
-            await self.close()
-            return -1
+            return await self.error(result)
         self.user = result
+
+    async def check_id(self, room_name):
+        if not isinstance(room_name, str):
+            self.error_mess = "Input must be a string"
+            return False
+
+        if not room_name.isascii():
+            self.error_mess = "String must be ASCII-encoded"
+            return False
+
+        if len(room_name) >= 100:
+            self.error_mess = "String length must be less than 100"
+            return False
+
+        allowed_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.')
+
+        if set(room_name).issubset(allowed_chars):
+            return True
+        else:
+            self.error_mess = "String contains invalid characters"
+            return False
 
     async def connect(self):
         self.room_group_id = self.scope["url_route"]["kwargs"]["room_id"]
+        if (await self.check_id(self.room_group_id) == False):
+            return self.error(None)
         if (await self.check_user() == -1):
             return
         self.room = await get_room(self.room_group_id)
@@ -52,7 +80,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.disconnect(404)
             return
         if (await in_room(self.room, self.user) == False):
-            await self.set_user()
+            return await self.error("User is not register in room: {}".format(
+                self.room_group_name))
         else:
             await self.refresh_last_mess()
         await self.channel_layer.group_add(
@@ -81,8 +110,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event["message"]
         # Send message to WebSocket
-        if not await is_blocked(self.user, message['author']['id']):
-            await self.send(text_data=json.dumps({"type" : "chat", "message": message}))
+        if await is_blocked(self.user, message['author']['id']):
+            message["content"] = "undefined"
+        await self.send(text_data=json.dumps({"type" : "chat", "message": message}))
 
     async def announce_message(self, event):
         announce = event ["announce"]
