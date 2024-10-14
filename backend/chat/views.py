@@ -8,11 +8,13 @@ from django.http import JsonResponse
 from .serializers import RoomSerializer
 from user.serializers import UserSerializer
 from django.shortcuts import get_object_or_404
-from .data_handling import remove_from_room, get_user_by_name
+from .data_handling import remove_from_room, get_user_by_name, get_room
 from .models import Room, User
 from rest_framework.response import Response
 from asgiref.sync import async_to_sync
 import json
+import string
+import random
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
@@ -46,32 +48,18 @@ def check_admin(user, room):
         return True
     return False
 
-def check_id(room_name):
-    if not isinstance(room_name, str):
-        error_mess = "Input must be a string"
-        return error_mess
-
-    if not room_name.isascii():
-        error_mess = "String must be ASCII-encoded"
-        return error_mess
-
-    if len(room_name) >= 100:
-        error_mess = "String length must be less than 100"
-        return error_mess
-
-    allowed_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.')
-
-    if set(room_name).issubset(allowed_chars):
-        return True
-    else:
-        error_mess = "String contains invalid characters"
-        return error_mess
+def gen_group_name():
+    group_name = ''.join(random.choices(
+        string.ascii_uppercase + string.ascii_lowercase, k=50))
+    if (Room.objects.filter(group_name=group_name).exists()):
+        return gen_group_name()
+    return group_name
 
 def create_room(room, user, data):
 
     if room:
         return JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
-    new_room = Room.objects.create(created_by=user)
+    new_room = Room.objects.create(created_by=user, group_name=gen_group_name())
     new_room.participants.set([user])
     room_s = RoomSerializer(new_room, data=data, partial=True)
     if room_s.is_valid():
@@ -127,11 +115,11 @@ def delete_room(room):
 	operation_description="Create a room"
 )
 @api_view(['POST', 'PUT', 'DELETE', 'GET'])
-def room(request, room_name):
+def room(request, room_id):
     user = request.user
-    if not room_name:
+    if not room_id:
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
-    room = Room.objects.filter(name=room_name).all().first()
+    room = Room.objects.filter(id=room_id).all().first()
 
     if (request.method == 'POST'):
         return create_room(room, user, request.data)
@@ -145,18 +133,22 @@ def room(request, room_name):
         return delete_room(room)
 
 def find_user(data):
-    username = data['username']
-    try:
-        user = get_object_or_404(User, username=username)
-        return user
-    except:
-        return None
+    name = data['username']
+    user = User.objects.filter(username=name).all().first()
+    return user
 
 def add_user(user, room):
     if room.participants.filter(id=user.id).first():
         return JsonResponse({'User status': 'Already in the {}'.format(room.name)}, status=status.HTTP_303_SEE_OTHER)
-    room.participants.add(user)
-    room.save()
+    elif user.invite_list_id and room.id in user.invite_list_id:
+        return JsonResponse({'User status': 'Already sent an invitation for {}'.format(room.name)}, status=status.HTTP_303_SEE_OTHER)
+    if not user.invite_list_id:
+        user.invite_list_id = [room.id]
+    else:
+        user.invite_list_id.append(room.id)
+    user.save()
+    # room.participants.add(user)
+    # room.save()
     return Response({"User status": "Added in {} successfully".format(room.name)}, status=status.HTTP_200_OK)
 
 
@@ -171,18 +163,18 @@ def delete_user(user, room):
 def user(request):
     user = request.user
     data = json.loads(request.body)
-    room_name = data['room_name']
-    if (not room_name):
+    room_id = data['room_id']
+    if (not room_id):
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
-    room = Room.objects.filter(name=room_name).all().first()
+    room = Room.objects.filter(id=room_id).all().first()
 
     if not room:
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
-    if (check_admin(user, room) == False):
-        return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     user_add = find_user(data)
     if not user:
         return Response({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
+    if (user != user_add and check_admin(user, room) == False):
+        return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     if (request.method == 'POST'):
         return add_user(user_add, room)
     elif (request.method == 'DELETE'):
@@ -192,10 +184,10 @@ def user(request):
 def is_admin(request):
     user = request.user
     data = json.loads(request.body)
-    room_name = data['room_name']
-    if (not room_name):
+    room_id = data['room_id']
+    if (not room_id):
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
-    room = Room.objects.filter(name=room_name).all().first()
+    room = Room.objects.filter(id=room_id).all().first()
 
     if not room:
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -203,4 +195,36 @@ def is_admin(request):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     else:
         room_s = RoomSerializer(room)
-        return JsonResponse({"User status": "Your are admin of {}".format(room.name), 'room' : room_s.data}, status=status.HTTP_200_OK)                                                                                                                                                                                                 
+        return JsonResponse({"User status": "Your are admin of {}".format(room.name), 'room' : room_s.data}, status=status.HTTP_200_OK)
+
+def get_invite(user):
+    rooms = []
+
+    if (not user.invite_list_id):
+        return JsonResponse({"error": "no invitations"}, status=status.HTTP_404_NOT_FOUND)
+
+    for room_id in user.invite_list_id:
+        rooms.append(get_object_or_404(Room, id=room_id))
+    rooms_s = RoomSerializer(rooms, many=True)
+    return JsonResponse({'rooms_invitations': rooms_s.data}, status=status.HTTP_200_OK)
+
+def delete_invite(user, room_id):
+    if (not user.invite_list_id or room_id not in user.invite_list_id):
+        return JsonResponse({"error": "no invitations"}, status=status.HTTP_403_FORBIDDEN)
+    user.invite_list_id.remove(room_id)
+    user.save()
+    room = get_object_or_404(Room, id=room_id)
+    room.participants.add(user)
+    room.save()
+    return JsonResponse({'invitation': 'accepted'}, status=status.HTTP_200_OK)
+
+@api_view(['GET', 'POST', 'DELETE'])
+def invite(request):
+    user = request.user
+
+    if (request.method == 'GET'):
+        return get_invite(user)
+    elif (request.method == 'DELETE'):
+        data = json.loads(request.body)
+        room_id = data['room_id']
+        return delete_invite(user, room_id)

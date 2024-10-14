@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.contrib.auth.hashers import make_password
+from django.contrib.postgres.fields.array import ArrayField
 
 class User(AbstractUser):
 	USER_TYPE_CHOICES = [
@@ -24,6 +25,7 @@ class User(AbstractUser):
 	is_two_factor_enabled = models.BooleanField(default=False)
 	blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
 	friends = models.ManyToManyField('self', symmetrical=False, related_name='friends_with', blank=True)
+	invite_list_id = ArrayField(models.IntegerField(), blank=True, null=True)
 
 	def save(self, *args, **kwargs):
 		if not self.pk and self.user_type == 'email' and self.password:

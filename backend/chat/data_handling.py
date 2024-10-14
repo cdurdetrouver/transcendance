@@ -29,14 +29,6 @@ def get_user_by_name(username):
     return get_object_or_404(User, username=username)
 
 @database_sync_to_async
-def room_exists(room_name):
-    try:
-        room = get_object_or_404(Room, name=room_name)
-        return True
-    except:
-        return False
-
-@database_sync_to_async
 def get_room(room_id):
     try:
         room = get_object_or_404(Room, id=room_id)
@@ -64,7 +56,6 @@ def remove_from_room(room, user):
 def get_mess(mess_id):
     return get_object_or_404(Message, id=mess_id)
 
-#refresh a partir de start 
 @database_sync_to_async
 def get_last_10_messages(room, nb_refresh, starts, user):
     start = None

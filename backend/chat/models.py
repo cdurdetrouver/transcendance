@@ -21,9 +21,10 @@ class Message(models.Model):
 
 class Room (models.Model):
 	name = models.CharField(max_length=128, blank=True)
+	group_name = models.CharField(max_length=100, blank=True)
 	created_by =  models.ForeignKey(User, related_name='room_admin', on_delete=models.SET_NULL, null=True, blank=True)
 	messages = models.ManyToManyField(Message, blank=True)
-	participants =  models.ManyToManyField(User, blank=True, related_name='room_participant')
+	participants =  models.ManyToManyField(User, blank=True, symmetrical=False, related_name='room_participant')
 	room_picture = models.ImageField(upload_to='room_pictures/', null=True, blank=True)
 
 	def save(self, *args, **kwargs):

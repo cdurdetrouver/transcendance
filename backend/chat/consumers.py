@@ -47,41 +47,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return await self.error(result)
         self.user = result
 
-    async def check_id(self, room_name):
-        if not isinstance(room_name, str):
-            self.error_mess = "Input must be a string"
-            return False
-
-        if not room_name.isascii():
-            self.error_mess = "String must be ASCII-encoded"
-            return False
-
-        if len(room_name) >= 100:
-            self.error_mess = "String length must be less than 100"
-            return False
-
-        allowed_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.')
-
-        if set(room_name).issubset(allowed_chars):
-            return True
-        else:
-            self.error_mess = "String contains invalid characters"
-            return False
-
     async def connect(self):
         self.room_group_id = self.scope["url_route"]["kwargs"]["room_id"]
-        if (await self.check_id(self.room_group_id) == False):
-            return self.error(None)
         if (await self.check_user() == -1):
             return
         self.room = await get_room(self.room_group_id)
-        self.room_group_name = await sync_to_async(lambda: self.room.name)()
+        self.room_group_name = await sync_to_async(lambda: self.room.group_name)()
         if (not self.room):
             await self.disconnect(404)
             return
         if (await in_room(self.room, self.user) == False):
             return await self.error("User is not register in room: {}".format(
-                self.room_group_name))
+                self.room.name))
         else:
             await self.refresh_last_mess()
         await self.channel_layer.group_add(
