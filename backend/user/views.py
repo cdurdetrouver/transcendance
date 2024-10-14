@@ -560,7 +560,7 @@ def block_user(request, user_id):
 
 	if request.method == 'GET':
 		users_serializer = UserSerializer(user.blocked_users.all(), many=True)
-		return JsonResponse({'blockeds': users_serializer}, status=status.HTTP_200_OK)
+		return JsonResponse({'blockeds': users_serializer.data}, status=status.HTTP_200_OK)
 	if request.method == 'DELETE':
 		user.blocked_users.remove(user_to_block)
 		user.save()
