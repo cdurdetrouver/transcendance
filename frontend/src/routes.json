@@ -56,6 +56,10 @@
 		"files": "/user/2FA"
 	},
 	{
+		"path" : "/pong/multiplayer",
+		"files" : "/pong/multiplayer"
+	},
+	{
 		"path": "/404",
 		"files": "/404"
 	}
