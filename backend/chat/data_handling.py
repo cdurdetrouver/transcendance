@@ -19,7 +19,7 @@ def get_user(user_id):
 
 @database_sync_to_async
 def is_blocked(user, author_id):
-    if user.blocked_users.filter(id=author_id).exists():
+    if user.blocked_users.filter(id=author_id).all().first():
         return True
     return False
 
@@ -58,7 +58,6 @@ def add_in_room(room, user):
 @database_sync_to_async
 def remove_from_room(room, user):
     room.participants.exclude(id=user.id)
-    print("here")
     room.save()
 
 @database_sync_to_async
@@ -67,7 +66,7 @@ def get_mess(mess_id):
 
 #refresh a partir de start 
 @database_sync_to_async
-def get_last_10_messages(room, nb_refresh, starts):
+def get_last_10_messages(room, nb_refresh, starts, user):
     start = None
     end_history = False
 
@@ -82,10 +81,11 @@ def get_last_10_messages(room, nb_refresh, starts):
     else:
         last_mess = all_mess
         end_history = True
-    for mess in last_mess:
-        if is_blocked(mess.author):
-            mess.content = "undefined"
+
     mess_s = MessageSerializer(last_mess, many=True)
+    for mess in mess_s.data:
+        if user.blocked_users.filter(id=mess["author"]["id"]).all().first():
+            mess["content"] = "undefined"
     return mess_s.data,start, end_history
 
 @database_sync_to_async

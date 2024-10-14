@@ -104,7 +104,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             message = await save_message(self.room, text_data_json, self.user)
             message_serializer = MessageSerializer(message)
             await self.channel_layer.group_send(
-                self.room_group_name, {"type": "chat.message", "message" : message_serializer.data})
+                self.room_group_name, {
+                    "type": "chat.message", "message" : message_serializer.data})
 
     # Receive message from room group
     async def chat_message(self, event):
@@ -123,7 +124,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if self.refresh_stop:
             messages = []
         else:
-            messages, start, self.refresh_stop = await get_last_10_messages(self.room, self.refresh, self.refresh_start)
+            messages, start, self.refresh_stop = await get_last_10_messages(
+                self.room, self.refresh, self.refresh_start, self.user)
             if (start != None):
                 self.refresh_start  = start
         await self.send(text_data=json.dumps({"type" : "list-chat", "messages": messages}))
