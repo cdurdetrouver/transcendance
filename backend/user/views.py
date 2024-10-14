@@ -632,6 +632,33 @@ def friend_user(request, user_id):
 		return JsonResponse({'message': 'User blocked successfully'}, status=status.HTTP_200_OK)
 
 
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'users': openapi.Schema(
+					type=openapi.TYPE_ARRAY,
+					items=UserSerializer.user_swagger
+				)
+			}
+		)
+	},
+	operation_description="Retrieve a list of users that match the username"
+)
+@api_view(['GET'])
+def search_user(request):
+	query = request.GET.get('q', '')
+	size = int(request.GET.get('size', '30'))
+	if query:
+		users = User.objects.filter(username__icontains=query)[:size]
+		user_list = UserSerializer(users, many=True).data
+		return JsonResponse({'users': user_list}, status=status.HTTP_200_OK)
+	else:
+		return JsonResponse({'users': []}, status=status.HTTP_200_OK)
+
 
 def complete_login(user):
 	user_serializer = UserSerializer(user)
