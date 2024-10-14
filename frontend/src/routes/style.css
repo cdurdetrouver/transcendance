@@ -126,8 +126,17 @@ body, html {
     font-size: 55px;
 }
 
+#popin-login-logout {
+    background-color: red;
+    display: flex;
+    /* padding: 95px 110px 0px 100px; */
+    width: 145px;
+    height: 155px;
+    transform: rotate(12deg);
+    top: 13%;
+    left: 11%;
+}
 .popin {
-    background-color: brown;
     display: none;
     position: fixed;
     top: 0;
