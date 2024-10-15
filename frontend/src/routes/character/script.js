@@ -12,6 +12,16 @@ let	currdegC;
 let	turn;
 let currentIndex;
 
+setTimeout(function() {
+    let preloadDiv = document.querySelector('div.preload');
+    
+    if (preloadDiv) {
+        preloadDiv.classList.remove('preload');
+    } else {
+        console.error("Div not found lol");
+    }
+}, 500);
+
 const stats = {
 	"ISAAC": {
 	  life: "../../static/assets/character/3.png",
