@@ -18,5 +18,7 @@ from django.urls import path
 from chat import views
 
 urlpatterns = [
-    path('', views.get_user_chats),
+    path('room/<int:room_id>', views.room),
+    path('users_management/', views.user),
+    path('admin/', views.is_admin),
 ]

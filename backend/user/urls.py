@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.urls import path
 from user import views
+from chat.views import get_user_chats, invite
 
 urlpatterns = [
     path('', views.user_detail),
+    path('chats/', get_user_chats),
+    path('invitations/', invite),
     path('<int:user_id>/', views.user_id),
     path('games/<int:user_id>/', views.user_games),
     path('generate-2fa-qr/', views.generate_2fa_qr_code),
