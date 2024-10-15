@@ -137,18 +137,18 @@ def find_user(data):
     user = User.objects.filter(username=name).all().first()
     return user
 
-def add_user(user, room):
-    if room.participants.filter(id=user.id).first():
+def add_user(user_data, room, user):
+    if (user in user_data.blocked_users.all()):
+        return JsonResponse({'error': 'user blocked you.'}, status=status.HTTP_403_FORBIDDEN)
+    if room.participants.filter(id=user_data.id).first():
         return JsonResponse({'User status': 'Already in the {}'.format(room.name)}, status=status.HTTP_303_SEE_OTHER)
-    elif user.invite_list_id and room.id in user.invite_list_id:
+    elif user_data.invite_list_id and room.id in user_data.invite_list_id:
         return JsonResponse({'User status': 'Already sent an invitation for {}'.format(room.name)}, status=status.HTTP_303_SEE_OTHER)
-    if not user.invite_list_id:
-        user.invite_list_id = [room.id]
+    if not user_data.invite_list_id:
+        user_data.invite_list_id = [room.id]
     else:
-        user.invite_list_id.append(room.id)
-    user.save()
-    # room.participants.add(user)
-    # room.save()
+        user_data.invite_list_id.append(room.id)
+    user_data.save()
     return Response({"User status": "Added in {} successfully".format(room.name)}, status=status.HTTP_200_OK)
 
 
@@ -157,6 +157,9 @@ def delete_user(user, room):
         return JsonResponse({'User status': 'Not found in room {}'.format(room.name)},  status=status.HTTP_404_NOT_FOUND)
     room.participants.set(room.participants.exclude(id=user.id))
     room.save()
+    list_user = room.participants.all()
+    if (len(list_user) == 0):
+        room.delete()
     return Response({"User status": "Deleted from {} successfully.".format(room.name)}, status=status.HTTP_200_OK)
 
 @api_view(['POST', 'DELETE'])
@@ -170,15 +173,15 @@ def user(request):
 
     if not room:
         return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
-    user_add = find_user(data)
+    user_data = find_user(data)
     if not user:
         return Response({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
-    if (user != user_add and check_admin(user, room) == False):
+    if (user != user_data and check_admin(user, room) == False):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     if (request.method == 'POST'):
-        return add_user(user_add, room)
+        return add_user(user_data, room, user)
     elif (request.method == 'DELETE'):
-        return delete_user(user_add, room)
+        return delete_user(user_data, room)
 
 @api_view(['POST'])
 def is_admin(request):
@@ -206,17 +209,23 @@ def get_invite(user):
     for room_id in user.invite_list_id:
         rooms.append(get_object_or_404(Room, id=room_id))
     rooms_s = RoomSerializer(rooms, many=True)
-    return JsonResponse({'rooms_invitations': rooms_s.data}, status=status.HTTP_200_OK)
+    return JsonResponse({'invitation': rooms_s.data}, status=status.HTTP_200_OK)
 
-def delete_invite(user, room_id):
+def delete_invite(user, room_id, value):
     if (not user.invite_list_id or room_id not in user.invite_list_id):
-        return JsonResponse({"error": "no invitations"}, status=status.HTTP_403_FORBIDDEN)
+        return JsonResponse({"error": "no invitation"}, status=status.HTTP_403_FORBIDDEN)
     user.invite_list_id.remove(room_id)
     user.save()
     room = get_object_or_404(Room, id=room_id)
-    room.participants.add(user)
-    room.save()
-    return JsonResponse({'invitation': 'accepted'}, status=status.HTTP_200_OK)
+    if not room:
+        return Response({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+    if value == "TRUE":
+        room.participants.add(user)
+        room.save()
+        return JsonResponse({'invitation': 'accepted'}, status=status.HTTP_200_OK)
+    elif value == "FALSE":
+        return JsonResponse({'invitation': 'refused'}, status=status.HTTP_200_OK)
+    return JsonResponse({'error': 'wrong format for value.'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST', 'DELETE'])
 def invite(request):
@@ -227,4 +236,5 @@ def invite(request):
     elif (request.method == 'DELETE'):
         data = json.loads(request.body)
         room_id = data['room_id']
-        return delete_invite(user, room_id)
+        value = data['value']
+        return delete_invite(user, room_id, value)

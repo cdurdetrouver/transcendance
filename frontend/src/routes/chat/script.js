@@ -7,11 +7,12 @@ import { get_user } from "../../components/user/script.js";
 // join if not in
 // 2 rooms same name
 
-//si dernier personmne leave destroy room
-//return 403 si user 
-//leave button for user  / join room only invite accept or
-//create une room avec direct quelqu'un ?
+//show error si photo n'est pas au bon format
+
+//create une room avec direct quelqu'un ? -> create room can take a list of user with already the same name
+//pong link
 //func remove user not clean
+//clean globals vars
 
 //for frontend team:
 //refresh juste affiche les 10 d'avant mais ils ne sont pas avant dans la box
@@ -135,9 +136,8 @@ async function add_user(username) {
             "username": username
         })
 	});
-    if (response.status === 200)
-        {
-            const data = await response.json();
+    const data = await response.json();
+    if (response.status === 200) {
             console.log("add user request succes: " + data['User status']);
             const chat_conf = document.querySelector('.chat-conf');
             chat_conf.innerHTML = `
@@ -149,7 +149,6 @@ async function add_user(username) {
         }
         else if (response.status === 303)
         {
-            const data = await response.json();
             console.log("add user request succes: " + data['User status']);
             const chat_conf = document.querySelector('.chat-conf');
             chat_conf.innerHTML = `
@@ -159,9 +158,8 @@ async function add_user(username) {
             document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()});
             return ;
         }
-        else if (response.status === 404)
+        else if (response.status === 404 || response.status === 403)
         {
-            const data = await response.json();
             console.log(data['error']);
             return;
         }
@@ -497,7 +495,7 @@ async function print_chats() {
         }
 }
 
-async function accept_invitation(room_id, room_name) {
+async function accept_invitation(room_id, value) {
     const response = await fetch(config.backendUrl + "/user/invitations/", {
         method: "DELETE",
         headers: {
@@ -505,15 +503,22 @@ async function accept_invitation(room_id, room_name) {
 		},
         body: JSON.stringify({
             "room_id": room_id,
+            "value": value
         }),
 		credentials: "include",
 	});
+    const data = await response.json();
     if (response.status === 200)
         {
-            const data = await response.json();
-            return data
+            console.log("invitation: ", data['invitation'])
+            print_chats();
+            print_invitations();
+            return
         }
-        return null;   
+    else {
+        console.log("error: ", data['error'])
+    }
+        return;   
 }
 
 async function print_invitations() {
@@ -524,7 +529,7 @@ async function print_invitations() {
             chat_error.innerHTML = `
             <t1>List of inviataions</t1>
             <div class="chat-info-invitations">
-            <div>"no invitations found"</div>
+            <div>no invitations found</div>
             </div>
             `;
         }
@@ -543,16 +548,16 @@ async function print_invitations() {
                 <div class="chat-block-invitations-${room.id}">
 			        <t1>${room.name}</t1>
                     <img src="${room_picture}" height=100 alt="Room Picture">
-                    <input id="invitation-accept" type="button" value="Accept invitation">
+                    <input id="invitation-accept-${room.id}" type="button" value="Accept invitation">
+                    <input id="invitation-refuse-${room.id}" type="button" value="Refuse invitation">
 
                 </div>
                 `;
-                const btn = document.querySelector('.invitation-accept')
-                chat.addEventListener('click', function(event) {
-                    accept_invitation(room.id, room.name);
-            });
                 chat_list.appendChild(chat);
-                console.log(room);
+                const btn_accept = document.getElementById(`invitation-accept-${room.id}`)
+                const btn_refuse = document.getElementById(`invitation-refuse-${room.id}`)
+                btn_accept.addEventListener('click', accept_invitation(room.id, "TRUE"));
+                btn_refuse.addEventListener('click', accept_invitation(room.id, "FALSE"));
             };
         }
 }
