@@ -18,22 +18,25 @@ if (userCookie) {
 await get_user();
 
 if (userCookie) {
+	console.log('TEST');
 	const user = JSON.parse(userCookie);
-	loginPopin.style.display = 'none';
+	loginPopin.style.display = "none";
 	logoutPopin.style.display = "flex";
 	logoutPopin.className = "log-buttons";
 	logoutPopin.fontFamily = "isaac";
 	logoutPopin.innerHTML += `LOGGED AS ${user.username}`;
 }
 else {
-	loginPopin.style.display = 'flex';
+	console.log("laaaa");
+	loginPopin.style.display = "flex";
+
 }
 
 const popin = document.getElementById("popin");
-const openPopupBtn = document.getElementById("login");
+const loginButton = document.getElementById("login");
 const closePopupBtn = document.getElementById("closePopupBtn");
 
-openPopupBtn.addEventListener("click", function() {
+loginButton.addEventListener("click", function() {
     popin.style.display = "flex";
 });
 
@@ -47,15 +50,11 @@ window.addEventListener("click", function(event) {
     }
 });
 
-const registerPopin = document.getElementById("register-content");
-// const loginPopin = document.getElementById("login-content");
+const registerForm = document.getElementById("register-content");
+const loginForm = document.getElementById("login-content");
 
-const openPopinBtn = document.getElementById("register-button");
+const registerButton = document.getElementById("register-button");
 const closePopinBtn = document.getElementById("closePopupBtn");
-
-openPopinBtn.addEventListener("click", function() {
-    popin.style.display = "flex"; // Make the popup visible
-});
 
 closePopinBtn.addEventListener("click", function() {
 	popin.style.display = "none";
@@ -67,10 +66,9 @@ window.addEventListener("click", function(event) {
     }
 });
 
-
-openPopinBtn.addEventListener('click', function (event) {
-	loginPopin.style.display = "none";
-	registerPopin.style.display = "flex";
+registerButton.addEventListener('click', function (event) {
+	loginForm.style.display = "none";
+	registerForm.style.display = "flex";
 });
 
 
@@ -78,9 +76,9 @@ const submitLoginButton = document.getElementById("submit-login");
 const submitRegisterButton = document.getElementById("submit-register");
 
 const logindiv = document.getElementById("login-content");
-const loginform = logindiv.querySelector('form');
+const loginSubmit = logindiv.querySelector('form');
 
-loginform.addEventListener('submit', login_form);
+loginSubmit.addEventListener('submit', login_form);
 
 async function login_form(event) {
 	event.preventDefault();
@@ -88,17 +86,18 @@ async function login_form(event) {
 	const email = document.querySelector('input[name="email"]').value;
 	const password = document.querySelector('input[name="password"]').value;
 	
-	const popinLogin = document.getElementById("login-popin");
-	const popinLogout = document.getElementById("logout-popin");
+	// const popinLogin = document.getElementById("login-popin");
+	// const popinLogout = document.getElementById("logout-popin");
 	
 	const response = await login(email, password);
 	
 	console.log('Response Status:', response.status);
 	
 	if (response.status === 200) {
+		console.log("TEST ici");
 		customalert('Login successful', 'You are now logged in');
-		popinLogin.style.display = "none";
-		popinLogout.style.display = "flex";
+		loginPopin.style.display = "none";
+		logoutPopin.style.display = "flex";
 		popin.style.display ="none";
 		logoutPopin.className = "log-buttons";
 		logoutPopin.fontFamily = "isaac";
@@ -113,8 +112,8 @@ async function login_form(event) {
 }
 
 const registerDiv = document.getElementById("register-content");
-const registerForm = registerDiv.querySelector('form');
-registerForm.addEventListener('submit', register_form);
+const registerSubmit = registerDiv.querySelector('form');
+registerSubmit.addEventListener('submit', register_form);
 
 async function register_form(event) {
 	event.preventDefault();
@@ -136,8 +135,9 @@ async function register_form(event) {
 	if (response.status === 201) {
 		customalert('Registration successful', 'You are now registered');
 		loginPopin.style.display = "flex";
-		registerPopin.style.display = "none";
-		popinLog.style.display = 'flex'; 
+		registerForm.style.display = "none";
+		popinLog.style.display = "flex";
+		loginForm.style.display = "none";
 
 	}
 	else {

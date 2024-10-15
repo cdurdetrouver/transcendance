@@ -76,12 +76,11 @@ body, html {
     font-size: 3vw;
     text-decoration: none;
     border: none;
-    white-space: normal;
     display: flex;
     flex-direction: column; /* Permet au texte d'être empilé verticalement */
     align-items: center; /* Centre le contenu horizontalement */
     justify-content: center;
-    overflow: hidden;
+
 }
 
 /* button:hover {
@@ -141,6 +140,9 @@ body, html {
 #logout-popin {
     /* background-color:rgb(94, 255, 0); */
     display: none;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
     
 }
 
