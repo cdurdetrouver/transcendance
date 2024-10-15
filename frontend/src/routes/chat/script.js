@@ -362,8 +362,9 @@ async function leave_chat(params) {
 }
 
 async function send_pong_link(params) {
-
-}
+    chatSocket.send(JSON.stringify({
+        'type': "invitation",
+    }));}
 
 //load html in chat box and open a connection with the backend to start the chat
 async function open_chat(chat_id, chat_name) {
@@ -412,6 +413,9 @@ async function open_chat(chat_id, chat_name) {
             for (const index in data.messages)
                 document.querySelector('#chat-log').value += (data.messages[index].content + '\n');
         }
+        else if (data.type == 'invitation') {
+            document.querySelector('#chat-log').value += `${config.frontendUrl}/privatematchmaking?match_name=${data.match_name}` + '\n';
+        }
     };
     
     chatSocket.onclose = function(e)
@@ -447,19 +451,7 @@ async function open_chat(chat_id, chat_name) {
         chatSocket.send(JSON.stringify({
             'type': "refresh_mess",
         }));
-    };const response = await fetch(config.backendUrl + "/user/chats/", {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-		},
-		credentials: "include",
-	});
-    if (response.status === 200)
-        {
-            const data = await response.json();
-            return data
-        }
-        return null;
+    };
 }
 
 //here we get the list of chat from user and load it to the html
@@ -533,14 +525,14 @@ async function print_invitations() {
         {
             const chat_error = document.querySelector('.chat-list-invitations');
             chat_error.innerHTML = `
-            <t1>List of inviataions</t1>
+            <t1>List of invitations</t1>
             <div class="chat-info-invitations">
             <div>no invitations found</div>
             </div>
             `;
         }
     else {
-        const rooms = ret_rooms.rooms_invitations
+        const rooms = ret_rooms.invitation;
         const chat_list = document.querySelector('.chat-list-invitations');
         chat_list.innerHTML=`
             <t1>List of invitations</t1>

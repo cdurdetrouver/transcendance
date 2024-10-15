@@ -20,6 +20,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.refresh_start = None
         self.refresh_stop = False
         self.user = None
+        self.game_invit = False
 
     async def set_user(self):
         await add_in_room(self.room, self.user)
@@ -71,9 +72,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name, self.channel_name
         )
 
-    async def chat_invitation(self):
-        pass
-
+    async def chat_invitation(self, event):
+        self.game_invit = True
+        await self.send(text_data=json.dumps({"type" : "invitation", "match_name": self.channel_name}))
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -87,10 +88,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 self.room_group_name, {
                     "type": "chat.message", "message" : message_serializer.data})
-        elif text_data_json["type"] == 'invitation':
+        elif text_data_json["type"] == 'invitation' and self.game_invit == False:
             await self.channel_layer.group_send(
                 self.room_group_name, {
                     "type": "chat.invitation"})
+        elif text_data_json["type"] == 'invitation' and self.game_invit == True:
+            await self.send(text_data=json.dumps({"type" : "announce", "content": 'Invite for pong already sent'}))
 
     # Receive message from room group
     async def chat_message(self, event):
