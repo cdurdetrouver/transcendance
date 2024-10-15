@@ -2,7 +2,6 @@ import { get_user} from '../../components/user/script.js';
 
 let userElement = document.querySelector('#user_username');
 let isConnected = false;
-const user = await get_user();
 
 setTimeout(function() {
     let headerElement = document.querySelector('header'); 
@@ -45,4 +44,5 @@ export async function initComponent() {
 
 
 export async function cleanupComponent() {
+
 }
