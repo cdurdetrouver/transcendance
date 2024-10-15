@@ -224,8 +224,8 @@ async function chat_remove_user(params) {
             <t1>${ret}</t1>
             <input id="chat-add-user-close" type="button" value="close">
         `;
-        document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()});});
-    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
+        document.querySelector('#chat-add-user-close').addEventListener('click', open_conf());});
+    document.querySelector('#chat-conf-close').addEventListener('click', open_conf()); 
 }
 
 async function update_room(event) {
@@ -361,6 +361,10 @@ async function leave_chat(params) {
     print_chats();
 }
 
+async function send_pong_link(params) {
+
+}
+
 //load html in chat box and open a connection with the backend to start the chat
 async function open_chat(chat_id, chat_name) {
     if (chatSocket) {
@@ -386,12 +390,14 @@ async function open_chat(chat_id, chat_name) {
             <input id="chat-message-input" type="text" size="100" placeholder="Your message"><br>
             <input id="chat-message-submit" type="button" value="Send">
             <input id="chat-message-refresh" type="button" value="refresh">
+            <input id="chat-message-pong" type="button" value="Send pong link">
             <input id="chat-message-close" type="button" value="close chat">
             <input id="chat-message-leave" type="button" value="leave chat">
 		</li>
     `;
-    document.querySelector('#chat-conf-btn').addEventListener('click', function(event) {check_admin()});
-    document.querySelector('#chat-message-leave').addEventListener('click', function(event) {leave_chat()});
+    document.querySelector('#chat-conf-btn').addEventListener('click', check_admin);
+    document.querySelector('#chat-message-pong').addEventListener('click', send_pong_link);
+    document.querySelector('#chat-message-leave').addEventListener('click', leave_chat);
 
     chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + chat_id + "/");
     chatSocket.onmessage = function(e)

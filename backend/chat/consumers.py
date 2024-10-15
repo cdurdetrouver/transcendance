@@ -70,6 +70,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name, self.channel_name
         )
 
+    async def chat_invitation(self):
+        pass
+
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -77,12 +80,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to room group
         if (text_data_json["type"] == "refresh_mess"):
             await self.refresh_last_mess()
-        else:
+        elif text_data_json["type"] == "chat":
             message = await save_message(self.room, text_data_json, self.user)
             message_serializer = MessageSerializer(message)
             await self.channel_layer.group_send(
                 self.room_group_name, {
                     "type": "chat.message", "message" : message_serializer.data})
+        elif text_data_json["type"] == 'invitation':
+            await self.channel_layer.group_send(
+                self.room_group_name, {
+                    "type": "chat.invitation"})
 
     # Receive message from room group
     async def chat_message(self, event):
