@@ -4,6 +4,12 @@
 }
 
 
+header {
+	font-family: IsaacFont;
+	font-size: 2rem;
+	text-decoration: none;
+}
+
 header.preload *{
 	animation-duration: 0s !important;
 	-webkit-animation-duration: 0s !important;
