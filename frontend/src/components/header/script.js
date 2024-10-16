@@ -1,4 +1,6 @@
 import { get_user} from '../../components/user/script.js';
+import config from '../../env/config.js';
+
 
 setTimeout(function() {
     let headerElement = document.querySelector('header'); 
@@ -9,6 +11,10 @@ setTimeout(function() {
         console.error("Header element not found");
     }
 }, 100);
+
+
+
+
 
 
 export async function initComponent() {
@@ -31,9 +37,12 @@ export async function initComponent() {
 		imgElement.alt = 'login-icon';
 		const textHeader = secondLi.querySelector('.text-header');
 		textHeader.innerText = 'Login'; 
-
 	}
 
+
+	let imgElement = document.querySelector('.icon.avatar img');
+	const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+	imgElement.src = profile_picture;
 
 	const sidebar = document.querySelector('.sidebar');
 	const iconImage = document.getElementById('iconImage');
