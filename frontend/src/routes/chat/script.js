@@ -9,12 +9,18 @@ import { get_user } from "../../components/user/script.js";
 
 //show error si photo n'est pas au bon format
 
-//create une room avec direct quelqu'un ? -> create room can take a list of user with already the same name
-//pong link
+//create une room avec direct quelqu'un ? -> create room can take a list of user with already the same name:
+//      - name user1-user2 order by strcmp
+//      - si creer ne pas envoyer deux fois l'invit
+//      juste un dict qu'on met dans formdata ?! 
+
 //func remove user not clean
+//solve pb id room for create 0 ? car id 0 existe pas 
 //clean globals vars
+//check si on attend bien dans toutes les requests tous les codes erreurs prevus
 
 //for frontend team:
+//pong link redirect to ther link sent
 //refresh juste affiche les 10 d'avant mais ils ne sont pas avant dans la box
 let chatSocket;
 let room_name = "";
@@ -70,7 +76,9 @@ async function created_room(room_name_created) {
 async function send_create_room(event) {
 	event.preventDefault();
     const form = event.target
+    console.log(form);
     const form_data = new FormData(form);
+    console.log(form_data);
 
     const response = await fetch(config.backendUrl + "/chat/room/" + 42, {
         method: "POST",
@@ -394,11 +402,13 @@ async function open_chat(chat_id, chat_name) {
             <input id="chat-message-pong" type="button" value="Send pong link">
             <input id="chat-message-close" type="button" value="close chat">
             <input id="chat-message-leave" type="button" value="leave chat">
+            <input id="chat-message-test" type="button" value="test">
 		</li>
     `;
     document.querySelector('#chat-conf-btn').addEventListener('click', check_admin);
     document.querySelector('#chat-message-pong').addEventListener('click', send_pong_link);
     document.querySelector('#chat-message-leave').addEventListener('click', leave_chat);
+    document.querySelector('#chat-message-test').addEventListener('click', mp_somebody);
 
     chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + chat_id + "/");
     chatSocket.onmessage = function(e)
@@ -554,10 +564,38 @@ async function print_invitations() {
                 chat_list.appendChild(chat);
                 const btn_accept = document.getElementById(`invitation-accept-${room.id}`)
                 const btn_refuse = document.getElementById(`invitation-refuse-${room.id}`)
-                btn_accept.addEventListener('click', accept_invitation(room.id, "TRUE"));
-                btn_refuse.addEventListener('click', accept_invitation(room.id, "FALSE"));
+                btn_accept.addEventListener('click', function(event) {accept_invitation(room.id, "TRUE")});
+                btn_refuse.addEventListener('click', function(event) {accept_invitation(room.id, "FALSE")});
             };
         }
+}
+
+async function mp_somebody() {
+
+    const user2_id = 2;
+    const response = await fetch(config.backendUrl + "/chat/room/" + 42, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+		},
+        body: JSON.stringify({
+            "type": "mp",
+            "recepient_id" : user2_id,
+        }),
+		credentials: "include",
+	});
+    if (response.status === 200)
+    {
+        const data = await response.json();
+        print_chats();
+        return ;
+    }
+    else if (response.status === 303)
+    {
+        console.log("Room already exists.");
+        return;
+    }
+    return;
 }
 
 export async function initComponent(params) {
