@@ -1,8 +1,5 @@
 import { get_user} from '../../components/user/script.js';
 
-let userElement = document.querySelector('#user_username');
-let isConnected = false;
-
 setTimeout(function() {
     let headerElement = document.querySelector('header'); 
     
@@ -11,35 +8,44 @@ setTimeout(function() {
     } else {
         console.error("Header element not found");
     }
-}, 500);
-
-const user = await get_user();
-const usernameText = document.querySelector('.bottom .text');
-
-usernameText.textContent = user.username;
-
-const firstLi = document.querySelector('.bottom li:first-child');
-
-if (isConnected == true) {
-    firstLi.remove();  // Removes the first li element
-}
-
-if (user)
-{
-	userElement.innerText = `${user.username} is connected`;
-	isConnected = true;
-}
-else
-{
-	userElement.innerText = 'No user connected';
-	isConnected = false;
-}
-
+}, 100);
 
 
 export async function initComponent() {
-	userElement = document.querySelector('#user_username');
-	isConnected = false;
+	const user = await get_user();
+
+	const usernameText = document.querySelector('.bottom .text-header');
+
+	if (user)
+	{
+		usernameText.textContent = user.username;
+	}
+	else
+	{
+		const firstLi = document.querySelector('.bottom li:first-child');
+		firstLi.remove();  // Removes the first li element
+		const secondLi = document.querySelector('.bottom li:first-child');
+
+		const imgElement = secondLi.querySelector('.icon img');
+		imgElement.src = '../../static/assets/login.png'; 
+		imgElement.alt = 'login-icon';
+		const textHeader = secondLi.querySelector('.text-header');
+		textHeader.innerText = 'Login'; 
+
+	}
+
+
+	const sidebar = document.querySelector('.sidebar');
+	const iconImage = document.getElementById('iconImage');
+
+	sidebar.addEventListener('mouseenter', () => {
+		iconImage.src = '../../static/assets/jpg/head_cry_4.gif' ; // Change to your new icon source
+	});
+
+	sidebar.addEventListener('mouseleave', () => {
+		iconImage.src = '../../static/assets/jpg/head.png'; // Change back to the original icon
+	});
+
 }
 
 

@@ -7,6 +7,7 @@
 header {
 	font-family: IsaacFont;
 	font-size: 2rem;
+	color: #2d2d2d;
 	text-decoration: none;
 }
 
@@ -22,7 +23,7 @@ header.preload *{
 	top: 0;
 	width:  80px;
 	height: 100vh;
-	background: url('../../static/assets/sheets/header_sheet.png')  no-repeat  right;
+	background: url('../../static/assets/sheets/header_sheet2.png')  no-repeat  right;
 	background-size: 100% 150%;
 	overflow: hidden;
 	transition: .6s;
@@ -43,12 +44,14 @@ header.preload *{
     flex-direction: column; /* Aligner les éléments verticalement */
 }
 
-.sidebar li:hover
-{
-	transform: scale(1.1) translateX(12px);
+
+
+.sidebar li:hover {
+    transform: scale(1.1) translateX(12px); /* Applies to all li elements */
 }
 
-  .icon img {
+
+.icon img {
 	width: 30px;
     height: auto;
 }
@@ -61,11 +64,11 @@ header.preload *{
 	text-decoration: none;
 	width: auto;
 	min-width: 60px;
-	height: 80px;
+	height: 60px;
 	align-items: center;
 }
 
-.sidebar .text
+.sidebar .text-header
 {
 	margin-left: 35px;
 }
@@ -78,16 +81,16 @@ header.preload *{
 	top: 10px
 }
 
+.logo {
+	position: relative;
+	top: -20px;
+}
+
 .top .icon img
 {
 	position: relative;
 	top: 0px;
 	width: 40px;
-}
-
-.logo
-{
-	margin-bottom: 10vh;
 }
 
 .top .logo:hover
@@ -97,16 +100,17 @@ header.preload *{
 }
 
 .sidebar .bottom {
+	display:flex;
+	flex-direction: column;
     margin-top: auto;
 	margin-bottom: 30px;
-	
 }
 
-.bottom .icon img 
+.avatar img
 {
 	position: relative;
-	width: 40px;
-	height: 40px;
+	width: 30px;
+    height: auto;
 	border-radius: 50%;
 	overflow: hidden;
 }
@@ -121,10 +125,12 @@ header.preload *{
 }
 
 a:link { 
-	text-decoration: none; 
+	text-decoration: none;
+	color: #2d2d2d;
   } 
   a:visited { 
-	text-decoration: none; 
+	text-decoration: none;
+	color: #2d2d2d;
   } 
   a:hover { 
 	text-decoration: none; 
@@ -132,3 +138,39 @@ a:link {
   a:active { 
 	text-decoration: none; 
   }
+
+.line {
+	height: 3px;       /* Set the height of the rectangle */
+	width: 30px;      /* Set the width to be greater than the height for a rectangular shape */
+	background:  #929292; /* The background color of the rectangle */
+	display: inline-block; /* Ensures it behaves like a block element */
+	border-radius: 18%;
+	transition: width 0.6s; /* Add transition for smooth width change */
+
+}
+
+.sidebar:hover .line {
+    width: 240px; /* New width when sidebar is hovered */
+}
+
+.line-no-hover 
+{
+	position: relative;
+    transform: none !important;
+}
+
+.test {
+	height: 60px !important;
+
+}
+
+.sidebar:hover .doodle {
+	transition: none;
+}
+
+.doodle 
+{
+	position: absolute;
+	top: 10%;
+	z-index: -1;
+}
