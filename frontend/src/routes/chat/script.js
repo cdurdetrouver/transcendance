@@ -9,11 +9,7 @@ import { get_user } from "../../components/user/script.js";
 
 //show error si photo n'est pas au bon format
 
-//create une room avec direct quelqu'un ? -> create room can take a list of user with already the same name:
-//      - name user1-user2 order by strcmp
-//      - si creer ne pas envoyer deux fois l'invit
-//      juste un dict qu'on met dans formdata ?! 
-
+//gen a link to join
 //func remove user not clean
 //solve pb id room for create 0 ? car id 0 existe pas 
 //clean globals vars
@@ -584,15 +580,16 @@ async function mp_somebody() {
         }),
 		credentials: "include",
 	});
+    const data = await response.json();
     if (response.status === 200)
     {
-        const data = await response.json();
+        console.log(data["room_status"])
         print_chats();
         return ;
     }
-    else if (response.status === 303)
+    else if (response.status === 303 || response.status === 404 ||response.status === 403 ||response.status === 400)
     {
-        console.log("Room already exists.");
+        console.log("error mp: ", data["error"]);
         return;
     }
     return;
