@@ -10,7 +10,8 @@ import { get_user } from "../../components/user/script.js";
 
 //show error si photo n'est pas au bon format
 
-//docs 
+//docs views
+//docs models
 
 //for frontend team:
 //pong link redirect to ther link sent
