@@ -99,6 +99,7 @@ header.preload *{
     cursor: default; /* Optionally, prevent the hover cursor */
 }
 
+
 .sidebar .bottom {
 	display:flex;
 	flex-direction: column;
