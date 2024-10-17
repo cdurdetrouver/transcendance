@@ -1,6 +1,6 @@
 <div id="container">
 	<div id="game-container">
-		<img src="" alt="Menu" id="menu-image">
+		<img src="/routes/assets/images/menu.png" alt="Menu" id="menu-image">
 		<div id="select-mode">
 			<a disabled href="/pong" class="button-mode" id="LOCAL">LOCAL</a>
 			<a disabled href="" class="button-mode" id="online">ONLINE</a>
@@ -13,7 +13,7 @@
 					<button  class="log-buttons" id="login">LOGIN</button>
 				</div>
 				<div id="logout-popin">
-					<button class="log-buttons" id="logout">LOGOUT TEST TEST TEST</button>
+					<button class="log-buttons" id="logout">LOGOUT</button>
 				</div>
 			</div>
 
@@ -28,15 +28,15 @@
 						<input type="password" class="custom-input" id="password" name="password" required><br><br>
 						<input class="confirm-button" type="submit" value="Submit"> Or login with:
 						<div id="buttons"> 
-						<button class="login-buttons" id="google-login">Google
+						<a class="login-buttons google_button" id="google-login">Google
 							<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
-						</button>
-						<button class="login-buttons" id="github-login"> GitHub
+						</a>
+						<a class="login-buttons github_button" id="github-login"> GitHub
 							<img src="../routes/assets/logo/github_logo.png" id="github-logo" alt="Github logo">
-						  </button>
-						<button class="login-buttons" id="42-login"> 
+						</a>
+						<a class="login-buttons intra_button" id="42-login"> 
 						<img src="../routes/assets/logo/42.png" id="intra-logo" alt="42 logo">
-						</button>
+						</a>
 						</div>
 					</form>
 					<p>Don't have an account? <button class="confirm-button" id="register-button">Register</button></p>
