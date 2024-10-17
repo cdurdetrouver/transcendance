@@ -329,6 +329,5 @@ backend/*/migrations/*
 !backend/*/migrations/__init__.py
 
 # Ignore png files
-*.png
 
 .vscode/

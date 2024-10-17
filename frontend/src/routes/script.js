@@ -18,8 +18,6 @@ const logoutPopin = document.getElementById("logout-popin");
 const closeButton = document.getElementById("closePopupBtn");
 const loginButton = document.getElementById("login");
 
-let userElement = document.querySelector('#user_username');
-
 let userCookie = getCookie('user');
 
 await get_user();
@@ -33,10 +31,10 @@ if (userCookie) {
 	logoutPopin.fontFamily = "isaac";
 	logoutPopin.innerHTML += `LOGGED AS ${user.username}`;
 }
+
 else {
 	loginPopin.style.display = "flex";
 }
-
 
 loginButton.addEventListener("click", function() {
 	console.log("login button");
@@ -64,9 +62,6 @@ registerButton.addEventListener('click', function (event) {
 });
 
 //LOGIN
-
-const submitLoginButton = document.getElementById("submit-login");
-const submitRegisterButton = document.getElementById("submit-register");
 
 const logindiv = document.getElementById("login-content");
 const loginSubmit = logindiv.querySelector('form');

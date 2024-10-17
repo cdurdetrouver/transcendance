@@ -46,6 +46,7 @@ async function login_tierce(code, user_type) {
 	return response;
 }
 
+
 async function register(username, email, password, profile_picture) {
 	const formData = new FormData();
 	formData.append('username', username);

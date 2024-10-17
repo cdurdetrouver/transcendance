@@ -1,4 +1,28 @@
-var stats = {
+let carousel;
+let	item_a;
+let	item_b;
+let	item_c;
+let	item_d;
+let	item_e;
+let	item_f;
+let	currdeg;
+let	currdegA;
+let	currdegB;
+let	currdegC;
+let	turn;
+let currentIndex;
+
+setTimeout(function() {
+    let preloadDiv = document.querySelector('div.preload');
+    
+    if (preloadDiv) {
+        preloadDiv.classList.remove('preload');
+    } else {
+        console.error("Div not found lol");
+    }
+}, 500);
+
+const stats = {
 	"ISAAC": {
 	  life: "../../static/assets/character/3.png",
 	  str: "../../static/assets/character/2.png",
@@ -31,21 +55,16 @@ var stats = {
 	}
   };
 
-var carousel = $(".carousel"),
-  a = $(".a"),
-  b = $(".b"),
-  c = $(".c"),
-  d = $(".d"),
-  t = $(".e"),
-  f = $(".f"),
-  currdeg  = 0,
-  currdegA  = 0,
-  currdegB  = 0,
-  currdegC  = 0,
-  turn = 0;
-
 const names = ["ISAAC", "CAIN", "MAGGIE", "JUDAS", "?????", "EVE"]; 
-let currentIndex = 0;
+
+function handleKeydown(e) {
+	if (e.key === "ArrowRight") {
+		rotate({ data: { d: "n" } });
+	} else if (e.key === "ArrowLeft") {
+		rotate({ data: { d: "p" } });
+	}
+}
+
 
 function updateStats(character)
 {
@@ -56,18 +75,6 @@ function updateStats(character)
 	$(".speed-stat").html('<img src="' + characterStats.speed + '" alt="speed stat">');
 }
 
-$(document).ready(function() {
-	$(".next").on("click", { d: "n" }, rotate);
-	$(".prev").on("click", { d: "p" }, rotate);
-
-	$(document).on("keydown", function(e) {
-		if (e.key === "ArrowRight") {
-			rotate({ data: { d: "n" } });
-		} else if (e.key === "ArrowLeft") {
-			rotate({ data: { d: "p" } });
-		}
-	});
-});
 
 function rotate(e)
 {
@@ -108,25 +115,55 @@ function rotate(e)
   carousel.css({
     "transform": "rotateX(-20deg) rotateY("+currdeg+"deg)"
   });
-  a.css({
+  item_a.css({
 	"transform": "rotateY(0deg) translateZ(11vw) rotateY("+currdegA+"deg)"
   });
-  b.css({
+  item_b.css({
 	"transform": "rotateY(60deg) translateZ(11vw) rotateY("+currdegB+"deg)"
   });
-  c.css({
+  item_c.css({
 	"transform": "rotateY(120deg) translateZ(11vw) rotateY("+currdegC+"deg)"
   });
-  d.css({
+  item_d.css({
 	"transform": "rotateY(180deg) translateZ(11vw) rotateY("+currdegA+"deg)"
   });
-  t.css({
+  item_e.css({
 	"transform": "rotateY(240deg) translateZ(11vw) rotateY("+currdegB+"deg)"
   });
-  f.css({
+  item_f.css({
 	"transform": "rotateY(300deg) translateZ(11vw) rotateY("+currdegC+"deg)"
   });
 
   $(".name-text").text(names[currentIndex]);
   updateStats(names[currentIndex]);
 }
+
+export async function initComponent() {
+	carousel = $(".carousel");
+	item_a = $(".item_a");
+	item_b = $(".item_b");
+	item_c = $(".item_c");
+	item_d = $(".item_d");
+	item_e = $(".item_e");
+	item_f = $(".item_f");
+	currdeg  = 0;
+	currdegA  = 0;
+	currdegB  = 0;
+	currdegC  = 0;
+	turn = 0;
+	currentIndex = 0;
+
+	document.querySelector(".next").addEventListener("click", function() {
+		rotate({ data: { d: "n" } });
+	});
+
+	document.querySelector(".prev").addEventListener("click", function() {
+		rotate({ data: { d: "p" } });
+	});
+
+	document.addEventListener('keydown', handleKeydown);
+  }
+  
+  export async function cleanupComponent() {
+	document.removeEventListener('keydown', handleKeydown);
+  }
