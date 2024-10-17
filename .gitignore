@@ -328,7 +328,4 @@ backend/*/migrations/*
 # But do not ignore the __init__.py file in any migrations directory
 !backend/*/migrations/__init__.py
 
-# Ignore png files
-*.png
-
 .vscode/
