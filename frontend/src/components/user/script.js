@@ -46,6 +46,7 @@ async function login_tierce(code, user_type) {
 	return response;
 }
 
+
 async function register(username, email, password, profile_picture) {
 	const formData = new FormData();
 	formData.append('username', username);
@@ -61,9 +62,11 @@ async function register(username, email, password, profile_picture) {
 
 	if (response.status === 201) {
 		const data = await response.json();
-
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
 		return response;
+	}
+	else {
+        console.error('Registration failed with status:', response.status);
 	}
 	return response;
 }
@@ -126,15 +129,4 @@ async function logout() {
 	deleteCookie('user');
 }
 
-async function searchUsers(query, size = 30) {
-	const response = await fetch(`${config.backendUrl}/user/search/?q=${query}&size=${size}`, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		credentials: 'include',
-	});
-	return response;
-}
-
-export { login, register, get_user, update_user, delete_user, refresh_token, logout, login_tierce, searchUsers };
+export { login, register, get_user, update_user, delete_user, refresh_token, logout, login_tierce };

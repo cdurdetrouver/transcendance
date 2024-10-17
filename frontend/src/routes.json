@@ -62,5 +62,9 @@
 	{
 		"path": "/404",
 		"files": "/404"
+	},
+	{
+		"path": "/account",
+		"files": "/account"
 	}
 ]
