@@ -25,30 +25,32 @@ export async function initComponent() {
 	if (user)
 	{
 		usernameText.textContent = user.username;
+		let imgElement = document.querySelector('.icon.avatar img');
+		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+		imgElement.src = profile_picture;
 	}
 	else
 	{
-		const firstLi = document.querySelector('.bottom li:first-child');
-		firstLi.remove();  // Removes the first li element
-		const secondLi = document.querySelector('.bottom li:first-child');
+		const secondLi = document.querySelector('.bottom li:nth-child(2)');
+		const thirdLi = document.querySelector('.bottom li:nth-child(3)');
+		secondLi.remove();
+		
+		const imgElement = thirdLi.querySelector('.icon img'); // Select the img inside the .icon class
 
-		const imgElement = secondLi.querySelector('.icon img');
-		imgElement.src = '../../static/assets/login.png'; 
+		imgElement.src = '../../static/assets/header/login.png';
 		imgElement.alt = 'login-icon';
-		const textHeader = secondLi.querySelector('.text-header');
+		const textHeader = thirdLi.querySelector('.text-header');
 		textHeader.innerText = 'Login'; 
 	}
 
 
-	let imgElement = document.querySelector('.icon.avatar img');
-	const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
-	imgElement.src = profile_picture;
+
 
 	const sidebar = document.querySelector('.sidebar');
 	const iconImage = document.getElementById('iconImage');
 
 	sidebar.addEventListener('mouseenter', () => {
-		iconImage.src = '../../static/assets/jpg/head_cry_4.gif' ; // Change to your new icon source
+		iconImage.src = '../../static/assets/header/head_cry_4.gif' ; // Change to your new icon source
 	});
 
 	sidebar.addEventListener('mouseleave', () => {
