@@ -10,7 +10,6 @@ import { get_user } from "../../components/user/script.js";
 
 //show error si photo n'est pas au bon format
 
-//clean globals vars
 //check ret requests
 //docs 
 
@@ -148,18 +147,14 @@ async function add_user(username) {
             `;
             document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()});
     }
-    else if (response.status === 303) {
-            console.log("add user request succes: " + data['User status']);
+    else if (response.status === 303 || response.status === 404 || response.status === 403) {
+            console.log("add user request: " + data['error']);
             const chat_conf = document.querySelector('.chat-conf');
             chat_conf.innerHTML = `
                 <t1>${data['User status']}</t1>
                 <input id="chat-add-user-close" type="button" value="close">
             `;
             document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()});
-    }
-    else if (response.status === 404 || response.status === 403)
-        {
-            console.log(data['error']);
     }
     return;
 }
@@ -188,13 +183,13 @@ async function remove_user(username) {
              "username": username
         })
 	});
-    let ret = "";
+    let ret;
     const data = await response.json();
     if (response.status === 200) {
             console.log("Remove user request succes: " + data['User status']);
             ret = data['User status'];
         }
-    if (response.status === 404 || response.status === 403) {
+    if (response.status === 404 || response.status === 403 || response.status === 400) {
                 console.log("error: " + data['error']);
                 ret = data['error'];
     }
@@ -239,7 +234,7 @@ async function update_room(event) {
         `;
         print_chats();
     }
-    else if (response.status === 303 || response.status === 404 || response.status === 400) {
+    else if (response.status === 404 || response.status === 400 || response.status === 403) {
         console.log(data['error']);
     }
     return; 
@@ -269,7 +264,7 @@ async function chat_delete(event) {
         if (chatSocket)
             chatSocket.close();
     }
-    else if (response.status === 404) {
+    else if (response.status === 404 || response.status === 403 || response.status === 400) {
         console.log(data['error'])
     }
     return;

@@ -107,8 +107,6 @@ def create_room(room, user, data):
     return JsonResponse({'error': "request no correctly format"}, status=status.HTTP_400_BAD_REQUEST)
 
 def update_room(data, room):
-    if Room.objects.filter(name=data.get('new_name')).all().first():
-            return JsonResponse({'error': 'room name already in use'}, status=status.HTTP_303_SEE_OTHER)
     room_s = RoomSerializer(room, data=data, partial=True)
     if room_s.is_valid():
         room_s.save()
@@ -159,7 +157,7 @@ def info_room(room):
 def room(request, room_id):
     user = request.user
     if not room_id:
-        return JsonResponse({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse({'error': "request no correctly format"}, status=status.HTTP_400_BAD_REQUEST)
     room = Room.objects.filter(id=room_id).all().first()
 
     if (request.method == 'GET'):
@@ -186,9 +184,9 @@ def add_user(user_data, room, user):
     if (user in user_data.blocked_users.all()):
         return JsonResponse({'error': 'user blocked you.'}, status=status.HTTP_403_FORBIDDEN)
     if room.participants.filter(id=user_data.id).first():
-        return JsonResponse({'User status': 'Already in the {}'.format(room.name)}, status=status.HTTP_303_SEE_OTHER)
+        return JsonResponse({'error': 'Already in the {}'.format(room.name)}, status=status.HTTP_303_SEE_OTHER)
     elif user_data.invite_list_id and room.id in user_data.invite_list_id:
-        return JsonResponse({'User status': 'Already sent an invitation for {}'.format(room.name)}, status=status.HTTP_303_SEE_OTHER)
+        return JsonResponse({'error': 'Already sent an invitation for {}'.format(room.name)}, status=status.HTTP_303_SEE_OTHER)
     if not user_data.invite_list_id:
         user_data.invite_list_id = [room.id]
     else:
@@ -219,7 +217,7 @@ def user(request):
     if not room:
         return JsonResponse({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     user_data = find_user(data)
-    if not user:
+    if not user_data:
         return JsonResponse({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
     if (user != user_data and check_admin(user, room) == False):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
