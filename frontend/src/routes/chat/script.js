@@ -10,7 +10,6 @@ import { get_user } from "../../components/user/script.js";
 
 //show error si photo n'est pas au bon format
 
-//check ret requests
 //docs 
 
 //for frontend team:
@@ -257,7 +256,7 @@ async function chat_delete(event) {
     if (response.status === 200) {
 	    const chat_delete = document.querySelector('.chat-box');
         chat_delete.innerHTML = `
-        <t1>Chat ${room_id} deleted successfully.</t1>
+        <t1>Chat ${room.id} deleted successfully.</t1>
         <input id="chat-conf-close" type="button" value="Close chat">
         `;
         document.querySelector('#chat-conf-close').addEventListener('click', chat_close);
@@ -525,7 +524,7 @@ async function print_invitations() {
                 const btn_refuse = document.getElementById(`invitation-refuse-${room_l.id}`)
                 btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
                 btn_refuse.addEventListener('click', function(event) {accept_invitation(room_l.id, "FALSE")});
-            };
+            };12345
         }
 }
 
