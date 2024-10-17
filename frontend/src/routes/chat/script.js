@@ -14,6 +14,7 @@ import { get_user } from "../../components/user/script.js";
 //solve pb id room for create 0 ? car id 0 existe pas 
 //clean globals vars
 //check si on attend bien dans toutes les requests tous les codes erreurs prevus
+//docs 
 
 //for frontend team:
 //pong link redirect to ther link sent
@@ -33,12 +34,14 @@ async function get_user_chats()
 		},
 		credentials: "include",
 	});
-    if (response.status === 200)
-        {
-            const data = await response.json();
+    const data = await response.json();
+    if (response.status === 200) {
             return data
-        }
-        return null;
+    }
+    if (response.status === 404) {
+        console.log("error: ", data['error'])
+    }
+    return null;
 }
 
 async function get_user_invitations(params) {
@@ -49,12 +52,14 @@ async function get_user_invitations(params) {
 		},
 		credentials: "include",
 	});
-    if (response.status === 200)
-        {
+    if (response.status === 200) {
             const data = await response.json();
             return data
-        }
-        return null;
+    }
+    if (response.status === 404) {
+        console.log("error: ", data['error'])
+    }
+    return null;
 }
 
 async function created_room(room_name_created) {
@@ -66,7 +71,6 @@ async function created_room(room_name_created) {
 		 </li>
     `;
     document.querySelector('.chat-conf-close').addEventListener('click', close_create_room);
-
 }
 
 async function send_create_room(event) {
@@ -88,10 +92,8 @@ async function send_create_room(event) {
         print_chats();
         return ;
     }
-    else if (response.status === 303)
-    {
-        console.log("Room already exists.");
-        return;
+    else if (response.status === 404 || response.status === 403 || response.status === 400 || response.status === 303) {
+        console.log("error: ", data['error'])
     }
     return;
 }
@@ -149,10 +151,8 @@ async function add_user(username) {
                 <input id="chat-add-user-close" type="button" value="close">
             `;
             document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()});
-            return ;
-        }
-        else if (response.status === 303)
-        {
+    }
+    else if (response.status === 303) {
             console.log("add user request succes: " + data['User status']);
             const chat_conf = document.querySelector('.chat-conf');
             chat_conf.innerHTML = `
@@ -160,13 +160,13 @@ async function add_user(username) {
                 <input id="chat-add-user-close" type="button" value="close">
             `;
             document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()});
-            return ;
-        }
-        else if (response.status === 404 || response.status === 403)
+    }
+    else if (response.status === 404 || response.status === 403)
         {
             console.log(data['error']);
-            return;
-        }
+            
+    }
+    return;
 }
 
 async function chat_add_user() {
@@ -193,24 +193,17 @@ async function remove_user(username) {
              "username": username
         })
 	});
+    const data = await response.json();
     if (response.status === 200)
         {
-            const data = await response.json();
             console.log("Remove user request succes: " + data['User status']);
             return data['User status'];
         }
-    if (response.status === 404)
+    if (response.status === 404 || response.status === 403)
             {
-                const data = await response.json();
-                console.log("Remove user request succes: " + data['User status']);
-                return data['User status'];
+                console.log("error: " + data['error']);
+                return data['error'];
             }
-        else if (response.status === 404)
-        {
-            const data = await response.json();
-            console.log(data['error']);
-            return;
-        }
 }
 
 async function chat_remove_user(params) {
@@ -243,24 +236,16 @@ async function update_room(event) {
 		credentials: "include",
 	});
     const data = await response.json();
-    if (response.status === 200)
-    {
+    if (response.status === 200) {
         room_name = data['room_name'];
 	    const chat_title = document.getElementById('chat-name-title');
         chat_title.innerHTML = `
         <t1>Chat ${room_name} selected</t1>
         `;
         print_chats();
-        return ;
     }
-    else if (response.status === 303)
-    {
-        console.log(data['room_status']);
-        return;
-    }
-    else if (response.status === 404) {
-        console.log(data['error'])
-        return
+    else if (response.status === 303 || response.status === 404 || response.status === 400) {
+        console.log(data['error']);
     }
     return; 
 }
@@ -279,8 +264,7 @@ async function chat_delete(event) {
 		credentials: "include",
 	});
     const data = await response.json();
-    if (response.status === 200)
-    {
+    if (response.status === 200) {
         room_name = data['room_name'];
 	    const chat_delete = document.querySelector('.chat-box');
         chat_delete.innerHTML = `
@@ -290,12 +274,11 @@ async function chat_delete(event) {
         document.querySelector('#chat-conf-close').addEventListener('click', chat_close);
         if (chatSocket)
             chatSocket.close();
-        return ;
     }
     else if (response.status === 404) {
         console.log(data['error'])
-        return
     }
+    return
 }
 
 async function chat_close_conf(params) {
@@ -343,20 +326,16 @@ async function check_admin() {
             "room_id" : room_id,
         })
 	});
-    if (response.status === 200)
-        {
-            const data = await response.json();
+    const data = await response.json();
+    if (response.status === 200) {
             room = data['room']
             console.log(data['User status']);
             open_conf();
-            return ;
-        }
-        else if (response.status === 404 || response.status === 403)
-        {
-            const data = await response.json();
+    }
+    else if (response.status === 404 || response.status === 403) {
             console.log(data['error']);
-            return;
-        }
+    }
+    return;
 }
 
 async function leave_chat(params) {
@@ -512,14 +491,12 @@ async function accept_invitation(room_id, value) {
 		credentials: "include",
 	});
     const data = await response.json();
-    if (response.status === 200)
-        {
+    if (response.status === 200) {
             console.log("invitation: ", data['invitation'])
             print_chats();
             print_invitations();
-            return
-        }
-    else {
+    }
+    else if (response.status === 400 || response.status === 404 || response.status === 403){
         console.log("error: ", data['error'])
     }
         return;   

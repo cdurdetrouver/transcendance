@@ -74,7 +74,7 @@ def mp_exists(user_1, user_2):
 
 def create_room(room, user, data):
     if room:
-        return JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
+        return JsonResponse({'error': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
     try:
         if data['type'] == "mp" and isinstance(data["recepient_id"], int) == True:
             recepient, succes = get_user_mp(data["recepient_id"])
@@ -84,7 +84,7 @@ def create_room(room, user, data):
                 return JsonResponse({'error': 'user blocked you.'}, status=status.HTTP_403_FORBIDDEN)
             room_name, exists = mp_exists(user, recepient)
             if exists:
-                return JsonResponse({'room_statuts': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
+                return JsonResponse({'error': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
             new_room = Room.objects.create(name=room_name, group_name=gen_group_name())
             new_room.participants.set([user])
             new_room.created_by = user
@@ -95,9 +95,6 @@ def create_room(room, user, data):
             else:
                 recepient.invite_list_id.append(new_room.id)
             recepient.save()
-            print("created by : ", user)
-            print("room: ", new_room)
-            print(recepient.invite_list_id, " | ", recepient.username)#a delete 
             return  JsonResponse({'room_statuts': 'created', 'room': room_s.data}, status=status.HTTP_200_OK)
     except:
         if isinstance(data, QueryDict):
@@ -114,7 +111,7 @@ def create_room(room, user, data):
 
 def update_room(data, room):
     if Room.objects.filter(name=data.get('new_name')).all().first():
-            return JsonResponse({'room_statuts': 'room name already in use'}, status=status.HTTP_303_SEE_OTHER)
+            return JsonResponse({'error': 'room name already in use'}, status=status.HTTP_303_SEE_OTHER)
     room_s = RoomSerializer(room, data=data, partial=True)
     if room_s.is_valid():
         room_s.save()
