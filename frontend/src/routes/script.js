@@ -17,6 +17,16 @@ const loginPopin = document.getElementById("login-popin");
 const logoutPopin = document.getElementById("logout-popin");
 const closeButton = document.getElementById("closePopupBtn");
 const loginButton = document.getElementById("login");
+const popin = document.getElementById("popin");
+const account = document.getElementById("account");
+
+function enableAccount() {
+	account.classList.remove("disabled-link");
+}
+
+function disabledAccount() {
+	account.classList.add("disabled-link");
+}
 
 let userCookie = getCookie('user');
 
@@ -24,12 +34,12 @@ await get_user();
 
 if (userCookie) {
 	const user = JSON.parse(userCookie);
-	console.log("TEST ICI ENFAITE");
 	loginPopin.style.display = "none";
 	logoutPopin.style.display = "flex";
 	logoutPopin.className = "log-buttons";
 	logoutPopin.fontFamily = "isaac";
-	logoutPopin.innerHTML += `LOGGED AS ${user.username}`;
+	logoutPopin.innerHTML += "LOGGED AS ${user.username}";
+	enableAccount();
 }
 
 else {
@@ -51,11 +61,10 @@ window.addEventListener("click", function(event) {
     }
 });
 
-const popin = document.getElementById("popin");
 const loginForm = document.getElementById("login-content");
-
 const registerForm = document.getElementById("register-content");
 const registerButton = document.getElementById("register-button");
+
 registerButton.addEventListener('click', function (event) {
 	loginForm.style.display = "none";
 	registerForm.style.display = "flex";
@@ -84,6 +93,7 @@ async function login_form(event) {
 		loginPopin.style.display = "none";
 		logoutPopin.style.display = "flex";
 		popin.style.display = "none";
+		enableAccount()
 	}
 	else {
 		const data = await response.json();
@@ -122,6 +132,7 @@ async function register_form(event) {
 		logoutPopin.style.display = "flex";
 		popin.style.display = "none";
 		loginForm.style.display = "flex";
+		enableAccount();
 	}
 	else {
 		const data = await response.json();
@@ -140,5 +151,6 @@ async function logoutUser(event) {
 	logout();
 	loginPopin.style.display = 'flex';
 	logoutPopin.style.display = 'none';
+	disabledAccount();
 
 }

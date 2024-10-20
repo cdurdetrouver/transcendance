@@ -58,7 +58,7 @@ body, html {
 
 .disabled-link {
     pointer-events: none;
-    color: grey;
+    /* color: grey; */
     cursor: not-allowed;
 }
 

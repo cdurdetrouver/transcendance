@@ -39,19 +39,21 @@ function setPersonalUser(user) {
 	const userDiv = document.createElement('div');
 	const username = user.username;
 	const email = user.email;
-	const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
-	const userHtml = `
-		<div class="user__info">
-			<p class="user__info__username">${username}</p>
-			<p class="user__info__email">${email}</p>
-			<img src="${profile_picture}" alt="Profile Picture">
-		</div>
-		<div class="user__buttons">
-			<button class="user__buttons__edit" onclick="router.navigate('/user/edit')">Edit</button>
-			<button class="user__buttons__logout" onclick="logout()">Logout</button>
-		</div>
-	`;
-	userDiv.innerHTML = userHtml;
+	const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
+	// const userHtml = 
+	// `
+	// 	<div class="user__info">
+	// 		<p class="user__info__username">${username}</p>
+	// 		<p class="user__info__email">${email}</p>
+	// 		<img src="${profilePicture}" alt="Profile Picture">
+	// 	</div>
+	// 	<div class="user__buttons">
+	// 		<button class="user__buttons__edit" onclick="router.navigate('/user/edit')">Edit</button>
+	// 		<button class="user__buttons__logout" onclick="logout()">Logout</button>
+	// 	</div>
+	// `
+	// ;
+	// userDiv.innerHTML = userHtml;
 	if (containerDiv.firstChild) {
 		containerDiv.insertBefore(userDiv, containerDiv.firstChild);
 	} else {
@@ -63,12 +65,12 @@ function setUser(user) {
 	const userDiv = document.querySelector('.container');
 	const username = user.username;
 	const email = user.email;
-	const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+	const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
 	const userHtml = `
 		<div class="user__info">
 			<p class="user__info__username">${username}</p>
 			<p class="user__info__email">${email}</p>
-			<img src="${profile_picture}" alt="Profile Picture">
+			<img src="${profilePicture}" alt="Profile Picture">
 		</div>
 	`;
 	userDiv.innerHTML = userHtml;
