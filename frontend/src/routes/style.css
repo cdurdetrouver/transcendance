@@ -56,6 +56,12 @@ body, html {
 	display: block;
 }
 
+.disabled-link {
+    pointer-events: none;
+    color: grey;
+    cursor: not-allowed;
+}
+
 .button-mode {
     padding: 10px 20px;
     background: transparent;
