@@ -43,14 +43,62 @@
 					<span class="line"></span>
 				</li>
 				<li>
-					<a class="menu" href="#">
-						<span class="icon avatar"> <img src="../../static/assets/header/login.png" alt="icon"></span>
-						<span class="text-header">Login</span>
-					</a>
+					<span class="icon avatar " id="avatar-icon"> 
+						<img src="../../static/assets/header/login.png" alt="icon">
+					</span>
+					<span id="login-popin" class="text-header">
+						<button  class="log-buttons" id="login">Login</button>
+					</span>
 				</li>
 			</div>
 		</ul>
 		<div class="doodle"> <img src="../../static/assets/header/header_doodle.png"></div>
 	</aside>
+
+	<div class="popin">
+		<div class="log-popin">
+			<div id="login-content">
+				<span id="closePopupBtn">&times;</span>
+				<form class="form">
+					<label class="email" for="email"> email:</label>
+					<input type="text" class="custom-input" id="email" name="email" required><br><br>
+					<label for="password">Password:</label>
+					<input type="password" class="custom-input" id="password" name="password" required><br><br>
+					<input class="confirm-button" type="submit" value="Submit"> Or login with:
+					<div id="buttons"> 
+					<a class="login-buttons google_button" id="google-login">Google
+						<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
+					</a>
+					<a class="login-buttons github_button" id="github-login"> GitHub
+						<img src="../routes/assets/logo/github_logo.png" id="github-logo" alt="Github logo">
+					</a>
+					<a class="login-buttons intra_button" id="42-login"> 
+					<img src="../routes/assets/logo/42.png" id="intra-logo" alt="42 logo">
+					</a>
+					</div>
+				</form>
+				<p>Don't have an account? <button class="confirm-button" id="register-button">Register</button></p>
+			</div>
+				<div id="register-content">
+					<h2>Register</h2>
+					<form class="form">
+						<label for="usernameRegister">Username:</label>
+						<input type="text" class="custom-input" id="usernameRegister" name="usernameRegister" required><br><br>
+						<label for="emailRegister">Email:</label>
+						<input type="text" class="custom-input" id="emailRegister" name="emailRegister" required><br><br>
+						<label for="passwordRegister">Password:</label>
+						<input type="password" class="custom-input" id="passwordRegister" name="passwordRegister" required><br><br>
+						
+						<input type="password" name="confirmPasswordRegister" placeholder="Confirm password " required>
+
+						<input type="file" name="profilePicture" id="chk" required>
+						
+						
+						<input class="confirm-button" type="submit" value="Submit">
+					</form>
+				</div>
+		</div>
+	</div>
+
 </header>
  
