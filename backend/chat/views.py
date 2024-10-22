@@ -28,7 +28,13 @@ from drf_yasg.utils import swagger_auto_schema
                     items=RoomSerializer.room_swagger
 				)
 			}
-		)
+		),
+        404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'no room found'
+            }
+        ),
 	},
 	operation_description="Retrieve a list of chat for user"
 )
@@ -205,6 +211,72 @@ def delete_user(user, room):
         room.delete()
     return JsonResponse({"User status": "Deleted from {} successfully.".format(room.name)}, status=status.HTTP_200_OK)
 
+@swagger_auto_schema(
+	method='post',
+    request_body = openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'room_id': openapi.Schema(type=openapi.TYPE_STRING, description='Id of the room'),
+        }
+    ),
+    responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				"User status": "Added in room_name successfully"
+			}
+		),
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				"User status": "Deleted in room_name successfully"
+			}
+		),
+        400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'request no correctly format'
+            }
+        ),
+        404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				"error": "room not found"
+            }
+        ),
+        404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				"error": "user not found"
+            }
+        ),
+        403: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'user need to be admin of the room'
+            }
+        ),
+        403: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'user blocked you.'
+            }
+        ),
+        303: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'Already in the room_name'
+            }
+        ),
+        303: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'Already sent an invitation for user_name'
+            }
+        ),
+	},
+	operation_description="Retrieve a list of invite of user"
+)
 @api_view(['POST', 'DELETE'])
 def user(request):
     user = request.user
@@ -226,6 +298,40 @@ def user(request):
     elif (request.method == 'DELETE'):
         return delete_user(user_data, room)
 
+@swagger_auto_schema(
+	method='post',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+                "User status": "Your are admin of room_name",
+				'room': openapi.Schema(
+                    type=RoomSerializer.room_swagger
+				)
+			}
+		),
+        404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'no room found'
+            }
+        ),
+        400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'request no correctly format'
+            }
+        ),
+        400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'user need to be admin of the room'
+            }
+        ),
+	},
+	operation_description="IS admin ?"
+)
 @api_view(['POST'])
 def is_admin(request):
     user = request.user
@@ -277,6 +383,34 @@ def delete_invite(user, room_id, value):
         return JsonResponse({'invitation': 'refused'}, status=status.HTTP_200_OK)
     return JsonResponse({'error': 'wrong format for value.'}, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'invitation': openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=RoomSerializer.room_swagger
+				)
+			}
+		),
+        400: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': 'request no correctly format'
+            }
+        ),
+        404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				"error": "no invitations"
+            }
+        ),
+	},
+	operation_description="Retrieve a list of invite of user"
+)
 @api_view(['GET', 'POST', 'DELETE'])
 def invite(request):
     user = request.user
