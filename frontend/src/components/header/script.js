@@ -2,6 +2,7 @@ import { get_user} from '../../components/user/script.js';
 import config from '../../env/config.js';
 
 
+
 setTimeout(function() {
     let headerElement = document.querySelector('header'); 
     
