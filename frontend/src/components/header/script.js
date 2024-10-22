@@ -39,7 +39,6 @@ loginButton.addEventListener("click", function() {
 });
 
 
-
 closeButton.addEventListener("click", function() {
     popin.style.display = "none";
 });
