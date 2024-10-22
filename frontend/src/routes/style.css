@@ -110,6 +110,7 @@ body, html {
 }
 
 #select-mode {
+
     position: absolute;
     top: 12%;
     left: 33%;

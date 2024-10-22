@@ -11,7 +11,7 @@ ButtonGoogle.href = `https://accounts.google.com/o/oauth2/auth?client_id=${confi
 const ButtonGithub = document.querySelector('.github_button');
 ButtonGithub.href = `https://github.com/login/oauth/authorize?client_id=${config.github_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=github')}&scope=user`;
 const ButtonIntra = document.querySelector('.intra_button');
-	ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login')}&response_type=code`;
+ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login')}&response_type=code`;
 
 const loginPopin = document.getElementById("login-popin");
 const logoutPopin = document.getElementById("logout-popin");
@@ -38,7 +38,7 @@ if (userCookie) {
 	logoutPopin.style.display = "flex";
 	logoutPopin.className = "log-buttons";
 	logoutPopin.fontFamily = "isaac";
-	logoutPopin.innerHTML += "LOGGED AS ${user.username}";
+	logoutPopin.innerHTML += `LOGGED AS ${user.username}`;
 	enableAccount();
 }
 

@@ -50,7 +50,7 @@ async function handleFormSubmit(event) {
 	}
 }
 
-async function handleDeleteAccount() {
+export async function handleDeleteAccount() {
 	if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
 		try {
 			await delete_user();

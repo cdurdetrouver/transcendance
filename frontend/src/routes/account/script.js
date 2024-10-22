@@ -2,6 +2,7 @@ import { customalert } from '../../components/alert/script.js';
 import config from '../../env/config.js';
 import { get_user } from '../../components/user/script.js';
 import { router } from '../../app.js';
+import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 
 async function get_games(user_id) {
 	const response = await fetch(config.backendUrl + '/user/games/' + user_id, {
@@ -35,11 +36,27 @@ function addGame(player1, player1_score, player2, player2_score) {
 }
 
 function setPersonalUser(user) {
-	const containerDiv = document.querySelector('.container');
-	const userDiv = document.createElement('div');
 	const username = user.username;
 	const email = user.email;
 	const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
+	
+	var userInfos = document.getElementById("user-infos");
+
+	if (userInfos) {
+		console.log("userinfos exist");
+
+		var image = document.createElement("img");
+	
+		image.src = profilePicture;//img par defaut. puis changer comme dans le header
+		image.alt = "Profile Picture";
+		image.style.width = "100%";
+		image.style.height = "100%";
+	
+		userInfos.appendChild(image);
+	}
+	else {
+		console.log("user infos does not exist");
+	}
 	// const userHtml = 
 	// `
 	// 	<div class="user__info">
@@ -54,11 +71,6 @@ function setPersonalUser(user) {
 	// `
 	// ;
 	// userDiv.innerHTML = userHtml;
-	if (containerDiv.firstChild) {
-		containerDiv.insertBefore(userDiv, containerDiv.firstChild);
-	} else {
-		containerDiv.appendChild(userDiv);
-	}
 }
 
 function setUser(user) {
@@ -118,3 +130,23 @@ export async function initComponent() {
 
 export async function cleanupComponent() {
 }
+
+const editButton = document.getElementById("edit-button");
+const deleteButton = document.getElementById("delete-button");
+const confirmationPopin = document.getElementById("confirmation-popin");
+
+editButton.addEventListener("click", function() {
+	console.log("edit button");
+	
+});
+
+deleteButton.addEventListener("click", function() {
+	console.log("delete button");
+	// handleDeleteAccount();
+	confirmationPopin.style.display = "flex";
+	//faire cliquer sur oui ou non
+
+});
+
+
+
