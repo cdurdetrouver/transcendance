@@ -558,7 +558,7 @@ async function mp_somebody() {
 export async function initComponent(params) {
     user = await get_user();
     if (!user)
-        router.navigate('/login?return=/chat');
+        router.navigate('/login');
     print_chats();
     print_invitations();
     const create_room_btn = document.querySelector('.li-create-room-btn');
