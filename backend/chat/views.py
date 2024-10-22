@@ -129,19 +129,19 @@ def info_room(room):
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
-            'type': "mp",
+            'type': openapi.Schema(type=openapi.TYPE_STRING, description="mp"),
             'recepient_id': openapi.Schema(
                     type=openapi.TYPE_INTEGER, 
                     description='Id of target user to create an mp'),
             'room': RoomSerializer.room_swagger
         },
-        description="This method takes room or type and recepient_id"
+        description="This method takes  ( room ) or  ( type and recepient_id )"
     ),
     responses={
         200: openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'room_statuts': 'created',
+                'room_statuts': openapi.Schema(type=openapi.TYPE_STRING, description='created'),
             }
         ),
         303: 'already exists',
@@ -155,17 +155,13 @@ def info_room(room):
 )
 @swagger_auto_schema(
 	method='put',
-	request_body={
-        'room': RoomSerializer.room_swagger,
-    },
+	request_body=RoomSerializer,
 	responses={
 		200: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-                'room_status': 'updated',
-				'room': openapi.Schema(
-                    type=RoomSerializer.room_swagger
-				)
+                'room_status': openapi.Schema(type=openapi.TYPE_STRING, description='updated'),
+				'room': RoomSerializer.room_swagger
 			}
 		),
         400: "room serializer errors",
@@ -177,14 +173,12 @@ def info_room(room):
 )
 @swagger_auto_schema(
 	method='delete',
-	request_body={
-        'room': RoomSerializer.room_swagger,
-    },
+	request_body= None,
 	responses={
 		200: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-                'room_status': 'deleted successfully',
+                'room_status': openapi.Schema(type=openapi.TYPE_STRING, description='deleted successfully'),
 			}
 		),
         400: "request no correctly format",
@@ -328,15 +322,13 @@ def user(request):
 		200: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-                "User status": "Your are admin of room_name",
-				'room': openapi.Schema(
-                    type=RoomSerializer.room_swagger
-				)
+                "User status": openapi.Schema(type=openapi.TYPE_STRING, description="Your are admin of room_name"),
+				'room': RoomSerializer.room_swagger
 			}
 		),
-        404: 'no room found',
         400: 'request no correctly format',
-        400: 'user need to be admin of the room',
+        403: "user isn't admin of the room",
+        404: 'no room found',
 	},
 	operation_description="IS admin ?"
 )
@@ -350,7 +342,7 @@ def is_admin(request, room_id):
     if not room:
         return JsonResponse({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     if (check_admin(user, room) == False):
-        return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
+        return JsonResponse({'error': "user isn't admin of the room"}, status=status.HTTP_403_FORBIDDEN)
     else:
         room_s = RoomSerializer(room)
         return JsonResponse({"User status": "Your are admin of {}".format(room.name), 'room' : room_s.data}, status=status.HTTP_200_OK)
