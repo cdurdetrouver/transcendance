@@ -15,7 +15,6 @@ import string
 import random
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from cloudinit.sources.DataSourceLXD import description
 
 @swagger_auto_schema(
 	method='get',
@@ -30,12 +29,7 @@ from cloudinit.sources.DataSourceLXD import description
 				)
 			}
 		),
-        404: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'no room found'
-            }
-        ),
+        404: 'no room found',
 	},
 	operation_description="Retrieve a list of chat for user"
 )
@@ -123,7 +117,8 @@ def update_room(data, room):
 
 def delete_room(room):
     room.delete()
-    return JsonResponse({"Room status": "{} deleted successfully.".format(room.name)}, status=status.HTTP_200_OK)
+    room.save()
+    return JsonResponse({"room_statuts": "deleted successfully"}, status=status.HTTP_200_OK)
 
 def info_room(room):
     room_s = RoomSerializer(room)
@@ -146,9 +141,7 @@ def info_room(room):
         200: openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'room_statuts': openapi.Schema(
-                    type=openapi.TYPE_STRING, 
-                    description='Status of room creation'),
+                'room_statuts': 'created',
             }
         ),
         303: 'already exists',
@@ -169,16 +162,51 @@ def info_room(room):
 		200: openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
-				'rooms': openapi.Schema(
-                    type=openapi.TYPE_ARRAY,
-                    items=RoomSerializer.room_swagger
+                'room_status': 'updated',
+				'room': openapi.Schema(
+                    type=RoomSerializer.room_swagger
 				)
 			}
 		),
         400: "room serializer errors",
+        400: "request no correctly format",
+        403: "user need to be admin of the room",
         404: 'no room found',
 	},
 	operation_description="Update a room"
+)
+@swagger_auto_schema(
+	method='delete',
+	request_body={
+        'room': RoomSerializer.room_swagger,
+    },
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+                'room_status': 'deleted successfully',
+			}
+		),
+        400: "request no correctly format",
+        403: "user need to be admin of the room",
+        404: 'no room found',
+	},
+	operation_description="Delete a room"
+)
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+                'room': RoomSerializer.room_swagger,
+			}
+		),
+        400: "request no correctly format",
+        404: 'no room found',
+	},
+	operation_description="Get the data from a room"
 )
 @api_view(['POST', 'PUT', 'DELETE', 'GET'])
 def room(request, room_id):
@@ -187,12 +215,12 @@ def room(request, room_id):
         return JsonResponse({'error': "request no correctly format"}, status=status.HTTP_400_BAD_REQUEST)
     room = Room.objects.filter(id=room_id).all().first()
 
-    if (request.method == 'GET'):
-        return info_room(room)
     if (request.method == 'POST'):
         return create_room(room, user, request.data)
     if (not room):
         return JsonResponse({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+    if (request.method == 'GET'):
+        return info_room(room)
     if (check_admin(user, room) == False):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
     elif (request.method == 'PUT'):

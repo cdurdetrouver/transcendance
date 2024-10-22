@@ -255,9 +255,10 @@ async function chat_delete(event) {
 	});
     const data = await response.json();
     if (response.status === 200) {
+        console.log(`Chat ${room.id} deleted successfully.`);
 	    const chat_delete = document.querySelector('.chat-box');
         chat_delete.innerHTML = `
-        <t1>Chat ${room.id} deleted successfully.</t1>
+        <t1>Chat ${room.name} deleted successfully.</t1>
         <input id="chat-conf-close" type="button" value="Close chat">
         `;
         document.querySelector('#chat-conf-close').addEventListener('click', chat_close);
@@ -303,7 +304,7 @@ async function open_conf() {
 }
 
 async function check_admin() {
-    const response = await fetch(config.backendUrl + "/chat/admin/", {
+    const response = await fetch(config.backendUrl + "/chat/admin/" + room.id, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
