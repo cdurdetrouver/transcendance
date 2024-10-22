@@ -212,6 +212,26 @@ def delete_user(user, room):
     return JsonResponse({"User status": "Deleted from {} successfully.".format(room.name)}, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(
+	method='delete',
+    request_body = openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'room_id': openapi.Schema(type=openapi.TYPE_STRING, description='Id of the room'),
+        }
+    ),
+    responses={
+		200: "Deleted in room_name successfully",
+        400: 'request no correctly format',
+        404: "room not found",
+        404: "user not found",
+        403: 'user need to be admin of the room',
+        403: 'user blocked you.',
+        303: 'Already in the room_name',
+        303: 'Already sent an invitation for user_name',
+	},
+	operation_description="Delete a new user in room"
+)
+@swagger_auto_schema(
 	method='post',
     request_body = openapi.Schema(
         type=openapi.TYPE_OBJECT,
@@ -220,62 +240,16 @@ def delete_user(user, room):
         }
     ),
     responses={
-		200: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				"User status": "Added in room_name successfully"
-			}
-		),
-		200: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				"User status": "Deleted in room_name successfully"
-			}
-		),
-        400: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'request no correctly format'
-            }
-        ),
-        404: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				"error": "room not found"
-            }
-        ),
-        404: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				"error": "user not found"
-            }
-        ),
-        403: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'user need to be admin of the room'
-            }
-        ),
-        403: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'user blocked you.'
-            }
-        ),
-        303: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'Already in the room_name'
-            }
-        ),
-        303: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'Already sent an invitation for user_name'
-            }
-        ),
+		200: "Added in room_name successfully",
+        400: 'request no correctly format',
+        404: "room not found",
+        404: "user not found",
+        403: 'user need to be admin of the room',
+        403: 'user blocked you.',
+        303: 'Already in the room_name',
+        303: 'Already sent an invitation for user_name',
 	},
-	operation_description="Retrieve a list of invite of user"
+	operation_description="Post a new user in room"
 )
 @api_view(['POST', 'DELETE'])
 def user(request):
@@ -311,24 +285,9 @@ def user(request):
 				)
 			}
 		),
-        404: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'no room found'
-            }
-        ),
-        400: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'request no correctly format'
-            }
-        ),
-        400: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'user need to be admin of the room'
-            }
-        ),
+        404: 'no room found',
+        400: 'request no correctly format',
+        400: 'user need to be admin of the room',
 	},
 	operation_description="IS admin ?"
 )
@@ -396,22 +355,39 @@ def delete_invite(user, room_id, value):
 				)
 			}
 		),
-        400: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				'error': 'request no correctly format'
-            }
-        ),
-        404: openapi.Schema(
-			type=openapi.TYPE_OBJECT,
-			properties={
-				"error": "no invitations"
-            }
-        ),
+        400: 'request no correctly format',
+        400: 'wrong format for value.',
+        404: "no invitations",
 	},
 	operation_description="Retrieve a list of invite of user"
 )
-@api_view(['GET', 'POST', 'DELETE'])
+@swagger_auto_schema(
+	method='delete',
+	request_body=openapi.Schema(
+		type=openapi.TYPE_OBJECT,
+		properties={
+			'room_id': openapi.Schema(type=openapi.TYPE_STRING, description='room_id of the selected room'),
+			'value': openapi.Schema(type=openapi.TYPE_STRING, description='TRUE or FALSE'),
+		},
+		required=['room_id', 'value']
+	),
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'invitation': openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=RoomSerializer.room_swagger
+				)
+			}
+		),
+        400 :'request no correctly format',
+        403: "no invitations",
+        404: "no invitation",
+	},
+	operation_description="Accept or decline an invite of user for a room"
+)
+@api_view(['GET', 'DELETE'])
 def invite(request):
     user = request.user
 
