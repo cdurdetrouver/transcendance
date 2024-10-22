@@ -304,15 +304,11 @@ async function open_conf() {
 
 async function check_admin() {
     const response = await fetch(config.backendUrl + "/chat/admin/", {
-        method: "POST",
+        method: "GET",
         headers: {
             'Content-Type': 'application/json',
-            
 		},
 		credentials: "include",
-        body: JSON.stringify({
-            "room_id" : room.id,
-        })
 	});
     const data = await response.json();
     if (response.status === 200) {
