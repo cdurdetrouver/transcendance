@@ -260,6 +260,16 @@ a:hover {
 	margin-bottom: 20px;
 }
 
+#github-logo {
+    width: 20%;
+}
+
+#buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
 #intra-logo {
     width: 20%;
 }
@@ -273,6 +283,23 @@ a:hover {
 #local:disabled {
     cursor: not-allowed; /*if login cursor: allowed */
     border: none;
+}
+
+#local:disabled {
+    cursor: not-allowed; /*if login cursor: allowed */
+    border: none;
+}
+
+.login-buttons:hover {
+    font-size: 1rem;
+}
+
+#register-content {
+    display: none;
+    flex-direction: column;
+    align-items:  center;
+    padding: 95px 110px 0px 100px;
+    transform: rotate(5deg);
 }
 
 #local:disabled {
