@@ -6,6 +6,8 @@ import { router } from '../../app.js';
 
 
 // plus de message de welcome ou de leave
+//remove all comments
+//remove all consol.logs
 
 //for frontend team:
 //pong link redirect to their link sent
@@ -69,7 +71,7 @@ async function send_create_room(event) {
     const form_data = new FormData(form);
     console.log(form_data);
 
-    const response = await fetch(config.backendUrl + "/chat/room/" + 42, {
+    const response = await fetch(config.backendUrl + "/chat/room/" + 0, {
         method: "POST",
         body: form_data,
 		credentials: "include",
@@ -327,7 +329,6 @@ async function send_pong_link(params) {
         'type': "invitation",
     }));}
 
-//load html in chat box and open a connection with the backend to start the chat
 async function open_chat(room_selected) {
     if (chatSocket) {
         chatSocket.close();
@@ -521,7 +522,7 @@ async function print_invitations() {
 async function mp_somebody(user_id) {
 
     console.log("mp function");
-    const response = await fetch(config.backendUrl + "/chat/room/" + 42, {
+    const response = await fetch(config.backendUrl + "/chat/room/" + 0, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

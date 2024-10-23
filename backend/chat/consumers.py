@@ -4,12 +4,11 @@ from channels.db import database_sync_to_async
 from .serializers import MessageSerializer
 from .models import Message, Room, User
 from django.conf import settings
-from rest_framework import exceptions
-from rest_framework.response import Response
 from asgiref.sync import sync_to_async
 from user.utils import get_user_by_token
 from user.serializers import UserSerializer
 from .data_handling import get_room, in_room, add_in_room, get_last_10_messages, save_message, is_blocked
+from channels.layers import get_channel_layer
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
@@ -59,6 +58,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.room_group_name = await sync_to_async(lambda: self.room.group_name)()
+        get_channel_layer()
         if (await in_room(self.room, self.user) == False):
             return await self.error("User is not register in room: {}".format(
                 self.room.name))
@@ -106,7 +106,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event["message"]
         # Send message to WebSocket
-        if await is_blocked(self.user, message['author']['id']):
+        print(message)
+        if message['author'] and await is_blocked(self.user, message['author']['id']):
             message["content"] = "undefined"
         await self.send(text_data=json.dumps({"type" : "chat", "message": message}))
 

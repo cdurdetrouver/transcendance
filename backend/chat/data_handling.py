@@ -2,6 +2,7 @@ from .models import Message, Room, User
 from django.conf import settings
 import json
 from channels.db import database_sync_to_async
+from channels.layers import get_channel_layer
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
@@ -11,7 +12,7 @@ from rest_framework import exceptions
 import jwt
 from django.utils import timezone
 from user.utils import get_from_cookies
-from asgiref.sync import sync_to_async
+from asgiref.sync import sync_to_async, async_to_sync
 
 @database_sync_to_async
 def get_user(user_id):
@@ -23,6 +24,14 @@ def is_blocked(user, author_id):
         return True
     return False
 
+@async_to_sync
+async def send_chat(room, announce):
+    channel_layer = get_channel_layer()
+    await channel_layer.group_send(
+        room.group_name,
+        {"type": "announce.message", "announce": announce},
+    )
+    await save_announce(room, announce)
 
 @database_sync_to_async
 def get_user_by_name(username):
@@ -72,7 +81,7 @@ def get_last_10_messages(room, nb_refresh, starts, user):
 
     mess_s = MessageSerializer(last_mess, many=True)
     for mess in mess_s.data:
-        if user.blocked_users.filter(id=mess["author"]["id"]).all().first():
+        if mess['author'] and user.blocked_users.filter(id=mess["author"]["id"]).all().first():
             mess["content"] = "undefined"
     return mess_s.data,start, end_history
 
@@ -84,3 +93,12 @@ def save_message(room, text_data_json, user):
     room.save()
     message.save()
     return message
+
+@database_sync_to_async
+def save_announce(room, announce):
+    content = announce
+    mess = Message.objects.create(author=None, message_type="announce", content=content)
+    room.messages.add(mess)
+    room.save()
+    mess.save()
+    return mess

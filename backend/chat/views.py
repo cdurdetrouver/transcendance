@@ -1,15 +1,11 @@
 from django.http import HttpResponse, QueryDict, JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework import status
-from django.views.decorators.csrf import csrf_exempt
-from twisted.application.runner.test.test_pidfile import ifPlatformSupported
 from autobahn.wamp import request
 from .serializers import RoomSerializer
 from user.serializers import UserSerializer
-from django.shortcuts import get_object_or_404
-from .data_handling import remove_from_room, get_user_by_name, get_room
+from .data_handling import send_chat
 from .models import Room, User
-from asgiref.sync import async_to_sync
 import json
 import string
 import random
@@ -71,9 +67,7 @@ def mp_exists(user_1, user_2):
         return None, True
     return room_name, False
 
-def create_room(room, user, data):
-    if room:
-        return JsonResponse({'error': 'already exists'}, status=status.HTTP_303_SEE_OTHER)
+def create_room(user, data):
     if 'type' in data:
         if data['type'] == "mp" and isinstance(data["recepient_id"], int) == True:
             recepient, succes = get_user_mp(data["recepient_id"])
@@ -205,12 +199,14 @@ def info_room(room):
 @api_view(['POST', 'PUT', 'DELETE', 'GET'])
 def room(request, room_id):
     user = request.user
+    
+    if (request.method == 'POST' and room_id == 0):
+        return create_room(user, request.data)
+    
     if not room_id:
         return JsonResponse({'error': "request no correctly format"}, status=status.HTTP_400_BAD_REQUEST)
     room = Room.objects.filter(id=room_id).all().first()
 
-    if (request.method == 'POST'):
-        return create_room(room, user, request.data)
     if (not room):
         return JsonResponse({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
     if (request.method == 'GET'):
@@ -376,6 +372,7 @@ def delete_invite(user, room_id, value):
     if value == "TRUE":
         room.participants.add(user)
         room.save()
+        send_chat(room, user.username + " joined the chat")
         return JsonResponse({'invitation': 'accepted'}, status=status.HTTP_200_OK)
     elif value == "FALSE":
         return JsonResponse({'invitation': 'refused'}, status=status.HTTP_200_OK)
