@@ -19,29 +19,35 @@
 
 		<div class="popin">
 			<div class="log-popin">
+				<div class="title-login"> LOGIN</div>
+				<span id="closePopupBtn">&times;</span>
 				<div id="login-content">
-					<div class="title-login"> Login</div>
-					<span id="closePopupBtn">&times;</span>
-					<form class="form">
-						<label class="email" for="email"> email:</label>
-						<input type="text" class="custom-input" id="email" name="email" required><br><br>
-						<label for="password">Password:</label>
-						<input type="password" class="custom-input" id="password" name="password" required><br><br>
-						<input class="confirm-button" type="submit" value="Submit">
-						<div>Or login with:</div>
-						<div id="buttons"> 
-						<a class="login-buttons google_button" id="google-login">Google
-							<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
-						</a>
-						<a class="login-buttons github_button" id="github-login">GitHub
-							<img src="../routes/assets/logo/github_logo.png" id="github-logo" alt="Github logo">
-						</a>
-						<a class="login-buttons intra_button" id="42-login">Intra
-						<img src="../routes/assets/logo/42.png" id="intra-logo" alt="42 logo">
-						</a>
-						</div>
-					</form>
-					<div class="no-account">Don't have an account? <button class="confirm-button" id="register-button">Register</button></div>
+					<div class="defaut-login">
+						<form class="form">
+							<label class="email" for="email"> E-mail</label>
+							<input type="text" class="custom-input" id="email" name="email" required><br><br>
+							<label class="email" for="password">Password:</label>
+							<input type="password" class="custom-input" id="password" name="password" required><br><br>
+							<input class="confirm-button" type="submit" value="SUBMIT">
+						</form>
+						<div class="no-account">No account ?! <button class="confirm-button" id="register-button">REGISTER</button></div>
+					</div>
+					<div class = "separator"> </div>
+					<div class="app-login">
+						<form class="form">
+							<div id="buttons"> 
+								<a class="login-buttons google_button" id="google-login" data-ling>Google
+									<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
+								</a>
+								<a class="login-buttons github_button" id="github-login" data-ling>GitHub
+									<img src="../routes/assets/logo/github_logo.png" id="github-logo" alt="Github logo">
+								</a>
+								<a class="login-buttons intra_button" id="42-login" data-ling>Intra
+								<img src="../routes/assets/logo/42.png" id="intra-logo" alt="42 logo">
+								</a>
+							</div>
+						</form>
+					</div>
 				</div>
 					<div id="register-content">
 						<h2>Register</h2>
