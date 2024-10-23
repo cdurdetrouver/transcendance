@@ -367,8 +367,11 @@ async function open_chat(room_selected) {
     {
         const data = JSON.parse(e.data);
         console.log(data);
-        if (data.type == 'announce')
-            document.querySelector('#chat-log').value += (data.content + '\n');
+        if (data.type == 'announce') {
+            const chat_log = document.querySelector('#chat-log')
+            if (chat_log)
+                chat_log.value += (data.content + '\n');
+        }
         else if (data.type == 'chat')
             document.querySelector('#chat-log').value += (data.message.content + '\n');
         else if (data.type == 'list-chat') {
