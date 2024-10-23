@@ -5,9 +5,6 @@ import { router } from '../../app.js';
 //show error si photo n'est pas au bon format
 
 
-//if chat delete :
-//  invit ? p'tit undefined qui traine quand on spam
-//  chat socket open ?
 // plus de message de welcome ou de leave
 
 //for frontend team:
@@ -358,13 +355,11 @@ async function open_chat(room_selected) {
             <input id="chat-message-pong" type="button" value="Send pong link">
             <input id="chat-message-close" type="button" value="close chat">
             <input id="chat-message-leave" type="button" value="leave chat">
-            <input id="chat-message-test" type="button" value="test">
 		</li>
     `;
     document.querySelector('#chat-conf-btn').addEventListener('click', check_admin);
     document.querySelector('#chat-message-pong').addEventListener('click', send_pong_link);
     document.querySelector('#chat-message-leave').addEventListener('click', leave_chat);
-    document.querySelector('#chat-message-test').addEventListener('click', mp_somebody);
 
     chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + room.id + "/");
     chatSocket.onmessage = function(e)
@@ -523,9 +518,9 @@ async function print_invitations() {
         }
 }
 
-async function mp_somebody() {
+async function mp_somebody(user_id) {
 
-    const user2_id = 2;
+    console.log("mp function");
     const response = await fetch(config.backendUrl + "/chat/room/" + 42, {
         method: "POST",
         headers: {
@@ -533,7 +528,7 @@ async function mp_somebody() {
 		},
         body: JSON.stringify({
             "type": "mp",
-            "recepient_id" : user2_id,
+            "recepient_id" : user_id,
         }),
 		credentials: "include",
 	});

@@ -54,10 +54,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if (await self.check_user() == -1):
             return
         self.room = await get_room(self.room_group_id)
-        self.room_group_name = await sync_to_async(lambda: self.room.group_name)()
         if (not self.room):
             await self.disconnect(404)
+            await self.close()
             return
+        self.room_group_name = await sync_to_async(lambda: self.room.group_name)()
         if (await in_room(self.room, self.user) == False):
             return await self.error("User is not register in room: {}".format(
                 self.room.name))
