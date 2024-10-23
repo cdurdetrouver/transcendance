@@ -30,11 +30,8 @@ def get_user_by_name(username):
 
 @database_sync_to_async
 def get_room(room_id):
-    try:
-        room = get_object_or_404(Room, id=room_id)
-        return room
-    except:
-        return None
+    room = Room.objects.filter(id=room_id).all().first()
+    return room
 
 @database_sync_to_async
 def in_room(room, user):

@@ -6,8 +6,9 @@ import { router } from '../../app.js';
 
 
 //if chat delete :
-//  invit ?
-//  chat socket open ? 
+//  invit ? p'tit undefined qui traine quand on spam
+//  chat socket open ?
+// plus de message de welcome ou de leave
 
 //for frontend team:
 //pong link redirect to their link sent

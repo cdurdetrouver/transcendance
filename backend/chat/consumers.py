@@ -74,12 +74,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def chat_invitation(self, event):
         self.game_invit = True
-        await self.send(text_data=json.dumps({"type" : "invitation", "match_name": self.channel_name}))
+        await self.send(text_data=json.dumps({"type": "invitation", "match_name": self.channel_name}))
+
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
 
         # Send message to room group
+        if (await get_room(self.room_group_id) == None):
+            await self.send(text_data=json.dumps({"type": "announce", "content": "the chat has been deleted"}))
+            self.disconnect(403)
+            await self.close(4003)
+            return
         if (text_data_json["type"] == "refresh_mess"):
             await self.refresh_last_mess()
         elif text_data_json["type"] == "chat":
