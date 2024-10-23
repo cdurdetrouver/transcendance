@@ -38,9 +38,7 @@ loginButton.addEventListener("click", function() {
     popin.style.display = "flex";
 });
 
-avatarIcon.addEventListener("click", function() {
-    popin.style.display = "flex";
-});
+
 
 closeButton.addEventListener("click", function() {
     popin.style.display = "none";
@@ -137,6 +135,12 @@ export async function initComponent() {
 	const user = await get_user();
 
 	const usernameText = document.querySelector('.bottom .text-header');
+
+	avatarIcon.addEventListener("click", function() {
+		if (user)
+			return;
+		popin.style.display = "flex";
+	});
 
 	if (user)
 	{
