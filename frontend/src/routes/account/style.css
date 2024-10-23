@@ -1,49 +1,76 @@
 body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    background-color: #CAC5BD
+    /*width: 100%;*/
+    /*height: 100%;*/
+    background-image: url('../assets/images/utils/background_account.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /*background-color: #D2C7C3;*/
 
 }
 
-@font-face {
-	font-family: isaac;
-	src: url(../routes/assets/font/IsaacGame.ttf);
-}
 #page {
     position: relative;
 }
-#container {
+
+.background {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    left: 50%;
+    /*background-image: url('../assets/images/utils/profile_sheet.png');*/
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    transform: translateX(-50%);
     display: flex;
-    align-items: center;
     justify-content: center;
-    background-color:#CAC5BD
+    align-items: center;
+    flex-direction: column;
 }
 
-#background-image{
-	height: 100%;
-    width: 100%;
+#sheet {
+    /*position: absolute;*/
+    background-color: #4CAF50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sheet-image {
+
+    width: 50vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #main-page {
     position: absolute;
-    /* background-color: rgb(245, 0, 253); */
-    top:0%;
-    left:25%;
-    width: 48%;
-    height: 100%;
+    background-color: rgb(245, 0, 253);
+    left:29%;
+    top:6%;
+    width: 32vw;
+    height: 78vh;
     transform: rotate(7deg);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 100%;
+    max-height: 100%;
+}
 
+#container {
+    background-color: #4CAF50;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    /*background-color: #D2C7C3;*/
 }
 
 #user-infos{
@@ -53,46 +80,61 @@ body, html {
     left: 10%;
     width: 20%;
     height: 20%;
-    transform: rotate(4deg);    
+    transform: rotate(1deg);
 }
 
-.image-buttons {
-    display: flex;
-    width:100%;
-}
+ .buttons {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     padding: 1rem;
+     /*background-color: red;*/
+ }
 
-/* .buttons { */
-    /* display: inline-flexbox; */
-    /* max-width: 60%; */
-    /* max-height: 60%; */
-/* } */
-
-/* #options {
+#options {
     position: absolute;
     background-color: blue;
-    top: 73%;
-    left: 10%;
-    width: 80%;
-    height: 23%;
-    transform: rotate(4deg);
-} */
+    top: 75%;
+    left:10%;
+    width: 25vw;
+    height: 15vh;
+    transform: rotate(1deg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+/*#edit-button-image {*/
+/*    width: 10vw;*/
+/*    height: 10vh;*/
+/*}*/
+
+/*#delete-button-image {*/
+/*    top: 73%;*/
+/*    left: 20%;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*}*/
 
 #edit-button {
+    background-color: red;
     position: absolute;
-    top: 73%;
-    left: 20%;
+    /*top: 73%;*/
+    /*left: 20%;*/
     width: 58%;
     height: 8%;
-    transform: rotate(4deg);
+    transform: rotate(1deg);
 }
 
 #delete-button {
+    background-color: red;
     position: absolute;
-    top: 85%;
-    left: 20%;
+    /*top: 80%;*/
+    /*left: 10%;*/
     width: 56%;
     height: 8%;
-    transform: rotate(4deg);
+    transform: rotate(1deg);
 }
 
 #confirmation-image {
@@ -104,8 +146,6 @@ body, html {
 #confirmation-popin {
     position: absolute;
     display: none;
-    top: 0%;
-    left: 0%;
     align-items: center;
     justify-content: center;
     width: 100%;
