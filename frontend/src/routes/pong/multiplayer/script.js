@@ -41,8 +41,6 @@ function handleKeydown(e) {
 	if (!game_started)
 		return;
 
-	console.log(e.key);
-
 	if (e.key === 'ArrowLeft') {
 		player3moveleft = true;
 	} else if (e.key === 'ArrowRight') {
@@ -71,8 +69,6 @@ function handleKeydown(e) {
 function handleKeyup(e) {
 	if (!game_started)
 		return;
-
-	console.log(e.key);
 
 	if (e.key === 'ArrowLeft') {
 		player3moveleft = false;
@@ -128,41 +124,65 @@ function ballReset() {
 
 	if (randomNumber1 === 0) {
 		ballspeedX = 4;
-		ballspeedY = 0;
+		ballspeedY = 0.1;
 	}
 	if (randomNumber1 === 1) {
 		ballspeedX = -4;
-		ballspeedY = 0;
+		ballspeedY = 0.1;
 	}
 	if (randomNumber1 === 2) {
-		ballspeedX = 0;
+		ballspeedX = 0.1;
 		ballspeedY = 4;
 	}
 	if (randomNumber1 === 3) {
-		ballspeedX = 0;
+		ballspeedX = 0.1;
 		ballspeedY = -4;
 	}
-	lastTouch = null;
 }
 
 function updateScore() {
-	if (lastTouch === null)
+	if (lastTouch == null)
 		return;
 
-	if (lastTouch === player1) {
+	if (lastTouch == player1) {
 		player1Score++;
-	} else if (lastTouch === player2) {
+	} else if (lastTouch == player2) {
 		player2Score++;
-	} else if (lastTouch === player3) {
+	} else if (lastTouch == player3) {
 		player3Score++;
-	} else if (lastTouch === player4) {
+	} else if (lastTouch == player4) {
 		player4Score++;
 	}
 
 	if (player1Score >= 5 || player2Score >= 5 || player3Score >= 5 || player4Score >= 5) {
 		game_ended = true;
-		customalert('Game Over', lastTouch + ' wins!', true);
+		customalert('Game Over', lastTouch + ' wins!');
 	}
+
+	lastTouch = null;
+}
+
+function RectCircleColliding(circle_x, circle_y, rect_x, rect_y, rect_width, rect_height) {
+	var distX = Math.abs(circle_x - rect_x - rect_width / 2);
+	var distY = Math.abs(circle_y - rect_y - rect_height / 2);
+
+	if (distX > (rect_width / 2 + ballRadius)) {
+		return false;
+	}
+	if (distY > (rect_height / 2 + ballRadius)) {
+		return false;
+	}
+	
+	if (distX <= (rect_width / 2)) {
+		return true;
+	}
+	if (distY <= (rect_height / 2)) {
+		return true;
+	}
+
+	var dx = distX - rect_width / 2;
+	var dy = distY - rect_height / 2;
+	return (dx * dx + dy * dy <= (ballRadius * ballRadius));
 }
 
 function UpdateGame() {
@@ -216,6 +236,54 @@ function UpdateGame() {
 		ballReset();
 		updateScore();
 	}
+
+	if (RectCircleColliding(ballX, ballY, 5, paddle1Y, paddleWidth, paddleHeight)) {
+		ballspeedX = -ballspeedX;
+
+		let paddleCenterY = paddle1Y + paddleHeight / 2;
+		let impactY = ballY - paddleCenterY;
+		let impactRatio = impactY / (paddleHeight / 2);
+
+		ballspeedY = impactRatio * 4; 
+
+		lastTouch = player1;
+	}
+
+    if (RectCircleColliding(ballX, ballY, paddle2X, 5, paddleHeight, paddleWidth)) {
+		ballspeedY = -ballspeedY;
+
+		let paddleCenterX = paddle2X + paddleHeight / 2;
+		let impactX = ballX - paddleCenterX;
+		let impactRatio = impactX / (paddleHeight / 2);
+
+		ballspeedX = impactRatio * 4; 
+
+		lastTouch = player2;
+	}
+
+    if (RectCircleColliding(ballX, ballY, paddle3X, canvas.height - paddleWidth - 5, paddleHeight, paddleWidth)) {
+		ballspeedY = -ballspeedY;
+
+		let paddleCenterX = paddle3X + paddleHeight / 2;
+		let impactX = ballX - paddleCenterX;
+		let impactRatio = impactX / (paddleHeight / 2);
+
+		ballspeedX = impactRatio * 4; 
+
+		lastTouch = player3;
+	}
+
+    if (RectCircleColliding(ballX, ballY, canvas.height - paddleWidth - 5, paddle4Y, paddleWidth, paddleHeight)) {
+		ballspeedX = -ballspeedX;
+
+		let paddleCenterY = paddle4Y + paddleHeight / 2;
+		let impactY = ballY - paddleCenterY;
+		let impactRatio = impactY / (paddleHeight / 2);
+
+		ballspeedY = impactRatio * 4; 
+
+		lastTouch = player4;
+	}
 }
 
 
@@ -224,6 +292,10 @@ function gameLoop() {
 		draw();
 		UpdateGame();
 		requestAnimationFrame(gameLoop);
+	} else {
+		draw();
+		document.removeEventListener('keydown', handleKeydown);
+		document.removeEventListener('keyup', handleKeyup);
 	}
 }
 
@@ -244,13 +316,13 @@ export async function initComponent() {
 	ballX = canvas.width / 2;
 	ballY = canvas.height / 2;
 	ballspeedX = 4;
-	ballspeedY = 0;
+	ballspeedY = 0.1;
 	player1Score = 0;
 	player2Score = 0;
 	player3Score = 0;
 	player4Score = 0;
 
-	console.log('pong multiplayer');
+	game_started = false;
 
 	const urlParams = new URLSearchParams(window.location.search);
 	player1 = urlParams.get('player1');
@@ -266,6 +338,8 @@ export async function initComponent() {
 	document.addEventListener('keydown', handleKeydown);
 	document.addEventListener('keyup', handleKeyup);
 
+
+	game_started = true;
 	gameLoop();
 }
 
