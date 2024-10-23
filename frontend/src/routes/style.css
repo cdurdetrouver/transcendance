@@ -233,10 +233,14 @@ a:hover {
 	margin-bottom: 20px;
 }
 
-.intra_button{
-	background-color: rgba(240,240,240,255);
+.login-buttons:hover {
+	transform: scale(1.05); /* Slightly enlarge the button */
+
 }
 
+#google-login {
+	margin-bottom: 20px;
+}
 
 #google-logo {
     width: 20%;
@@ -271,10 +275,12 @@ a:hover {
 
 #buttons {
 	margin-top: 20px;
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
 	width: 60%;
+	margin-left: 30px;
+}
+
+#intra-login {
+	margin-bottom: 20px;
 }
 
 #intra-logo {
@@ -312,10 +318,6 @@ a:hover {
 #local:disabled {
     cursor: not-allowed; /*if login cursor: allowed */
     border: none;
-}
-
-.login-buttons:hover {
-    font-size: 1rem;
 }
 
 #register-content {
