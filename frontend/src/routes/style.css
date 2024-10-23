@@ -142,22 +142,60 @@ a:hover {
 
 #login-content {
     display: flex;
-    flex-direction: column;
-    align-items:  center;
-    padding: 95px 110px 0px 100px;
-    transform: rotate(5deg);
+    flex-direction: row;
+	padding-top: 30px;
+	padding-left: 50px;
+    transform: rotate(3deg);
+}
+
+.defaut-login {
+	display: flex;
+	flex-direction: column;
+	width: 150%;
+}
+
+.separator {
+	margin-left: 20px;
+	margin-right: 20px;
+	/* background:  #929292; */
+	display: inline-block; /* Ensures it behaves like a block element */
+	border-radius: 18%;
+	width: 5px;
+	height: 240px;
+}
+
+.app-login {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 25px;
 }
 
 .email {
-    margin-left: calc(32px);
+	font-family: isaac;
+	font-size: 1rem;
+	display: block;
 }
 
 .confirm-button {
-    padding: 5px 15px;
-	margin-bottom: 20px;
-    background-color: #fffcfc;
-    border: none;
-    border-radius: 0.5rem;
+	font-family: isaac;
+	font-size: 1rem;
+	background-image: url(../static/assets/sheets/Button.png);
+	width: 200px; /* Increase button width */
+    height: 60px;  /* Increase button height */
+    background-size: contain; /* Ensures the image fits within the button */
+    background-repeat: no-repeat;
+    background-position: center; /* Centers the image */
+	background-color: transparent;
+	outline: none;
+	border: none;
+	cursor: pointer;
+	transition: transform 0.2s ease;
+	margin-top: -10px;
+
+}
+
+.confirm-button:hover {
+    transform: scale(1.05); /* Slightly enlarge the button */
 }
 
 .login-buttons {
@@ -174,6 +212,17 @@ a:hover {
     flex-direction: column;
     border-radius: 0.5rem;
     text-decoration: none;
+	transition: transform 0.2s ease;
+
+}
+
+.login-buttons:hover {
+	transform: scale(1.05); /* Slightly enlarge the button */
+
+}
+
+#google-login {
+	margin-bottom: 20px;
 }
 
 #google-logo {
@@ -181,13 +230,12 @@ a:hover {
 }
 
 #github-login {
-    width:30%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #2b2e31;
     color: white;
-    text-align: center;
+	margin-bottom: 20px;
+}
+
+.github_button{
+    background-color: #2b2e31;
 }
 
 #github-logo {
@@ -195,13 +243,34 @@ a:hover {
 }
 
 #buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
+	margin-top: 20px;
+	width: 60%;
+	margin-left: 30px;
+}
+
+#intra-login {
+	margin-bottom: 20px;
 }
 
 #intra-logo {
-    width:40px;
+    width: 20%;
+}
+
+.intra_button{
+	background-color: rgba(240,240,240,255);
+}
+
+#register-content {
+    display: none;
+    flex-direction: column;
+    align-items:  center;
+    padding: 95px 110px 0px 100px;
+    transform: rotate(5deg);
+}
+
+#local:disabled {
+    cursor: not-allowed; /*if login cursor: allowed */
+    border: none;
 }
 
 #register-content {
@@ -231,13 +300,15 @@ a:hover {
 	font-family: isaac;
 	color:#313131;
 	font-size: 2rem;
-	margin-bottom: 20px;
 	position :relative;
-	padding-left: 35%;
+	margin-bottom: 15px;
+	left : 40%;
+	top:11%;
+	transform: rotate(3deg);
 }
 
 .no-account 
 {
-	position: absolute;
-	left : 70%
+	font-family: isaac;
+	font-size: 1rem;
 }
