@@ -45,7 +45,7 @@ body, html {
 #start {
     width: 100%;
     height: 100%;
-	background-image: url('../routes/assets/images/bg_doodle.png');
+	background-image: url('../routes/assets/images/other/bg_doodle.png');
     z-index: 2;
 }
 
@@ -126,11 +126,11 @@ body, html {
 
 #log-page {
     position: absolute;
-    /* background-color: red; */
+     /*background-color: red;*/
     top: 22%;
-    left: 12%;
-    width: 14%;
-    height: 29%;
+    left: 11%;
+    width: 13%;
+    height: 28%;
     transform: rotate(12deg);
     display: flex;
     justify-content: center;
@@ -147,12 +147,17 @@ body, html {
     display: none;
 }
 
+#logout {
+    font-size: 2vw;
+}
 #logout-popin {
     /* background-color:rgb(94, 255, 0); */
     display: none;
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-family: isaac;
+    font-size: 50px;
     
 }
 
@@ -171,7 +176,7 @@ body, html {
 
 .log-popin {
 
-	background-image: url('../routes/assets/images/login-postit.png');
+	background-image: url('../routes/assets/images/other/login-postit.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
@@ -310,8 +315,8 @@ body, html {
 }
 
 #menu-image {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 90%;
+    max-height: 90%;
 }
 
 #start {
@@ -361,10 +366,10 @@ body, html {
 #select-mode {
     position: absolute;
     top: 12%;
-    left: 33%;
+    left: 29%;
     /* background-color: red; */
     transform: translate(10%, 10%) rotate(-5deg);
-    width: 34%;
+    width: 30%;
     height: 70%;
     display: flex;
     flex-direction: column;
