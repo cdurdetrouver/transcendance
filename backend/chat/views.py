@@ -1,9 +1,7 @@
-from django.http import HttpResponse, QueryDict, JsonResponse
+from django.http import QueryDict, JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework import status
-from autobahn.wamp import request
 from .serializers import RoomSerializer
-from user.serializers import UserSerializer
 from .data_handling import send_chat
 from .models import Room, User
 import json

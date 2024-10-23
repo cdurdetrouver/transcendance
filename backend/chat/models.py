@@ -1,11 +1,8 @@
-from typing import Iterable
 from django.db import models
 from user.models import User
 
 from user.models import User
-from django.contrib.postgres.fields import ArrayField
 
-# Create your models here.
 class Message(models.Model):
 	TYPES = [
 		('chat', 'Chat'),

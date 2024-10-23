@@ -4,11 +4,6 @@ import { router } from '../../app.js';
 
 //show error si photo n'est pas au bon format
 
-
-// plus de message de welcome ou de leave
-//remove all comments
-//remove all consol.logs
-
 //for frontend team:
 //pong link redirect to their link sent
 //refresh juste affiche les 10 d'avant mais ils ne sont pas avant dans la box
@@ -419,7 +414,6 @@ async function open_chat(room_selected) {
     };
 }
 
-//here we get the list of chat from user and load it to the html
 async function print_chats() {
     const ret_rooms = await get_user_chats();
     if (!ret_rooms)

@@ -1,13 +1,9 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from channels.db import database_sync_to_async
 from .serializers import MessageSerializer
-from .models import Message, Room, User
-from django.conf import settings
 from asgiref.sync import sync_to_async
 from user.utils import get_user_by_token
-from user.serializers import UserSerializer
-from .data_handling import get_room, in_room, add_in_room, get_last_10_messages, save_message, is_blocked
+from .data_handling import get_room, in_room, get_last_10_messages, save_message, is_blocked
 from channels.layers import get_channel_layer
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -20,14 +16,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.refresh_stop = False
         self.user = None
         self.game_invit = False
-
-    async def set_user(self):
-        await add_in_room(self.room, self.user)
-        await self.channel_layer.group_add(
-            self.room_group_name, self.channel_name)
-        await self.send(text_data=json.dumps({"type": "announce", "content": "Welcome in chat: " + self.room_group_name}))
-        await self.channel_layer.group_send(
-            self.room_group_name, {"type": "announce.message", "announce" : self.user.username + " as joined the chat"})
 
     async def error(self, error):
         if not error:
@@ -68,7 +56,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name, self.channel_name)
 
     async def disconnect(self, close_code):
-        # Leave room group
         await self.channel_layer.group_discard(
             self.room_group_name, self.channel_name
         )
@@ -77,11 +64,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.game_invit = True
         await self.send(text_data=json.dumps({"type": "invitation", "match_name": self.channel_name}))
 
-    # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
 
-        # Send message to room group
         if (await get_room(self.room_group_id) == None):
             await self.send(text_data=json.dumps({"type": "announce", "content": "the chat has been deleted"}))
             self.disconnect(403)
@@ -102,10 +87,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         elif text_data_json["type"] == 'invitation' and self.game_invit == True:
             await self.send(text_data=json.dumps({"type" : "announce", "content": 'Invite for pong already sent'}))
 
-    # Receive message from room group
     async def chat_message(self, event):
         message = event["message"]
-        # Send message to WebSocket
         print(message)
         if message['author'] and await is_blocked(self.user, message['author']['id']):
             message["content"] = "undefined"

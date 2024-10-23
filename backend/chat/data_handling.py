@@ -1,18 +1,9 @@
 from .models import Message, Room, User
-from django.conf import settings
-import json
 from channels.db import database_sync_to_async
 from channels.layers import get_channel_layer
-from rest_framework.response import Response
-from rest_framework import status
 from django.shortcuts import get_object_or_404
-from user.serializers import UserSerializer
 from .serializers import MessageSerializer
-from rest_framework import exceptions
-import jwt
-from django.utils import timezone
-from user.utils import get_from_cookies
-from asgiref.sync import sync_to_async, async_to_sync
+from asgiref.sync import async_to_sync
 
 @database_sync_to_async
 def get_user(user_id):
