@@ -29,6 +29,7 @@ class PrivateMatchmakingConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.user = result
+        self.friends = await sync_to_async(list)(self.user.friends.all())
         game_room_name = self.scope['url_route']['kwargs']['room_name']
         if not self.friends:
             await self.send(text_data=json.dumps({

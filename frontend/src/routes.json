@@ -60,6 +60,10 @@
 		"files" : "/pong/multiplayer"
 	},
 	{
+		"path" : "/pong/private",
+		"files" : "/pong/private"
+	},
+	{
 		"path": "/404",
 		"files": "/404"
 	},
