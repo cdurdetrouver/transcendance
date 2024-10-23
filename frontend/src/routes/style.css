@@ -121,7 +121,7 @@ a:hover {
 
 .log-popin {
 
-	background-image: url('../routes/assets/images/login-postit.png');
+	background-image: url('../static/assets/sheets/login.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
@@ -143,8 +143,9 @@ a:hover {
 #login-content {
     display: flex;
     flex-direction: column;
-    align-items:  center;
-    padding: 95px 110px 0px 100px;
+    /* align-items:  center; */
+	padding-top: 30px;
+	padding-left: 50px;
     transform: rotate(5deg);
 }
 
@@ -154,7 +155,7 @@ a:hover {
 
 .confirm-button {
     padding: 5px 15px;
-    margin: 10px;
+	margin-bottom: 20px;
     background-color: #fffcfc;
     border: none;
     border-radius: 0.5rem;
@@ -176,6 +177,11 @@ a:hover {
     text-decoration: none;
 }
 
+.intra_button{
+	background-color: rgba(240,240,240,255);
+}
+
+
 #google-logo {
     width: 20%;
 }
@@ -195,13 +201,15 @@ a:hover {
 }
 
 #buttons {
+	margin-top: 20px;
     display: flex;
     flex-direction: row;
     gap: 30px;
+	width: 60%;
 }
 
 #intra-logo {
-    width:40px;
+    width: 25%;
 }
 
 #register-content {
@@ -224,4 +232,20 @@ a:hover {
 .custom-input {
     border: none;
     background-color: #ccc7c6;
+}
+
+.title-login 
+{
+	font-family: isaac;
+	color:#313131;
+	font-size: 2rem;
+	margin-bottom: 20px;
+	position :relative;
+	padding-left: 35%;
+}
+
+.no-account 
+{
+	position: absolute;
+	left : 70%
 }
