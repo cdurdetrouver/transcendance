@@ -308,10 +308,12 @@ def user(request):
         return JsonResponse({"error": "user not found"}, status=status.HTTP_404_NOT_FOUND)
     if (user != user_data and check_admin(user, room) == False):
         return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
-    if (request.method == 'POST'):
-        return add_user(user_data, room, user)
     elif (request.method == 'DELETE'):
         return delete_user(user_data, room)
+    if (check_admin(user, room) == False):
+        return JsonResponse({'error': 'user need to be admin of the room'}, status=status.HTTP_403_FORBIDDEN)
+    elif (request.method == 'POST'):
+        return add_user(user_data, room, user)
 
 @swagger_auto_schema(
 	method='get',
