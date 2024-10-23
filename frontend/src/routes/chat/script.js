@@ -1,20 +1,16 @@
 import config from "../../env/config.js";
 import { get_user } from "../../components/user/script.js";
-//gen a link to join 
-
-//test:
-// block
-// send mess
-// join if not in
-// 2 rooms same name
+import { router } from '../../app.js';
 
 //show error si photo n'est pas au bon format
 
-//docs views
-//docs models
+
+//if chat delete :
+//  invit ?
+//  chat socket open ? 
 
 //for frontend team:
-//pong link redirect to ther link sent
+//pong link redirect to their link sent
 //refresh juste affiche les 10 d'avant mais ils ne sont pas avant dans la box
 let chatSocket;
 let room;
