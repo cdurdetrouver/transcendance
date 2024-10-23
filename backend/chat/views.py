@@ -368,11 +368,11 @@ def get_invite(user):
 def delete_invite(user, room_id, value):
     if (not user.invite_list_id or room_id not in user.invite_list_id):
         return JsonResponse({"error": "no invitation"}, status=status.HTTP_403_FORBIDDEN)
-    user.invite_list_id.remove(room_id)
-    user.save()
-    room = get_object_or_404(Room, id=room_id)
+    room = Room.objects.filter(id=room_id).all().first()
     if not room:
         return JsonResponse({"error": "room not found"}, status=status.HTTP_404_NOT_FOUND)
+    user.invite_list_id.remove(room_id)
+    user.save()
     if value == "TRUE":
         room.participants.add(user)
         room.save()
