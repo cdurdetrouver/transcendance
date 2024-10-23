@@ -233,6 +233,11 @@ a:hover {
 	margin-bottom: 20px;
 }
 
+.intra_button{
+	background-color: rgba(240,240,240,255);
+}
+
+
 #google-logo {
     width: 20%;
 }
@@ -265,9 +270,11 @@ a:hover {
 }
 
 #buttons {
+	margin-top: 20px;
     display: flex;
     flex-direction: row;
     gap: 30px;
+	width: 60%;
 }
 
 #intra-logo {

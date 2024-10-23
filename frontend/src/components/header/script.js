@@ -38,9 +38,7 @@ loginButton.addEventListener("click", function() {
     popin.style.display = "flex";
 });
 
-avatarIcon.addEventListener("click", function() {
-    popin.style.display = "flex";
-});
+
 
 closeButton.addEventListener("click", function() {
     popin.style.display = "none";
