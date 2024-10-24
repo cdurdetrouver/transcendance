@@ -25,6 +25,7 @@ async function get_games(user_id) {
 function addGame(player1, player1_score, player2, player2_score) {
 	const game_list = document.querySelector('.game-list');
 	const game = document.createElement('li');
+
 	game.innerHTML = `
 		<div class="game-info">
 			<div>${player1.username}</div>
@@ -38,39 +39,23 @@ function addGame(player1, player1_score, player2, player2_score) {
 function setPersonalUser(user) {
 	const username = user.username;
 	const email = user.email;
-	const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
-	
-	var userInfos = document.getElementById("user-infos");
+	// const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
+	const profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
 
-	if (userInfos) {
-		console.log("userinfos exist");
+	var profilePictureContainer = document.getElementById("profile-picture-container");
 
-		var image = document.createElement("img");
-	
-		image.src = profilePicture;//img par defaut. puis changer comme dans le header
-		image.alt = "Profile Picture";
-		image.style.width = "100%";
-		image.style.height = "100%";
-	
-		userInfos.appendChild(image);
+	if (profilePictureContainer) {
+		console.log("profile exist");
+
+		// var image = document.createElement("img");
+		let imgElement = document.querySelector('#profile-picture');
+		imgElement.src = profilePicture;
+
 	}
 	else {
 		console.log("user infos does not exist");
 	}
-	// const userHtml = 
-	// `
-	// 	<div class="user__info">
-	// 		<p class="user__info__username">${username}</p>
-	// 		<p class="user__info__email">${email}</p>
-	// 		<img src="${profilePicture}" alt="Profile Picture">
-	// 	</div>
-	// 	<div class="user__buttons">
-	// 		<button class="user__buttons__edit" onclick="router.navigate('/user/edit')">Edit</button>
-	// 		<button class="user__buttons__logout" onclick="logout()">Logout</button>
-	// 	</div>
-	// `
-	// ;
-	// userDiv.innerHTML = userHtml;
+
 }
 
 function setUser(user) {
@@ -134,6 +119,8 @@ export async function cleanupComponent() {
 const editButton = document.getElementById("edit-button");
 const deleteButton = document.getElementById("delete-button");
 const confirmationPopin = document.getElementById("confirmation-popin");
+const yesButton = document.getElementById("yes-button");
+const noButton = document.getElementById("no-button");
 
 editButton.addEventListener("click", function() {
 	console.log("edit button");
@@ -145,7 +132,18 @@ deleteButton.addEventListener("click", function() {
 	// handleDeleteAccount();
 	confirmationPopin.style.display = "flex";
 	//faire cliquer sur oui ou non
+});
 
+
+yesButton.addEventListener("click", function() {
+	console.log("yes button");
+	// handleDeleteAccount();
+	confirmationPopin.style.display = "none";
+});
+
+noButton.addEventListener("click", function() {
+	console.log("no button");
+	confirmationPopin.style.display = "none";
 });
 
 
