@@ -17,6 +17,8 @@ const loginPopin = document.getElementById("login-popin");
 const logoutPopin = document.getElementById("logout-popin");
 const closeButton = document.getElementById("closePopupBtn");
 const loginButton = document.getElementById("login");
+const loginTitle = document.getElementById("title-login");
+
 
 let userCookie = getCookie('user');
 
@@ -24,7 +26,6 @@ await get_user();
 
 if (userCookie) {
 	const user = JSON.parse(userCookie);
-	console.log("TEST ICI ENFAITE");
 	loginPopin.style.display = "none";
 	logoutPopin.style.display = "flex";
 	logoutPopin.className = "log-buttons";
@@ -57,6 +58,7 @@ const loginForm = document.getElementById("login-content");
 const registerForm = document.getElementById("register-content");
 const registerButton = document.getElementById("register-button");
 registerButton.addEventListener('click', function (event) {
+	loginTitle.textContent = 'REGISTER';
 	loginForm.style.display = "none";
 	registerForm.style.display = "flex";
 });
@@ -97,9 +99,16 @@ const registerDiv = document.getElementById("register-content");
 const registerSubmit = registerDiv.querySelector('form');
 registerSubmit.addEventListener('submit', register_form);
 
+
+const fileInput = document.getElementById('chk');
+const fileChosen = document.getElementById('file-chosen');
+
+fileInput.addEventListener('change', function() {
+    fileChosen.textContent = this.files[0].name;
+});
+
 async function register_form(event) {
 	event.preventDefault();
-	
 	
 	const username = document.querySelector('input[name="usernameRegister"]').value;
 	const email = document.querySelector('input[name="emailRegister"]').value;

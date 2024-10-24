@@ -121,7 +121,7 @@ a:hover {
 
 .log-popin {
 
-	background-image: url('../static/assets/sheets/login.png');
+	background-image: url('../static/assets/sheets/login2.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
@@ -133,11 +133,16 @@ a:hover {
 }
 
 #closePopupBtn {
+	background-image: url(../static/assets/login/cross.png);
+	background-repeat: no-repeat;
+	background-size: contain;
 	position: absolute;
-	top: 15%;
-	right: 14%;
+	top: 17%;
+	right: 6%;
 	font-size: 35px;
 	cursor: pointer;
+	width: 20px;
+	height: 20px;
 }
 
 #login-content {
@@ -191,6 +196,7 @@ a:hover {
 	cursor: pointer;
 	transition: transform 0.2s ease;
 	margin-top: -10px;
+	margin-bottom: 10px;
 
 }
 
@@ -245,7 +251,7 @@ a:hover {
 #buttons {
 	margin-top: 20px;
 	width: 60%;
-	margin-left: 30px;
+	margin-left: 60px;
 }
 
 #intra-login {
@@ -261,24 +267,17 @@ a:hover {
 }
 
 #register-content {
+	font-family: isaac;
     display: none;
-    flex-direction: column;
-    align-items:  center;
-    padding: 95px 110px 0px 100px;
-    transform: rotate(5deg);
+    flex-direction: row;
+	padding-top: 30px;
+	padding-left: 50px;
+    transform: rotate(3deg);
 }
 
 #local:disabled {
     cursor: not-allowed; /*if login cursor: allowed */
     border: none;
-}
-
-#register-content {
-    display: none;
-    flex-direction: column;
-    align-items:  center;
-    padding: 95px 110px 0px 100px;
-    transform: rotate(5deg);
 }
 
 #local:disabled {
@@ -295,14 +294,14 @@ a:hover {
     background-color: #ccc7c6;
 }
 
-.title-login 
+#title-login 
 {
 	font-family: isaac;
 	color:#313131;
 	font-size: 2rem;
 	position :relative;
-	margin-bottom: 15px;
-	left : 40%;
+	margin-bottom: 30px;
+	left : 9%;
 	top:11%;
 	transform: rotate(3deg);
 }
@@ -311,4 +310,25 @@ a:hover {
 {
 	font-family: isaac;
 	font-size: 1rem;
+}
+
+
+
+
+.custom-file-upload {
+    display:inline-block;
+}
+
+.avatar-register
+{
+	padding-left: 150px;
+}
+
+.avatar {
+	background-image: url(../static/assets/login/avatar.png);
+	background-repeat: no-repeat;
+	background-size:contain;
+	height: 150px;
+	width:150px;
+
 }
