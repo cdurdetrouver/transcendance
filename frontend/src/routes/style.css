@@ -132,6 +132,8 @@ a:hover {
     position: relative;
 }
 
+
+
 #closePopupBtn {
 	background-image: url(../static/assets/login/cross.png);
 	background-repeat: no-repeat;
@@ -266,14 +268,7 @@ a:hover {
 	background-color: rgba(240,240,240,255);
 }
 
-#register-content {
-	font-family: isaac;
-    display: none;
-    flex-direction: row;
-	padding-top: 30px;
-	padding-left: 50px;
-    transform: rotate(3deg);
-}
+
 
 #local:disabled {
     cursor: not-allowed; /*if login cursor: allowed */
@@ -313,7 +308,19 @@ a:hover {
 }
 
 
+#register-content {
+	font-family: isaac;
+    display: none;
+    flex-direction: row;
+    transform: rotate(3deg);
+}
 
+#test {
+	display: flex;
+    flex-direction: row;
+	padding-top: 30px;
+	padding-left: 50px;
+}
 
 .custom-file-upload {
     display:inline-block;
@@ -321,14 +328,45 @@ a:hover {
 
 .avatar-register
 {
-	padding-left: 150px;
+	padding-left: 45%;
 }
 
 .avatar {
-	background-image: url(../static/assets/login/avatar.png);
+	position: relative;
+	background-image: url(../static/assets/login/avatar_sad.png);
 	background-repeat: no-repeat;
 	background-size:contain;
 	height: 150px;
 	width:150px;
+	left: -15px;
+	transition: transform 0.2s ease;
+}
 
+.avatar:hover {
+	transform: scale(1.05);;
+}
+
+#file-chosen {
+	position: relative;
+	top: -15px;
+}
+
+.register-confirm
+{
+	position: relative;
+	top: -5px;
+	left: -50px
+}
+
+#return {
+	background-image: url(../static/assets/login/arrow.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	position: absolute;
+	top: 95%;
+	right: 5%;
+	font-size: 35px;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
 }

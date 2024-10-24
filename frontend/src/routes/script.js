@@ -18,6 +18,7 @@ const logoutPopin = document.getElementById("logout-popin");
 const closeButton = document.getElementById("closePopupBtn");
 const loginButton = document.getElementById("login");
 const loginTitle = document.getElementById("title-login");
+const popins = document.querySelector('.log-popin');
 
 
 let userCookie = getCookie('user');
@@ -57,10 +58,19 @@ const loginForm = document.getElementById("login-content");
 
 const registerForm = document.getElementById("register-content");
 const registerButton = document.getElementById("register-button");
+
 registerButton.addEventListener('click', function (event) {
 	loginTitle.textContent = 'REGISTER';
 	loginForm.style.display = "none";
 	registerForm.style.display = "flex";
+});
+
+const returnButton = document.getElementById("return");
+
+returnButton.addEventListener('click', function (e) {
+	loginTitle.textContent = 'LOGIN';
+	loginForm.style.display = "flex";
+	registerForm.style.display = "none";
 });
 
 //LOGIN
@@ -102,9 +112,12 @@ registerSubmit.addEventListener('submit', register_form);
 
 const fileInput = document.getElementById('chk');
 const fileChosen = document.getElementById('file-chosen');
+const avatar = document.querySelector(".avatar");
 
 fileInput.addEventListener('change', function() {
     fileChosen.textContent = this.files[0].name;
+	avatar.style.backgroundImage = "url(../static/assets/login/avatar_happy.png)";
+
 });
 
 async function register_form(event) {

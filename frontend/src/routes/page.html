@@ -50,8 +50,8 @@
 					</div>
 				</div>
 				<div id="register-content">
+					<form class="form" id="test">
 						<div class="defaut-register">
-						<form class="form">
 							<label  class="email" for="usernameRegister">USERNAME</label>
 							<input type="text" class="custom-input" id="usernameRegister" name="usernameRegister" required><br><br>
 							<label  class="email" for="emailRegister">EMAIL</label>
@@ -61,15 +61,15 @@
 							<input class="email" type="password" name="confirmPasswordRegister" placeholder="CONFIRM PASSWORD " required>
 						</div>
 						<div class="avatar-register">
+							<div>PICK AN AVATAR</div>
 							<input type="file" name="profilePicture" id="chk" required style="display: none;">
-							<label  for="chk" class="custom-file-upload avatar">
-								CHOSE FILE
-							</label>
+							<label  for="chk" class="custom-file-upload avatar"></label>
 							<div  id="file-chosen">No file chosen</div>
-							<input class="confirm-button" type="submit" value="Submit">
+							<input class="confirm-button register-confirm" type="submit" value="SUBMIT">
 						</div>
+						<div id="return"></div>
+					</form>
 				</div>
-				</form>
 			</div>
 		</div>
 
