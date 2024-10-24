@@ -308,24 +308,17 @@ a:hover {
 }
 
 #register-content {
+	font-family: isaac;
     display: none;
-    flex-direction: column;
-    align-items:  center;
-    padding: 95px 110px 0px 100px;
-    transform: rotate(5deg);
+    flex-direction: row;
+	padding-top: 30px;
+	padding-left: 50px;
+    transform: rotate(3deg);
 }
 
 #local:disabled {
     cursor: not-allowed; /*if login cursor: allowed */
     border: none;
-}
-
-#register-content {
-    display: none;
-    flex-direction: column;
-    align-items:  center;
-    padding: 95px 110px 0px 100px;
-    transform: rotate(5deg);
 }
 
 #local:disabled {
