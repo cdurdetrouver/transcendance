@@ -115,15 +115,12 @@ body, html {
 }
 
 #confirmation-image {
-    /*position: absolute;*/
-    width: 45%;
-    /* height: 30%; */
-
+    width: 35%;
 }
 
 #confirmation-popin {
     position: absolute;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -133,42 +130,56 @@ body, html {
     left:0%;
 }
 
+/* PAS RESPONSIVE =>*/
+/* ET TOUS LES TEXTES SONT PAS RESPONSIVE AUSSI */
 #popin-postit {
     position: absolute;
     /* background-color: blue; */
-    width: 45%;
-    height: 30%;
+    width: 31%;
+    height: 35%;
+    /* max-height: 50%;
+    max-width: 40%; */
+}
+
+.button-popin {
+    position: absolute;
+    top: 65%;
+    font-family: isaac;
+    font-size: 4rem;
+    transition: transform 0.3s ease;
+    /* background-color: blue; */
+}
+
+.button-popin:hover {
+    transform: scale(1.2);
 }
 
 #yes-button {
-    position: absolute;
-    top: 63%;
-    left:13%;
+    left:15%;
     width: 27%;
     height: 18%;
-    /* background-color: blue; */
-    font-family: isaac;
-    font-size: 3rem;
-
 }
 
 #no-button {
-    position: absolute;
-    top: 63%;
-    left: 70%;
+    left: 60%;
     width: 23%;
     height: 18%;
-    /* background-color: blue; */
-    font-family: isaac;
-    font-size: 3rem;
+}
+
+#no-image {
+    width:90%;
+}
+
+#yes-image {
+    width: 90%;
 }
 
 #confirmationText {
-    position: absolute;
+    /* position: absolute; */
     top: 10%;
     left: 15%;
     font-family: isaac;
-    font-size: 2.8rem;
+    font-size: 4.2rem;
     text-align: center;
 }
 
