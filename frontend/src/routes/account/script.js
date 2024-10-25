@@ -55,6 +55,9 @@ function setPersonalUser(user) {
 	else {
 		console.log("user infos does not exist");
 	}
+	const userInfo = document.getElementById("user-info");
+
+	userInfo.innerHTML = `${username}<br>${email}`;
 
 }
 

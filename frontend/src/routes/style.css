@@ -71,6 +71,7 @@ body, html {
     font-size: 3.5vw;
     text-decoration: none;
     border: none;
+    transition: transform 0.3s ease;
 }
 
 .log-buttons {
@@ -110,7 +111,7 @@ body, html {
 }
 
 #select-mode {
-    background-color: #4CAF50;
+    /* background-color: #4CAF50; */
     position: absolute;
     top: 12%;
     left: 33%;
@@ -265,11 +266,11 @@ body, html {
     flex-direction: column;
     border-radius: 0.5rem;
     text-decoration: none;
+    transition: transform 0.3s ease;
 }
 
 .login-buttons:hover {
-    font-size: 1rem;
-    
+    transform: scale(1.2);
 }
 
 #github-logo {
@@ -402,8 +403,10 @@ body, html {
     text-decoration: none;
 }
 
+
+
 a:hover {
-    font-size: 3.8vw;
+    transform: scale(1.2);
 }
 
 #openPageButton {
