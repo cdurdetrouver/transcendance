@@ -208,7 +208,7 @@ body, html {
     /* background-color: blueviolet; */
     display: flex;
     flex-direction: column;
-
+    font-size: 2vw;
 }
 
 #email {
