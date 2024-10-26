@@ -55,9 +55,12 @@ function setPersonalUser(user) {
 	else {
 		console.log("user infos does not exist");
 	}
-	const userInfo = document.getElementById("user-info");
+	const usernameInfo = document.getElementById("username");
+	const emailInfo = document.getElementById("email");
 
-	userInfo.innerHTML = `${username}<br>${email}`;
+
+	usernameInfo.innerHTML += `${username}`;
+	emailInfo.innerHTML += `${email}`;
 
 }
 
@@ -125,10 +128,10 @@ const confirmationPopin = document.getElementById("confirmation-popin");
 const yesButton = document.getElementById("yes-button");
 const noButton = document.getElementById("no-button");
 
-editButton.addEventListener("click", function() {
-	console.log("edit button");
+// editButton.addEventListener("click", function() {
+// 	console.log("edit button");
 	
-});
+// });
 
 deleteButton.addEventListener("click", function() {
 	console.log("delete button");

@@ -9,20 +9,24 @@
 					<div id="profile-picture-container">
 						<img src="../../static/assets/header/login.png" alt="Profile Picture" id="profile-picture">
 					</div>
-					<div id="user-info">
-						<p id=username"></p>
-						<p id="email"></p>
+					<div class="text"id="user-info">
+						<div id="username">
+						<input type="text" class="edit-input" placeholder="new username">
+						</div>
+						<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-button" id="edit-username">
+						<div id="email">
+							<input type="text" class="edit-input" placeholder="new email">
+						</div>
+						<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-button" id="edit-email">
+	
 					</div>
-					<div id="wins">
-						<span id="stats"> WINS</span>
+					<div  class="stats text" id="wins">
+						<span > WINS</span>
 					</div>
-					<div id="losses">
-						<span id =stats> LOSSES</span>
+					<div  class="stats text" id="losses">
+						<span> LOSSES</span>
 					</div>
 					<div id="options">
-						<a class="buttons" id="edit-button">
-							<img src="../routes/assets/images/utils/edit_file.png" alt="Edit File Image" class="button-image">
-						</a>
 						<a class="buttons" id="delete-button" >
 							<img src="../routes/assets/images/utils/delete_file.png" alt="Delete File Image" class="button-image">
 						</a>
