@@ -151,7 +151,7 @@ a:link {
 }
 
 .sidebar:hover .line {
-    width: 240px; /* New width when sidebar is hovered */
+    width: 240px;
 }
 
 .line-no-hover 

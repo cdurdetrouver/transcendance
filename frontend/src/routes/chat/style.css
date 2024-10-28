@@ -1,0 +1,22 @@
+.container
+{
+	display: flex;
+	margin-left: 100px;
+	margin-top: 25px;
+	gap: 40px;
+}
+
+.block {
+	width: 500px;
+	height: 90vh;
+	background-color: #aaaa9f;
+	display: flex;
+	justify-content: left;
+	color: white;
+	font-size: 1rem;
+	border-radius: 8px;
+}
+
+.middle {
+	width: 700px;
+}
