@@ -1,5 +1,5 @@
 import config from "../../env/config.js";
-import { get_user } from "../../components/user/script.js";
+import { get_user, searchUsers } from "../../components/user/script.js";
 import { router } from '../../app.js';
 
 //show error si photo n'est pas au bon format
@@ -553,6 +553,21 @@ export async function initComponent(params) {
     print_invitations();
     const create_room_btn = document.querySelector('.li-create-room-btn');
     create_room_btn.addEventListener('click', create_room);
+
+	document.getElementById('user-search').addEventListener('input', async function() {
+		const query = this.value;
+		if (query.length > 0) {
+			const response = await searchUsers(query, 5);
+			if (response.status === 200) {
+				const data = await response.json();
+				updateUserList(data.users);
+			} else {
+				updateUserList([]);
+			}
+		} else {
+			updateUserList([]);
+		}
+	});
 }
 
 export async function cleanupComponent(params) {
@@ -560,4 +575,18 @@ export async function cleanupComponent(params) {
         chatSocket.close();
     const container = document.querySelector('.chat_container');
     container.replaceWith(container.cloneNode(true));
+}
+
+
+function updateUserList(users) {
+	const userList = document.getElementById('user-list');
+	userList.innerHTML = '';
+	users.forEach(user => {
+		const userItem = document.createElement('li');
+		userItem.textContent = user.username;
+		userItem.onclick = () => {
+			router.navigate(`/user?id=${user.id}`);
+		};
+		userList.appendChild(userItem);
+	});
 }
