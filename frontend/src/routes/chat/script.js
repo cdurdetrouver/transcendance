@@ -715,6 +715,8 @@ export async function cleanupComponent(params) {
 function updateUserList(users) {
 	const userList = document.querySelector('.user-list');
 	userList.innerHTML = '';
+	const userProfil = document.getElementById('user-profile');
+	userProfil.innerHTML = '';
 	users.forEach(user => {
 		const userItem = document.createElement('li');
 		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
