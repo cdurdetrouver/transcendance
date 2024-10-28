@@ -1,36 +1,37 @@
 {{header}}
+<div class="background">
+	<div class="flex-container">
+		<div class="block left">
+			<div class="search-container">
+				<h1>Discussion</h1>
+				<input type="text" id="user-search" placeholder="Search for users...">
+				<ul id="user-list"></ul>
+			</div>
+			<div class="chat-list"> </div>
 
-<div class="container">
-	<div class="block left">
-		<div class="search-container">
-			<h1>Discussion</h1>
-			<input type="text" id="user-search" placeholder="Search for users...">
-			<ul id="user-list"></ul>
-
-			<ul class="chat-list">
-				<!-- List of the chat -->
-				<t1>List of chat</t1>
+		</div>
+		<div class="block middle">
+			<ul class="chat-box">
+				<!-- Chat-box -->
+				<t1>No chat selected</t1>
 			</ul>
 		</div>
+		<div class="block right">
+			<h1>Profile</h1>
+			<div id="user-profile"></div>
+		</div>
 	</div>
-	<div class="block middle">
-		<ul class="chat-box">
-			<!-- Chat-box -->
-			<t1>No chat selected</t1>
+
+	<div class="chat_container">
+		<ul class="chat-list-invitations">
+			<!-- List of the chat -->
+			<t1>List of invitations</t1>
+		</ul>
+		<ul class="create-box">
+			<!-- create-box -->
+			<li class="li-create-room-btn">
+				<input id="create-room-btn" type="button" value="create room">
+			</li>
 		</ul>
 	</div>
-	<div class="block right"></div>
-</div>
-
-<div class="chat_container">
-	<ul class="chat-list-invitations">
-		<!-- List of the chat -->
-        <t1>List of invitations</t1>
-	</ul>
-	<ul class="create-box">
-		<!-- create-box -->
-		 <li class="li-create-room-btn">
-			<input id="create-room-btn" type="button" value="create room">
-		 </li>
-	</ul>
 </div>

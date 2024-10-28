@@ -1,4 +1,9 @@
-.container
+.background {
+	width: 100%;
+	height: 100%;
+}
+
+.flex-container
 {
 	display: flex;
 	margin-left: 100px;
@@ -17,6 +22,59 @@
 	border-radius: 8px;
 }
 
+.left {
+	overflow-y: scroll;
+	display: flex;
+	flex-direction: column;
+}
+
 .middle {
 	width: 700px;
+}
+
+
+.room {
+	width: 80%;
+	height: 75px;
+	display: flex;
+	align-items: center; /* Aligns content vertically */
+}
+
+.room-pic {
+	display: inline-flex;
+	align-items: center; 
+	margin-right: 10px; 
+}
+
+.room-pic img
+{
+	width: 50px;
+    height: 50px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.room-name
+{
+	display: inline-flex;
+	align-items: center; /* Aligns text to the middle of the image */
+}
+
+
+.room:hover {
+	background-color: #858582;
+
+}
+
+
+.chat-list {
+	list-style-type: none; 
+	padding: 0; 
+	margin: 0; 
+}
+
+#chat-log {
+	width: 600px; /* or use a specific width like 600px */
+	height: 600px; /* set to desired height */
+	resize: none; /* optional, disables resizing */
 }

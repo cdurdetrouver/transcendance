@@ -116,14 +116,6 @@ header.preload *{
 	overflow: hidden;
 }
 
-.avatar img
-{
-	position: relative;
-	width: 30px;
-    height: auto;
-	border-radius: 50%;
-	overflow: hidden;
-}
 
 a:link { 
 	text-decoration: none;
