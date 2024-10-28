@@ -4,7 +4,7 @@
 	<div class="background">
 		<div class="container">
 			<div id="sheet">
-				<img src="../routes/assets/images/utils/profile_sheet_2.png" alt="sheet image" id="sheet-image">
+				<img src="../routes/assets/images/utils/profile_sheet.png" alt="sheet image" id="sheet-image">
 				<div id="main-page">
 					<div id="profile-picture-container">
 						<img src="../../static/assets/header/login.png" alt="Profile Picture" id="profile-picture">
@@ -26,22 +26,23 @@
 					<div  class="stats text" id="losses">
 						<span> LOSSES</span>
 					</div>
-					<div id="options">
-						<a class="buttons" id="delete-button" >
-							<img src="../routes/assets/images/utils/delete_file.png" alt="Delete File Image" class="button-image">
-						</a>
+					<div id="delete-profile">
+						<button class="buttons text" id="delete-button" >DELETE PROFILE
+							<img src="../routes/assets/images/utils/logo_delete.png" alt="Delete logo" id="delete-logo">
+						</button>
 					</div>
 				</div>
 			</div>
 			<div id="confirmation-popin">
-				<img src="../routes/assets/images/utils/confirmation_sheet.png" alt="Confirmation Image" id="confirmation-image">
+				<img src="../routes/assets/images/utils/confirmation_sheet_empty.png" alt="Confirmation Image" id="confirmation-image">
 				<div id="popin-postit">
-					<a class="button-popin" id="yes-button">
-						<img id="yes-image" src="../routes/assets/images/utils/yes-button.png">
-					</a>
-					<a class="button-popin" id="no-button">
-						<img id="no-image" src="../routes/assets/images/utils/no-button.png">
-					</a>
+					<span id="confirmation-text" class="text">ARE YOU SURE ?</span>
+					<button class="button-popin text buttons" id="yes-button">YES
+						<!-- <img id="yes-image" src="../routes/assets/images/utils/yes-button.png"> -->
+					</button>
+					<button class="button-popin text buttons" id="no-button">NO
+						<!-- <img id="no-image" src="../routes/assets/images/utils/no-button.png"> -->
+					</button>
 				</div>
 			</div>
 		</div>

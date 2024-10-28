@@ -69,12 +69,25 @@ body, html {
     max-height: 100%;
 }
 
-#options {
-    /*background-color: blue;*/
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+#delete-profile {
+    position: absolute;
+    top: 88%;
+    width: 80%;
+    height: 10%;
+    /* background-color: blue; */
+}
+
+#delete-button {
+    white-space: nowrap;
+    font-size: 2vw;
+    left: 10%;
+}
+
+#delete-logo {
+    position: absolute;
+    width: 10%;
+    left: 96%;
+    top: 0%;
 }
 
 #container {
@@ -102,9 +115,9 @@ body, html {
 
 .buttons {
     display: inline-block;
-    width: 60%;
-    height: 20%;
     transition: transform 0.3s ease;
+    background-color: transparent;
+    border: none;
 }
 
 .buttons:hover {
@@ -116,12 +129,13 @@ body, html {
 }
 
 #confirmation-image {
+    /* position: absolute; */
     width: 35%;
 }
 
 #confirmation-popin {
     position: absolute;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -133,17 +147,18 @@ body, html {
 
 #popin-postit {
     position: absolute;
-    /* background-color: blue; */
+    /* top: 0%;
+    left: 0%; */
+    background-color: blue;
     width: 31%;
     height: 35%;
-
 }
 
 .button-popin {
     position: absolute;
-    top: 65%;
-    font-size: 4rem;
+    top: 60%;
     transition: transform 0.3s ease;
+    font-size: 4vw;
     /* background-color: blue; */
 }
 
@@ -163,19 +178,12 @@ body, html {
     height: 18%;
 }
 
-#no-image {
-    width:90%;
-}
-
-#yes-image {
-    width: 90%;
-}
-
-#confirmationText {
-    top: 10%;
-    left: 15%;
-    font-size: 4.2rem;
-    text-align: center;
+#confirmation-text {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    font-size: 2.8vw;
+    /* text-align: center; */
 }
 
 .stats {
@@ -252,4 +260,5 @@ body, html {
 .text {
     font-family: isaac-bold;
     color: #332C2B;
+    display: inline-block;
 }
