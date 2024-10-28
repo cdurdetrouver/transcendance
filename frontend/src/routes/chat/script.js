@@ -344,7 +344,7 @@ async function open_chat(room_selected) {
             </div>
 		</li>
         <li>
-            <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+            <textarea id="chat-log"></textarea><br>
             <input id="chat-message-input" type="text" size="100" placeholder="Your message"><br>
             <input id="chat-message-submit" type="button" value="Send">
             <input id="chat-message-refresh" type="button" value="refresh">
@@ -429,19 +429,23 @@ async function print_chats() {
     else {
         const rooms = ret_rooms.rooms
         const chat_list = document.querySelector('.chat-list');
-        chat_list.innerHTML=`
-            <t1>List of chat</t1>
-        `;
         for (const room_l of rooms)
             {
+                // <div class="chat-invitations-${room_l.id}">
+				
                 const chat = document.createElement('li');
                 chat.id = room_l.id
-                const room_picture = config.backendUrl + room_l.room_picture;
-                chat.innerHTML = `
-                <div class="chat-invitations-${room_l.id}">
-			        <t1>${room_l.name}</t1>
-                    <img src="${room_picture}" height=100 alt="Room Picture">
-                </div>
+                let room_picture = config.backendUrl + room_l.room_picture;
+				if (room_picture == "http://localhost:8000null")
+				{
+					console.log("test");
+					room_picture = "../../static/assets/jpg/default_picture.jpg"
+				}
+					chat.innerHTML = `
+                <li class="room">
+				    <span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
+			        <span class="room-name">${room_l.name}</span>
+                </li>
                 `;
                 chat.addEventListener('click', function(event) {
                     open_chat(room_l);
@@ -581,11 +585,14 @@ export async function cleanupComponent(params) {
 function updateUserList(users) {
 	const userList = document.getElementById('user-list');
 	userList.innerHTML = '';
+	const userProfil = document.getElementById('user-profile');
+	userProfil.innerHTML = '';
 	users.forEach(user => {
 		const userItem = document.createElement('li');
 		userItem.textContent = user.username;
 		userItem.onclick = () => {
-			router.navigate(`/user?id=${user.id}`);
+			const userItem = document.createElement('li');
+			userProfil.textContent = user.username;
 		};
 		userList.appendChild(userItem);
 	});
