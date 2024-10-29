@@ -219,9 +219,9 @@ async function update_room(event) {
     const data = await response.json();
     if (response.status === 200) {
         room = data['room'];
-	    const chat_title = document.getElementById('chat-name-title');
+		const chat_title = document.querySelector('.room-name-center')
         chat_title.innerHTML = `
-        <t1>Chat ${room.name} selected</t1>
+        ${room.name}
         `;
         print_chats();
     }
@@ -334,15 +334,17 @@ async function open_chat(room_selected) {
     room = room_selected;
     console.log(room);
     const chat_box = document.querySelector('.chat-box');
+	const chat_conf = document.querySelector('.chat-conf');
+	const room_info = document.querySelector('.room-info');
+	let room_picture = config.backendUrl + room.room_picture;
+	if (room_picture == "http://localhost:8000null")
+	{
+		room_picture = "../../static/assets/jpg/default_picture.jpg"
+	}
+
     chat_box.innerHTML = `
-        <li id='chat-name-title'>
-            <t1>Chat ${room.name} selected</t1>
-		</li>
-        <li>
-            <div class="chat-conf">
-                <input id="chat-conf-btn" type="button" value="chat conf">
-            </div>
-		</li>
+	<span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
+	<span class="room-name-center">${room.name}</span>
         <li>
             <textarea id="chat-log"></textarea><br>
             <input id="chat-message-input" type="text" size="100" placeholder="Your message"><br>
@@ -353,9 +355,39 @@ async function open_chat(room_selected) {
             <input id="chat-message-leave" type="button" value="leave chat">
 		</li>
     `;
-    document.querySelector('#chat-conf-btn').addEventListener('click', check_admin);
+	chat_conf.innerHTML = `
+	<input id="chat-add-user" type="button" value="Add user">
+	<input id="chat-remove-user" type="button" value="Remove user">
+	<form id="roomConfForm" class="room__form">
+		<label for="room_name">Room name:</label>
+		<input type="text" id="room_name" name="name" value=${room.name}>
+
+		<label for="room_picture">Room Picture:</label>
+		<input type="file" id="room_picture" name="room_picture" accept="image/*">
+
+		<button type="submit">Update</button>
+	</form>
+	<input id="chat-delete" type="button" value="Delete chat">
+	<input id="chat-conf-close" type="button" value="Close conf chat">
+	
+	`;
+
+
+
+	room_info.innerHTML = `
+	<div class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </div>
+	<div class="room-name-right"> ${room.name}  </div>
+	`
+
+    // document.querySelector('#chat-conf-btn').addEventListener('click', check_admin);
     document.querySelector('#chat-message-pong').addEventListener('click', send_pong_link);
     document.querySelector('#chat-message-leave').addEventListener('click', leave_chat);
+
+	document.getElementById('roomConfForm').addEventListener('submit', update_room);
+    document.getElementById('chat-add-user').addEventListener('click', chat_add_user);
+    document.getElementById('chat-remove-user').addEventListener('click', chat_remove_user);
+    document.getElementById('chat-delete').addEventListener('click', chat_delete);
+    document.getElementById('chat-conf-close').addEventListener('click', chat_close_conf);
 
     chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + room.id + "/");
     chatSocket.onmessage = function(e)
@@ -438,13 +470,12 @@ async function print_chats() {
                 let room_picture = config.backendUrl + room_l.room_picture;
 				if (room_picture == "http://localhost:8000null")
 				{
-					console.log("test");
 					room_picture = "../../static/assets/jpg/default_picture.jpg"
 				}
 					chat.innerHTML = `
                 <li class="room">
 				    <span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
-			        <span class="room-name">${room_l.name}</span>
+			        <span class="room-name-left">${room_l.name}</span>
                 </li>
                 `;
                 chat.addEventListener('click', function(event) {
