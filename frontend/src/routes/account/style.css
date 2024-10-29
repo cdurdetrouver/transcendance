@@ -129,7 +129,6 @@ body, html {
 }
 
 #confirmation-image {
-    /* position: absolute; */
     width: 35%;
 }
 
@@ -151,7 +150,7 @@ body, html {
     left: 0%; */
     background-color: blue;
     width: 31%;
-    height: 35%;
+    aspect-ratio: 228 / 129;
 }
 
 .button-popin {
