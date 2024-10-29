@@ -122,16 +122,23 @@ export async function initComponent() {
 export async function cleanupComponent() {
 }
 
-const editButton = document.getElementById("edit-button");
+const editUsername = document.getElementById("edit-username");
+const editEmail = document.getElementById("edit-email");
 const deleteButton = document.getElementById("delete-button");
 const confirmationPopin = document.getElementById("confirmation-popin");
 const yesButton = document.getElementById("yes-button");
 const noButton = document.getElementById("no-button");
+const logoutButton = document.getElementById("logout-button");
 
-// editButton.addEventListener("click", function() {
-// 	console.log("edit button");
+editUsername.addEventListener("click", function() {
+	console.log("edit username");
 	
-// });
+});
+
+editEmail.addEventListener("click", function() {
+	console.log("edit email");
+
+});
 
 deleteButton.addEventListener("click", function() {
 	console.log("delete button");
@@ -143,8 +150,9 @@ deleteButton.addEventListener("click", function() {
 
 yesButton.addEventListener("click", function() {
 	console.log("yes button");
-	// handleDeleteAccount();
 	confirmationPopin.style.display = "none";
+	handleDeleteAccount();
+
 });
 
 noButton.addEventListener("click", function() {
@@ -152,5 +160,7 @@ noButton.addEventListener("click", function() {
 	confirmationPopin.style.display = "none";
 });
 
-
+logoutButton.addEventListener("click", function() {
+	console.log("logout button");
+});
 

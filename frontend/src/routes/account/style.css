@@ -135,7 +135,7 @@ body, html {
 
 #confirmation-popin {
     position: absolute;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -261,4 +261,11 @@ body, html {
     font-family: isaac-bold;
     color: #332C2B;
     display: inline-block;
+}
+
+#logout-button {
+    position: absolute;
+    width: 6%;
+    top: 76%;
+    left: 73%;
 }
