@@ -348,7 +348,7 @@ async function open_chat(room_selected) {
 		<span class="room-name">${room.name}</span>
 	</div>
 
-            <textarea id="chat-log"></textarea><br>
+            <div id="chat-log" style="overflow-y: auto; max-height: 80%;"></div>
             <input id="chat-message-input" type="text" size="100" placeholder="Your message"><br>
             <input id="chat-message-submit" type="button" value="Send">
             <input id="chat-message-refresh" type="button" value="refresh">
@@ -402,16 +402,65 @@ async function open_chat(room_selected) {
         }
         else if (data.type == 'chat')
 		{
-            document.querySelector('#chat-log').value += (data.message.author.username + ' : ' + data.message.content + '\n');
+			const chatLog = document.querySelector('#chat-log');
+			const username = data.message.author.username;
+			const content = data.message.content;
+
+			const isCurrentUser = username === user.username; // replace 'your_username' as needed
+
+				// Create a new div for each message
+			const messageElement = document.createElement('div');
+			messageElement.classList.add( isCurrentUser ? 'chat-message-user' : 'chat-message');
+			messageElement.style.textAlign = isCurrentUser ? 'right' : 'left';
+			messageElement.textContent = `${username}: ${content}`;
+		
+			// Append message to chat log
+			chatLog.appendChild(messageElement);
+
 		}
-        else if (data.type == 'list-chat') {
-            for (const index in data.messages)
-			{
+		else if (data.type == 'list-chat') {
+			const chatLog = document.querySelector('#chat-log'); // Selects the #chat-log div
+		
+			for (const index in data.messages) {
 				const message = data.messages[index];
-				const msgUser = message.author ? (message.author.username + ': ') : "";
-			    document.querySelector('#chat-log').value += (msgUser + data.messages[index].content + '\n');
+				const username = message.author ? message.author.username : "Unknown";
+				const content = message.content;
+		
+				const isCurrentUser = username === user.username;
+				// Create a new div for each message
+
+				const messageElement = document.createElement('div');
+				messageElement.classList.add( isCurrentUser ? 'chat-message-user' : 'chat-message');
+				messageElement.style.textAlign = isCurrentUser ? 'right' : 'left';
+				messageElement.style.textAlign = isCurrentUser ? 'right' : 'left';
+				messageElement.textContent = `${content}`;
+
+
+				if (!isCurrentUser)
+				{
+
+					const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+
+					const profileImg = document.createElement('img');
+					profileImg.src = profile_picture;
+					profileImg.alt = `${username}'s profile picture`; // Alt text for accessibility
+					profileImg.classList.add('profile-pic'); // Optional: Add a class for styling
+
+					const nameDiv = document.createElement('div');
+					nameDiv.classList.add('nameDiv');
+					nameDiv.textContent = `${username}`;
+					nameDiv.innerHTML = `<span>${username}</span>`; // Set username
+					nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
+
+
+					chatLog.appendChild(nameDiv);
+
+				}
+				chatLog.appendChild(messageElement);
+
 			}
-        }
+		}
+		
         else if (data.type == 'invitation') {
             document.querySelector('#chat-log').value += `${config.frontendUrl}/privatematchmaking?match_name=${data.match_name}` + '\n';
         }
