@@ -83,6 +83,33 @@
   height: 80%;
   resize: none;
   background: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.flex-container .middle .chat-block .chat-message {
+  width: 50%;
+  border-radius: 20px;
+  margin-left: 35px;
+}
+.flex-container .middle .chat-block .chat-message-user {
+  margin-left: 50%;
+  width: auto;
+  border-radius: 20px;
+  background-color: #373f85;
+}
+.flex-container .middle .chat-block .nameDiv {
+  font-size: 10px;
+  color: rgb(219, 218, 218);
+}
+.flex-container .middle .chat-block .profile-pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  bottom: -32px;
+  margin-right: 10px;
 }
 .flex-container .right {
   display: flex;
