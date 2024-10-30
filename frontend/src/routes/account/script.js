@@ -1,6 +1,6 @@
 import { customalert } from '../../components/alert/script.js';
 import config from '../../env/config.js';
-import { get_user } from '../../components/user/script.js';
+import { get_user, logout } from '../../components/user/script.js';
 import { router } from '../../app.js';
 import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 
@@ -122,6 +122,10 @@ export async function initComponent() {
 export async function cleanupComponent() {
 }
 
+const currentInfo = document.getElementById("current-info");
+const userInfo = document.getElementById("user-info");
+const editInfo = document.getElementById("edit-info");
+const editButton = document.getElementById("edit-button");
 const editUsername = document.getElementById("edit-username");
 const editEmail = document.getElementById("edit-email");
 const deleteButton = document.getElementById("delete-button");
@@ -130,8 +134,11 @@ const yesButton = document.getElementById("yes-button");
 const noButton = document.getElementById("no-button");
 const logoutButton = document.getElementById("logout-button");
 
-editUsername.addEventListener("click", function() {
-	console.log("edit username");
+editButton.addEventListener("click", function() {
+	console.log("edit button");
+	
+	// editInfo.style.display = "flex";
+	// currentInfo.style.display = "none";
 	
 });
 
@@ -144,7 +151,6 @@ deleteButton.addEventListener("click", function() {
 	console.log("delete button");
 	// handleDeleteAccount();
 	confirmationPopin.style.display = "flex";
-	//faire cliquer sur oui ou non
 });
 
 
@@ -162,5 +168,7 @@ noButton.addEventListener("click", function() {
 
 logoutButton.addEventListener("click", function() {
 	console.log("logout button");
+	logout();
+	// disabledAccount();
 });
 

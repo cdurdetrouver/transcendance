@@ -11,14 +11,28 @@
 						<img src="../../static/assets/header/login.png" alt="Profile Picture" id="profile-picture">
 					</div>
 					<div class="text"id="user-info">
-						<div id="username">
-						<input type="text" class="edit-input" placeholder="new username">
+						<div id="current-info">
+							<div id="username">
+								<button id="edit-username-button">
+									<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
+								</button>
+							</div>
+							<div id="email"></div>
+							<div id="password"
 						</div>
-						<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-button buttons" id="edit-username">
-						<div id="email">
-							<input type="text" class="edit-input" placeholder="new email">
+						<div id="edit-info">
+							<div id="edit-username">
+								<input type="text" class="edit-input" id="input-username" placeholder="new username">
+							</div>
+							<div id="edit-email">
+								<input type="text" class="edit-input" id="input-email" placeholder="new email">
+							</div>
+							<div id="edit-password">
+								<input type="text" class="edit-input" id="current-password" placeholder="Current password">
+								<input type="text" class="edit-input" id="new-password" placeholder="New password">
+								<input type="text" class="edit-input" id="confirm-password" placeholder="Confirm new password">
+							</div>
 						</div>
-						<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-button buttons" id="edit-email">
 					</div>
 					<div  class="stats text" id="wins">
 						<span > WINS</span>
@@ -27,8 +41,17 @@
 						<span> LOSSES</span>
 					</div>
 					<div id="delete-profile">
-						<button class="buttons text" id="delete-button" >DELETE PROFILE
-							<img src="../routes/assets/images/utils/logo_delete.png" alt="Delete logo" id="delete-logo">
+						<button class="buttons text" id="delete-button" >
+						<img src="../routes/assets/images/utils/logo_delete.png" alt="Delete logo" class="delete-logo" id="delete-logo-left">
+						DELETE PROFILE
+						<img src="../routes/assets/images/utils/logo_delete.png" alt="Delete logo" class="delete-logo" id="delete-logo-right">
+						</button>
+					</div>
+					<div id="edit-profile">
+						<button class="buttons text" id="edit-button">
+							<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-left">
+							EDIT PROFILE
+							<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-right">
 						</button>
 					</div>
 				</div>
