@@ -219,7 +219,7 @@ async function update_room(event) {
     const data = await response.json();
     if (response.status === 200) {
         room = data['room'];
-		const chat_title = document.querySelector('.room-name-center')
+		const chat_title = document.querySelector('#chat-header .room-name')
         chat_title.innerHTML = `
         ${room.name}
         `;
@@ -232,7 +232,7 @@ async function update_room(event) {
 }
 
 async function chat_close(params) {
-    const chat_box = document.querySelector('.chat-box');
+    const chat_box = document.querySelector('.chat-block');
     chat_box.innerHTML = `<t1>No chat selected</t1>`;
     print_chats();
 }
@@ -247,7 +247,7 @@ async function chat_delete(event) {
     const data = await response.json();
     if (response.status === 200) {
         console.log(`Chat ${room.id} deleted successfully.`);
-	    const chat_delete = document.querySelector('.chat-box');
+	    const chat_delete = document.querySelector('.chat-block');
         chat_delete.innerHTML = `
         <t1>Chat ${room.name} deleted successfully.</t1>
         <input id="chat-conf-close" type="button" value="Close chat">
@@ -333,7 +333,7 @@ async function open_chat(room_selected) {
     }
     room = room_selected;
     console.log(room);
-    const chat_box = document.querySelector('.chat-box');
+    const chat_box = document.querySelector('.chat-block');
 	const chat_conf = document.querySelector('.chat-conf');
 	const room_info = document.querySelector('.room-info');
 	let room_picture = config.backendUrl + room.room_picture;
@@ -343,9 +343,11 @@ async function open_chat(room_selected) {
 	}
 
     chat_box.innerHTML = `
-	<span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
-	<span class="room-name-center">${room.name}</span>
-        <li>
+	<div id=chat-header> 
+		<span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
+		<span class="room-name">${room.name}</span>
+	</div>
+
             <textarea id="chat-log"></textarea><br>
             <input id="chat-message-input" type="text" size="100" placeholder="Your message"><br>
             <input id="chat-message-submit" type="button" value="Send">
@@ -353,7 +355,6 @@ async function open_chat(room_selected) {
             <input id="chat-message-pong" type="button" value="Send pong link">
             <input id="chat-message-close" type="button" value="close chat">
             <input id="chat-message-leave" type="button" value="leave chat">
-		</li>
     `;
 	chat_conf.innerHTML = `
 	<input id="chat-add-user" type="button" value="Add user">
@@ -397,13 +398,19 @@ async function open_chat(room_selected) {
         if (data.type == 'announce') {
             const chat_log = document.querySelector('#chat-log')
             if (chat_log)
-                chat_log.value += (data.content + '\n');
+                chat_log.value += (data.message.author.username + ' : ' + data.content + '\n');
         }
         else if (data.type == 'chat')
-            document.querySelector('#chat-log').value += (data.message.content + '\n');
+		{
+            document.querySelector('#chat-log').value += (data.message.author.username + ' : ' + data.message.content + '\n');
+		}
         else if (data.type == 'list-chat') {
             for (const index in data.messages)
-                document.querySelector('#chat-log').value += (data.messages[index].content + '\n');
+			{
+				const message = data.messages[index];
+				const msgUser = message.author ? (message.author.username + ': ') : "";
+			    document.querySelector('#chat-log').value += (msgUser + data.messages[index].content + '\n');
+			}
         }
         else if (data.type == 'invitation') {
             document.querySelector('#chat-log').value += `${config.frontendUrl}/privatematchmaking?match_name=${data.match_name}` + '\n';
@@ -435,7 +442,7 @@ async function open_chat(room_selected) {
     {
         if (chatSocket)
             chatSocket.close();
-        const chat_box = document.querySelector('.chat-box');
+        const chat_box = document.querySelector('.chat-block');
         chat_box.innerHTML = `<t1>No chat selected</t1>`;
     };
     document.querySelector('#chat-message-refresh').onclick = function(e)
