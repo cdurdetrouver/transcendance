@@ -98,8 +98,43 @@
 					height: 80%; 
 					resize: none;
 					background: none;
-
+					display: flex;
+					flex-direction: column;
+					gap: 5px;
 				}
+
+				.chat-message {
+					width: 50%;
+					// -webkit-border-radius: 20px;
+					border-radius: 20px;
+					// background-color: #858582;
+					margin-left: 35px;
+				}
+
+				.chat-message-user {
+					margin-left : 50%;
+					width: auto;
+					-webkit-border-radius: 20px;
+					border-radius: 20px;
+					background-color: #373f85;
+				}
+
+				.nameDiv {
+					font-size: 10px;
+					color: rgb(219, 218, 218);	
+				}
+
+				.profile-pic
+				{
+					width: 30px;
+					height: 30px;
+					border-radius: 50%;
+					overflow: hidden;
+					position: relative;
+					bottom: -32px;
+					margin-right: 10px;
+				}
+
 		}
 	}
 	.right {
