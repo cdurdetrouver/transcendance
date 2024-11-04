@@ -294,9 +294,12 @@ body, html {
 }
 
 #edit-password-button {
-    display: none;
-    width: 90%;
+    width: 100%;
 
+}
+
+#password {
+    display:none;
 }
 
 /* #delete-logo { */

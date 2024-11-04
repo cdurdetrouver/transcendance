@@ -55,12 +55,12 @@ function setPersonalUser(user) {
 	else {
 		console.log("user infos does not exist");
 	}
-	const usernameInfo = document.getElementById("username");
-	const emailInfo = document.getElementById("email");
+	const usernameInfo = document.querySelector("#username .label");
+	const emailInfo = document.querySelector("#email .label");
 
 
-	usernameInfo.innerHTML += `${username}`;
-	emailInfo.innerHTML += `${email}`;
+	usernameInfo.textContent = username;
+	emailInfo.textContent = email;
 
 }
 
@@ -137,19 +137,9 @@ const editPasswordButton = document.getElementById("edit-password-button");
 const password = document.getElementById("password");
 const editUsernameButton = document.getElementById("edit-username-button");
 
-
-editUsernameButton.addEventListener("click", function(){
-	console.log("edit username button");
-
-})
-
 editProfileButton.addEventListener("click", function() {
-	console.log("edit button");
-
-	password.textContent = "password";
 	editUsernameButton.style.display = "flex";
-	editPasswordButton.style.display = "flex";
-	
+	password.style.display = "flex";
 });
 
 editEmail.addEventListener("click", function() {
