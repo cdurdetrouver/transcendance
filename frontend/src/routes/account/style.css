@@ -76,7 +76,7 @@ body, html {
     justify-content: space-between;
     width: 90%;
     height: 10%;
-    /* background-color: blue; */
+    /* background-color: purple; */
 }
 
 .delete-logo {
@@ -125,7 +125,7 @@ body, html {
 }
 
 .buttons {
-    display: inline-block;
+    /* display: inline-block; */
     transition: transform 0.3s ease;
     background-color: transparent;
     border: none;
@@ -236,8 +236,8 @@ body, html {
     height: 100%;
 }
 
-#username {
-}
+/* #username {
+} */
 
 .edit-logo-mode {
     width: 7%;
@@ -269,10 +269,34 @@ body, html {
     left: 0%;
 }
 
-#edit-button {
+#edit-profile-button {
     white-space: nowrap;
     font-size: 2vw;
     left: 10%;
+}
+
+#username {
+    display: flex;
+    align-items: center;
+
+}
+
+/* .edit-button {
+    position: absolute;
+    width: 90%;
+     display: none;
+} */
+
+#edit-username-button {
+    display: none;
+    width: 90%;
+
+}
+
+#edit-password-button {
+    display: none;
+    width: 90%;
+
 }
 
 /* #delete-logo { */
@@ -293,11 +317,11 @@ body, html {
     width: 80%;
 }
 
-.edit-button {
+/* .edit-button {
     display: block;
     position: absolute;
     width: 7%;
-}
+} */
 
 #edit-email {
     top: 50%;
@@ -309,10 +333,14 @@ body, html {
     left: 100%;
 }
 
+#input-username{
+    display: none;
+}
+
 .text {
     font-family: isaac-bold;
     color: #332C2B;
-    display: inline-block;
+
 }
 
 #logout-button {

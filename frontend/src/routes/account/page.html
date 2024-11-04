@@ -10,15 +10,39 @@
 					<div id="profile-picture-container">
 						<img src="../../static/assets/header/login.png" alt="Profile Picture" id="profile-picture">
 					</div>
-					<div class="text"id="user-info">
+					<div  class="stats text" id="wins">
+						WINS
+					</div>
+					<div  class="stats text" id="losses">
+					LOSSES
+					</div>
+					<div id="delete-profile">
+						<button class="buttons text" id="delete-button" >
+							<img src="../routes/assets/images/utils/logo_delete.png" alt="Delete logo" class="delete-logo" id="delete-logo-left">
+						DELETE PROFILE
+						<img src="../routes/assets/images/utils/logo_delete.png" alt="Delete logo" class="delete-logo" id="delete-logo-right">
+						</button>
+					</div>
+					<div id="edit-profile">
+						<button class="buttons text" id="edit-profile-button">
+							<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-left">
+							EDIT PROFILE
+							<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-right">
+						</button>
+					</div>
+					<div id="user-info">
 						<div id="current-info">
-							<div id="username">
-								<button id="edit-username-button">
+							<div class="text" id="username">
+								<button class="buttons edit-button" id="edit-username-button">
 									<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
 								</button>
 							</div>
-							<div id="email"></div>
-							<div id="password"
+							<div class="text" id="email"></div>
+							<div class="text" id="password">
+								<button class="buttons edit-button" id="edit-password-button">
+									<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
+								</button>
+							</div>
 						</div>
 						<div id="edit-info">
 							<div id="edit-username">
@@ -34,39 +58,19 @@
 							</div>
 						</div>
 					</div>
-					<div  class="stats text" id="wins">
-						<span > WINS</span>
-					</div>
-					<div  class="stats text" id="losses">
-						<span> LOSSES</span>
-					</div>
-					<div id="delete-profile">
-						<button class="buttons text" id="delete-button" >
-						<img src="../routes/assets/images/utils/logo_delete.png" alt="Delete logo" class="delete-logo" id="delete-logo-left">
-						DELETE PROFILE
-						<img src="../routes/assets/images/utils/logo_delete.png" alt="Delete logo" class="delete-logo" id="delete-logo-right">
-						</button>
-					</div>
-					<div id="edit-profile">
-						<button class="buttons text" id="edit-button">
-							<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-left">
-							EDIT PROFILE
-							<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-right">
-						</button>
-					</div>
 				</div>
 			</div>
-			<div id="confirmation-popin">
-				<img src="../routes/assets/images/utils/confirmation_sheet_empty.png" alt="Confirmation Image" id="confirmation-image">
-				<div id="popin-postit">
-					<span id="confirmation-text" class="text">ARE YOU SURE ?</span>
-					<button class="button-popin text buttons" id="yes-button">YES
-						<!-- <img id="yes-image" src="../routes/assets/images/utils/yes-button.png"> -->
-					</button>
-					<button class="button-popin text buttons" id="no-button">NO
-						<!-- <img id="no-image" src="../routes/assets/images/utils/no-button.png"> -->
-					</button>
-				</div>
+		</div>
+		<div id="confirmation-popin">
+			<img src="../routes/assets/images/utils/confirmation_sheet_empty.png" alt="Confirmation Image" id="confirmation-image">
+			<div id="popin-postit">
+				<span id="confirmation-text" class="text">ARE YOU SURE ?</span>
+				<button class="button-popin text buttons" id="yes-button">YES
+					<!-- <img id="yes-image" src="../routes/assets/images/utils/yes-button.png"> -->
+				</button>
+				<button class="button-popin text buttons" id="no-button">NO
+					<!-- <img id="no-image" src="../routes/assets/images/utils/no-button.png"> -->
+				</button>
 			</div>
 		</div>
 	</div>

@@ -125,7 +125,7 @@ export async function cleanupComponent() {
 const currentInfo = document.getElementById("current-info");
 const userInfo = document.getElementById("user-info");
 const editInfo = document.getElementById("edit-info");
-const editButton = document.getElementById("edit-button");
+const editProfileButton = document.getElementById("edit-profile-button");
 const editUsername = document.getElementById("edit-username");
 const editEmail = document.getElementById("edit-email");
 const deleteButton = document.getElementById("delete-button");
@@ -133,12 +133,22 @@ const confirmationPopin = document.getElementById("confirmation-popin");
 const yesButton = document.getElementById("yes-button");
 const noButton = document.getElementById("no-button");
 const logoutButton = document.getElementById("logout-button");
+const editPasswordButton = document.getElementById("edit-password-button");
+const password = document.getElementById("password");
+const editUsernameButton = document.getElementById("edit-username-button");
 
-editButton.addEventListener("click", function() {
+
+editUsernameButton.addEventListener("click", function(){
+	console.log("edit username button");
+
+})
+
+editProfileButton.addEventListener("click", function() {
 	console.log("edit button");
-	
-	// editInfo.style.display = "flex";
-	// currentInfo.style.display = "none";
+
+	password.textContent = "password";
+	editUsernameButton.style.display = "flex";
+	editPasswordButton.style.display = "flex";
 	
 });
 
