@@ -349,10 +349,12 @@ async function open_chat(room_selected) {
 	</div>
 
             <div id="chat-log" style="overflow-y: auto; max-height: 80%;"></div>
-            <input id="chat-message-input" type="text" size="100" placeholder="Your message"><br>
+			<div id="chat-input-block">
+			    <input id="chat-message-input" type="text" placeholder="Aa"><br>
+				<input id="chat-message-pong" type="button" value="Send pong link">
+			</div>
             <input id="chat-message-submit" type="button" value="Send">
             <input id="chat-message-refresh" type="button" value="refresh">
-            <input id="chat-message-pong" type="button" value="Send pong link">
             <input id="chat-message-close" type="button" value="close chat">
             <input id="chat-message-leave" type="button" value="leave chat">
     `;
@@ -406,63 +408,84 @@ async function open_chat(room_selected) {
 			const username = data.message.author.username;
 			const content = data.message.content;
 
-			const isCurrentUser = username === user.username; // replace 'your_username' as needed
-
-				// Create a new div for each message
 			const messageElement = document.createElement('div');
-			messageElement.classList.add( isCurrentUser ? 'chat-message-user' : 'chat-message');
-			messageElement.style.textAlign = isCurrentUser ? 'right' : 'left';
-			messageElement.textContent = `${username}: ${content}`;
+			messageElement.classList.add('chat-message');
+			messageElement.textContent = `${content}`;
 		
+			const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+
+			const profileImg = document.createElement('img');
+			profileImg.src = profile_picture;
+			profileImg.alt = `${username}'s profile picture`; 
+			profileImg.classList.add('profile-pic'); 
+
+			const nameDiv = document.createElement('div');
+			nameDiv.classList.add('nameDiv');
+			nameDiv.textContent = `${username}`;
+			nameDiv.innerHTML = `<span>${username}</span>`; 
+			nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
+
+			chatLog.appendChild(nameDiv);
+
 			// Append message to chat log
+			chatLog.scrollTop = chatLog.scrollHeight;
 			chatLog.appendChild(messageElement);
 
 		}
 		else if (data.type == 'list-chat') {
-			const chatLog = document.querySelector('#chat-log'); // Selects the #chat-log div
+			const chatLog = document.querySelector('#chat-log');
 		
 			for (const index in data.messages) {
 				const message = data.messages[index];
-				const username = message.author ? message.author.username : "Unknown";
+				const username = message.author ? message.author.username : "";
 				const content = message.content;
-		
-				const isCurrentUser = username === user.username;
-				// Create a new div for each message
 
 				const messageElement = document.createElement('div');
-				messageElement.classList.add( isCurrentUser ? 'chat-message-user' : 'chat-message');
-				messageElement.style.textAlign = isCurrentUser ? 'right' : 'left';
-				messageElement.style.textAlign = isCurrentUser ? 'right' : 'left';
+				messageElement.classList.add('chat-message');
 				messageElement.textContent = `${content}`;
 
+				const profile_picture = message.author.picture_remote ? message.author.picture_remote : config.backendUrl + message.author.profile_picture;
 
-				if (!isCurrentUser)
-				{
+				const profileImg = document.createElement('img');
+				profileImg.src = profile_picture;
+				profileImg.alt = `${username}'s profile picture`;
+				profileImg.classList.add('profile-pic'); 
 
-					const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+				const nameDiv = document.createElement('div');
+				nameDiv.classList.add('nameDiv');
+				nameDiv.textContent = `${username}`;
+				nameDiv.innerHTML = `<span>${username}</span>`; // Set username
+				nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
 
-					const profileImg = document.createElement('img');
-					profileImg.src = profile_picture;
-					profileImg.alt = `${username}'s profile picture`; // Alt text for accessibility
-					profileImg.classList.add('profile-pic'); // Optional: Add a class for styling
-
-					const nameDiv = document.createElement('div');
-					nameDiv.classList.add('nameDiv');
-					nameDiv.textContent = `${username}`;
-					nameDiv.innerHTML = `<span>${username}</span>`; // Set username
-					nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
-
-
-					chatLog.appendChild(nameDiv);
-
-				}
+				chatLog.appendChild(nameDiv);
+				chatLog.scrollTop = chatLog.scrollHeight;
 				chatLog.appendChild(messageElement);
 
 			}
 		}
 		
         else if (data.type == 'invitation') {
-            document.querySelector('#chat-log').value += `${config.frontendUrl}/privatematchmaking?match_name=${data.match_name}` + '\n';
+			const chatLog = document.querySelector('#chat-log');
+			const username = data.message && data.message.author ? data.message.author.username : 'Unknown User';
+			const invitationLink = `${config.frontendUrl}/privatematchmaking?match_name=${data.match_name}`; 
+	
+			// Create message element
+			const messageElement = document.createElement('div');
+			messageElement.classList.add('chat-message');
+			
+			// Create clickable link for the invitation
+			const linkElement = document.createElement('a');
+			linkElement.href = invitationLink;
+			linkElement.classList.add('gamek-link'); // Add your styles here
+			linkElement.innerHTML = `A pong room was created!<br>Click to join`; // Use innerHTML for line break
+			linkElement.target = "_blank"; // Opens link in a new tab
+			
+			// Append the link to the message element
+			messageElement.appendChild(linkElement);
+
+			// Append the message element to the chat log
+			chatLog.appendChild(messageElement);
+			chatLog.appendChild(messageElement);
         }
     };
     
@@ -659,6 +682,19 @@ export async function initComponent(params) {
 			updateUserList([]);
 		}
 	});
+
+	const textBox = document.getElementById('user-search');
+	const chatList = document.querySelector('.chat-list');
+
+	// Hide chat-list when text box is focused
+	textBox.addEventListener('focus', function() {
+		chatList.style.display = 'none'; // Hide the chat list
+	});
+
+	// Show chat-list when text box loses focus
+	textBox.addEventListener('blur', function() {
+		chatList.style.display = 'block'; // Show the chat list
+	});
 }
 
 export async function cleanupComponent(params) {
@@ -676,11 +712,18 @@ function updateUserList(users) {
 	userProfil.innerHTML = '';
 	users.forEach(user => {
 		const userItem = document.createElement('li');
-		userItem.textContent = user.username;
-		userItem.onclick = () => {
-			const userItem = document.createElement('li');
-			userProfil.textContent = user.username;
-		};
+		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+
+		userItem.innerHTML = `
+		<li class="user-search-list" >
+			<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span>
+			<span class="room-name-left">${user.username}</span>
+		</li>
+		`
+		// userItem.onclick = () => {
+		// 	const userItem = document.createElement('li');
+		// 	userProfil.textContent = user.username;
+		// };
 		userList.appendChild(userItem);
 	});
 }
