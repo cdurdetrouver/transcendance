@@ -139,10 +139,6 @@ body, html {
     width: 100%;
 }
 
-#confirmation-image {
-    width: 35%;
-}
-
 #confirmation-popin {
     position: absolute;
     display: none;
@@ -153,24 +149,29 @@ body, html {
     background-color: rgba(0, 0, 0, 0.5);
     top:0%;
     left:0%;
+    button {
+        position: absolute;
+        top: 60%;
+        transition: transform 0.3s ease;
+        font-size: 4vw;
+    }
+    span {
+        position: absolute;
+        top: 20%;
+        left: 10%;
+        font-size: 2.8vw;
+    }
+    img {
+        width: 35%;
+    }
 }
 
 #popin-postit {
     position: absolute;
-    /* top: 0%;
-    left: 0%; */
-    /* background-color: blue; */
     width: 31%;
     aspect-ratio: 228 / 129;
 }
 
-.button-popin {
-    position: absolute;
-    top: 60%;
-    transition: transform 0.3s ease;
-    font-size: 4vw;
-    /* background-color: blue; */
-}
 
 .button-popin:hover {
     transform: scale(1.2);
@@ -186,14 +187,6 @@ body, html {
     left: 60%;
     width: 23%;
     height: 18%;
-}
-
-#confirmation-text {
-    position: absolute;
-    top: 20%;
-    left: 10%;
-    font-size: 2.8vw;
-    /* text-align: center; */
 }
 
 .stats {
@@ -236,9 +229,6 @@ body, html {
     height: 100%;
 }
 
-/* #username {
-} */
-
 .edit-logo-mode {
     width: 7%;
 }
@@ -269,81 +259,47 @@ body, html {
     left: 0%;
 }
 
-#edit-profile-button {
-    white-space: nowrap;
-    font-size: 2vw;
-    left: 10%;
+#edit-profile {
+    button {
+        white-space: nowrap;
+        font-size: 2vw;
+        left: 10%;    
+    }
 }
 
 #username {
     display: flex;
-    align-items: center;
-
-}
-
-/* .edit-button {
-    position: absolute;
-    width: 90%;
-     display: none;
-} */
-
-#edit-username-button {
-    display: none;
-    width: 90%;
-
-}
-
-#edit-password-button {
-    width: 100%;
-
+    button {
+        display: none;
+        width: 100%;
+        background-color: transparent;
+        border: none;
+    }
 }
 
 #password {
     display:none;
+    button {
+        width: 100%;
+    }
 }
 
-/* #delete-logo { */
-    /* position: absolute; */
-    /* width: 10%; */
-    /* left: 96%; */
-    /* top: 0%; */
-/* } */
-
-
-#edit-info {
-    /* display: flex; */
+#edit-username {
     display: none;
-
+}
+           
+#edit-password {
+    display: none;
+    flex-direction: column;
 }
 
 .edit-input {
     width: 80%;
 }
 
-/* .edit-button {
-    display: block;
-    position: absolute;
-    width: 7%;
-} */
-
-#edit-email {
-    top: 50%;
-    left: 100%;
-}
-
-#edit-username {
-    top: 5%;
-    left: 100%;
-}
-
-#input-username{
-    display: none;
-}
-
 .text {
     font-family: isaac-bold;
     color: #332C2B;
-
 }
 
 #logout-button {
@@ -352,4 +308,36 @@ body, html {
     top: 8%;
     left: 69%;
     z-index: 1111;
+}
+
+.circle {
+    position: absolute;
+    top: 30%;
+    left: 76%;
+    width: 150px; /* Diamètre du cercle */
+    height: 150px;
+    border-radius: 50%; /* Rendre le div circulaire */
+    overflow: hidden; /* Empêche les débordements */
+}
+.slice {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(50% 50%, 100% 0%, 100% 100%);
+}
+.slice-1 {
+    background-color: #4CAF50; /* Couleur de la première portion */
+    transform: rotate(0deg);
+}
+.slice-2 {
+    background-color: #2196F3; /* Couleur de la deuxième portion */
+    transform: rotate(90deg);
+}
+.slice-3 {
+    background-color: #FFC107; /* Couleur de la troisième portion */
+    transform: rotate(180deg);
+}
+.slice-4 {
+    background-color: #F44336; /* Couleur de la quatrième portion */
+    transform: rotate(270deg);
 }

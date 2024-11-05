@@ -125,26 +125,42 @@ export async function cleanupComponent() {
 const currentInfo = document.getElementById("current-info");
 const userInfo = document.getElementById("user-info");
 const editInfo = document.getElementById("edit-info");
-const editProfileButton = document.getElementById("edit-profile-button");
-const editUsername = document.getElementById("edit-username");
-const editEmail = document.getElementById("edit-email");
+
 const deleteButton = document.getElementById("delete-button");
 const confirmationPopin = document.getElementById("confirmation-popin");
 const yesButton = document.getElementById("yes-button");
 const noButton = document.getElementById("no-button");
 const logoutButton = document.getElementById("logout-button");
-const editPasswordButton = document.getElementById("edit-password-button");
-const password = document.getElementById("password");
-const editUsernameButton = document.getElementById("edit-username-button");
+
+const editProfileButton = document.querySelector("#edit-profile .buttons");
+const password = document.querySelector("#password");
+const editPasswordButton = document.querySelector("#password .edit-button");
+const editUsernameButton = document.querySelector("#username .edit-button")
+const editUsername = document.querySelector("#edit-username");
+const username = document.querySelector("#username");
+const editPassword = document.querySelector("#edit-password");
+// const editContainer = document.querySelector("#edit-info");
 
 editProfileButton.addEventListener("click", function() {
 	editUsernameButton.style.display = "flex";
 	password.style.display = "flex";
 });
 
-editEmail.addEventListener("click", function() {
-	console.log("edit email");
+editPasswordButton.addEventListener("click", function() {
+	console.log("edit password");
+	document.querySelector("#password .label").style.display = "none";
+	document.querySelector("#password .buttons").style.display = "none";
+	editPassword.style.display = "flex";
 
+});
+
+editUsernameButton.addEventListener("click", function() {
+	console.log("edit username");
+	// username.style.display = "none";
+	document.querySelector("#username .label").style.display = "none";
+	document.querySelector("#username .edit-button").style.display = "none";
+	// editContainer.style.display = "flex";
+	editUsername.style.display = "flex";
 });
 
 deleteButton.addEventListener("click", function() {

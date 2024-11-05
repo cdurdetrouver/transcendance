@@ -3,37 +3,40 @@
 <div id="page">
 	<div class="background">
 		<div class="container">
+			<div class="circle">
+				<div class="slice slice-1"></div>
+				<div class="slice slice-2"></div>
+				<div class="slice slice-3"></div>
+				<div class="slice slice-4"></div>
+			</div>
 			<div id="sheet">
 				<img src="../../static/assets/header/login.png" alt="logout image" class="buttons" id="logout-button">
 				<img src="../routes/assets/images/utils/profile_sheet.png" alt="sheet image" id="sheet-image">
 				<div id="main-page">
 					<div id="user-info">
 						<div id="current-info">
+							<div class="text" id="email"><span class="label"></span></div>
 							<div class="text" id="username">
 								<span class="label"></span>
-								<button class="buttons edit-button" id="edit-username-button">
+								<button class=" edit-button">
 									<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
 								</button>
+								<div id="edit-username">
+									<input type="text" class="edit-input"  placeholder="new username">
+									<input type="submit" value="Submit">
+								</div>
 							</div>
-							<div class="text" id="email"><span class="label"></span></div>
 							<div class="text" id="password">
 								<span class="label">PASSWORD</span>
-								<button class="buttons edit-button" id="edit-password-button">
+								<button class="buttons edit-button">
 									<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
 								</button>
-							</div>
-						</div>
-						<div id="edit-info">
-							<div id="edit-username">
-								<input type="text" class="edit-input" id="input-username" placeholder="new username">
-							</div>
-							<div id="edit-email">
-								<input type="text" class="edit-input" id="input-email" placeholder="new email">
-							</div>
-							<div id="edit-password">
-								<input type="text" class="edit-input" id="current-password" placeholder="Current password">
-								<input type="text" class="edit-input" id="new-password" placeholder="New password">
-								<input type="text" class="edit-input" id="confirm-password" placeholder="Confirm new password">
+								<div id="edit-password">
+									<input type="text" class="edit-input" id="current-password" placeholder="Current password">
+									<input type="text" class="edit-input" id="new-password" placeholder="New password">
+									<input type="text" class="edit-input" id="confirm-password" placeholder="Confirm new password">
+									<input type="submit" value="Submit">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -54,7 +57,7 @@
 						</button>
 					</div>
 					<div id="edit-profile">
-						<button class="buttons text" id="edit-profile-button">
+						<button class="buttons text">
 							<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-left">
 							EDIT PROFILE
 							<img src="../routes/assets/images/utils/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-right">
@@ -65,15 +68,11 @@
 			</div>
 		</div>
 		<div id="confirmation-popin">
-			<img src="../routes/assets/images/utils/confirmation_sheet_empty.png" alt="Confirmation Image" id="confirmation-image">
+			<img src="../routes/assets/images/utils/confirmation_sheet_empty.png" alt="Confirmation Image">
 			<div id="popin-postit">
-				<span id="confirmation-text" class="text">ARE YOU SURE ?</span>
-				<button class="button-popin text buttons" id="yes-button">YES
-					<!-- <img id="yes-image" src="../routes/assets/images/utils/yes-button.png"> -->
-				</button>
-				<button class="button-popin text buttons" id="no-button">NO
-					<!-- <img id="no-image" src="../routes/assets/images/utils/no-button.png"> -->
-				</button>
+				<span class="text">ARE YOU SURE ?</span>
+				<button class="text buttons" id="yes-button">YES</button>
+				<button class="text buttons" id="no-button">NO</button>
 			</div>
 		</div>
 	</div>
