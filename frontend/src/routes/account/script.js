@@ -181,6 +181,8 @@ noButton.addEventListener("click", function() {
 logoutButton.addEventListener("click", function() {
 	console.log("logout button");
 	logout();
+	router.navigate('/');
+
 	// disabledAccount();
 });
 
