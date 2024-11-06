@@ -443,21 +443,23 @@ async function open_chat(room_selected) {
 				const messageElement = document.createElement('div');
 				messageElement.classList.add('chat-message');
 				messageElement.textContent = `${content}`;
+				
+				if (message.author)
+				{
+					const profile_picture = message.author.picture_remote ? message.author.picture_remote : config.backendUrl + message.author.profile_picture;
+					const profileImg = document.createElement('img');
+					profileImg.src = profile_picture;
+					profileImg.alt = `${username}'s profile picture`;
+					profileImg.classList.add('profile-pic'); 
 
-				const profile_picture = message.author.picture_remote ? message.author.picture_remote : config.backendUrl + message.author.profile_picture;
+					const nameDiv = document.createElement('div');
+					nameDiv.classList.add('nameDiv');
+					nameDiv.textContent = `${username}`;
+					nameDiv.innerHTML = `<span>${username}</span>`; // Set username
+					nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
+					chatLog.appendChild(nameDiv);
+				}
 
-				const profileImg = document.createElement('img');
-				profileImg.src = profile_picture;
-				profileImg.alt = `${username}'s profile picture`;
-				profileImg.classList.add('profile-pic'); 
-
-				const nameDiv = document.createElement('div');
-				nameDiv.classList.add('nameDiv');
-				nameDiv.textContent = `${username}`;
-				nameDiv.innerHTML = `<span>${username}</span>`; // Set username
-				nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
-
-				chatLog.appendChild(nameDiv);
 				chatLog.scrollTop = chatLog.scrollHeight;
 				chatLog.appendChild(messageElement);
 
@@ -594,39 +596,37 @@ async function print_invitations() {
     const ret_rooms = await get_user_invitations();
     if (!ret_rooms)
         {
-            const chat_error = document.querySelector('.chat-list-invitations');
-            chat_error.innerHTML = `
-            <t1>List of invitations</t1>
-            <div class="chat-info-invitations">
-            <div>no invitations found</div>
-            </div>
-            `;
+            const no_invit = document.querySelector('.invitation');
+
+			const newH2 = document.createElement('h4');
+			newH2.textContent = 'No invitation, sorry :('; // Set the content of the new h2
+
+			const h1Element = no_invit.querySelector('h1');
+			h1Element.insertAdjacentElement('afterend', newH2);
         }
     else {
         const rooms = ret_rooms.invitation;
-        const chat_list = document.querySelector('.chat-list-invitations');
-        chat_list.innerHTML=`
-            <t1>List of invitations</t1>
-        `;
+        const invite_list = document.querySelector('.invitation-list');
         for (const room_l of rooms)
             {
-                const chat = document.createElement('li');
-                const room_picture = config.backendUrl + room_l.room_picture;
-                chat.innerHTML = `
-                <div class="chat-block-invitations-${room_l.id}">
-			        <t1>${room_l.name}</t1>
-                    <img src="${room_picture}" height=100 alt="Room Picture">
-                    <input id="invitation-accept-${room_l.id}" type="button" value="Accept invitation">
-                    <input id="invitation-refuse-${room_l.id}" type="button" value="Refuse invitation">
+                const invite = document.createElement('li');
+                let room_picture = config.backendUrl + room_l.room_picture;
+				if (room_picture == "http://localhost:8000null")
+					room_picture = "../../static/assets/jpg/default_picture.jpg"
+                invite.innerHTML = `
+				<li class="room">
+				    <span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
+			        <span class="room-name-left">${room_l.name}</span>
+                </li>
 
-                </div>
                 `;
-                chat_list.appendChild(chat);
-                const btn_accept = document.getElementById(`invitation-accept-${room_l.id}`)
-                const btn_refuse = document.getElementById(`invitation-refuse-${room_l.id}`)
-                btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
-                btn_refuse.addEventListener('click', function(event) {accept_invitation(room_l.id, "FALSE")});
-            };12345
+                invite_list.appendChild(invite);
+
+
+				invite.addEventListener('click', function(event) {
+						open_invitation(room_l);
+				});
+            };
         }
 }
 
@@ -682,19 +682,6 @@ export async function initComponent(params) {
 			updateUserList([]);
 		}
 	});
-
-	const textBox = document.getElementById('user-search');
-	const chatList = document.querySelector('.chat-list');
-
-	// Hide chat-list when text box is focused
-	textBox.addEventListener('focus', function() {
-		chatList.style.display = 'none'; // Hide the chat list
-	});
-
-	// Show chat-list when text box loses focus
-	textBox.addEventListener('blur', function() {
-		chatList.style.display = 'block'; // Show the chat list
-	});
 }
 
 export async function cleanupComponent(params) {
@@ -727,3 +714,57 @@ function updateUserList(users) {
 		userList.appendChild(userItem);
 	});
 }
+
+
+function open_invitation(room_l) {
+	room = room_l;
+    console.log(room);
+    // console.log(room.participants[0]);
+
+    const chat_box = document.querySelector('.chat-block');
+	const chat_conf = document.querySelector('.chat-conf');
+	const room_info = document.querySelector('.room-info');
+	const room_users = document.querySelector('.room-users');
+
+	let room_picture = config.backendUrl + room.room_picture;
+	if (room_picture == "http://localhost:8000null")
+	{
+		room_picture = "../../static/assets/jpg/default_picture.jpg"
+	}
+
+    chat_box.innerHTML = `
+	<div id=chat-header> 
+		<span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
+		<span class="room-name">${room.name}</span>
+	</div>
+	<h1>Accept invite to see the content of chat</h1>
+    `;
+
+	room_info.innerHTML = `
+	<div class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </div>
+	<div class="room-name-right"> ${room.name}  </div>
+	`
+	chat_conf.innerHTML = `
+	<input id="invitation-accept-${room_l.id}" type="button" value="Accept invitation">
+	<input id="invitation-refuse-${room_l.id}" type="button" value="Refuse invitation">
+	`;
+
+	const btn_accept = document.getElementById(`invitation-accept-${room_l.id}`)
+	const btn_refuse = document.getElementById(`invitation-refuse-${room_l.id}`)
+	btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
+	btn_refuse.addEventListener('click', function(event) {accept_invitation(room_l.id, "FALSE")});
+
+	for (const user of room.participants)
+	{
+		console.log(user);
+		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+		room_users.innerHTML = `
+		<li class="user-search-list" >
+			<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
+			<span class="room-name-left">${user.username}</span>
+		</li>
+		`;
+	}
+
+}
+
