@@ -2,7 +2,7 @@ import { customalert } from '../../components/alert/script.js';
 import config from '../../env/config.js';
 import { get_user, logout } from '../../components/user/script.js';
 import { router } from '../../app.js';
-import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
+import { handleDeleteAccount  } from '../user/edit/script.js';
 
 async function get_games(user_id) {
 	const response = await fetch(config.backendUrl + '/user/games/' + user_id, {
@@ -121,66 +121,4 @@ export async function initComponent() {
 
 export async function cleanupComponent() {
 }
-
-
-const confirmationPopin = document.getElementById("confirmation-popin");
-const yesButton = document.getElementById("yes-button");
-const noButton = document.getElementById("no-button");
-const logoutButton = document.getElementById("logout-button");
-
-const deleteButton = document.querySelector("#delete-profile .buttons");
-const editProfileButton = document.querySelector("#edit-profile .buttons");
-const password = document.querySelector("#password");
-const editPasswordButton = document.querySelector("#password .edit-button");
-const editUsernameButton = document.querySelector("#username .edit-button")
-const editUsername = document.querySelector("#edit-username");
-const editPassword = document.querySelector("#edit-password");
-// const editContainer = document.querySelector("#edit-info");
-
-editProfileButton.addEventListener("click", function() {
-	editUsernameButton.style.display = "flex";
-	password.style.display = "flex";
-});
-
-editPasswordButton.addEventListener("click", function() {
-	console.log("edit password");
-	document.querySelector("#password .label").style.display = "none";
-	document.querySelector("#password .buttons").style.display = "none";
-	editPassword.style.display = "flex";
-
-});
-
-editUsernameButton.addEventListener("click", function() {
-	console.log("edit username");
-	// username.style.display = "none";
-	document.querySelector("#username .label").style.display = "none";
-	document.querySelector("#username .edit-button").style.display = "none";
-	// editContainer.style.display = "flex";
-	editUsername.style.display = "flex";
-});
-
-deleteButton.addEventListener("click", function() {
-	console.log("delete button");
-	// handleDeleteAccount();
-	confirmationPopin.style.display = "flex";
-});
-
-
-yesButton.addEventListener("click", function() {
-	console.log("yes button");
-	confirmationPopin.style.display = "none";
-	handleDeleteAccount();
-
-});
-
-noButton.addEventListener("click", function() {
-	console.log("no button");
-	confirmationPopin.style.display = "none";
-});
-
-logoutButton.addEventListener("click", function() {
-	console.log("logout button");
-	logout();
-	// disabledAccount();
-});
 
