@@ -4,8 +4,11 @@
 		<div class="block left">
 			<div class="search-container">
 				<h1>Group chat</h1>
-				<input type="text" id="user-search" placeholder="Search for users...">
-				<ul id="user-list"></ul>
+				<div class="create-box">
+					<li class="li-create-room-btn">
+						<input id="create-room-btn" type="button" value="create room">
+					</li>
+				</div>
 			</div>
 			<div class="chat-list"> </div>
 			<div class="invitation">
@@ -24,17 +27,14 @@
 			<div class="room-info"></div>
 			<div id="user-profile"></div>
 			<div class="room-users"></div>
-			<div class="chat-conf"><div>
+			<div class="chat-conf"></div>
+			<div>
+				<ul class="user-list"></ul>
+			</div>
 		</div>
 	</div>
 
 	<ul class="chat-list-invitations">
 		<!-- List of the chat -->
-	</ul>
-	<ul class="create-box">
-		<!-- create-box -->
-		<li class="li-create-room-btn">
-			<input id="create-room-btn" type="button" value="create room">
-		</li>
 	</ul>
 </div>
