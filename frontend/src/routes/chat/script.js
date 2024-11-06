@@ -715,8 +715,6 @@ export async function cleanupComponent(params) {
 function updateUserList(users) {
 	const userList = document.querySelector('.user-list');
 	userList.innerHTML = '';
-	const userProfil = document.getElementById('user-profile');
-	userProfil.innerHTML = '';
 	users.forEach(user => {
 		const userItem = document.createElement('li');
 		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
@@ -842,17 +840,30 @@ function open_invitation(room_l) {
 	btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
 	btn_refuse.addEventListener('click', function(event) {accept_invitation(room_l.id, "FALSE")});
 
-	for (const user of room.participants)
-	{
-		console.log(user);
-		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
-		room_users.innerHTML = `
-		<li class="room" >
-			<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
-			<span class="room-name-left">${user.username}</span>
-		</li>
-		`;
-	}
-
+	print_member(room);
 }
 
+function print_member(room) {
+	const userList = document.querySelector('.room-users');
+	userList.innerHTML = '';
+	room.participants.forEach(user => {
+		const userItem = document.createElement('li');
+		userItem.classList.add('room');
+
+		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+		if (user.username == room.created_by.username)
+		{
+			userItem.innerHTML = `
+				<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
+				<span class="room-name-left"> <b>${user.username}</b></span>
+			`;
+		}
+		else {
+			userItem.innerHTML = `
+				<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
+				<span class="room-name-left">${user.username}</span>
+			`;
+		}
+		userList.appendChild(userItem);
+	});
+}
