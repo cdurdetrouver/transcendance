@@ -157,6 +157,22 @@ async function chat_add_user() {
     <input id="chat-user-submit" type="button" value="add user">
     <input id="chat-conf-close" type="button" value="close">
     `;
+
+	document.getElementById('chat-user-input').addEventListener('input', async function() {
+		const query = this.value;
+		if (query.length > 0) {
+			const response = await searchUsers(query, 5);
+			if (response.status === 200) {
+				const data = await response.json();
+				updateUserList(data.users);
+			} else {
+				updateUserList([]);
+			}
+		} else {
+			updateUserList([]);
+		}
+	});
+
     const input_user = document.querySelector('#chat-user-input');
     document.querySelector('#chat-user-submit').addEventListener('click', function(event) {add_user(input_user.value, room)});
     document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
@@ -382,6 +398,8 @@ async function open_chat(room_selected) {
 	<div class="room-name-right"> ${room.name}  </div>
 	`
 
+	print_member(room);
+
     // document.querySelector('#chat-conf-btn').addEventListener('click', check_admin);
     document.querySelector('#chat-message-pong').addEventListener('click', send_pong_link);
     document.querySelector('#chat-message-leave').addEventListener('click', leave_chat);
@@ -412,7 +430,8 @@ async function open_chat(room_selected) {
 			messageElement.classList.add('chat-message');
 			messageElement.textContent = `${content}`;
 		
-			const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+			const profile_picture =  data.message.author.picture_remote ?  data.message.author.picture_remote : config.backendUrl +  data.message.author.profile_picture;
+
 
 			const profileImg = document.createElement('img');
 			profileImg.src = profile_picture;
@@ -668,20 +687,20 @@ export async function initComponent(params) {
     const create_room_btn = document.querySelector('.li-create-room-btn');
     create_room_btn.addEventListener('click', create_room);
 
-	document.getElementById('user-search').addEventListener('input', async function() {
-		const query = this.value;
-		if (query.length > 0) {
-			const response = await searchUsers(query, 5);
-			if (response.status === 200) {
-				const data = await response.json();
-				updateUserList(data.users);
-			} else {
-				updateUserList([]);
-			}
-		} else {
-			updateUserList([]);
-		}
-	});
+	// document.getElementById('user-search').addEventListener('input', async function() {
+	// 	const query = this.value;
+	// 	if (query.length > 0) {
+	// 		const response = await searchUsers(query, 5);
+	// 		if (response.status === 200) {
+	// 			const data = await response.json();
+	// 			updateUserList(data.users);
+	// 		} else {
+	// 			updateUserList([]);
+	// 		}
+	// 	} else {
+	// 		updateUserList([]);
+	// 	}
+	// });
 }
 
 export async function cleanupComponent(params) {
@@ -693,10 +712,8 @@ export async function cleanupComponent(params) {
 
 
 function updateUserList(users) {
-	const userList = document.getElementById('user-list');
+	const userList = document.querySelector('.user-list');
 	userList.innerHTML = '';
-	const userProfil = document.getElementById('user-profile');
-	userProfil.innerHTML = '';
 	users.forEach(user => {
 		const userItem = document.createElement('li');
 		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
@@ -707,10 +724,9 @@ function updateUserList(users) {
 			<span class="room-name-left">${user.username}</span>
 		</li>
 		`
-		// userItem.onclick = () => {
-		// 	const userItem = document.createElement('li');
-		// 	userProfil.textContent = user.username;
-		// };
+		userItem.addEventListener('click', () => {
+			document.getElementById('chat-user-input').value = user.username;
+		});
 		userList.appendChild(userItem);
 	});
 }
@@ -755,17 +771,30 @@ function open_invitation(room_l) {
 	btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
 	btn_refuse.addEventListener('click', function(event) {accept_invitation(room_l.id, "FALSE")});
 
-	for (const user of room.participants)
-	{
-		console.log(user);
-		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
-		room_users.innerHTML = `
-		<li class="room" >
-			<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
-			<span class="room-name-left">${user.username}</span>
-		</li>
-		`;
-	}
-
+	print_member(room);
 }
 
+function print_member(room) {
+	const userList = document.querySelector('.room-users');
+	userList.innerHTML = '';
+	room.participants.forEach(user => {
+		const userItem = document.createElement('li');
+		userItem.classList.add('room');
+
+		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+		if (user.username == room.created_by.username)
+		{
+			userItem.innerHTML = `
+				<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
+				<span class="room-name-left"> <b>${user.username}</b></span>
+			`;
+		}
+		else {
+			userItem.innerHTML = `
+				<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
+				<span class="room-name-left">${user.username}</span>
+			`;
+		}
+		userList.appendChild(userItem);
+	});
+}

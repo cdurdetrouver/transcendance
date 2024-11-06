@@ -3,6 +3,7 @@
 	height: 100%;
 }
 
+
 .flex-container {
 	display: flex;
 	flex-direction: row;
@@ -26,14 +27,7 @@
 		flex-direction: column;
 		min-height: 0; /* Allows flex-grow items to shrink as needed */
 
-		
-		.search-container {
-
-
-			#user-list {
-				list-style-type: none; 
-			}
-		}
+	
 
 		.user-list {
 			list-style-type: none; 
@@ -203,6 +197,14 @@
 			top: 50%; /* Position 50% from the top of the parent */
 			transform: translateY(-50%); /* Center it vertically relative to itself */
 		}
+
+		.room-users {
+			list-style-type: none; 
+		}
+
+		.room {
+			list-style-type: none; 
+		}
 	}
 }
 
@@ -238,7 +240,4 @@
 		align-items: center;
 	}
 
-	& img {
-		
-	}
 }
