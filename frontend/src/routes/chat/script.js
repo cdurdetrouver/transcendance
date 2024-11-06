@@ -832,6 +832,7 @@ function open_invitation(room_l) {
 	<div class="room-name-right"> ${room.name}  </div>
 	`
 	chat_conf.innerHTML = `
+	<div> invited by ${room.created_by.username} </div>
 	<input id="invitation-accept-${room_l.id}" type="button" value="Accept invitation">
 	<input id="invitation-refuse-${room_l.id}" type="button" value="Refuse invitation">
 	`;
@@ -846,7 +847,7 @@ function open_invitation(room_l) {
 		console.log(user);
 		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
 		room_users.innerHTML = `
-		<li class="user-search-list" >
+		<li class="room" >
 			<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
 			<span class="room-name-left">${user.username}</span>
 		</li>
