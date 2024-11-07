@@ -1,0 +1,193 @@
+@font-face {
+  font-family: "isaac";
+  src: url(../routes/assets/font/IsaacGame.ttf);
+}
+body, html {
+  background-image: url("../routes/assets/images/home/background.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+
+#page-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#page-container #page-background {
+  position: relative;
+  background-image: url("../routes/assets/images/home/background.png");
+}
+#page-container #page-background #page-content {
+  position: relative;
+}
+#page-container #page-background #page-content #sheet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+#page-container #page-background #page-content #sheet #sheet-image {
+  width: 50vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#page-container #page-background #page-content #sheet #selection-mode {
+  background-color: rgb(0, 255, 255);
+  position: absolute;
+  left: 9%;
+  top: 4;
+  width: 63%;
+  height: 80%;
+  transform: rotate(7deg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-;
+  max-width: 100%;
+  max-height: 100%;
+  transform: translate(10%, 10%) rotate(-5deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4%;
+}
+#page-container #page-background #page-content #sheet #selection-mode .button {
+  padding: 10px 20px;
+  background: transparent;
+  color: rgb(69, 57, 59);
+  cursor: pointer;
+  font-family: isaac;
+  font-size: 3.5vw;
+  text-decoration: none;
+  border: none;
+  transition: transform 0.3s ease;
+}
+#page-container #page-background #page-content #sheet #selection-mode #local:disabled, #page-container #page-background #page-content #sheet #selection-mode #online:disabled {
+  cursor: not-allowed;
+  border: none;
+}
+#page-container #page-background #page-content #sheet #login-container {
+  position: absolute;
+  top: 22%;
+  left: 11%;
+  width: 13%;
+  height: 28%;
+  transform: rotate(12deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#page-container #page-background #page-content #sheet #login-container #login {
+  display: none;
+}
+#page-container #page-background #page-content #sheet #login-container #logout {
+  display: none;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: isaac;
+  font-size: 50px;
+}
+#page-container #page-background #page-content #sheet #login-container button {
+  font-size: 2vw;
+}
+#page-container #page-background #page-content #sheet #popin-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+#page-container #page-background #page-content #sheet #popin-container #popin-content {
+  background-image: url("../routes/assets/images/home/login-postit.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+  padding: 20px;
+  border-radius: 5px;
+  width: 600px;
+  height: 400px;
+  position: relative;
+}
+#page-container #page-background #page-content #sheet #popin-container #close-button {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+#page-container #page-background #page-content #sheet #popin-container #login-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 95px 110px 0px 100px;
+  transform: rotate(5deg);
+}
+#page-container #page-background #page-content #sheet #popin-container #login-content label {
+  #email-margin-left: 32px;
+}
+#page-container #page-background #page-content #sheet #popin-container #login-content input {
+  border: none;
+}
+#page-container #page-background #page-content #sheet #popin-container #login-content #submit {
+  padding: 5px 15px;
+  margin: 10px;
+  border: none;
+  border-radius: 0.5rem;
+}
+#page-container #page-background #page-content #sheet #popin-container #external-login-option {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+#page-container #page-background #page-content #sheet #popin-container #external-login-option a {
+  flex: 1;
+  color: black;
+  border: none;
+  padding: 5px 15px;
+  /* gap: 10px */
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+#page-container #page-background #page-content #sheet #popin-container #external-login-option github {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+}
+#page-container #page-background #page-content #sheet #popin-container .submit-button {
+  padding: 5px 15px;
+  margin: 10px;
+  border: none;
+  border-radius: 0.5rem;
+}
+#page-container #page-background #page-content #sheet #popin-container #register-content {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 95px 110px 0px 100px;
+  transform: rotate(5deg);
+}/*# sourceMappingURL=style.css.map */
