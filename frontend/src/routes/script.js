@@ -13,10 +13,8 @@ ButtonGithub.href = `https://github.com/login/oauth/authorize?client_id=${config
 const ButtonIntra = document.querySelector("#intra");
 ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login')}&response_type=code`;
 
-const loginPopin = document.getElementById("popin-container");
-
-const logoutPopin = document.querySelector("#logout button");
-const loginButton = document.querySelector("#login button");
+const loginPopin = document.querySelector("#login-container button");
+const loginButton = document.querySelector("#login-container button");
 const closeButton = document.querySelector("#close-button");
 const popin = document.querySelector("#popin-container");
 const account = document.querySelector("#account");
@@ -29,6 +27,13 @@ function disabledAccount() {
 	account.classList.add("disabled-link");
 }
 
+async function getProfilePicture() {
+	let user = await get_user();
+	let profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+	let imgElement = document.querySelector("#login-container img");
+	imgElement.src = profilePicture;
+}
+
 let userCookie = getCookie('user');
 
 await get_user();
@@ -36,16 +41,14 @@ await get_user();
 if (userCookie) {
 	const user = JSON.parse(userCookie);
 	loginPopin.style.display = "none";
-	logoutPopin.style.display = "flex";
-	logoutPopin.className = "log-buttons";
-	logoutPopin.fontFamily = "isaac";
-	logoutPopin.innerHTML += `LOGGED AS ${user.username}`;
+	getProfilePicture();
 	enableAccount();
 }
 
 else {
 	loginPopin.style.display = "flex";
 }
+
 
 loginButton.addEventListener("click", function() {
 	console.log("login button");
@@ -56,17 +59,18 @@ closeButton.addEventListener("click", function() {
     popin.style.display = "none";
 });
 
-window.addEventListener("click", function(event) {
-    if (event.target === popin) {
-        popin.style.display = "none";
-    }
-});
+// window.addEventListener("click", function(event) {
+//     if (event.target === popin) {
+//         popin.style.display = "none";
+//     }
+// });
 
 const loginForm = document.querySelector("#login-content");
 const registerForm = document.querySelector("#register-content");
-const registerButton = document.querySelector("#register-content .submit-button");
+const registerButton = document.querySelector("#login-content .submit-button");
 
 registerButton.addEventListener('click', function (event) {
+	console.log("register button");
 	loginForm.style.display = "none";
 	registerForm.style.display = "flex";
 });
@@ -89,9 +93,10 @@ async function login_form(event) {
 		console.log("login success");
 		customalert('Login successful', 'You are now logged in');
 		loginPopin.style.display = "none";
-		logoutPopin.style.display = "flex";
+		// logoutPopin.style.display = "flex";
 		popin.style.display = "none";
 		enableAccount()
+		getProfilePicture();
 	}
 	else {
 		const data = await response.json();
@@ -103,32 +108,37 @@ async function login_form(event) {
 const registerSubmit = registerForm.querySelector("form");
 registerSubmit.addEventListener("submit", register_form);
 
+
+
 async function register_form(event) {
 	event.preventDefault();
 	
 	
-	const username = document.querySelector('input[name="usernameRegister"]').value;
-	const email = document.querySelector('input[name="emailRegister"]').value;
-	const password = document.querySelector('input[name="passwordRegister"]').value;
-	const confirmPassword = document.querySelector('input[name="confirmPasswordRegister"]').value;
-	const profile_picture = document.querySelector('input[name="profilePicture').files[0];
+	const username = document.querySelector('input[name="username"]').value;
+	const email = document.querySelector('input[name="email"]').value;
+	const password = document.querySelector('input[name="password-register"]').value;
+	const confirmPassword = document.querySelector('input[name="confirm-password"]').value;
+	const profilePicture = document.querySelector('input[name="profile-picture').files[0];
 
 	if (password !== confirmPassword) {
+		console.log("password", password);
+		console.log("confirm password", confirmPassword, "cc");
 		customalert('Error', 'Password do not match.', true);
 		return
 	}
 
-	const response = await register(username, email, password, profile_picture);
+	const response = await register(username, email, password, profilePicture);
 
 	if (response.status === 201) {
 		console.log("register success");
 		customalert('Registration successful', 'You are now registered');
 		registerForm.style.display = "none";
 		loginPopin.style.display = "none";
-		logoutPopin.style.display = "flex";
+		// logoutPopin.style.display = "flex";
 		popin.style.display = "none";
 		loginForm.style.display = "flex";
 		enableAccount();
+		getProfilePicture();
 	}
 	else {
 		const data = await response.json();
@@ -136,15 +146,3 @@ async function register_form(event) {
 	}
 }
 
-//LOGOUT
-const logoutButton= document.querySelector("#logout");
-logoutButton.addEventListener("click", logoutUser);
-
-async function logoutUser(event) {
-
-	logout();
-	loginPopin.style.display = 'flex';
-	logoutPopin.style.display = 'none';
-	disabledAccount();
-
-}
