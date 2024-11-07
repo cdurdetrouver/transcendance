@@ -6,19 +6,20 @@ import {customalert} from '../components/alert/script.js';
 import config from '../env/config.js';
 import { router } from '../app.js';
 
-const ButtonGoogle = document.querySelector('.google_button');
+const ButtonGoogle = document.querySelector("#google");
 ButtonGoogle.href = `https://accounts.google.com/o/oauth2/auth?client_id=${config.google_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=google')}&response_type=code&scope=openid%20email%20profile`;
-const ButtonGithub = document.querySelector('.github_button');
+const ButtonGithub = document.querySelector("#github");
 ButtonGithub.href = `https://github.com/login/oauth/authorize?client_id=${config.github_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=github')}&scope=user`;
-const ButtonIntra = document.querySelector('.intra_button');
+const ButtonIntra = document.querySelector("#intra");
 ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login')}&response_type=code`;
 
-const loginPopin = document.getElementById("login-popin");
-const logoutPopin = document.getElementById("logout-popin");
-const closeButton = document.getElementById("closePopupBtn");
-const loginButton = document.getElementById("login");
-const popin = document.getElementById("popin");
-const account = document.getElementById("account");
+const loginPopin = document.getElementById("popin-container");
+
+const logoutPopin = document.querySelector("#logout button");
+const loginButton = document.querySelector("#login button");
+const closeButton = document.querySelector("#close-button");
+const popin = document.querySelector("#popin-container");
+const account = document.querySelector("#account");
 
 function enableAccount() {
 	account.classList.remove("disabled-link");
@@ -61,9 +62,9 @@ window.addEventListener("click", function(event) {
     }
 });
 
-const loginForm = document.getElementById("login-content");
-const registerForm = document.getElementById("register-content");
-const registerButton = document.getElementById("register-button");
+const loginForm = document.querySelector("#login-content");
+const registerForm = document.querySelector("#register-content");
+const registerButton = document.querySelector("#register-content .submit-button");
 
 registerButton.addEventListener('click', function (event) {
 	loginForm.style.display = "none";
@@ -71,10 +72,7 @@ registerButton.addEventListener('click', function (event) {
 });
 
 //LOGIN
-
-const logindiv = document.getElementById("login-content");
-const loginSubmit = logindiv.querySelector('form');
-
+const loginSubmit = loginForm.querySelector('form');
 loginSubmit.addEventListener('submit', login_form);
 
 async function login_form(event) {
@@ -102,10 +100,8 @@ async function login_form(event) {
 }
 
 //REGISTER
-
-const registerDiv = document.getElementById("register-content");
-const registerSubmit = registerDiv.querySelector('form');
-registerSubmit.addEventListener('submit', register_form);
+const registerSubmit = registerForm.querySelector("form");
+registerSubmit.addEventListener("submit", register_form);
 
 async function register_form(event) {
 	event.preventDefault();
@@ -140,10 +136,8 @@ async function register_form(event) {
 	}
 }
 
-const logoutButton= document.getElementById("logout");
-
 //LOGOUT
-
+const logoutButton= document.querySelector("#logout");
 logoutButton.addEventListener("click", logoutUser);
 
 async function logoutUser(event) {

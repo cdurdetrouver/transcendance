@@ -13,7 +13,7 @@ body, html {
 	src: url(../routes/assets/font/IsaacGame.ttf);
   }
 
-#container {
+#page-container {
     position: relative;
     width: 100%;
     height: 100%;
@@ -23,8 +23,23 @@ body, html {
     background-color: #d2c7c3;
 }
 
-#game-container {
+#page-background {
     position: relative;
+}
+
+#select-mode {
+    /* background-color: #4CAF50; */
+    position: absolute;
+    top: 12%;
+    left: 33%;
+    width: 34%;
+    height: 70%;
+    transform: translate(10%, 10%) rotate(-5deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4%;
 }
 
 #menu-image {
@@ -32,22 +47,7 @@ body, html {
     max-height: 100%;
 }
 
-#start {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.5s ease;
-}
 
-#start {
-    width: 100%;
-    height: 100%;
-	background-image: url('../routes/assets/images/other/bg_doodle.png');
-    z-index: 2;
-}
 
 .centered-image {
 	max-width: 2000px;
@@ -110,20 +110,7 @@ body, html {
     font-size: 55px;
 }
 
-#select-mode {
-    /* background-color: #4CAF50; */
-    position: absolute;
-    top: 12%;
-    left: 33%;
-    width: 34%;
-    height: 70%;
-    transform: translate(10%, 10%) rotate(-5deg);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 4%;
-}
+
 
 #log-page {
     position: absolute;
@@ -151,6 +138,7 @@ body, html {
 #logout {
     font-size: 2vw;
 }
+
 #logout-popin {
     /* background-color:rgb(94, 255, 0); */
     display: none;
@@ -177,7 +165,7 @@ body, html {
 
 .log-popin {
 
-	background-image: url('../routes/assets/images/other/login-postit.png');
+	background-image: url('../routes/assets/images/home/login-postit.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
@@ -227,6 +215,11 @@ body, html {
 }
 
 #local:disabled {
+    cursor: not-allowed; /*if login cursor: allowed */
+    border: none;
+}
+
+#online:disabled {
     cursor: not-allowed; /*if login cursor: allowed */
     border: none;
 }
@@ -333,7 +326,7 @@ body, html {
 #start {
     width: 100%;
     height: 100%;
-	background-image: url('../routes/assets/images/bg_doodle.png');
+	background-image: url('../routes/assets/images/home/background.png');
     z-index: 2;
 }
 
