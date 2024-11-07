@@ -185,17 +185,46 @@
 	.right {
 		display: flex;
 		flex-direction: column;
+		height: 90vh;
 
 		.room-info 
 		{
 			position: relative;
-			left : 50%;
-			transform: translateX(-10%);
+			height: 100px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+			
+			.room-pic {
+				position: absolute;
+				left: 50%;
+				transform: translateX(-50%);
+				top: 12px ;
+			}
+
+			.room-name-right {
+				position: absolute;
+				left: 50%;
+				transform: translateX(-50%);
+				top: 70px ;
+
+			}
 		}
+
+		.room-users {
+			overflow-y: scroll; 
+			padding-bottom: 30%;
+			
+			scrollbar-width: thin; 
+			scrollbar-color: #888 transparent;
+
+		}
+					
+
 		.chat-conf {
-			position: absolute;
-			top: 50%; /* Position 50% from the top of the parent */
-			transform: translateY(-50%); /* Center it vertically relative to itself */
+			position: relative;
+		}
+
+		.lower-left {
+			position: relative;
 		}
 
 		.room-users {
@@ -204,6 +233,11 @@
 
 		.room {
 			list-style-type: none; 
+		}
+
+
+		.leave-room {
+			margin-top: auto;
 		}
 	}
 }
