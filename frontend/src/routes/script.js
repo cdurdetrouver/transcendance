@@ -1,10 +1,9 @@
 
-import { getCookie, setCookie } from '../../components/storage/script.js';
-import { get_user } from '../../components/user/script.js';
-import { login, register, logout, login_tierce } from '../components/user/script.js';
+import { getCookie } from '../components/storage/script.js';
+import { get_user } from '../components/user/script.js';
+import { login, register } from '../components/user/script.js';
 import {customalert} from '../components/alert/script.js';
 import config from '../env/config.js';
-import { router } from '../app.js';
 
 const ButtonGoogle = document.querySelector("#google");
 ButtonGoogle.href = `https://accounts.google.com/o/oauth2/auth?client_id=${config.google_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=google')}&response_type=code&scope=openid%20email%20profile`;
@@ -23,10 +22,6 @@ function enableAccount() {
 	account.classList.remove("disabled-link");
 }
 
-function disabledAccount() {
-	account.classList.add("disabled-link");
-}
-
 async function getProfilePicture() {
 	let user = await get_user();
 	let profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
@@ -39,7 +34,6 @@ let userCookie = getCookie('user');
 await get_user();
 
 if (userCookie) {
-	const user = JSON.parse(userCookie);
 	loginPopin.style.display = "none";
 	getProfilePicture();
 	enableAccount();
@@ -69,7 +63,7 @@ const loginForm = document.querySelector("#login-content");
 const registerForm = document.querySelector("#register-content");
 const registerButton = document.querySelector("#login-content .submit-button");
 
-registerButton.addEventListener('click', function (event) {
+registerButton.addEventListener('click', function () {
 	console.log("register button");
 	loginForm.style.display = "none";
 	registerForm.style.display = "flex";
@@ -96,7 +90,7 @@ async function login_form(event) {
 		// logoutPopin.style.display = "flex";
 		popin.style.display = "none";
 		enableAccount()
-		getProfilePicture();
+		await getProfilePicture();
 	}
 	else {
 		const data = await response.json();
@@ -118,7 +112,7 @@ async function register_form(event) {
 	const email = document.querySelector('input[name="email"]').value;
 	const password = document.querySelector('input[name="password-register"]').value;
 	const confirmPassword = document.querySelector('input[name="confirm-password"]').value;
-	const profilePicture = document.querySelector('input[name="profile-picture').files[0];
+	const profilePicture = document.querySelector('input[name="profile-picture"]').files[0];
 
 	if (password !== confirmPassword) {
 		console.log("password", password);
@@ -138,7 +132,7 @@ async function register_form(event) {
 		popin.style.display = "none";
 		loginForm.style.display = "flex";
 		enableAccount();
-		getProfilePicture();
+		await getProfilePicture();
 	}
 	else {
 		const data = await response.json();

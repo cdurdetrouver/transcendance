@@ -23,6 +23,10 @@ body, html {
   width: 100%;
   height: 100%;
 }
+#page-container #page-content .text {
+  font-family: isaac;
+  font-size: 1rem;
+}
 #page-container #page-content .button {
   padding: 10px 20px;
   background: transparent;
@@ -63,15 +67,12 @@ body, html {
   top: 0%;
   width: 41%;
   height: 85%;
-  transform: rotate(7deg);
   justify-content: center;
-  align-items: flex-;
   max-width: 100%;
   max-height: 100%;
   transform: translate(10%, 10%) rotate(-5deg);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 4%;
 }
@@ -106,6 +107,14 @@ body, html {
 #page-container #page-content #login-container img {
   width: 50%;
 }
+#page-container #page-content #login-container #separator {
+  margin-left: 20px;
+  margin-right: 20px;
+  display: inline-block;
+  border-radius: 18%;
+  width: 5px;
+  height: 240px;
+}
 #page-container #page-content #popin-container {
   display: none;
   position: fixed;
@@ -119,7 +128,7 @@ body, html {
   z-index: 9999;
 }
 #page-container #page-content #popin-container #popin-content {
-  background-image: url("../routes/assets/images/home/login-postit.png");
+  background-image: url("../static/assets/sheets/login2.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
@@ -130,42 +139,64 @@ body, html {
   position: relative;
 }
 #page-container #page-content #popin-container #close-button {
+  background-image: url(../static/assets/login/cross.png);
+  background-repeat: no-repeat;
+  background-size: contain;
   position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 24px;
+  top: 17%;
+  right: 6%;
+  font-size: 35px;
   cursor: pointer;
+  width: 20px;
+  height: 20px;
 }
 #page-container #page-content #popin-container #login-content {
   display: flex;
+  flex-direction: row;
+  padding-top: 30px;
+  padding-left: 50px;
+  transform: rotate(3deg);
+}
+#page-container #page-content #popin-container #login-content #default-login {
+  display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 95px 110px 0px 100px;
-  transform: rotate(5deg);
+  width: 150%;
 }
-#page-container #page-content #popin-container #login-content label {
-  #email-margin-left: 32px;
+#page-container #page-content #popin-container #login-content #default-login label #email {
+  margin-left: 32px;
 }
-#page-container #page-content #popin-container #login-content input {
+#page-container #page-content #popin-container #login-content #default-login input {
   border: none;
 }
-#page-container #page-content #popin-container #login-content #submit {
+#page-container #page-content #popin-container #login-content #default-login #submit {
   padding: 5px 15px;
   margin: 10px;
   border: none;
   border-radius: 0.5rem;
 }
-#page-container #page-content #popin-container #external-login-option {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
+#page-container #page-content #popin-container #login-content .separator {
+  margin-left: 20px;
+  margin-right: 20px;
+  display: inline-block;
+  border-radius: 18%;
+  width: 5px;
+  height: 240px;
 }
-#page-container #page-content #popin-container #external-login-option a {
+#page-container #page-content #popin-container #login-content #app-login {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+}
+#page-container #page-content #popin-container #login-content #app-login a {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 60%;
+  margin-left: 60px;
   flex: 1;
+  background-color: #fffcfc;
   color: black;
   border: none;
   padding: 5px 15px;
-  border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
   display: flex;
@@ -175,27 +206,74 @@ body, html {
   text-decoration: none;
   transition: transform 0.3s ease;
 }
-#page-container #page-content #popin-container #external-login-option a img {
-  width: 10px;
+#page-container #page-content #popin-container #login-content #app-login a:hover {
+  transform: scale(1.05);
 }
-#page-container #page-content #popin-container #external-login-option #github {
-  width: 30%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#page-container #page-content #popin-container #login-content #app-login img {
+  width: 20%;
+}
+#page-container #page-content #popin-container #login-content #app-login #github {
   color: white;
-  text-align: center;
+  background-color: #2b2e31;
 }
-#page-container #page-content #popin-container .submit-button {
+#page-container #page-content #popin-container #login-content #app-login #intra {
+  background-color: rgb(240, 240, 240);
+}
+#page-container #page-content #popin-container #login-content .submit-button {
   padding: 5px 15px;
   margin: 10px;
   border: none;
   border-radius: 0.5rem;
 }
 #page-container #page-content #popin-container #register-content {
+  font-family: isaac;
   display: none;
-  flex-direction: column;
-  align-items: center;
-  padding: 95px 110px 0px 100px;
-  transform: rotate(5deg);
-}/*# sourceMappingURL=style.css.map */
+  flex-direction: row;
+  transform: rotate(3deg);
+}
+#page-container #page-content #popin-container #register-content #test {
+  display: flex;
+  flex-direction: row;
+  padding-top: 30px;
+  padding-left: 50px;
+}
+#page-container #page-content #popin-container #register-content #test #avatar-register {
+  padding-left: 45%;
+}
+#page-container #page-content #popin-container #register-content #test #avatar-register #avatar {
+  position: relative;
+  background-image: url(../static/assets/login/avatar_sad.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 150px;
+  width: 150px;
+  left: -15px;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+#page-container #page-content #popin-container #register-content #test #avatar-register #avatar:hover {
+  transform: scale(1.05);
+}
+#page-container #page-content #popin-container #register-content #test #avatar-register #file-chosen {
+  position: relative;
+  top: -15px;
+}
+#page-container #page-content #popin-container #register-content #test #avatar-register #submit-register {
+  position: relative;
+  top: -5px;
+  left: -50p;
+}
+#page-container #page-content #popin-container #register-content #test #return {
+  background-image: url(../static/assets/login/arrow.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  top: 95%;
+  right: 5%;
+  font-size: 35px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+/*# sourceMappingURL=style.css.map */

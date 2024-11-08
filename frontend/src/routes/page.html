@@ -2,7 +2,7 @@
 	<div id="page-content">
 		<img src="../routes/assets/images/home/login_sheet.png" alt="Log sheet" id="log-sheet"/>
 		<div id="sheet">
-			<img src="../routes/assets/images/home/sheet.png" id="sheet-image"/>
+			<img src="../routes/assets/images/home/sheet.png" id="sheet-image" alt="Sheet Image"/>
 			<div id="selection-mode">
 				<a href="/character" class="button" id="local">LOCAL</a>
 				<a href="" class="button" id="online">ONLINE</a>
@@ -17,40 +17,61 @@
 		</div>
 		<div id="popin-container">
 			<div id="popin-content">
-				<span id="close-button">&times;</span>
+				<div id="title-login">LOGIN</div>
+				<span id="close-button"></span>
 				<div id="login-content">
-					<form>
-						<label for="email-login"> email:</label>
-						<input type="text" id="email-login" name="email" required><br><br>
-						<label for="password-login">Password:</label>
-						<input type="password" id="password-login" name="password" required><br><br>
-						<input id="submit" type="submit" value="Submit"> Or login with:
-						<div id="external-login-option"> 
-							<a id="google">Google
-								<img src="../routes/assets/images/home/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo"/>
-							</a>
-							<a id="github"> GitHub
-								<img src="../routes/assets/images/home/logo/github_logo.png" id="github-logo" alt="Github logo"/>
-							</a>
-							<a id="intra"> 
-							<img src="../routes/assets/images/home/logo/42.png" id="intra-logo" alt="42 logo"/>
-							</a>
+					<div id="default-login">
+						<form>
+							<label for="email-login"> email:</label>
+							<input type="text" id="email-login" name="email" required><br><br>
+							<label for="password-login">Password:</label>
+							<input type="password" id="password-login" name="password" required><br><br>
+							<input id="submit" type="submit" value="Submit"> Or login with:
+						</form>
+						<div class="text">NO ACCOUNT ?!
+							<button class="button submit-button">REGISTER</button>
+<!--							<p>Don't have an account? <button class="submit-button">Register</button></p>-->
 						</div>
-					</form>
-					<p>Don't have an account? <button class="submit-button">Register</button></p>
+					</div>
+					<div class = "separator"> </div>
+					<div id="app-login">
+						<form class="form">
+							<div id="buttons">
+								<a id="google">Google
+									<img src="../routes/assets/images/home/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo"/>
+								</a>
+								<a id="github"> GitHub
+									<img src="../routes/assets/images/home/logo/github_logo.png" id="github-logo" alt="Github logo"/>
+								</a>
+								<a id="intra">
+								<img src="../routes/assets/images/home/logo/42.png" id="intra-logo" alt="42 logo"/>
+								</a>
+							</div>
+						</form>
+					</div>
 				</div>
 				<div id="register-content">
-					<h2>Register</h2>
-					<form>
-						<label for="username">Username:</label>
-						<input type="text" class="custom-input" id="username" name="username" required><br><br>
-						<label for="email-register">Email:</label>
-						<input type="text" class="custom-input" id="email-register" name="email" required><br><br>
-						<label for="password-register">Password:</label>
-						<input type="password" class="custom-input" id="password-register" name="password-register" required><br><br>
-						<input type="password" name="confirm-password" placeholder="Confirm password " required>
-						<input type="file" name="profile-picture" id="chk" required>
-						<input class="submit-button" type="submit" value="Submit">
+					<form id="test">
+						<div id="default-register">
+							<label for="username">Username:</label>
+							<input type="text" class="custom-input" id="username" name="username" required><br><br>
+							<label for="email-register">Email:</label>
+							<input type="text" class="custom-input" id="email-register" name="email" required><br><br>
+							<label for="password-register">Password:</label>
+							<input type="password" class="custom-input" id="password-register" name="password-register" required><br><br>
+							<label for="confirm-password">Confirm password:</label>
+							<input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm password " required>
+<!--							<input type="file" name="profile-picture" id="chk" required>-->
+<!--							<input class="submit-button" type="submit" value="Submit">-->
+						</div>
+						<div id="avatar-register">
+							<div>PICK AN AVATAR</div>
+							<input type="file" name="profilePicture" id="chk" required style="display: none;">
+							<label  for="chk" id="custom-file-upload avatar"></label>
+							<div  id="file-chosen">No file chosen</div>
+							<input class="button" id="submit-register" type="submit" value="SUBMIT">
+						</div>
+						<div id="return"></div>
 					</form>
 				</div>
 			</div>
