@@ -27,17 +27,6 @@ body, html {
   font-family: isaac;
   font-size: 1rem;
 }
-#page-container #page-content .button {
-  padding: 10px 20px;
-  background: transparent;
-  color: rgb(69, 57, 59);
-  cursor: pointer;
-  font-family: isaac;
-  font-size: 3.5vw;
-  text-decoration: none;
-  border: none;
-  transition: transform 0.3s ease;
-}
 #page-container #page-content a:hover {
   transform: scale(1.2);
 }
@@ -79,6 +68,17 @@ body, html {
 #page-container #page-content #sheet #selection-mode #local:disabled, #page-container #page-content #sheet #selection-mode #online:disabled {
   cursor: not-allowed;
   border: none;
+}
+#page-container #page-content #sheet #selection-mode .button {
+  padding: 10px 20px;
+  background: transparent;
+  color: rgb(69, 57, 59);
+  cursor: pointer;
+  font-family: isaac;
+  font-size: 3.5vw;
+  text-decoration: none;
+  border: none;
+  transition: transform 0.3s ease;
 }
 #page-container #page-content #login-container {
   position: absolute;
@@ -138,7 +138,17 @@ body, html {
   height: 400px;
   position: relative;
 }
-#page-container #page-content #popin-container #close-button {
+#page-container #page-content #popin-container #popin-content #title-login {
+  font-family: isaac;
+  color: #313131;
+  font-size: 2rem;
+  position: relative;
+  margin-bottom: 30px;
+  left: 9%;
+  top: 11%;
+  transform: rotate(3deg);
+}
+#page-container #page-content #popin-container #popin-content #close-button {
   background-image: url(../static/assets/login/cross.png);
   background-repeat: no-repeat;
   background-size: contain;
@@ -150,31 +160,40 @@ body, html {
   width: 20px;
   height: 20px;
 }
-#page-container #page-content #popin-container #login-content {
+#page-container #page-content #popin-container #popin-content input {
+  border: none;
+  background-color: #ccc7c6;
+}
+#page-container #page-content #popin-container #popin-content .button {
+  font-family: isaac;
+  font-size: 1rem;
+  background-image: url(../static/assets/sheets/Button.png);
+  width: 200px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+#page-container #page-content #popin-container #popin-content #login-content {
   display: flex;
   flex-direction: row;
   padding-top: 30px;
   padding-left: 50px;
   transform: rotate(3deg);
 }
-#page-container #page-content #popin-container #login-content #default-login {
+#page-container #page-content #popin-container #popin-content #login-content #default-login {
   display: flex;
   flex-direction: column;
   width: 150%;
 }
-#page-container #page-content #popin-container #login-content #default-login label #email {
-  margin-left: 32px;
-}
-#page-container #page-content #popin-container #login-content #default-login input {
-  border: none;
-}
-#page-container #page-content #popin-container #login-content #default-login #submit {
-  padding: 5px 15px;
-  margin: 10px;
-  border: none;
-  border-radius: 0.5rem;
-}
-#page-container #page-content #popin-container #login-content .separator {
+#page-container #page-content #popin-container #popin-content #login-content .separator {
   margin-left: 20px;
   margin-right: 20px;
   display: inline-block;
@@ -182,22 +201,18 @@ body, html {
   width: 5px;
   height: 240px;
 }
-#page-container #page-content #popin-container #login-content #app-login {
+#page-container #page-content #popin-container #popin-content #login-content #app-login {
   display: flex;
   flex-direction: column;
   margin-bottom: 25px;
 }
-#page-container #page-content #popin-container #login-content #app-login a {
+#page-container #page-content #popin-container #popin-content #login-content #app-login a {
   margin-top: 20px;
-  margin-bottom: 20px;
-  width: 60%;
+  width: 55%;
   margin-left: 60px;
-  flex: 1;
   background-color: #fffcfc;
   color: black;
-  border: none;
   padding: 5px 15px;
-  font-size: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -206,41 +221,35 @@ body, html {
   text-decoration: none;
   transition: transform 0.3s ease;
 }
-#page-container #page-content #popin-container #login-content #app-login a:hover {
+#page-container #page-content #popin-container #popin-content #login-content #app-login a:hover {
   transform: scale(1.05);
 }
-#page-container #page-content #popin-container #login-content #app-login img {
+#page-container #page-content #popin-container #popin-content #login-content #app-login img {
   width: 20%;
 }
-#page-container #page-content #popin-container #login-content #app-login #github {
+#page-container #page-content #popin-container #popin-content #login-content #app-login #github {
   color: white;
   background-color: #2b2e31;
 }
-#page-container #page-content #popin-container #login-content #app-login #intra {
+#page-container #page-content #popin-container #popin-content #login-content #app-login #intra {
   background-color: rgb(240, 240, 240);
 }
-#page-container #page-content #popin-container #login-content .submit-button {
-  padding: 5px 15px;
-  margin: 10px;
-  border: none;
-  border-radius: 0.5rem;
-}
-#page-container #page-content #popin-container #register-content {
+#page-container #page-content #popin-container #popin-content #register-content {
   font-family: isaac;
   display: none;
   flex-direction: row;
   transform: rotate(3deg);
 }
-#page-container #page-content #popin-container #register-content #test {
+#page-container #page-content #popin-container #popin-content #register-content #test {
   display: flex;
   flex-direction: row;
   padding-top: 30px;
   padding-left: 50px;
 }
-#page-container #page-content #popin-container #register-content #test #avatar-register {
-  padding-left: 45%;
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register {
+  padding-left: 38%;
 }
-#page-container #page-content #popin-container #register-content #test #avatar-register #avatar {
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #avatar {
   position: relative;
   background-image: url(../static/assets/login/avatar_sad.png);
   background-repeat: no-repeat;
@@ -251,19 +260,18 @@ body, html {
   display: inline-block;
   transition: transform 0.2s ease;
 }
-#page-container #page-content #popin-container #register-content #test #avatar-register #avatar:hover {
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #avatar:hover {
   transform: scale(1.05);
 }
-#page-container #page-content #popin-container #register-content #test #avatar-register #file-chosen {
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #file-chosen {
   position: relative;
   top: -15px;
 }
-#page-container #page-content #popin-container #register-content #test #avatar-register #submit-register {
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #submit-register {
   position: relative;
-  top: -5px;
-  left: -50p;
+  left: -29%;
 }
-#page-container #page-content #popin-container #register-content #test #return {
+#page-container #page-content #popin-container #popin-content #register-content #test #back-to-login {
   background-image: url(../static/assets/login/arrow.png);
   background-repeat: no-repeat;
   background-size: contain;

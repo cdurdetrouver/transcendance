@@ -28,16 +28,7 @@ body, html
         .text
             font-family: isaac
             font-size: 1rem
-        .button
-            padding: 10px 20px
-            background: transparent
-            color: rgba(69,57,59,255)
-            cursor: pointer
-            font-family: isaac
-            font-size: 3.5vw
-            text-decoration: none
-            border: none
-            transition: transform 0.3s ease
+
         a:hover
            transform: scale(1.2)
 
@@ -82,6 +73,16 @@ body, html
                 #local:disabled, #online:disabled
                     cursor: not-allowed
                     border: none
+                .button
+                    padding: 10px 20px
+                    background: transparent
+                    color: rgba(69,57,59,255)
+                    cursor: pointer
+                    font-family: isaac
+                    font-size: 3.5vw
+                    text-decoration: none
+                    border: none
+                    transition: transform 0.3s ease
 
         #login-container
             // background-color: #d31616
@@ -140,137 +141,145 @@ body, html
                 height: 400px
                 position: relative
 
-            #close-button
-                background-image: url(../static/assets/login/cross.png)
-                background-repeat: no-repeat
-                background-size: contain
-                position: absolute
-                top: 17%
-                right: 6%
-                font-size: 35px
-                cursor: pointer
-                width: 20px
-                height: 20px
-            
-            #login-content
-                display: flex
-                flex-direction: row
-                padding-top: 30px
-                padding-left: 50px
-                transform: rotate(3deg)
+                #title-login
+                    font-family: isaac
+                    color: #313131
+                    font-size: 2rem
+                    position: relative
+                    margin-bottom: 30px
+                    left : 9%
+                    top: 11%
+                    transform: rotate(3deg)
 
-                #default-login
-                    display: flex
-                    flex-direction: column
-                    width: 150%
+                #close-button
+                    background-image: url(../static/assets/login/cross.png)
+                    background-repeat: no-repeat
+                    background-size: contain
+                    position: absolute
+                    top: 17%
+                    right: 6%
+                    font-size: 35px
+                    cursor: pointer
+                    width: 20px
+                    height: 20px
 
-                    label
-                        #email
-                            margin-left: calc(32px)
-                    input
-                         border: none
-
-                    #submit
-                        padding: 5px 15px
-                        margin: 10px
-                        border: none
-                        border-radius: 0.5rem
-                .separator
-                    margin-left: 20px
-                    margin-right: 20px
-                    display: inline-block
-                    border-radius: 18%
-                    width: 5px
-                    height: 240px
-
-                #app-login
-                    display: flex
-                    flex-direction: column
-                    margin-bottom: 25px
-
-                    a
-                        margin-top: 20px
-                        margin-bottom: 20px
-                        width: 60%
-                        margin-left: 60px
-
-                        flex: 1
-                        background-color: #fffcfc
-                        color: black
-                        border: none
-                        padding: 5px 15px
-                        font-size: 1rem
-                        cursor: pointer
-                        display: flex
-                        align-items: center
-                        flex-direction: column
-                        border-radius: 0.5rem
-                        text-decoration: none
-                        transition: transform 0.3s ease
-
-                    a:hover
-                        transform: scale(1.05)
-                    img
-                        width: 20%
-
-                    #github
-                        color: white
-                        background-color: #2b2e31
-                    #intra
-                        background-color: rgba(240,240,240,255)
-
-                .submit-button
-                    padding: 5px 15px
-                    margin: 10px
+                input
                     border: none
-                    border-radius: 0.5rem
+                    background-color: #ccc7c6
 
-            #register-content
-                font-family: isaac
-                display: none
-                flex-direction: row
-                transform: rotate(3deg)
+                .button
+                    font-family: isaac
+                    font-size: 1rem
+                    background-image: url(../static/assets/sheets/Button.png)
+                    width: 200px
+                    height: 60px
+                    background-size: contain
+                    background-repeat: no-repeat
+                    background-position: center
+                    background-color: transparent
+                    outline: none
+                    border: none
+                    cursor: pointer
+                    transition: transform 0.2s ease
+                    margin-top: -10px
+                    margin-bottom: 10px
 
-                #test
+                #login-content
                     display: flex
                     flex-direction: row
                     padding-top: 30px
                     padding-left: 50px
+                    transform: rotate(3deg)
 
-                    #avatar-register
-                        padding-left: 45%
+                    #default-login
+                        display: flex
+                        flex-direction: column
+                        width: 150%
 
-                        #avatar
-                            position: relative
-                            background-image: url(../static/assets/login/avatar_sad.png)
+                    .separator
+                        margin-left: 20px
+                        margin-right: 20px
+                        display: inline-block
+                        border-radius: 18%
+                        width: 5px
+                        height: 240px
+
+                    #app-login
+                        display: flex
+                        flex-direction: column
+                        margin-bottom: 25px
+
+                        a
+                            margin-top: 20px
+                            width: 55%
+                            margin-left: 60px
+                            background-color: #fffcfc
+                            color: black
+                            padding: 5px 15px
+                            cursor: pointer
+                            display: flex
+                            align-items: center
+                            flex-direction: column
+                            border-radius: 0.5rem
+                            text-decoration: none
+                            transition: transform 0.3s ease
+
+                        a:hover
+                            transform: scale(1.05)
+                        img
+                            width: 20%
+
+                        #github
+                            color: white
+                            background-color: #2b2e31
+                        #intra
+                            background-color: rgba(240,240,240,255)
+
+                #register-content
+                    font-family: isaac
+                    display: none
+                    flex-direction: row
+                    transform: rotate(3deg)
+
+                    #test
+                        display: flex
+                        flex-direction: row
+                        padding-top: 30px
+                        padding-left: 50px
+
+                        #avatar-register
+                            padding-left: 38%
+
+                            #avatar
+                                position: relative
+                                background-image: url(../static/assets/login/avatar_sad.png)
+                                background-repeat: no-repeat
+                                background-size: contain
+                                height: 150px
+                                width: 150px
+                                left: -15px
+                                display: inline-block
+                                transition: transform 0.2s ease
+
+                            #avatar:hover
+                                transform: scale(1.05)
+
+                            #file-chosen
+                                position: relative
+                                top: -15px
+
+                            #submit-register
+                                position: relative
+                                left: -29%
+
+                        #back-to-login
+                            background-image: url(../static/assets/login/arrow.png)
                             background-repeat: no-repeat
                             background-size: contain
-                            height: 150px
-                            width: 150px
-                            left: -15px
-                            display: inline-block
-                            transition: transform 0.2s ease
-
-                        #avatar:hover
-                            transform: scale(1.05)
-
-                        #file-chosen
-                            position: relative
-                            top: -15px
-
-                        #submit-register
-                            position: relative
-                            top: -5px
-                            left: -50p
-
-                    #return
-                        background-image: url(../static/assets/login/arrow.png)
-                        background-repeat: no-repeat
-                        background-size: contain
-                        position: absolute
-                        top: 95%
-                        right: 5%
-                        font-size: 35px
-                        cursor: pointer
-                        width: 20px
-                        height: 20px
+                            position: absolute
+                            top: 95%
+                            right: 5%
+                            font-size: 35px
+                            cursor: pointer
+                            width: 20px
+                            height: 20px

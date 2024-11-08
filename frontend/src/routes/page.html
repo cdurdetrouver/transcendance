@@ -22,21 +22,21 @@
 				<div id="login-content">
 					<div id="default-login">
 						<form>
-							<label for="email-login"> email:</label>
+							<label class="text" for="email-login"> email:</label><br>
 							<input type="text" id="email-login" name="email" required><br><br>
-							<label for="password-login">Password:</label>
+							<label class="text" for="password-login">Password:</label>
 							<input type="password" id="password-login" name="password" required><br><br>
-							<input id="submit" type="submit" value="Submit"> Or login with:
+							<input class="button" type="submit" value="Submit">
 						</form>
 						<div class="text">NO ACCOUNT ?!
-							<button class="button submit-button">REGISTER</button>
+							<button class="button">REGISTER</button>
 <!--							<p>Don't have an account? <button class="submit-button">Register</button></p>-->
 						</div>
 					</div>
 					<div class = "separator"> </div>
 					<div id="app-login">
 						<form class="form">
-							<div id="buttons">
+							<div id="app-buttons">
 								<a id="google">Google
 									<img src="../routes/assets/images/home/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo"/>
 								</a>
@@ -60,18 +60,18 @@
 							<label for="password-register">Password:</label>
 							<input type="password" class="custom-input" id="password-register" name="password-register" required><br><br>
 							<label for="confirm-password">Confirm password:</label>
-							<input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm password " required>
+							<input type="password" name="confirm-password" id="confirm-password" required>
 <!--							<input type="file" name="profile-picture" id="chk" required>-->
 <!--							<input class="submit-button" type="submit" value="Submit">-->
 						</div>
 						<div id="avatar-register">
 							<div>PICK AN AVATAR</div>
 							<input type="file" name="profilePicture" id="chk" required style="display: none;">
-							<label  for="chk" id="custom-file-upload avatar"></label>
+							<label  for="chk" id="avatar"></label>
 							<div  id="file-chosen">No file chosen</div>
 							<input class="button" id="submit-register" type="submit" value="SUBMIT">
 						</div>
-						<div id="return"></div>
+						<div id="back-to-login"></div>
 					</form>
 				</div>
 			</div>

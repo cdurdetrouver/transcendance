@@ -61,7 +61,7 @@ closeButton.addEventListener("click", function() {
 
 const loginForm = document.querySelector("#login-content");
 const registerForm = document.querySelector("#register-content");
-const registerButton = document.querySelector("#login-content .submit-button");
+const registerButton = document.querySelector("#login-content button");
 
 registerButton.addEventListener('click', function () {
 	console.log("register button");
@@ -100,9 +100,27 @@ async function login_form(event) {
 
 //REGISTER
 const registerSubmit = registerForm.querySelector("form");
+
+
+const fileInput = document.getElementById('chk');
+const fileChosen = document.getElementById('file-chosen');
+const avatar = document.querySelector(".avatar");
+const backToLogin = document.querySelector("#back-to-login");
+
+
+
+backToLogin.addEventListener("click", function() {
+	registerForm.style.display = "none";
+	loginForm.style.display = "flex";
+});
+
+fileInput.addEventListener('change', function() {
+	fileChosen.textContent = this.files[0].name;
+	avatar.style.backgroundImage = "url(../static/assets/login/avatar_happy.png)";
+
+});
+
 registerSubmit.addEventListener("submit", register_form);
-
-
 
 async function register_form(event) {
 	event.preventDefault();
