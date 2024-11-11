@@ -14,7 +14,7 @@ ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.i
 
 const loginPopin = document.querySelector("#login-container button");
 const loginButton = document.querySelector("#login-container button");
-const closeButton = document.querySelector("#close-button");
+
 const popin = document.querySelector("#popin-container");
 const account = document.querySelector("#account");
 
@@ -48,8 +48,10 @@ loginButton.addEventListener("click", function() {
 	console.log("login button");
     popin.style.display = "flex";
 });
+const closeButton = document.querySelector("#close-button");
 
 closeButton.addEventListener("click", function() {
+	console.log("close button");
     popin.style.display = "none";
 });
 
@@ -67,6 +69,7 @@ registerButton.addEventListener('click', function () {
 	console.log("register button");
 	loginForm.style.display = "none";
 	registerForm.style.display = "flex";
+	document.querySelector("#title").innerHTML = "REGISTER";
 });
 
 //LOGIN
@@ -112,6 +115,8 @@ const backToLogin = document.querySelector("#back-to-login");
 backToLogin.addEventListener("click", function() {
 	registerForm.style.display = "none";
 	loginForm.style.display = "flex";
+	document.querySelector("#title").innerHTML = "LOGIN";
+
 });
 
 fileInput.addEventListener('change', function() {

@@ -32,6 +32,11 @@ body, html
         a:hover
            transform: scale(1.2)
 
+        button:hover
+                transform: scale(1.05)
+                border: none
+                background-color: transparent
+
         #log-sheet
             position: absolute
             width: 22%
@@ -87,7 +92,7 @@ body, html
         #login-container
             // background-color: #d31616
             position: absolute
-            top: 24%
+            top: 28%
             left: 6%
             width: 15%
             height: 32%
@@ -96,7 +101,7 @@ body, html
             display: flex
             flex-direction: column-reverse
             align-content: center
-            justify-content: center
+            justify-content: space-around
             align-items: center
             white-space: normal
             overflow: hidden
@@ -104,8 +109,11 @@ body, html
             z-index: 1111
             
             button
+                background-color: transparent
                 font-family: isaac
                 font-size: 2vw
+                border: none
+
             button:hover
                 transform: scale(1.2)
             img
@@ -141,7 +149,11 @@ body, html
                 height: 400px
                 position: relative
 
-                #title-login
+                form
+                    .text
+                        font-size: 1.5rem
+
+                #title
                     font-family: isaac
                     color: #313131
                     font-size: 2rem
@@ -155,13 +167,13 @@ body, html
                     background-image: url(../static/assets/login/cross.png)
                     background-repeat: no-repeat
                     background-size: contain
+                    background-color: transparent
                     position: absolute
                     top: 17%
                     right: 6%
-                    font-size: 35px
                     cursor: pointer
-                    width: 20px
-                    height: 20px
+                    height: 4%
+                    border: none
 
                 input
                     border: none
@@ -187,7 +199,7 @@ body, html
                 #login-content
                     display: flex
                     flex-direction: row
-                    padding-top: 30px
+                    padding-top: 19px
                     padding-left: 50px
                     transform: rotate(3deg)
 
@@ -207,11 +219,11 @@ body, html
                     #app-login
                         display: flex
                         flex-direction: column
-                        margin-bottom: 25px
+                        padding-top: 5%
 
                         a
                             margin-top: 20px
-                            width: 55%
+                            width: 54%
                             margin-left: 60px
                             background-color: #fffcfc
                             color: black
@@ -234,6 +246,8 @@ body, html
                             background-color: #2b2e31
                         #intra
                             background-color: rgba(240,240,240,255)
+                        #intra-logo
+                            width: 30%
 
                 #register-content
                     font-family: isaac
@@ -241,14 +255,18 @@ body, html
                     flex-direction: row
                     transform: rotate(3deg)
 
+                    .text
+                        font-size: 1.4rem
+
                     #test
                         display: flex
                         flex-direction: row
-                        padding-top: 30px
+                        padding-top: 11px
                         padding-left: 50px
 
                         #avatar-register
-                            padding-left: 38%
+                            padding-left: 35%
+                            padding-top: 5%
 
                             #avatar
                                 position: relative

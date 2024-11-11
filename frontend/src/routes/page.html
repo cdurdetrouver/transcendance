@@ -17,8 +17,8 @@
 		</div>
 		<div id="popin-container">
 			<div id="popin-content">
-				<div id="title-login">LOGIN</div>
-				<span id="close-button"></span>
+				<div class="text" id="title"> LOGIN</div>
+				<button id="close-button"></button>
 				<div id="login-content">
 					<div id="default-login">
 						<form>
@@ -53,25 +53,25 @@
 				<div id="register-content">
 					<form id="test">
 						<div id="default-register">
-							<label for="username">Username:</label>
+							<label class="text" for="username">Username:</label>
 							<input type="text" class="custom-input" id="username" name="username" required><br><br>
-							<label for="email-register">Email:</label>
+							<label class="text" for="email-register">Email:</label>
 							<input type="text" class="custom-input" id="email-register" name="email" required><br><br>
-							<label for="password-register">Password:</label>
+							<label class="text" for="password-register">Password:</label>
 							<input type="password" class="custom-input" id="password-register" name="password-register" required><br><br>
-							<label for="confirm-password">Confirm password:</label>
+							<label class="text" for="confirm-password">Confirm password:</label>
 							<input type="password" name="confirm-password" id="confirm-password" required>
 <!--							<input type="file" name="profile-picture" id="chk" required>-->
 <!--							<input class="submit-button" type="submit" value="Submit">-->
 						</div>
 						<div id="avatar-register">
 							<div>PICK AN AVATAR</div>
-							<input type="file" name="profilePicture" id="chk" required style="display: none;">
+							<input type="file" name="profile-picture" id="chk" required style="display: none;">
 							<label  for="chk" id="avatar"></label>
-							<div  id="file-chosen">No file chosen</div>
+							<div class="text" id="file-chosen">No file chosen</div>
 							<input class="button" id="submit-register" type="submit" value="SUBMIT">
 						</div>
-						<div id="back-to-login"></div>
+						<button class="button" id="back-to-login"></button>
 					</form>
 				</div>
 			</div>
