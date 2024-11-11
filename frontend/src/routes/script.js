@@ -72,6 +72,14 @@ registerButton.addEventListener('click', function () {
 	document.querySelector("#title").innerHTML = "REGISTER";
 });
 
+const returnButton = document.getElementById("return");
+
+returnButton.addEventListener('click', function (e) {
+	loginTitle.textContent = 'LOGIN';
+	loginForm.style.display = "flex";
+	registerForm.style.display = "none";
+});
+
 //LOGIN
 const loginSubmit = loginForm.querySelector('form');
 loginSubmit.addEventListener('submit', login_form);
@@ -126,6 +134,17 @@ fileInput.addEventListener('change', function() {
 });
 
 registerSubmit.addEventListener("submit", register_form);
+
+
+const fileInput = document.getElementById('chk');
+const fileChosen = document.getElementById('file-chosen');
+const avatar = document.querySelector(".avatar");
+
+fileInput.addEventListener('change', function() {
+    fileChosen.textContent = this.files[0].name;
+	avatar.style.backgroundImage = "url(../static/assets/login/avatar_happy.png)";
+
+});
 
 async function register_form(event) {
 	event.preventDefault();
