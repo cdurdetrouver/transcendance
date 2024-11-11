@@ -17,48 +17,88 @@
 				</div>
 			</div>
 
-		<div id="popin" class="popin">
+		<div class="popin">
 			<div class="log-popin">
-				<span id="closePopupBtn" class="close">&times;</span>
+				<div id="title-login">LOGIN</div>
+				<span id="closePopupBtn"></span>
 				<div id="login-content">
-					<form class="form">
-						<label class="email" for="email"> email:</label>
-						<input type="text" class="custom-input" id="email" name="email" required><br><br>
-						<label for="password">Password:</label>
-						<input type="password" class="custom-input" id="password" name="password" required><br><br>
-						<input class="confirm-button" type="submit" value="Submit"> Or login with:
-						<div id="buttons"> 
-						<a class="login-buttons google_button" id="google-login">Google
-							<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
-						</a>
-						<a class="login-buttons github_button" id="github-login"> GitHub
-							<img src="../routes/assets/logo/github_logo.png" id="github-logo" alt="Github logo">
-						</a>
-						<a class="login-buttons intra_button" id="42-login"> 
-						<img src="../routes/assets/logo/42.png" id="intra-logo" alt="42 logo">
-						</a>
-						</div>
-					</form>
-					<p>Don't have an account? <button class="confirm-button" id="register-button">Register</button></p>
-				</div>
-					<div id="register-content">
-						<h2>Register</h2>
+					<div class="defaut-login">
 						<form class="form">
-							<label for="usernameRegister">Username:</label>
-							<input type="text" class="custom-input" id="usernameRegister" name="usernameRegister" required><br><br>
-							<label for="emailRegister">Email:</label>
-							<input type="text" class="custom-input" id="emailRegister" name="emailRegister" required><br><br>
-							<label for="passwordRegister">Password:</label>
-							<input type="password" class="custom-input" id="passwordRegister" name="passwordRegister" required><br><br>
-							
-							<input type="password" name="confirmPasswordRegister" placeholder="Confirm password " required>
-
-							<input type="file" name="profilePicture" id="chk" required>
-							
-							
-							<input class="confirm-button" type="submit" value="Submit">
+							<label class="email" for="email"> E-MAIL</label>
+							<input type="text" class="custom-input" id="email" name="email" required><br><br>
+							<label class="email" for="password">PASSWORD:</label>
+							<input type="password" class="custom-input" id="password" name="password" required><br><br>
+							<input class="confirm-button" type="submit" value="SUBMIT">
+						</form>
+						<div class="no-account">NO ACCOUNT ?! <button class="confirm-button" id="register-button">REGISTER</button></div>
+					</div>
+					<div class = "separator"> </div>
+					<div class="app-login">
+						<form class="form">
+							<div id="buttons"> 
+								<a class="login-buttons google_button" id="google-login" data-ling>Google
+									<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
+								</a>
+								<a class="login-buttons github_button" id="github-login" data-ling>GitHub
+									<img src="../routes/assets/logo/github_logo.png" id="github-logo" alt="Github logo">
+								</a>
+								<a class="login-buttons intra_button" id="42-login" data-ling>Intra
+								<img src="../routes/assets/logo/42.png" id="intra-logo" alt="42 logo">
+								</a>
+							</div>
 						</form>
 					</div>
+				</div>
+				<div id="register-content">
+					<form class="form" id="test">
+						<div class="defaut-register">
+						<form class="form">
+							<label class="email" for="email"> E-MAIL</label>
+							<input type="text" class="custom-input" id="email" name="email" required><br><br>
+							<label class="email" for="password">PASSWORD:</label>
+							<input type="password" class="custom-input" id="password" name="password" required><br><br>
+							<input class="confirm-button" type="submit" value="SUBMIT">
+						</form>
+						<div class="no-account">NO ACCOUNT ?! <button class="confirm-button" id="register-button">REGISTER</button></div>
+					</div>
+					<div class = "separator"> </div>
+					<div class="app-login">
+						<form class="form">
+							<div id="buttons"> 
+								<a class="login-buttons google_button" id="google-login" data-ling>Google
+									<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
+								</a>
+								<a class="login-buttons github_button" id="github-login" data-ling>GitHub
+									<img src="../routes/assets/logo/github_logo.png" id="github-logo" alt="Github logo">
+								</a>
+								<a class="login-buttons intra_button" id="42-login" data-ling>Intra
+								<img src="../routes/assets/logo/42.png" id="intra-logo" alt="42 logo">
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div id="register-content">
+					<form class="form" id="test">
+						<div class="defaut-register">
+							<label  class="email" for="usernameRegister">USERNAME</label>
+							<input type="text" class="custom-input" id="usernameRegister" name="usernameRegister" required><br><br>
+							<label  class="email" for="emailRegister">EMAIL</label>
+							<input type="text" class="custom-input" id="emailRegister" name="emailRegister" required><br><br>
+							<label  class="email" for="passwordRegister">PASSWORD</label>
+							<input type="password" class="custom-input" id="passwordRegister" name="passwordRegister" required><br><br>
+							<input class="email" type="password" name="confirmPasswordRegister" placeholder="CONFIRM PASSWORD " required>
+						</div>
+						<div class="avatar-register">
+							<div>PICK AN AVATAR</div>
+							<input type="file" name="profilePicture" id="chk" required style="display: none;">
+							<label  for="chk" class="custom-file-upload avatar"></label>
+							<div  id="file-chosen">No file chosen</div>
+							<input class="confirm-button register-confirm" type="submit" value="SUBMIT">
+						</div>
+						<div id="return"></div>
+					</form>
+				</div>
 			</div>
 		</div>
 
