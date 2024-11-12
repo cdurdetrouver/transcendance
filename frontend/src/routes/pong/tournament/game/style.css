@@ -1,0 +1,54 @@
+.round {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* Style each match box */
+.match {
+    background-color: #f3f3f3;
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    min-width: 120px;
+    border-radius: 5px;
+    position: relative;
+}
+
+/* Style player names and winner display */
+.player {
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.winner {
+    color: #888;
+    font-size: 0.9em;
+}
+
+/* Connect matches with lines */
+.match::before, .match::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 20px;
+    background-color: #ddd;
+}
+
+.match::before {
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.match::after {
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Adjust connections for the root match */
+.round-0 .match::before {
+    display: none;
+}

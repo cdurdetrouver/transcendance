@@ -66,5 +66,13 @@
 	{
 		"path": "/accountid",
 		"files": "/accountid"
+	},
+	{
+		"path": "/tournament",
+		"files": "/pong/tournament"
+	},
+	{
+		"path": "/tournament/game",
+		"files": "/pong/tournament/game"
 	}
 ]
