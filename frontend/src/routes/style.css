@@ -2,6 +2,7 @@
   font-family: "isaac";
   src: url(../routes/assets/font/IsaacGame.ttf);
 }
+
 body, html {
   background-image: url("../routes/assets/images/home/background.png");
   background-position: center;

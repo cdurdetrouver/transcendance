@@ -1,8 +1,33 @@
 import { customalert } from '../../components/alert/script.js';
 import config from '../../env/config.js';
-import { get_user, logout } from '../../components/user/script.js';
+import { get_user, logout, update_user } from '../../components/user/script.js';
 import { router } from '../../app.js';
 import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
+import { deleteCookie, setCookie } from '../../../components/storage/script.js';
+
+document.getElementById("edit-password").addEventListener('submit', handleFormSubmit);
+document.getElementById("edit-username").addEventListener('submit', handleFormSubmit);
+
+
+async function handleFormSubmit(event) {
+	console.log("salut");
+	event.preventDefault();
+	const form = event.target;
+	const formData = new FormData(form);
+	console.log(formData);
+	let response = await update_user(formData);
+	if (response.status === 200) {
+		customalert('Success', 'User updated successfully', false);
+		let data = await response.json();
+		setPersonalUser(data.user);
+		deleteCookie('user');
+		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+	}
+	else {
+		let data = await response.json();
+		customalert('Error', data.error, true);
+	}
+}
 
 async function get_games(user_id) {
 	const response = await fetch(config.backendUrl + '/user/games/' + user_id, {
@@ -55,7 +80,7 @@ function setPersonalUser(user) {
 	else {
 		console.log("user infos does not exist");
 	}
-	const usernameInfo = document.querySelector("#username .label");
+	const usernameInfo = document.querySelector("#username-label .label");
 	const emailInfo = document.querySelector("#email .label");
 
 
@@ -130,31 +155,35 @@ const logoutButton = document.getElementById("logout-button");
 
 const deleteButton = document.querySelector("#delete-profile .buttons");
 const editProfileButton = document.querySelector("#edit-profile .buttons");
-const password = document.querySelector("#password");
-const editPasswordButton = document.querySelector("#password .edit-button");
-const editUsernameButton = document.querySelector("#username .edit-button")
+const password = document.querySelector("#password-label");
+const editPasswordButton = document.querySelector("#password-label .edit-button");
+const editUsernameButton = document.querySelector("#username-label .edit-button")
 const editUsername = document.querySelector("#edit-username");
 const editPassword = document.querySelector("#edit-password");
+const editProfilePicture = document.querySelector("#edit-profile-picture");
 // const editContainer = document.querySelector("#edit-info");
 
 editProfileButton.addEventListener("click", function() {
+	console.log("edit profile");
 	editUsernameButton.style.display = "flex";
 	password.style.display = "flex";
+	editProfilePicture.style.display = "flex";
 });
 
 editPasswordButton.addEventListener("click", function() {
 	console.log("edit password");
-	document.querySelector("#password .label").style.display = "none";
-	document.querySelector("#password .buttons").style.display = "none";
+	document.querySelector("#password-label .label").style.display = "none";
+	document.querySelector("#password-label .buttons").style.display = "none";
 	editPassword.style.display = "flex";
+	editPasswordButton.textContent = "BACK TO PROFILE";
 
 });
 
 editUsernameButton.addEventListener("click", function() {
 	console.log("edit username");
 	// username.style.display = "none";
-	document.querySelector("#username .label").style.display = "none";
-	document.querySelector("#username .edit-button").style.display = "none";
+	document.querySelector("#username-label .label").style.display = "none";
+	document.querySelector("#username-label .edit-button").style.display = "none";
 	// editContainer.style.display = "flex";
 	editUsername.style.display = "flex";
 });

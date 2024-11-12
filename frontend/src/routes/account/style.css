@@ -1,358 +1,283 @@
-body, html {
-    background-image: url('../assets/images/account/background_account.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100%;
-    /*background-color: #D2C7C3;*/
-}
-
 @font-face {
-	font-family: isaac-bold;
-	src: url(../assets/font/IsaacGame.ttf);
-  }
-
+  font-family: isaac-bold;
+  src: url("../assets/font/IsaacGame.ttf");
+}
 @font-face {
-    font-family: isaac-bold;
-    src: url('http://localhost:5500/routes/assets/font/isaac_bold.ttf') format('truetype');
+  font-family: isaac-bold;
+  src: url("http://localhost:5500/routes/assets/font/isaac_bold.ttf") format("truetype");
 }
-
-
-#page {
-    position: relative;
-    height: 100%;
+body {
+  background-image: url("../assets/images/account/background_account.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
 }
-
-.background {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    left: 50%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+body #page {
+  position: relative;
+  height: 100%;
 }
-
-#sheet {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+body #page .text {
+  font-family: isaac-bold;
+  color: #332C2B;
 }
-
-#sheet-image {
-    /*background-color: #4CAF50;*/
-    width: 50vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body #page button {
+  background-color: transparent;
+  border: none;
 }
-
-#main-page {
-    position: absolute;
-    /*background-color: rgb(245, 0, 253);*/
-    left:9%;
-    top:4%;
-    width: 63%;
-    height: 80%;
-    transform: rotate(7deg);
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-
-    max-width: 100%;
-    max-height: 100%;
+body #page button:hover {
+  transform: scale(1.2);
 }
-
-#delete-profile {
-    /* position: absolute; */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 90%;
-    height: 10%;
-    button{
-        white-space: nowrap;
-        font-size: 2vw;
-        left: 10%;
-    }
-    img {
-        width: 8%;
-        vertical-align: middle;
-    }
-    /* background-color: purple; */
+body #page #background {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  left: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
-
-#delete-logo-left {
-    top: 88%;
-    left: 100%;
+body #page #background #container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
-
-#delete-logo-right {
-    top: 88%;
-    left: 0%;
-
+body #page #background #container .buttons {
+  transition: transform 0.3s ease;
+  background-color: transparent;
+  border: none;
 }
-
-#container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    /*background-color: #D2C7C3;*/
+body #page #background #container .buttons:hover {
+  transform: scale(1.2);
 }
-
-#profile-picture-container {
-    position: absolute;
-    /*background-color: blueviolet;*/
-    top: 11%;
-    left: 37%;
-    width: 30%;
-    height: 20%;
+body #page #background #container #sheet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
-
-#profile-picture {
-    width: 100%;
+body #page #background #container #sheet #logout-button {
+  position: absolute;
+  width: 6%;
+  top: 8%;
+  left: 69%;
+  z-index: 1111;
 }
-
-.buttons {
-    /* display: inline-block; */
-    transition: transform 0.3s ease;
-    background-color: transparent;
-    border: none;
+body #page #background #container #sheet #sheet-image {
+  width: 50vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-.buttons:hover {
-    transform: scale(1.2);
+body #page #background #container #sheet #main-page {
+  position: absolute;
+  left: 9%;
+  top: 4%;
+  width: 63%;
+  height: 80%;
+  transform: rotate(7deg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  max-width: 100%;
+  max-height: 100%;
 }
-
-.button-image {
-    width: 100%;
+body #page #background #container #sheet #main-page #user-info {
+  position: absolute;
+  width: 80%;
+  height: 30%;
+  top: 39%;
+  left: 10%;
+  font-size: 1.7vw;
 }
-
-#confirmation-popin {
-    position: absolute;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    top:0%;
-    left:0%;
-    button {
-        position: absolute;
-        top: 60%;
-        transition: transform 0.3s ease;
-        font-size: 4vw;
-    }
-    span {
-        position: absolute;
-        top: 20%;
-        left: 10%;
-        font-size: 2.8vw;
-    }
-    img {
-        width: 35%;
-    }
+body #page #background #container #sheet #main-page #user-info #current-info {
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
-
-#popin-postit {
-    position: absolute;
-    width: 31%;
-    aspect-ratio: 228 / 129;
+body #page #background #container #sheet #main-page #user-info #current-info input {
+  border: none;
+  background-color: #ccc7c6;
+  margin: 3px;
 }
-
-
-.button-popin:hover {
-    transform: scale(1.2);
+body #page #background #container #sheet #main-page #user-info #current-info button {
+  width: 100%;
 }
-
-#yes-button {
-    left:15%;
-    width: 27%;
-    height: 18%;
+body #page #background #container #sheet #main-page #user-info #current-info .edit-logo-mode {
+  width: 30%;
 }
-
-#no-button {
-    left: 60%;
-    width: 23%;
-    height: 18%;
+body #page #background #container #sheet #main-page #user-info #current-info #label-email {
+  padding: 2px;
+  background-color: #ada2a0;
 }
-
-.stats {
-    position: absolute;
-    /* background-color: rgb(238, 115, 0); */
-    width: 24%;
-    height: 20%;
-    font-size: 1.7vw;
-    text-align: center;
-    top: 18%;
-
+body #page #background #container #sheet #main-page #user-info #current-info #label-username {
+  padding: 2px;
+  background-color: #ada2a0;
 }
-#wins {
-    left: 5%;
-    color: #332C2B;
+body #page #background #container #sheet #main-page #user-info #current-info .edit-input {
+  width: 80%;
 }
-
-#losses {
-    left: 73%;
+body #page #background #container #sheet #main-page #user-info #current-info #username-label {
+  display: flex;
 }
-
-#user-info {
-    position: absolute;
-    width: 80%;
-    height: 30%;
-    top: 45%;
-    left: 10%;
-    font-size: 1.7vw;
+body #page #background #container #sheet #main-page #user-info #current-info #username-label button {
+  display: none;
 }
-
-#current-info {
-    /* display: none; */
-    display: flex;
-    flex-direction: column;   
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+body #page #background #container #sheet #main-page #user-info #current-info #username-label #edit-username {
+  display: none;
 }
-
-#label-username {
-    padding: 2px;
-    background-color: #ada2a0;
+body #page #background #container #sheet #main-page #user-info #current-info #password-label {
+  display: none;
 }
-
-#label-email {
-    padding: 2px;
-    background-color: #ada2a0;
-
+body #page #background #container #sheet #main-page #user-info #current-info #password-label span {
+  white-space: nowrap;
+  padding: 2px;
+  background-color: #ada2a0;
 }
-
-
-.edit-logo-mode {
-    width: 7%;
+body #page #background #container #sheet #main-page #user-info #current-info #password-label #edit-password {
+  display: none;
+  flex-direction: column;
 }
-
-#edit-profile {
-    position: absolute;
-    align-items: center;
-    justify-content: space-between;
-    width: 90%;
-    height: 10%;
-    top: 80%;
-    left: 5%;
-    /* background-color: blue; */
+body #page #background #container #sheet #delete-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  height: 10%;
 }
-
-.edit-logo {
-    width: 10%;
-    vertical-align: middle;
+body #page #background #container #sheet #delete-profile button {
+  white-space: nowrap;
+  font-size: 2vw;
+  left: 10%;
 }
-
-#edit-logo-left {
-    top: 88%;
-    left: 100%;
+body #page #background #container #sheet #delete-profile img {
+  width: 8%;
+  vertical-align: middle;
 }
-
-#edit-logo-right {
-    top: 88%;
-    left: 0%;
+body #page #background #container #sheet #delete-profile #delete-logo-left {
+  top: 88%;
+  left: 100%;
 }
-
-#edit-profile {
-    button {
-        white-space: nowrap;
-        font-size: 2vw;
-        left: 10%;    
-    }
+body #page #background #container #sheet #delete-profile #delete-logo-right {
+  top: 88%;
+  left: 0%;
 }
-
-#username {
-    display: flex;
-    button {
-        display: none;
-        width: 100%;
-        background-color: transparent;
-        border: none;
-    }
+body #page #background #container #sheet #edit-profile {
+  position: absolute;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  height: 10%;
+  top: 84%;
+  left: 5%;
 }
-
-#password {
-    display:none;
-    button {
-        width: 100%;
-    }
-    span {
-        white-space: nowrap;
-        padding: 2px;
-        background-color: #ada2a0;
-    }
+body #page #background #container #sheet #edit-profile button {
+  white-space: nowrap;
+  font-size: 2vw;
+  left: 10%;
 }
-
-#edit-username {
-    display: none;
+body #page #background #container #sheet #edit-profile .edit-logo {
+  width: 10%;
+  vertical-align: middle;
 }
-           
-#edit-password {
-    display: none;
-    flex-direction: column;
+body #page #background #container #sheet #edit-profile #edit-logo-right {
+  top: 88%;
 }
-
-.edit-input {
-    width: 80%;
+body #page #background #container #sheet #edit-profile #edit-logo-left {
+  top: 88%;
 }
-
-.text {
-    font-family: isaac-bold;
-    color: #332C2B;
+body #page #background #container #sheet #edit-profile-picture {
+  display: none;
+  position: absolute;
+  top: 29%;
+  left: 58%;
 }
-
-#logout-button {
-    position: absolute;
-    width: 6%;
-    top: 8%;
-    left: 69%;
-    z-index: 1111;
+body #page #background #container #sheet #edit-profile-picture img {
+  width: 30%;
 }
-
-.graph {
-    position: absolute;
-    top: 30%;
-    left: 76%;
-    width: 150px; /* Diamètre du cercle */
-    height: 150px;
-    border-radius: 50%; /* Rendre le div circulaire */
-    overflow: hidden; /* Empêche les débordements */
+body #page #background #container #sheet #profile-picture-container {
+  position: absolute;
+  top: 11%;
+  left: 37%;
+  width: 30%;
+  height: 20%;
 }
-.slice {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    clip-path: polygon(50% 50%, 100% 0%, 100% 100%);
+body #page #background #container #sheet #profile-picture-container #profile-picture {
+  width: 100%;
 }
-.slice-1 {
-    background-color: #4CAF50; /* Couleur de la première portion */
-    transform: rotate(0deg);
+body #page #background #container #sheet .button-image {
+  width: 100%;
 }
-.slice-2 {
-    background-color: #2196F3; /* Couleur de la deuxième portion */
-    transform: rotate(90deg);
+body #page #background #container #sheet .stats {
+  position: absolute;
+  width: 24%;
+  height: 20%;
+  font-size: 1.7vw;
+  text-align: center;
+  top: 18%;
 }
-.slice-3 {
-    background-color: #FFC107; /* Couleur de la troisième portion */
-    transform: rotate(180deg);
+body #page #background #container #sheet #wins {
+  left: 5%;
+  color: #332C2B;
 }
-.slice-4 {
-    background-color: #F44336; /* Couleur de la quatrième portion */
-    transform: rotate(270deg);
+body #page #background #container #sheet #losses {
+  left: 73%;
 }
+body #page #background #confirmation-popin {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0%;
+  left: 0%;
+}
+body #page #background #confirmation-popin button {
+  border: none;
+  position: absolute;
+  top: 60%;
+  transition: transform 0.3s ease;
+  font-size: 4vw;
+}
+body #page #background #confirmation-popin span {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  font-size: 2.8vw;
+}
+body #page #background #confirmation-popin img {
+  width: 35%;
+}
+body #page #background #confirmation-popin #popin-postit {
+  position: absolute;
+  width: 31%;
+  aspect-ratio: 228/129;
+}
+body #page #background #confirmation-popin .button-popin:hover {
+  transform: scale(1.2);
+}
+body #page #background #confirmation-popin #yes-button {
+  left: 15%;
+  width: 27%;
+  height: 18%;
+}
+body #page #background #confirmation-popin #no-button {
+  left: 60%;
+  width: 23%;
+  height: 18%;
+}/*# sourceMappingURL=style.css.map */
