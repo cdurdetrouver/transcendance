@@ -1,7 +1,86 @@
-<div id="container">
-	<img src="../routes/assets/images/intro_bg.png" alt="background image" id="background-image">
 
+{{header}}
+<div id="page">
+	<div class="background">
+		<div class="container">
+<!--			<div class="graph">-->
+<!--				<div class="slice slice-1"></div>-->
+<!--				<div class="slice slice-2"></div>-->
+<!--				<div class="slice slice-3"></div>-->
+<!--				<div class="slice slice-4"></div>-->
+<!--			</div>-->
+			<div id="sheet">
+				<img src="../../static/assets/header/login.png" alt="logout image" class="buttons" id="logout-button">
+				<img src="../routes/assets/images/account/profile_sheet.png" alt="sheet image" id="sheet-image">
+				<div id="main-page">
+					<div id="user-info">
+						<div id="current-info">
+							<span class="text" id="label-email">EMAIL:</span>
+							<div class="text" id="email">
+								<span class="label"></span>
+							</div>
+							<span class="text" id="label-username">USERNAME:</span>
+							<div class="text" id="username">
+								<span class="label"></span>
+								<button class=" edit-button">
+									<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
+								</button>
+								<div id="edit-username">
+									<input type="text" class="edit-input"  placeholder="new username">
+									<input type="submit" value="Submit">
+								</div>
+							</div>
+							<div class="text" id="password">
+								<span class="label">Change your password</span>
+								<button class="buttons edit-button">
+									<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
+								</button>
+								<div id="edit-password">
+									<input type="text" class="edit-input" id="current-password" placeholder="Current password">
+									<input type="text" class="edit-input" id="new-password" placeholder="New password">
+									<input type="text" class="edit-input" id="confirm-password" placeholder="Confirm new password">
+									<input type="submit" value="Submit">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="profile-picture-container">
+						<img src="../../static/assets/header/login.png" alt="Profile Picture" id="profile-picture">
+					</div>
+					<div  class="stats text" id="wins">
+						<span>WINS</span>
+					</div>
+					<div  class="stats text" id="losses">
+					<span>LOSSES</span>
+					</div>
+					<div id="delete-profile">
+						<button class="buttons text" >
+							<img src="../routes/assets/images/account/logo_delete.png" alt="Delete logo" class="delete-logo" id="delete-logo-left">
+						DELETE PROFILE
+						<img src="../routes/assets/images/account/logo_delete.png" alt="Delete logo" class="delete-logo" id="delete-logo-right">
+						</button>
+					</div>
+					<div id="edit-profile">
+						<button class="buttons text">
+							<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-left">
+							EDIT PROFILE
+							<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo" id="edit-logo-right">
+						</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div id="confirmation-popin">
+			<img src="../routes/assets/images/account/confirmation_sheet_empty.png" alt="Confirmation Image">
+			<div id="popin-postit">
+				<span class="text">ARE YOU SURE ?</span>
+				<button class="text buttons" id="yes-button">YES</button>
+				<button class="text buttons" id="no-button">NO</button>
+			</div>
+		</div>
+	</div>
 </div>
-
+	
 <script src="js/index.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>

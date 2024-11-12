@@ -1,5 +1,5 @@
 body, html {
-    background-image: url('../assets/images/account/background_account.png');
+    background-image: url('../assets/images/utils/background_account.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -69,36 +69,6 @@ body, html {
     max-height: 100%;
 }
 
-#delete-profile {
-    /* position: absolute; */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 90%;
-    height: 10%;
-    button{
-        white-space: nowrap;
-        font-size: 2vw;
-        left: 10%;
-    }
-    img {
-        width: 8%;
-        vertical-align: middle;
-    }
-    /* background-color: purple; */
-}
-
-#delete-logo-left {
-    top: 88%;
-    left: 100%;
-}
-
-#delete-logo-right {
-    top: 88%;
-    left: 0%;
-
-}
-
 #container {
     position: relative;
     display: flex;
@@ -123,7 +93,6 @@ body, html {
 }
 
 .buttons {
-    /* display: inline-block; */
     transition: transform 0.3s ease;
     background-color: transparent;
     border: none;
@@ -135,56 +104,6 @@ body, html {
 
 .button-image {
     width: 100%;
-}
-
-#confirmation-popin {
-    position: absolute;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    top:0%;
-    left:0%;
-    button {
-        position: absolute;
-        top: 60%;
-        transition: transform 0.3s ease;
-        font-size: 4vw;
-    }
-    span {
-        position: absolute;
-        top: 20%;
-        left: 10%;
-        font-size: 2.8vw;
-    }
-    img {
-        width: 35%;
-    }
-}
-
-#popin-postit {
-    position: absolute;
-    width: 31%;
-    aspect-ratio: 228 / 129;
-}
-
-
-.button-popin:hover {
-    transform: scale(1.2);
-}
-
-#yes-button {
-    left:15%;
-    width: 27%;
-    height: 18%;
-}
-
-#no-button {
-    left: 60%;
-    width: 23%;
-    height: 18%;
 }
 
 .stats {
@@ -238,45 +157,6 @@ body, html {
 
 }
 
-
-.edit-logo-mode {
-    width: 7%;
-}
-
-#edit-profile {
-    position: absolute;
-    align-items: center;
-    justify-content: space-between;
-    width: 90%;
-    height: 10%;
-    top: 80%;
-    left: 5%;
-    /* background-color: blue; */
-}
-
-.edit-logo {
-    width: 10%;
-    vertical-align: middle;
-}
-
-#edit-logo-left {
-    top: 88%;
-    left: 100%;
-}
-
-#edit-logo-right {
-    top: 88%;
-    left: 0%;
-}
-
-#edit-profile {
-    button {
-        white-space: nowrap;
-        font-size: 2vw;
-        left: 10%;    
-    }
-}
-
 #username {
     display: flex;
     button {
@@ -287,29 +167,12 @@ body, html {
     }
 }
 
-#password {
-    display:none;
+#invite-chat {
     button {
-        width: 100%;
-    }
-    span {
         white-space: nowrap;
-        padding: 2px;
-        background-color: #ada2a0;
+        font-size: 2vw;
+        left: 10%;
     }
-}
-
-#edit-username {
-    display: none;
-}
-           
-#edit-password {
-    display: none;
-    flex-direction: column;
-}
-
-.edit-input {
-    width: 80%;
 }
 
 .text {
@@ -325,7 +188,7 @@ body, html {
     z-index: 1111;
 }
 
-.graph {
+.circle {
     position: absolute;
     top: 30%;
     left: 76%;

@@ -1,418 +1,309 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    background-color: #d2c7c3;
-}
-
 @font-face {
-	font-family: isaac;
-	src: url(../routes/assets/font/IsaacGame.ttf);
-  }
-
-#container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #d2c7c3;
+  font-family: "isaac";
+  src: url(../routes/assets/font/IsaacGame.ttf);
+}
+body, html {
+  background-image: url("../routes/assets/images/home/background.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
 }
 
-#game-container {
-    position: relative;
+#page-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-#menu-image {
-    max-width: 100%;
-    max-height: 100%;
+#page-container #page-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
-
-.button-mode {
-    padding: 10px 20px;
-    background: transparent;
-    color: rgba(69,57,59,255);
-    cursor: pointer;
-	font-family: isaac;
-    font-size: 3.5vw;
-    text-decoration: none;
-    border: none;
+#page-container #page-content .text {
+  font-family: isaac;
+  font-size: 1rem;
 }
-
-#select-mode {
-    position: absolute;
-    top: 12%;
-    left: 33%;
-    transform: translate(10%, 10%) rotate(-5deg);
-    width: 34%;
-    height: 70%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 4%; /*pas sur que ca soit le mieux pour que ca soit responsive*/
+#page-container #page-content a:hover {
+  transform: scale(1.2);
 }
-
-a:hover {
-    font-size: 3.8vw;
+#page-container #page-content button:hover {
+  transform: scale(1.05);
+  border: none;
+  background-color: transparent;
 }
-
-
-#log-page {
-    position: absolute;
-    top: 22%;
-    left: 12%;
-    width: 14%;
-    height: 29%;
-    transform: rotate(12deg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    white-space: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
+#page-container #page-content #log-sheet {
+  position: absolute;
+  width: 22%;
+  top: 20%;
+  left: 2%;
+  z-index: 111;
+  rotate: -10deg;
 }
-
-.login-popin {
-    display: none;
+#page-container #page-content #sheet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
-
-#logout-popin {
-    display: none;
-    white-space: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
+#page-container #page-content #sheet #sheet-image {
+  width: 44%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-.log-buttons {
-    padding: 10px 20px;
-    background: transparent;
-    color: rgba(69,57,59,255);
-    cursor: pointer;
-	font-family: isaac;
-    font-size: 3vw;
-    text-decoration: none;
-    border: none;
-    display: flex;
-    flex-direction: column; /* Permet au texte d'être empilé verticalement */
-    align-items: center; /* Centre le contenu horizontalement */
-    justify-content: center;
+#page-container #page-content #sheet #selection-mode {
+  position: absolute;
+  left: 24%;
+  top: 0%;
+  width: 41%;
+  height: 85%;
+  justify-content: center;
+  max-width: 100%;
+  max-height: 100%;
+  transform: translate(10%, 10%) rotate(-5deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4%;
 }
-
-
-/* Debut du popup*/
-
-.popin {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
+#page-container #page-content #sheet #selection-mode #local:disabled, #page-container #page-content #sheet #selection-mode #online:disabled {
+  cursor: not-allowed;
+  border: none;
 }
-
-.log-popin {
-
-	background-image: url('../static/assets/sheets/login2.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-position: center;
-    padding: 20px;
-    border-radius: 5px;
-    width: 600px;
-    height:400px;
-    position: relative;
+#page-container #page-content #sheet #selection-mode .button {
+  padding: 10px 20px;
+  background: transparent;
+  color: rgb(69, 57, 59);
+  cursor: pointer;
+  font-family: isaac;
+  font-size: 3.5vw;
+  text-decoration: none;
+  border: none;
+  transition: transform 0.3s ease;
 }
-
-
-
-#closePopupBtn {
-	background-image: url(../static/assets/login/cross.png);
-	background-repeat: no-repeat;
-	background-size: contain;
-	position: absolute;
-	top: 17%;
-	right: 6%;
-	font-size: 35px;
-	cursor: pointer;
-	width: 20px;
-	height: 20px;
+#page-container #page-content #login-container {
+  position: absolute;
+  top: 28%;
+  left: 6%;
+  width: 15%;
+  height: 32%;
+  rotate: 2deg;
+  display: flex;
+  flex-direction: column-reverse;
+  align-content: center;
+  justify-content: space-around;
+  align-items: center;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 1111;
 }
-
-#login-content {
-    display: flex;
-    flex-direction: row;
-	padding-top: 30px;
-	padding-left: 50px;
-    transform: rotate(3deg);
+#page-container #page-content #login-container button {
+  background-color: transparent;
+  font-family: isaac;
+  font-size: 2vw;
+  border: none;
 }
-
-.defaut-login {
-	display: flex;
-	flex-direction: column;
-	width: 150%;
+#page-container #page-content #login-container button:hover {
+  transform: scale(1.2);
 }
-
-.separator {
-	margin-left: 20px;
-	margin-right: 20px;
-	/* background:  #929292; */
-	display: inline-block; /* Ensures it behaves like a block element */
-	border-radius: 18%;
-	width: 5px;
-	height: 240px;
+#page-container #page-content #login-container img {
+  width: 50%;
 }
-
-.app-login {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 25px;
+#page-container #page-content #login-container #separator {
+  margin-left: 20px;
+  margin-right: 20px;
+  display: inline-block;
+  border-radius: 18%;
+  width: 5px;
+  height: 240px;
 }
-
-.email {
-	font-family: isaac;
-	font-size: 1rem;
-	display: block;
+#page-container #page-content #popin-container {
+  display: none;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
-
-.confirm-button {
-	font-family: isaac;
-	font-size: 1rem;
-	background-image: url(../static/assets/sheets/Button.png);
-	width: 200px; /* Increase button width */
-    height: 60px;  /* Increase button height */
-    background-size: contain; /* Ensures the image fits within the button */
-    background-repeat: no-repeat;
-    background-position: center; /* Centers the image */
-	background-color: transparent;
-	outline: none;
+#page-container #page-content #popin-container #popin-content {
+  background-image: url("../static/assets/sheets/login2.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+  padding: 20px;
+  border-radius: 5px;
+  width: 600px;
+  height: 400px;
+  position: relative;
+}
+#page-container #page-content #popin-container #popin-content form .text {
+  font-size: 1.5rem;
+}
+#page-container #page-content #popin-container #popin-content #title {
+  font-family: isaac;
+  color: #313131;
+  font-size: 2rem;
+  position: relative;
+  margin-bottom: 30px;
+  left: 9%;
+  top: 11%;
+  transform: rotate(3deg);
+}
+#page-container #page-content #popin-container #popin-content #close-button {
+  background-image: url(../static/assets/login/cross.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: transparent;
+  position: absolute;
+  top: 17%;
+  right: 6%;
+  cursor: pointer;
+  height: 4%;
+  border: none;
+}
+#page-container #page-content #popin-container #popin-content input {
+  border: none;
+  background-color: #ccc7c6;
+}
+#page-container #page-content #popin-container #popin-content .button {
+  font-family: isaac;
+  font-size: 1rem;
+  background-image: url(../static/assets/sheets/Button.png);
+  width: 200px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+#page-container #page-content #popin-container #popin-content .button:hover{
+	transform: scale(1.05);
 	border: none;
-	cursor: pointer;
-	transition: transform 0.2s ease;
-	margin-top: -10px;
-	margin-bottom: 10px;
-
+	background-color: transparent;
+}
+#page-container #page-content #popin-container #popin-content #login-content {
+  display: flex;
+  flex-direction: row;
+  padding-top: 19px;
+  padding-left: 50px;
+  transform: rotate(3deg);
+}
+#page-container #page-content #popin-container #popin-content #login-content #default-login {
+  display: flex;
+  flex-direction: column;
+  width: 150%;
+}
+#page-container #page-content #popin-container #popin-content #login-content .separator {
+  margin-left: 20px;
+  margin-right: 20px;
+  display: inline-block;
+  border-radius: 18%;
+  width: 5px;
+  height: 240px;
+}
+#page-container #page-content #popin-container #popin-content #login-content #app-login {
+  display: flex;
+  flex-direction: column;
+  padding-top: 5%;
+}
+#page-container #page-content #popin-container #popin-content #login-content #app-login a {
+  margin-top: 20px;
+  width: 54%;
+  margin-left: 60px;
+  background-color: #fffcfc;
+  color: black;
+  padding: 5px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+#page-container #page-content #popin-container #popin-content #login-content #app-login a:hover {
+  transform: scale(1.05);
+}
+#page-container #page-content #popin-container #popin-content #login-content #app-login img {
+  width: 20%;
+}
+#page-container #page-content #popin-container #popin-content #login-content #app-login #github {
+  color: white;
+  background-color: #2b2e31;
+}
+#page-container #page-content #popin-container #popin-content #login-content #app-login #intra {
+  background-color: rgb(240, 240, 240);
+}
+#page-container #page-content #popin-container #popin-content #login-content #app-login #intra-logo {
+  width: 30%;
+}
+#page-container #page-content #popin-container #popin-content #register-content {
+  font-family: isaac;
+  display: none;
+  flex-direction: row;
+  transform: rotate(3deg);
+}
+#page-container #page-content #popin-container #popin-content #register-content .text {
+  font-size: 1.4rem;
+}
+#page-container #page-content #popin-container #popin-content #register-content #test {
+  display: flex;
+  flex-direction: row;
+  padding-top: 11px;
+  padding-left: 50px;
+}
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register {
+  padding-left: 35%;
+  padding-top: 5%;
+}
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #avatar {
+  position: relative;
+  background-image: url(../static/assets/login/avatar_sad.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 150px;
+  width: 150px;
+  left: -15px;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #avatar:hover {
+  transform: scale(1.05);
+}
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #file-chosen {
+  position: relative;
+  top: -15px;
+}
+#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #submit-register {
+  position: relative;
+  left: -29%;
+}
+#page-container #page-content #popin-container #popin-content #register-content #test #back-to-login {
+  background-image: url(../static/assets/login/arrow.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  top: 95%;
+  right: 5%;
+  font-size: 35px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
 }
 
-.confirm-button:hover {
-    transform: scale(1.05); /* Slightly enlarge the button */
-}
-
-.login-buttons {
-    flex: 1;
-    background-color: #fffcfc;
-    color: black;
-    border: none;
-    padding: 5px 15px;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    border-radius: 0.5rem;
-    text-decoration: none;
-	transition: transform 0.2s ease;
-
-}
-
-.login-buttons:hover {
-	transform: scale(1.05); /* Slightly enlarge the button */
-
-}
-
-#google-login {
-	margin-bottom: 20px;
-}
-
-.login-buttons:hover {
-	transform: scale(1.05); /* Slightly enlarge the button */
-
-}
-
-#google-login {
-	margin-bottom: 20px;
-}
-
-#google-logo {
-    width: 20%;
-}
-
-#github-login {
-    color: white;
-	margin-bottom: 20px;
-}
-
-.github_button{
-    background-color: #2b2e31;
-}
-
-#github-logo {
-    width: 20%;
-}
-
-#buttons {
-	margin-top: 20px;
-	width: 60%;
-	margin-left: 60px;
-}
-
-#intra-login {
-	margin-bottom: 20px;
-}
-
-#github-logo {
-    width: 20%;
-}
-
-#buttons {
-	margin-top: 20px;
-	width: 60%;
-	margin-left: 30px;
-}
-
-#intra-login {
-	margin-bottom: 20px;
-}
-
-#intra-logo {
-    width: 20%;
-}
-
-.intra_button{
-	background-color: rgba(240,240,240,255);
-}
-
-
-
-#local:disabled {
-    cursor: not-allowed; /*if login cursor: allowed */
-    border: none;
-}
-
-#local:disabled {
-    cursor: not-allowed; /*if login cursor: allowed */
-    border: none;
-}
-
-.login-buttons:hover {
-    font-size: 1rem;
-}
-
-#register-content {
-	font-family: isaac;
-    display: none;
-    flex-direction: row;
-	padding-top: 30px;
-	padding-left: 50px;
-    transform: rotate(3deg);
-}
-
-#local:disabled {
-    cursor: not-allowed; /*if login cursor: allowed */
-    border: none;
-}
-
-#local:disabled {
-    cursor: not-allowed; /*if login cursor: allowed */
-    border: none;
-}
-
-.login-buttons:hover {
-    font-size: 1rem;
-}
-
-.custom-input {
-    border: none;
-    background-color: #ccc7c6;
-}
-
-#title-login 
-{
-	font-family: isaac;
-	color:#313131;
-	font-size: 2rem;
-	position :relative;
-	margin-bottom: 30px;
-	left : 9%;
-	top:11%;
-	transform: rotate(3deg);
-}
-
-.no-account 
-{
-	font-family: isaac;
-	font-size: 1rem;
-}
-
-
-#register-content {
-	font-family: isaac;
-    display: none;
-    flex-direction: row;
-    transform: rotate(3deg);
-}
-
-#test {
-	display: flex;
-    flex-direction: row;
-	padding-top: 30px;
-	padding-left: 50px;
-}
-
-.custom-file-upload {
-    display:inline-block;
-}
-
-.avatar-register
-{
-	padding-left: 45%;
-}
-
-.avatar {
-	position: relative;
-	background-image: url(../static/assets/login/avatar_sad.png);
-	background-repeat: no-repeat;
-	background-size:contain;
-	height: 150px;
-	width:150px;
-	left: -15px;
-	transition: transform 0.2s ease;
-}
-
-.avatar:hover {
-	transform: scale(1.05);;
-}
-
-#file-chosen {
-	position: relative;
-	top: -15px;
-}
-
-.register-confirm
-{
-	position: relative;
-	top: -5px;
-	left: -50px
-}
-
-#return {
-	background-image: url(../static/assets/login/arrow.png);
-	background-repeat: no-repeat;
-	background-size: contain;
-	position: absolute;
-	top: 95%;
-	right: 5%;
-	font-size: 35px;
-	cursor: pointer;
-	width: 20px;
-	height: 20px;
-}
+/*# sourceMappingURL=style.css.map */
