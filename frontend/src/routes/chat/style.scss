@@ -43,38 +43,55 @@
 		font-size: 1rem;
 		border-radius: 8px;
 	}
-
 	.left {
 		background-color: transparent;
 		background-image: url('../../static/assets/sheets/chat-left.png');
 		background-repeat: no-repeat;
 		background-size: 100%;
-		
 		display: flex;
 		flex-direction: column;
-
 		.search-container {
 			font-family: isaac;
 			color: #2d2d2d;
 			margin-left: 50px;
-
 		}
-
 		.create-box {
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			width: 91%;
 			list-style-type: none;
 			padding-top: 10px;
 			padding-bottom: 10px;
-			border-top: 2px solid rgb(171, 170, 170); 
-
+			// border-top: 2px solid rgb(171, 170, 170);
+			#create-room-btn {
+				font-family: isaac-bold;
+				font-size: 0.7rem;
+				background-image: url(../../static/assets/sheets/Button.png);
+				width: 200px;
+				height: 60px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-color: transparent;
+				outline: none;
+				border: none;
+				cursor: pointer;
+				transition: transform 0.1s ease;
+				&:hover{
+					transform: scale(1.02);
+					border: none;
+					background-color: transparent;
+				}
+			}
 		}
-		
 		.user-list {
 			margin-left: 50px;
 			list-style-type: none; 
 		}
-		
 		.chat-list {
+			font-family: isaac-bold;
+			color: #2d2d2d;
 			border-top: 2px solid rgb(171, 170, 170); 
 			border-bottom: 2px solid   rgb(171, 170, 170);
 			width: 80%;
@@ -106,110 +123,109 @@
 
 	.middle {
 		width: 700px;
-		background-color: transparent;
-		background-image: url('../../static/assets/sheets/chat-middle.png');
-		background-repeat: no-repeat;
-		background-size:100%;
 
 			.chat-block {
 
 				width: inherit;
 				height: inherit;
 
-				#chat-header {
-					font-family: isaac-bold;
-					color: #2d2d2d;
-					padding-top: 30px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					display: flex;
-					align-items: center;
-
-
-					
-					.room-pic {
-						display: inline-flex;
-						align-items: center; 
-						margin-right: 15px; 
-					}
-
-					.room-pic img
-					{
-						width: 45px;
-						height: 45px;
-						border-radius: 50%;
-						overflow: hidden;
-					}
-
-					.room-name {
-						display: inline-flex;
+				.chat-output-block {
+					background-color: transparent;
+					background-image: url('../../static/assets/sheets/chat-middle.png');
+					background-repeat: no-repeat;
+					background-size:contain;
+					height: 90%;
+		
+					#chat-header {
+						font-family: isaac-bold;
+						color: #2d2d2d;
+						padding-top: 30px;
+						display: flex;
+						justify-content: center;
 						align-items: center;
-						font-size: 2rem;
-					}
-				}
-
-				#chat-log {
-					font-family: isaac-bold;
-					color: #2d2d2d;
-					overflow-y: auto;
-					margin-left: 50px;
-					margin-top: 50px;
-					width: 88%; 
-					height: 70%; 
-					resize: none;
-					background: none;
-					display: flex;
-					flex-direction: column;
-					gap: 5px;
-					scrollbar-width: thin; 
-					scrollbar-color: #888 transparent;
-
-					.chat-message {
-						border-radius: 20px;
-						margin-left: 35px;
-					}
-					
-					.gamek-link {
-						display: block;
-						text-align: center; 
-						color: #007bff; /* Link color */
-						text-decoration: none; /* Remove underline from the link by default */
-						border: 2px solid #007bff; /* Border properties */
-						border-radius: 10px; /* Rounded corners (optional) */
-						padding: 10px; /* Padding inside the border */
-						margin-left: 25%;
-						width: 40%;
 						
-						transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+						.room-pic {
+							display: inline-flex;
+							align-items: center; 
+							margin-right: 15px; 
+						}
+
+						.room-pic img
+						{
+							width: 45px;
+							height: 45px;
+							border-radius: 50%;
+							overflow: hidden;
+						}
+
+						.room-name {
+							display: inline-flex;
+							align-items: center;
+							font-size: 2rem;
+						}
 					}
-					
-					.gamek-link:hover {
-						background-color: rgba(0, 123, 255, 0.1); /* Light blue background on hover */
-						color: #0056b3; /* Darker blue color on hover */
-					}
-	
-					.nameDiv {
-						font-size: 10px;
-						color: #797979;
-					}
-	
-					.profile-pic
-					{
-						width: 30px;
-						height: 30px;
-						border-radius: 50%;
-						overflow: hidden;
-						position: relative;
-						bottom: -32px;
-						margin-right: 4px;
+
+					#chat-log {
+						font-family: isaac-bold;
+						color: #2d2d2d;
+						overflow-y: auto;
+						margin-left: 50px;
+						margin-top: 50px;
+						width: 88%; 
+						height: 100%; 
+						resize: none;
+						background: none;
+						display: flex;
+						flex-direction: column;
+						gap: 5px;
+						scrollbar-width: thin; 
+						scrollbar-color: #888 transparent;
+
+						.chat-message {
+							border-radius: 20px;
+							margin-left: 35px;
+						}
+						
+						.gamek-link {
+							display: block;
+							text-align: center; 
+							color: #007bff; /* Link color */
+							text-decoration: none; /* Remove underline from the link by default */
+							border: 2px solid #007bff; /* Border properties */
+							border-radius: 10px; /* Rounded corners (optional) */
+							padding: 10px; /* Padding inside the border */
+							margin-left: 25%;
+							width: 40%;
+							
+							transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+						}
+						
+						.gamek-link:hover {
+							background-color: rgba(0, 123, 255, 0.1); /* Light blue background on hover */
+							color: #0056b3; /* Darker blue color on hover */
+						}
+
+						.nameDiv {
+							font-size: 10px;
+							color: #797979;
+						}
+
+						.profile-pic
+						{
+							width: 30px;
+							height: 30px;
+							border-radius: 50%;
+							overflow: hidden;
+							position: relative;
+							bottom: -32px;
+							margin-right: 4px;
+						}
 					}
 				}
 				
 				#chat-input-block {
 					display: flex;
 					flex-direction: row;
-					margin-top: 10px;
 					margin-left: 15px;
 
 					#chat-message-input {
@@ -219,7 +235,7 @@
 						outline: none;
 						border: none;
 						height: 35px;
-						margin-top: 20px;
+						margin-left: 10px;
 						margin-right: 10px;
 						font-size: 16px;
 	
@@ -241,9 +257,6 @@
 						}
 					}
 				}
-
-
-
 
 		}
 	}
