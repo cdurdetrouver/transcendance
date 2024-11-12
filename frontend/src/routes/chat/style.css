@@ -47,7 +47,18 @@ html, body {
   background-size: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Allows flex-grow items to shrink as needed */
+}
+.flex-container .left .search-container {
+  font-family: isaac;
+  color: #2d2d2d;
+  margin-left: 50px;
+}
+.flex-container .left .create-box {
+  width: 91%;
+  list-style-type: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top: 2px solid rgb(171, 170, 170);
 }
 .flex-container .left .search-container {
   font-family: isaac;
@@ -89,6 +100,7 @@ html, body {
   overflow-y: scroll;
 }
 .flex-container .left .invitation-list {
+  margin-left: 50px;
   overflow-y: scroll;
 }
 .flex-container .middle {
@@ -215,7 +227,6 @@ html, body {
   background-size: 100%;
   display: flex;
   flex-direction: column;
-  height: 90vh;
 }
 .flex-container .right .room-info {
   position: relative;
