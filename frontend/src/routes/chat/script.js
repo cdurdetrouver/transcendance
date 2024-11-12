@@ -391,17 +391,19 @@ async function open_chat(room_selected) {
 	}
 
     chat_box.innerHTML = `
-	<div id=chat-header> 
-		<span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
-		<span class="room-name">${room.name}</span>
+	<div class="chat-output-block">
+		<div id=chat-header> 
+			<span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
+			<span class="room-name">${room.name}</span>
+		</div>
+		<div id="chat-log" style="overflow-y: auto; max-height: 80%;"></div>
 	</div>
-            <div id="chat-log" style="overflow-y: auto; max-height: 80%;"></div>
-			<div id="chat-input-block">	
-			    <input id="chat-message-input" type="text" placeholder="Aa"><br>
-				<input id="chat-message-pong" type="button" value="Send pong link">
-			</div>
-			<input id="chat-message-submit" type="button" value="Send">
-            <input id="chat-message-refresh" type="button" value="refresh">
+	<div id="chat-input-block">	
+		<input id="chat-message-input" type="text" placeholder="Aa"><br>
+		<input id="chat-message-pong" type="button" value="Send pong link">
+	</div>
+	<input id="chat-message-submit" type="button" value="Send">
+	<input id="chat-message-refresh" type="button" value="refresh">
     `;
     if (await check_admin() == true) 
 		open_conf();
