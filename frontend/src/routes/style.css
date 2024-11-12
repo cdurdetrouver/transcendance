@@ -191,6 +191,11 @@ body, html {
   margin-top: -10px;
   margin-bottom: 10px;
 }
+#page-container #page-content #popin-container #popin-content .button:hover{
+	transform: scale(1.05);
+	border: none;
+	background-color: transparent;
+}
 #page-container #page-content #popin-container #popin-content #login-content {
   display: flex;
   flex-direction: row;
