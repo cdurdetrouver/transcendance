@@ -1,0 +1,115 @@
+.container {
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: max-content;
+	text-align: center;
+}
+
+.waiting {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	position: relative;
+	gap: 2rem;
+}
+
+.user {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.user__name p {
+	font-size: 2rem;
+	margin: 0;
+}
+
+.user_picture img {
+	width: 150px;
+	height: 150px;
+	border-radius: 30%;
+}
+
+.user__status svg {
+	width: 50px;
+	height: 50px;
+}
+
+.waiting__message {
+	font-size: 1.5rem;
+	background-color: white;
+	padding: 1rem;
+	border-radius: 1.5rem;
+	position: relative;
+}
+
+@keyframes rotate {
+	from {
+		--angle: 0deg;
+	}
+
+	to {
+		--angle: 360deg;
+	}
+}
+
+@property --angle {
+	syntax: '<angle>';
+	initial-value: 0deg;
+	inherits: false;
+}
+
+.waiting__message::before,
+.waiting__message::after {
+	content: '';
+	width: 100%;
+	height: 100%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-image: conic-gradient(from var(--angle), transparent 90%, grey);
+	border-radius: 1.5rem;
+	position: absolute;
+	padding: 5px;
+	z-index: -1;
+	animation: 2s rotate linear infinite;
+	display: none;
+}
+
+.waiting__message::before {
+	filter: blur(15px);
+	opacity: 0.5;
+}
+
+.show::after,
+.show::before {
+	display: block;
+}
+
+.users {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 3rem;
+}
+
+.waiting__button #search {
+	background-color: green;
+	color: white;
+	font-size: 1rem;
+	padding: 1rem 2rem 1rem 2rem;
+	border-radius: 1.5rem;
+	cursor: pointer;
+}
+
+.game {
+	display: none;
+}

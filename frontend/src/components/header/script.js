@@ -1,7 +1,6 @@
 import { get_user} from '../../components/user/script.js';
 import { login, register } from '../user/script.js';
 import {customalert} from '../alert/script.js';
-
 import config from '../../env/config.js';
 
 
@@ -15,9 +14,6 @@ setTimeout(function() {
         console.error("Header element not found");
     }
 }, 100);
-
-
-
 
 const ButtonGoogle = document.querySelector('.google_button');
 ButtonGoogle.href = `https://accounts.google.com/o/oauth2/auth?client_id=${config.google_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=google')}&response_type=code&scope=openid%20email%20profile`;
@@ -134,7 +130,6 @@ export async function initComponent() {
 	const user = await get_user();
 
 	const usernameText = document.querySelector('.bottom .text-header');
-
 	avatarIcon.addEventListener("click", function() {
 		if (user)
 			return;

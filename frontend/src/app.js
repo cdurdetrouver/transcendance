@@ -16,9 +16,10 @@ class Router {
 
 			// Listen for link clicks
 			document.body.addEventListener('click', (event) => {
-				if (event.target.matches('[data-link]')) {
+				const link = event.target.closest('[data-link]');
+				if (link) {
 					event.preventDefault();
-					const pathName = event.target.getAttribute('href');
+					const pathName = link.getAttribute('href');
 					this.navigate(pathName);
 				}
 			});
