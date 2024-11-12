@@ -1,6 +1,7 @@
 import json
 import re
 import asyncio
+import time
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
@@ -28,6 +29,7 @@ class PrivateMatchmakingConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.user = result
+        self.friends = await sync_to_async(list)(self.user.friends.all())
         game_room_name = self.scope['url_route']['kwargs']['room_name']
         if not self.friends:
             await self.send(text_data=json.dumps({
@@ -36,7 +38,7 @@ class PrivateMatchmakingConsumer(AsyncWebsocketConsumer):
             }))
             await self.close()
             return
-        
+
         url_params = self.scope['url_route']['kwargs']
         self.character = url_params.get('character', '0')
 
@@ -167,8 +169,9 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+
         if ((self.user != self.game.player1 and self.user != self.game.player2) or self.game.started):
-            print(self.games)
             self.GameThread = self.games[self.room_group_name]
             await self.GameThread.add_viewer()
             await self.send(text_data=json.dumps({
@@ -177,8 +180,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                 'game_id': self.game.id
             }))
             self.type = 'viewer'
-            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         else:
+            await asyncio.sleep(1)
             self.type = 'player'
             self.waiting_players.append(self.user.id)
             self.player = 'player1' if self.user == self.game.player1 else 'player2'
@@ -188,13 +191,10 @@ class PongConsumer(AsyncWebsocketConsumer):
                 'message': 'Waiting for opponent to join',
                 'game_id': self.game.id
             }))
-            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
         if not self.game.started and self.game.player1.id in self.waiting_players and self.game.player2.id in self.waiting_players:
-            time.sleep(0.1)
             self.waiting_players.remove(self.game.player1.id)
             self.waiting_players.remove(self.game.player2.id)
-            print("Try to start game")
             try :
                 self.GameThread = GameThread(self.game, self.room_group_name, self.channel_layer)
                 self.games[self.room_group_name] = self.GameThread
@@ -202,12 +202,14 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.game.started = True
                 await sync_to_async(self.game.save)()
             except Exception as e:
-                print(e)
-                await self.send(text_data=json.dumps({
-                    'type': 'error',
-                    'message': 'Failed to start game'
-                }))
-                await self.close()
+                print("this error", e)
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'game.error',
+                        'message': 'Failed to start game',
+                    }
+                )
                 return
 
     async def disconnect(self, close_code):
@@ -249,6 +251,20 @@ class PongConsumer(AsyncWebsocketConsumer):
             }))
         elif self.type != 'viewer' and (data["message"] == "keyup" or data["message"] == "keydown"):
             await self.GameThread.set_player_direction(self.player, data)
+
+    async def game_error(self,event):
+        await self.send(text_data=json.dumps({
+            'type': 'error',
+            'message': event['message'],
+        }))
+        self.game.finished = True
+        await sync_to_async(self.game.save)()
+        if self.room_group_name in self.games:
+            self.GameThread.stop()
+            del self.games[self.room_group_name]
+        del self.GameThread
+        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        await self.close()
 
     async def game_started(self, event):
         self.GameThread = self.games[self.room_group_name]

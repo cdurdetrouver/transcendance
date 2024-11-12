@@ -69,6 +69,7 @@ function setUser(user) {
 	const username = user.username;
 	const email = user.email;
 	const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
+
 	const userHtml = `
 		<div class="user__info">
 			<p class="user__info__username">${username}</p>
@@ -121,7 +122,6 @@ export async function initComponent() {
 
 export async function cleanupComponent() {
 }
-
 
 const confirmationPopin = document.getElementById("confirmation-popin");
 const yesButton = document.getElementById("yes-button");
