@@ -2,6 +2,15 @@
   font-family: isaac;
   src: url(../../routes/assets/font/IsaacGame.ttf);
 }
+@font-face {
+  font-family: isaac-bold;
+  src: url("http://localhost:5500/routes/assets/font/isaac_bold.ttf") format("truetype");
+}
+html, body {
+  overflow: hidden;
+  height: 100%; /* Ensures the content fits the viewport height */
+}
+
 .background {
   position: relative;
   width: 100%;
@@ -63,14 +72,16 @@
   list-style-type: none;
   padding: 0;
   overflow-y: scroll;
-  flex: 1; /* Allows chat list to expand and take up remaining space */
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+  flex: 1;
 }
 .flex-container .left .invitation {
   font-family: isaac;
   color: #2d2d2d;
   margin-left: 50px;
   position: relative;
-  margin-bottom: 100px; /* Pushes invitation to the bottom */
+  margin-bottom: 100px;
 }
 .flex-container .left .invitation-list {
   margin-left: 50px;
@@ -78,43 +89,56 @@
 }
 .flex-container .middle {
   width: 700px;
+  background-color: transparent;
+  background-image: url("../../static/assets/sheets/chat-middle.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 .flex-container .middle .chat-block {
   width: inherit;
   height: inherit;
 }
 .flex-container .middle .chat-block #chat-header {
-  padding: 10px;
+  font-family: isaac-bold;
+  color: #2d2d2d;
+  padding-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 .flex-container .middle .chat-block #chat-header .room-pic {
   display: inline-flex;
   align-items: center;
-  margin-right: 5px;
+  margin-right: 15px;
 }
 .flex-container .middle .chat-block #chat-header .room-pic img {
-  width: 30px;
-  height: 30px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   overflow: hidden;
 }
 .flex-container .middle .chat-block #chat-header .room-name {
   display: inline-flex;
   align-items: center;
-  font-size: 16px;
+  font-size: 2rem;
 }
 .flex-container .middle .chat-block #chat-log {
+  font-family: isaac-bold;
+  color: #2d2d2d;
   overflow-y: auto;
-  margin-left: 15px;
-  width: 90%;
-  height: 80%;
+  margin-left: 50px;
+  margin-top: 50px;
+  width: 88%;
+  height: 70%;
   resize: none;
   background: none;
   display: flex;
   flex-direction: column;
   gap: 5px;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
 }
 .flex-container .middle .chat-block #chat-log .chat-message {
   border-radius: 20px;
@@ -138,7 +162,7 @@
 }
 .flex-container .middle .chat-block #chat-log .nameDiv {
   font-size: 10px;
-  color: rgb(219, 218, 218);
+  color: #797979;
 }
 .flex-container .middle .chat-block #chat-log .profile-pic {
   width: 30px;
@@ -162,6 +186,7 @@
   outline: none;
   border: none;
   height: 35px;
+  margin-top: 20px;
   margin-right: 10px;
   font-size: 16px;
 }
