@@ -1,67 +1,81 @@
-<div id="container">
-	<div id="game-container">
-		<img src="/routes/assets/images/menu.png" alt="Menu" id="menu-image">
-		<div id="select-mode">
-			<a disabled href="/character" class="button-mode" id="LOCAL" data-link>LOCAL</a>
-			<a disabled href="" class="button-mode" id="online" data-link>ONLINE</a>
-			<a disabled href="/account" class="button-mode" id="account" data-link>ACCOUNT</a>
-			<a href="" class="button-mode" id="chat" data-link>CHAT</a>
-			<a href="" class="button-mode" id="stats" data-link>STATS</a>
-			</div>
-			<div id="log-page">
-				<div id="login-popin">
-					<button  class="log-buttons" id="login">LOGIN</button>
-				</div>
-				<div id="logout-popin">
-					<button class="log-buttons" id="logout">LOGOUT</button>
-				</div>
-			</div>
-
-		<div id="popin" class="popin">
-			<div class="log-popin">
-				<span id="closePopupBtn" class="close">&times;</span>
-				<div id="login-content">
-					<form class="form">
-						<label class="email" for="email"> email:</label>
-						<input type="text" class="custom-input" id="email" name="email" required><br><br>
-						<label for="password">Password:</label>
-						<input type="password" class="custom-input" id="password" name="password" required><br><br>
-						<input class="confirm-button" type="submit" value="Submit"> Or login with:
-						<div id="buttons"> 
-						<a class="login-buttons google_button" id="google-login">Google
-							<img src="../routes/assets/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo">
-						</a>
-						<a class="login-buttons github_button" id="github-login"> GitHub
-							<img src="../routes/assets/logo/github_logo.png" id="github-logo" alt="Github logo">
-						</a>
-						<a class="login-buttons intra_button" id="42-login"> 
-						<img src="../routes/assets/logo/42.png" id="intra-logo" alt="42 logo">
-						</a>
-						</div>
-					</form>
-					<p>Don't have an account? <button class="confirm-button" id="register-button">Register</button></p>
-				</div>
-					<div id="register-content">
-						<h2>Register</h2>
-						<form class="form">
-							<label for="usernameRegister">Username:</label>
-							<input type="text" class="custom-input" id="usernameRegister" name="usernameRegister" required><br><br>
-							<label for="emailRegister">Email:</label>
-							<input type="text" class="custom-input" id="emailRegister" name="emailRegister" required><br><br>
-							<label for="passwordRegister">Password:</label>
-							<input type="password" class="custom-input" id="passwordRegister" name="passwordRegister" required><br><br>
-							
-							<input type="password" name="confirmPasswordRegister" placeholder="Confirm password " required>
-
-							<input type="file" name="profilePicture" id="chk" required>
-							
-							
-							<input class="confirm-button" type="submit" value="Submit">
-						</form>
-					</div>
+<div id="page-container">
+	<div id="page-content">
+		<img src="../routes/assets/images/home/login_sheet.png" alt="Log sheet" id="log-sheet"/>
+		<div id="sheet">
+			<img src="../routes/assets/images/home/sheet.png" id="sheet-image" alt="Sheet Image"/>
+			<div id="selection-mode">
+				<a href="/character" class="button" id="local">LOCAL</a>
+				<a href="" class="button" id="online">ONLINE</a>
+				<a href="/account" class="button disabled-link" id="account">ACCOUNT</a>
+				<a href="" class="button" id="chat">CHAT</a>
+				<a href="" class="button" id="stats">STATS</a>
 			</div>
 		</div>
-
+		<div id="login-container">
+			<button class="button">LOGIN</button>
+			<img src="../routes/assets/images/home/default_avatar.png" alt="Default Avatar"/>
+		</div>
+		<div id="popin-container">
+			<div id="popin-content">
+				<div class="text" id="title"> LOGIN</div>
+				<button id="close-button"></button>
+				<div id="login-content">
+					<div id="default-login">
+						<form>
+							<label class="text" for="email-login"> email:</label><br>
+							<input type="text" id="email-login" name="email" required><br><br>
+							<label class="text" for="password-login">Password:</label>
+							<input type="password" id="password-login" name="password" required><br><br>
+							<input class="button" type="submit" value="SUBMIT">
+						</form>
+						<div class="text">NO ACCOUNT ?!
+							<button class="button">REGISTER</button>
+<!--							<p>Don't have an account? <button class="submit-button">Register</button></p>-->
+						</div>
+					</div>
+					<div class = "separator"> </div>
+					<div id="app-login">
+						<form class="form">
+							<div id="app-buttons">
+								<a id="google">Google
+									<img src="../routes/assets/images/home/logo/Google__G__logo.svg.webp" id="google-logo" alt="Google logo"/>
+								</a>
+								<a id="github"> GitHub
+									<img src="../routes/assets/images/home/logo/github_logo.png" id="github-logo" alt="Github logo"/>
+								</a>
+								<a id="intra">
+								<img src="../routes/assets/images/home/logo/42.png" id="intra-logo" alt="42 logo"/>
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div id="register-content">
+					<form id="test">
+						<div id="default-register">
+							<label class="text" for="username">Username:</label>
+							<input type="text" class="custom-input" id="username" name="username" required><br><br>
+							<label class="text" for="email-register">Email:</label>
+							<input type="text" class="custom-input" id="email-register" name="email" required><br><br>
+							<label class="text" for="password-register">Password:</label>
+							<input type="password" class="custom-input" id="password-register" name="password-register" required><br><br>
+							<label class="text" for="confirm-password">Confirm password:</label>
+							<input type="password" name="confirm-password" id="confirm-password" required>
+<!--							<input type="file" name="profile-picture" id="chk" required>-->
+<!--							<input class="submit-button" type="submit" value="Submit">-->
+						</div>
+						<div id="avatar-register">
+							<div>PICK AN AVATAR</div>
+							<input type="file" name="profile-picture" id="chk" required style="display: none;">
+							<label  for="chk" id="avatar"></label>
+							<div class="text" id="file-chosen">No file chosen</div>
+							<input class="button" id="submit-register" type="submit" value="SUBMIT">
+						</div>
+						<button class="button" id="back-to-login"></button>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 <script src="js/index.js"></script>

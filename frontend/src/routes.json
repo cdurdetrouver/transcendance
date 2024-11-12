@@ -70,5 +70,9 @@
 	{
 		"path": "/account",
 		"files": "/account"
+	},
+	{
+		"path": "/accountid",
+		"files": "/accountid"
 	}
 ]

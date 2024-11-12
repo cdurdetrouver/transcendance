@@ -1,7 +1,8 @@
 import { customalert } from '../../components/alert/script.js';
 import config from '../../env/config.js';
-import { get_user } from '../../components/user/script.js';
+import { get_user, logout } from '../../components/user/script.js';
 import { router } from '../../app.js';
+import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 
 async function get_games(user_id) {
 	const response = await fetch(config.backendUrl + '/user/games/' + user_id, {
@@ -24,6 +25,7 @@ async function get_games(user_id) {
 function addGame(player1, player1_score, player2, player2_score) {
 	const game_list = document.querySelector('.game-list');
 	const game = document.createElement('li');
+
 	game.innerHTML = `
 		<div class="game-info">
 			<div>${player1.username}</div>
@@ -35,40 +37,44 @@ function addGame(player1, player1_score, player2, player2_score) {
 }
 
 function setPersonalUser(user) {
-	const containerDiv = document.querySelector('.container');
-	const userDiv = document.createElement('div');
 	const username = user.username;
 	const email = user.email;
-	const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
-	const userHtml = `
-		<div class="user__info">
-			<p class="user__info__username">${username}</p>
-			<p class="user__info__email">${email}</p>
-			<img src="${profile_picture}" alt="Profile Picture">
-		</div>
-		<div class="user__buttons">
-			<button class="user__buttons__edit" onclick="router.navigate('/user/edit')">Edit</button>
-			<button class="user__buttons__logout" onclick="logout()">Logout</button>
-		</div>
-	`;
-	userDiv.innerHTML = userHtml;
-	if (containerDiv.firstChild) {
-		containerDiv.insertBefore(userDiv, containerDiv.firstChild);
-	} else {
-		containerDiv.appendChild(userDiv);
+	// const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
+	const profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+
+	var profilePictureContainer = document.getElementById("profile-picture-container");
+
+	if (profilePictureContainer) {
+		console.log("profile exist");
+
+		// var image = document.createElement("img");
+		let imgElement = document.querySelector('#profile-picture');
+		imgElement.src = profilePicture;
+
 	}
+	else {
+		console.log("user infos does not exist");
+	}
+	const usernameInfo = document.querySelector("#username .label");
+	const emailInfo = document.querySelector("#email .label");
+
+
+	usernameInfo.textContent = username;
+	emailInfo.textContent = email;
+
 }
 
 function setUser(user) {
 	const userDiv = document.querySelector('.container');
 	const username = user.username;
 	const email = user.email;
-	const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+	const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
+
 	const userHtml = `
 		<div class="user__info">
 			<p class="user__info__username">${username}</p>
 			<p class="user__info__email">${email}</p>
-			<img src="${profile_picture}" alt="Profile Picture">
+			<img src="${profilePicture}" alt="Profile Picture">
 		</div>
 	`;
 	userDiv.innerHTML = userHtml;
@@ -116,3 +122,67 @@ export async function initComponent() {
 
 export async function cleanupComponent() {
 }
+
+const confirmationPopin = document.getElementById("confirmation-popin");
+const yesButton = document.getElementById("yes-button");
+const noButton = document.getElementById("no-button");
+const logoutButton = document.getElementById("logout-button");
+
+const deleteButton = document.querySelector("#delete-profile .buttons");
+const editProfileButton = document.querySelector("#edit-profile .buttons");
+const password = document.querySelector("#password");
+const editPasswordButton = document.querySelector("#password .edit-button");
+const editUsernameButton = document.querySelector("#username .edit-button")
+const editUsername = document.querySelector("#edit-username");
+const editPassword = document.querySelector("#edit-password");
+// const editContainer = document.querySelector("#edit-info");
+
+editProfileButton.addEventListener("click", function() {
+	editUsernameButton.style.display = "flex";
+	password.style.display = "flex";
+});
+
+editPasswordButton.addEventListener("click", function() {
+	console.log("edit password");
+	document.querySelector("#password .label").style.display = "none";
+	document.querySelector("#password .buttons").style.display = "none";
+	editPassword.style.display = "flex";
+
+});
+
+editUsernameButton.addEventListener("click", function() {
+	console.log("edit username");
+	// username.style.display = "none";
+	document.querySelector("#username .label").style.display = "none";
+	document.querySelector("#username .edit-button").style.display = "none";
+	// editContainer.style.display = "flex";
+	editUsername.style.display = "flex";
+});
+
+deleteButton.addEventListener("click", function() {
+	console.log("delete button");
+	// handleDeleteAccount();
+	confirmationPopin.style.display = "flex";
+});
+
+
+yesButton.addEventListener("click", function() {
+	console.log("yes button");
+	confirmationPopin.style.display = "none";
+	handleDeleteAccount();
+
+});
+
+noButton.addEventListener("click", function() {
+	console.log("no button");
+	confirmationPopin.style.display = "none";
+});
+
+logoutButton.addEventListener("click", function() {
+	console.log("logout button");
+	logout();
+	router.navigate('/');
+
+	// disabledAccount();
+});
+

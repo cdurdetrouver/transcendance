@@ -29,7 +29,7 @@ schema_view = get_schema_view(
 		default_version='v1',
 		description="Documentation for the API",
 		terms_of_service="https://www.google.com/policies/terms/",
-		contact=openapi.Contact(email="gbazart@student.42paris.fr"),
+		contact=openapi.Contact(email="gbazart@student.42.fr"),
 		license=openapi.License(name="BSD License"),
 	),
 	public=True,
@@ -39,6 +39,7 @@ schema_view = get_schema_view(
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('user/', include('user.urls')),
+	path('chat/', include('chat.urls')),
 	path('pong/', include('pong.urls')),
 	path('login/', login),
 	path('logout/', logout),
