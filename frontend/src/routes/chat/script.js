@@ -1,6 +1,7 @@
 import config from "../../env/config.js";
 import { get_user, searchUsers } from "../../components/user/script.js";
 import { router } from '../../app.js';
+import {customalert} from '../../components/alert/script.js';
 
 //show error si photo n'est pas au bon format
 
@@ -48,17 +49,6 @@ async function get_user_invitations(params) {
     return null;
 }
 
-async function created_room(c_room) {
-    const create_box = document.querySelector('.create-box');
-    create_box.innerHTML=`
-		 <li class="li-create-room-btn">
-			 <t1>Chat ${c_room.name} succesfully created</t1>
-            <input class="chat-conf-close" id=""submit type="button" value="Close">
-		 </li>
-    `;
-    document.querySelector('.chat-conf-close').addEventListener('click', close_create_room);
-}
-
 async function send_create_room(event) {
 	event.preventDefault();
     const form = event.target
@@ -74,8 +64,9 @@ async function send_create_room(event) {
     const data = await response.json();
     if (response.status === 200) {
         const c_room = data['room'];
-        created_room(c_room);
-        print_chats();
+        close_create_room();
+        customalert('Chat created !', c_room.name + ' has been created');
+        print_chats();  
         return;
     }
     else if (response.status === 404 || response.status === 403 || response.status === 400 || response.status === 303) {
@@ -87,29 +78,36 @@ async function send_create_room(event) {
 async function close_create_room() {
     const create_box = document.querySelector('.create-box');
     create_box.innerHTML=`
-		 <li class="li-create-room-btn">
+		 <div class="create-room">
 			<input id="create-room-btn" type="button" value="create room">
-		 </li>
+		 </div>
     `;
-    const create_room_btn = document.querySelector('.li-create-room-btn');
+    const create_room_btn = document.querySelector('.create-room');
     create_room_btn.addEventListener('click', create_room);
 }
 
 async function create_room() {
     const create_box = document.querySelector('.create-box');
     create_box.innerHTML=`
-        <li class="li-create-room-form">
+        <div class="create-room-form">
             <form id="roomForm" class="room__form">
-			    <label for="room_name">Room name:</label>
-			    <input type="text" id="room_name" name="name" required>
-
-			    <label for="room_picture">Room Picture:</label>
-			    <input type="file" id="room_picture" name="room_picture" accept="image/*">
-
-			    <button type="submit">Create</button>
-	        </form>
-            <input class="chat-conf-close" id=""submit type="button" value="Close">
-		</li>
+                <label for="room_name"></label>
+                <input type="text" id="room_name" name="name" placeholder="Enter room name" required><br><br>
+                
+                <label for="room_picture">Room Picture:</label><br>
+                <div class="form-row">
+                    <div id="new-pic">
+                        <input type="file" id="room_picture" name="room_picture" accept="image/*">
+                    </div>
+                    <div class="validate">
+                        <button id="validate-room" type="submit">test</button>
+                    </div>
+                    <div class="close-element">
+                        <input class="chat-conf-close" type="button" value="Close">
+                    </div>
+                </div>
+            </form>
+        </div>
     `;
 	document.getElementById('roomForm').addEventListener('submit', send_create_room);
     document.querySelector('.chat-conf-close').addEventListener('click', close_create_room);
@@ -352,7 +350,9 @@ async function open_chat_info(room, room_picture) {
 async function open_conf() {
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-        <input id="chat-add-user" type="button" value="Add user">
+        <div id="chat-add-user">
+            <input id="chat-button" type="button" value="Add user">
+        </div>
         <input id="chat-remove-user" type="button" value="Remove user">
         <form id="roomConfForm" class="room__form">
 			<label for="room_name">Room name:</label>
@@ -557,9 +557,8 @@ async function print_chats() {
         {
             const chat_error = document.querySelector('.chat-list');
             chat_error.innerHTML = `
-            <t1>List of chat</t1>
             <div class="chat-info">
-            <div>${"no chat found"}</div>
+                <h2>no chat found</h2>
             </div>
             `;
         }
@@ -687,7 +686,7 @@ export async function initComponent(params) {
         router.navigate('/login');
     print_chats();
     print_invitations();
-    const create_room_btn = document.querySelector('.li-create-room-btn');
+    const create_room_btn = document.querySelector('.create-room');
     create_room_btn.addEventListener('click', create_room);
 
 	// document.getElementById('user-search').addEventListener('input', async function() {
