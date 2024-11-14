@@ -517,6 +517,9 @@ async function open_chat(room_selected) {
 			chatLog.appendChild(messageElement);
 			chatLog.appendChild(messageElement);
         }
+		else if (data.type == 'error') {
+			customalert('error !', 'Message too longs', true);
+		}
     };
     
     chatSocket.onclose = function(e)

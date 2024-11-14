@@ -75,6 +75,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if (text_data_json["type"] == "refresh_mess"):
             await self.refresh_last_mess()
         elif text_data_json["type"] == "chat":
+            if len(text_data_json["message"]) > 128:
+                await self.send(text_data=json.dumps({"type": "error", "content": "Message too long"}))
+                return
             message = await save_message(self.room, text_data_json, self.user)
             message_serializer = MessageSerializer(message)
             await self.channel_layer.group_send(
