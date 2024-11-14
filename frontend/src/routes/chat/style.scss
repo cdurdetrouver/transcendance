@@ -76,51 +76,10 @@
 						background-color: transparent;
 					}
 				}
-				#room_name::placeholder {
-					font-family: isaac-bold;
-					color: gray;
-					opacity: 0.7;
-				}
-				input[type="text"] {
-					width: 60%; 
-					border-top: none;
-					border-left: none;
-					border-right: none;
-					border-bottom: 1px solid  grey; 
-					font-size: 16px;    
-					transition: 0.3s;    
-					box-shadow: none;    
-					background-color: #e9dadf;
-				}
-				input[type="text"]:focus {
-					border-color: #66afe9; 
-					outline: none;          
-					box-shadow: none;
-				}
-				#room_picture {
-					opacity: 0;              
-					position: absolute;      
-					height: 100px;
-					width: 100px;
-					z-index: 2;
-				}
 				.form-row {
 					display: flex;
 					align-items: center; 
 					gap: 20px;
-				}
-				#new-pic {
-					position: relative;
-					background-image: url(../../static/assets/login/avatar_sad.png);
-					background-repeat: no-repeat;
-					background-size: contain;
-					height: 100px;
-					width: 100px;
-					cursor: pointer;
-					transition: transform 0.2s ease;
-				}
-				#new-pic:hover {
-					transform: scale(1.05);
 				}
 				.validate {
 					margin-left: 25px;
@@ -327,26 +286,109 @@
 		}
 		.chat-conf {
 			position: relative;
-			#chat-button {
-				font-family: isaac-bold;
-				font-size: 0.7rem;
-				background-image: url(../../static/assets/chat/Button-green.png);
-				width: 150px;
-				height: 60px;
-				background-size: contain;
-				background-repeat: no-repeat;
-				background-position: center;
-				background-color: transparent;
-				outline: none;
-				border: none;
-				cursor: pointer;
-				transition: transform 0.1s ease;
-				&:hover{
-					transform: scale(1.02);
-					border: none;
+			h3 {
+				margin-left: 20px;
+				margin-bottom: 10px;
+			}
+			#user-add-remove-block {
+				display: flex;
+				flex-direction: row;
+				margin-left: 20px;
+				gap: 20px;
+				margin-bottom: 15px;
+				#button-add-user{
+					font-family: isaac-bold;
+					font-size: 0.8rem;
+					background-image: url(../../static/assets/chat/Button-green.png);
+					width: 150px;
+					height: 60px;
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-position: center;
 					background-color: transparent;
+					outline: none;
+					border: none;
+					cursor: pointer;
+					transition: transform 0.1s ease;
+					&:hover{
+						transform: scale(1.02);
+						border: none;
+						background-color: transparent;
+					}
 				}
-			}	
+				#button-remove-user{
+					font-family: isaac-bold;
+					font-size: 0.8rem;
+					background-image: url(../../static/assets/chat/button-red.png);
+					width: 150px;
+					height: 60px;
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-position: center;
+					background-color: transparent;
+					outline: none;
+					border: none;
+					cursor: pointer;
+					transition: transform 0.1s ease;
+					&:hover{
+						transform: scale(1.02);
+						border: none;
+						background-color: transparent;
+					}
+				}	
+			}
+			#roomConfForm {
+				margin-left: 20px;
+				.new-pic {
+					margin-left: 20px;
+				}
+				#submit-delete-block{
+					display: flex;
+					flex-direction: row;
+					margin-left: 20px;
+					gap: 20px;
+					#submit-edit {
+						font-family: isaac-bold;
+						font-size: 0.7rem;
+						background-image: url(../../static/assets/sheets/Button.png);
+						width: 150px;
+						height: 60px;
+						background-size: contain;
+						background-repeat: no-repeat;
+						background-position: center;
+						background-color: transparent;
+						outline: none;
+						border: none;
+						cursor: pointer;
+						transition: transform 0.1s ease;
+						&:hover{
+							transform: scale(1.02);
+							border: none;
+							background-color: transparent;
+						}
+					}
+				}
+				#chat-delete {
+					font-family: isaac-bold;
+					font-size: 0.7rem;
+					background-image: url(../../static/assets/sheets/Button-delete.png);
+					width: 150px;
+					height: 60px;
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-position: center;
+					background-color: transparent;
+					outline: none;
+					border: none;
+					cursor: pointer;
+					transition: transform 0.1s ease;
+					&:hover{
+						transform: scale(1.02);
+						border: none;
+						background-color: transparent;
+					}
+				}
+			}
 		}
 
 		.lower-left {
@@ -372,7 +414,6 @@
 
 
 		.leave-room {
-			margin-top: auto;
 		}
 	}
 }
@@ -434,5 +475,48 @@
 	transition: transform 0.2s ease;
 	&:hover{
 		transform: scale(1.10);
+	}
+}
+
+input[type="text"] {
+	width: 60%; 
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid  grey; 
+	font-size: 16px;    
+	transition: 0.3s;    
+	box-shadow: none;    
+	background-color: #e9dadf;
+	font-family: isaac-bold; 
+}
+input[type="text"]:focus {
+	border-color: #66afe9; 
+	outline: none;          
+	box-shadow: none;
+}
+.room_name::placeholder {
+	font-family: isaac-bold;
+	color: gray;
+	opacity: 0.7;
+}
+.room_picture {
+	opacity: 0;              
+	position: absolute;      
+	height: 100px;
+	width: 100px;
+	z-index: 2;
+}
+.new-pic {
+	position: relative;
+	background-image: url(../../static/assets/login/avatar_sad.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	height: 100px;
+	width: 100px;
+	cursor: pointer;
+	transition: transform 0.2s ease;
+	&:hover {
+		transform: scale(1.05);
 	}
 }
