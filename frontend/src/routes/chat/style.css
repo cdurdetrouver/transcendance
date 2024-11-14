@@ -58,7 +58,6 @@ html, body {
 }
 .flex-container .left .left-top .create-box {
   width: 91%;
-  list-style-type: none;
   padding-bottom: 10px;
 }
 .flex-container .left .left-top .create-box #create-room-btn {
@@ -263,28 +262,58 @@ html, body {
   flex-direction: column;
 }
 .flex-container .right .room-info {
-  margin-top: 30px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  height: 130px;
+  padding-left: 50px;
+  padding-bottom: 10px;
 }
-.flex-container .right .room-info .room-name-right {
-  position: absolute;
-  top: 55px;
-  font-size: 1.3rem;
+.flex-container .right .room-info h1 {
+  padding-top: 20px;
+}
+.flex-container .right .room-info #chat-message-leave {
+  font-family: isaac-bold;
+  font-size: 0.7rem;
+  background-image: url(../../static/assets/sheets/Button-cross.png);
+  width: 200px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.flex-container .right .room-info #chat-message-leave:hover {
+  transform: scale(1.02);
+  border: none;
+  background-color: transparent;
+}
+.flex-container .right .room-users {
+  list-style-type: none;
+  border-top: 2px solid rgb(171, 170, 170);
+  border-bottom: 2px solid rgb(171, 170, 170);
+  width: 80%;
+  margin-left: 50px;
+  min-height: 300px;
+  list-style-type: none;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+.flex-container .right .room {
+  list-style-type: none;
 }
 .flex-container .right .chat-conf {
   position: relative;
 }
 .flex-container .right .chat-conf h3 {
-  margin-left: 20px;
+  margin-left: 30px;
   margin-bottom: 10px;
 }
 .flex-container .right .chat-conf #user-add-remove-block {
   display: flex;
   flex-direction: row;
-  margin-left: 20px;
+  margin-left: 30px;
   gap: 20px;
   margin-bottom: 15px;
 }
@@ -329,10 +358,10 @@ html, body {
   background-color: transparent;
 }
 .flex-container .right .chat-conf #roomConfForm {
-  margin-left: 20px;
+  margin-left: 30px;
 }
 .flex-container .right .chat-conf #roomConfForm .new-pic {
-  margin-left: 20px;
+  margin-left: 30px;
 }
 .flex-container .right .chat-conf #roomConfForm #submit-delete-block {
   display: flex;
@@ -383,19 +412,7 @@ html, body {
 .flex-container .right .lower-left {
   position: relative;
 }
-.flex-container .right .room-users {
-  list-style-type: none;
-  width: 80%;
-  margin-left: 50px;
-  min-height: 200px;
-  list-style-type: none;
-  overflow-y: scroll;
-  scrollbar-width: thin;
-  scrollbar-color: #888 transparent;
-}
-.flex-container .right .room {
-  list-style-type: none;
-}
+
 .room-pic img {
   width: 50px;
   height: 50px;
