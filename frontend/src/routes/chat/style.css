@@ -361,6 +361,45 @@ html, body {
   border: none;
   background-color: transparent;
 }
+.flex-container .right .chat-conf #chat-user-input {
+  margin-left: 30px;
+}
+.flex-container .right .chat-conf #chat-user-submit {
+  background-image: url(../../static/assets/yes.png);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.flex-container .right .chat-conf #chat-user-submit:hover {
+  transform: scale(1.02);
+  border: none;
+  background-color: transparent;
+}
+.flex-container .right .chat-conf #chat-conf-close {
+  background-image: url(../../static/assets/login/arrow.png);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.flex-container .right .chat-conf #chat-conf-close:hover {
+  transform: scale(1.02);
+  border: none;
+  background-color: transparent;
+}
 .flex-container .right .chat-conf #roomConfForm {
   margin-left: 30px;
 }
@@ -416,6 +455,16 @@ html, body {
 .flex-container .right .lower-left {
   position: relative;
 }
+.flex-container .right .lower-left .user-list {
+  height: 175px;
+  font-family: isaac-bold;
+  color: #2d2d2d;
+  width: 80%;
+  list-style-type: none;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
 
 .room-pic img {
   width: 50px;
@@ -428,7 +477,7 @@ html, body {
   width: 100%;
   height: 75px;
   display: flex;
-  align-items: center; /* Aligns content vertically */
+  align-items: center;
 }
 .room:hover {
   background-color: #858582;
