@@ -1,12 +1,3 @@
-import { customalert } from "../../../../components/alert/script.js";
-import { router } from '../../../../app.js';
-
-const gameCanvas = document.getElementById("game-layer");
-const ctx = gameCanvas.getContext("2d");
-
-let frames = 0;
-
-
 class PongGame {
     constructor(player1, player2) {
         this.player1 = player1;
@@ -40,21 +31,6 @@ class PongGame {
         this.loop = null;
 
         this.keys = [];
-
-        
-        frames = 0;
-    }
-
-    async waitSpace() {
-        return new Promise((resolve) => {
-            function onKeyDown(event) {
-                if (event.code === 'Space') {
-                    document.removeEventListener('keydown', onKeyDown);
-                    resolve();
-                }
-            }
-            document.addEventListener('keydown', onKeyDown);
-        });
     }
 
     startCountdown() {
@@ -84,31 +60,37 @@ class PongGame {
         this.uiCtx.fillText(hearts, 1080, 25);
     }
 
-    async gameStart() {
+    gameStart() {
         this.bgCtx.fillStyle = "blue";
         this.bgCtx.fill();
         this.initializeGame();
         this.updateScoreboard();
+        this.manageAddEvent();
         this.ctx.font = '3vw Arial';
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'bottom';
         this.ctx.fillText('Press \'spacebar\' to start', this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 150);
-        this.manageAddEvent();
-        await this.waitSpace();
-        this.pong.isRunning = true;
-        this.startCountdown();
-        await this.updateGame();
     }
 
     manageAddEvent() {
-        window.addEventListener('keydown', (e) => {
+        window.addEventListener('keydown', function(e) {
+            this.keys = (this.keys || []);
             this.keys[e.key] = true;
-            console.log(this.keys);
         });
-        window.addEventListener('keyup', (e) => {
+        window.addEventListener('keyup', function(e) {
             this.keys[e.key] = false;
-            console.log(this.keys);
+        });
+    
+        window.addEventListener('keydown', function(e) {
+            if (e.code === "Space" && !this.isRunning) {
+                this.isRunning = true; 
+                this.startGameLoop();
+            }
+            if (e.code === "Enter") {
+                this.newGame();
+                this.startGameLoop();
+            }
         });
     }
 
@@ -118,6 +100,12 @@ class PongGame {
         this.pong.rightPaddle = new Paddle(this.gameCanvas.width - 130, this.gameCanvas.height / 2 - 30, "ArrowUp", "ArrowDown");
         this.pong.border = new Border(110, 110, 880, 480);
         this.render();
+    }
+
+    startGameLoop() {
+        this.stop();
+        this.startCountdown();
+        this.loop = requestAnimationFrame(this.updateGame.bind(this));
     }
 
     clear() {
@@ -132,13 +120,12 @@ class PongGame {
         }
     }
 
-    gameOver(winner) {
+    gameOver(loser) {
         this.ctx.font = '7vw Arial';
         this.ctx.fillStyle = 'rgba(1, 130, 0, 1)';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'bottom';
-        this.ctx.fillText(winner + ' win', this.gameCanvas.width / 2, this.gameCanvas.height / 2);
-        this.winner = winner;
+        this.ctx.fillText(loser + ' win', this.gameCanvas.width / 2, this.gameCanvas.height / 2);
 
         this.ctx.font = '3vw Arial';
         this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
@@ -148,27 +135,34 @@ class PongGame {
         this.stop();
         // this.initializeGame();
         this.clear();
-        console.log("Game over");
     }
 
-    async updateGame() {
-        frames++;
-        console.log("Updating game", this.pong.isRunning);
-        if (frames > 1000) {
-            this.winner = this.player1;
-            return;
-        }
+    newRound() {
+        this.pong.isRunning = true;
+        this.counter = 3;
+        this.clear();
+        this.stop();
+        this.updateScoreboard();
+        this.initializeGame();
+        this.startCountdown();
+    }
 
+    newGame() {
+        this.pong.rightPlayerScore = this.PlayerLife;
+        this.pong.leftPlayerScore = this.PlayerLife;
+        this.newRound();
+    }
 
+    updateGame() {
         if (!this.pong.isRunning) return;
 
         this.clear();
         if (this.pong.rightPlayerScore == 0) {
-            this.gameOver(this.player1);
+            this.gameOver("left");
             return;
         }
         if (this.pong.leftPlayerScore == 0) {
-            this.gameOver(this.player2);
+            this.gameOver("right");
             return;
         }
 
@@ -190,8 +184,7 @@ class PongGame {
 
         this.ballImpact(this.pong.ball, [this.pong.leftPaddle, this.pong.rightPaddle], this.pong.border);
         this.render();
-        await new Promise(requestAnimationFrame);
-        await this.updateGame();
+        this.loop = requestAnimationFrame(this.updateGame.bind(this));
     }
 
     ballImpact(ball, paddles, border) {
@@ -326,109 +319,6 @@ function RectCircleColliding(circle, rect) {
     return (dx * dx + dy * dy <= (circle.radius * circle.radius));
 }
 
-let players = [];
-
-class Match {
-    constructor(player1 = null, player2 = null, winner = null) {
-        this.player1 = player1;
-        this.player2 = player2;
-        this.winner = winner;
-        this.left = null;
-        this.right = null;
-    }
-}
-
-class Tournament {
-    constructor(players) {
-        if (players.length === 0) {
-            throw new Error("Tournament requires at least one player.");
-        }
-
-        this.players = players.length % 2 === 0 ? players : [...players, null];
-        this.root = this.buildTournamentTree(this.players);
-    }
-
-    buildTournamentTree(players) {
-        if (players.length === 1) {
-            return new Match(players[0], null);
-        }
-
-        let nextRound = [];
-        let matches = [];
-
-        for (let i = 0; i < players.length; i += 2) {
-            let player1 = players[i];
-            let player2 = i + 1 < players.length ? players[i + 1] : null;
-            let match = new Match(player1, player2);
-            matches.push(match);
-
-            nextRound.push(match);
-        }
-
-		matches.forEach(match => {
-			console.log(`Match between ${match.player1} and ${match.player2}`);
-		});
-
-        return this.buildMatches(nextRound);
-    }
-
-    buildMatches(matches) {
-        if (matches.length === 1) {
-            return matches[0];
-        }
-
-        let nextRound = [];
-        for (let i = 0; i < matches.length; i += 2) {
-            let left = matches[i];
-            let right = i + 1 < matches.length ? matches[i + 1] : null;
-            let match = new Match();
-            match.left = left;
-            match.right = right;
-            nextRound.push(match);
-        }
-
-        return this.buildMatches(nextRound);
-    }
-
-    async playMatch(match) {
-        if (!match || (!match.player1 && !match.player2)) {
-            return null;
-        }
-        if (!match.player2) {
-            match.winner = match.player1;
-        } else {
-            customalert("Match", `${match.player1} VS ${match.player2}`);
-            console.log(`Match playing ${match.player1} vs ${match.player2}`);
-            // Play the game
-            let pongGame = new PongGame(match.player1, match.player2);
-            await pongGame.gameStart();
-            match.winner = pongGame.winner;
-            console.log("Game ended");
-            // await pongGame.clear();
-            customalert("Winner", `${match.winner} wins the match!`);
-            await new Promise(resolve => setTimeout(resolve, 5000));
-        }
-        return match.winner;
-    }
-
-    async playTournament(match = this.root) {
-        if (!match) return null;
-
-        if (match.left) match.player1 = await this.playTournament(match.left);
-        if (match.right) match.player2 = await this.playTournament(match.right);
-
-        return await this.playMatch(match);
-    }
-}
-
-
-export async function initComponent() {
-    const urlParams = new URLSearchParams(window.location.search);
-    players = urlParams.get('players').split(',');
-
-	const tournament = new Tournament(players);
-
-    const winner = await tournament.playTournament();
-
-    customalert("Winner", `${winner} wins the tournament!`);
-}
+// Initialize and start the game
+const pongGame = new PongGame("gabriel", "bot");
+pongGame.gameStart();

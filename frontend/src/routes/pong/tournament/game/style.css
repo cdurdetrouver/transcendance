@@ -1,3 +1,15 @@
+#stage { 
+    width: 1100px; 
+    height: 700px; 
+    position: relative; 
+    border: 2px solid black 
+}
+
+canvas { position: absolute; }
+#ui-layer { z-index: 3 }
+#game-layer { z-index: 2 }
+#background-layer { z-index: 1 }
+
 .round {
     display: flex;
     justify-content: space-around;
