@@ -336,15 +336,11 @@ async function open_chat_info(room, room_picture) {
 
 	const room_info = document.querySelector('.room-info');
 	room_info.innerHTML = `
-	<div class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </div>
-	<div class="room-name-right"> ${room.name}  </div>
+	<h1>Group info</h1>
+	<div class="leave-room">
+		<input id="chat-message-leave" type="button" value="leave chat">
+	</div>
 	`
-
-	const leave_room =document.querySelector('.leave-room');
-	leave_room.innerHTML = `
-	<input id="chat-message-leave" type="button" value="leave chat">
-	` 
-
 }
 
 async function open_conf() {
@@ -796,7 +792,7 @@ function print_member(room) {
 		{
 			userItem.innerHTML = `
 				<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
-				<span class="room-name-left"> <b>${user.username}</b></span>
+				<span class="room-name-left">${user.username} (admin)</span>
 			`;
 		}
 		else {
