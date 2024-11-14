@@ -115,10 +115,12 @@ async function create_room() {
 
 async function toggleDisplay(element, displayStyle) {
     const userList = document.querySelector(element);
+	console.log(userList);
 	if (userList) {
         userList.style.display = displayStyle;
     } else {
         console.warn(`Element with selector "${element}" not found.`);
+		console.log(document.querySelector(element));
     };
 }
 
@@ -634,7 +636,7 @@ async function accept_invitation(room_id, value) {
     else if (response.status === 400 || response.status === 404 || response.status === 403){
         console.log("error: ", data['error'])
     }
-	const roomid = "room."+ room_id;
+	const roomid = ".room.room-id-" + room_id;
 	console.log(roomid);
 	toggleDisplay(roomid, "none")
         return;   
@@ -662,7 +664,7 @@ async function print_invitations() {
 				if (room_picture == "http://localhost:8000null")
 					room_picture = "../../static/assets/jpg/default_picture.jpg"
                 invite.innerHTML = `
-				<li class="room ${room_l.id}">
+				<li class="room room-id-${room_l.id}">
 				    <span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
 			        <span class="room-name-left">${room_l.name}</span>
 					<input id="invitation-accept-${room_l.id}" class="invite-yes" type="button" >
