@@ -119,6 +119,9 @@
 			overflow-y: scroll;
 			scrollbar-width: thin; 
 			scrollbar-color: #888 transparent;
+			display: flex;
+			flex-direction: column-reverse;
+			justify-content: flex-end;
 		}
 		.chat-info{
 			display: flex;
@@ -135,6 +138,7 @@
 		}
 
 		.invitation-list {
+			list-style-type: none;
 			width: 85%;
 			overflow-y: scroll;
 			scrollbar-width: thin; 
