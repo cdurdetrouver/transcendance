@@ -92,12 +92,12 @@ async function create_room() {
         <div class="create-room-form">
             <form id="roomForm" class="room__form">
                 <label for="room_name"></label>
-                <input type="text" id="room_name" name="name" placeholder="Enter room name" required><br><br>
+                <input type="text" class="room_name" name="name" placeholder="Enter room name" required><br><br>
                 
                 <label for="room_picture">Room Picture:</label><br>
                 <div class="form-row">
-                    <div id="new-pic">
-                        <input type="file" id="room_picture" name="room_picture" accept="image/*">
+                    <div class="new-pic">
+                        <input type="file" class="room_picture" name="room_picture" accept="image/*">
                     </div>
                     <div class="validate">
                         <button id="validate-room" type="submit">test</button>
@@ -350,21 +350,29 @@ async function open_chat_info(room, room_picture) {
 async function open_conf() {
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-        <div id="chat-add-user">
-            <input id="chat-button" type="button" value="Add user">
-        </div>
-        <input id="chat-remove-user" type="button" value="Remove user">
+		<h3>Group configuration</h3>
+		<div id="user-add-remove-block">
+			<div id="chat-add-user">
+				<input id="button-add-user" type="button" value="Add user">
+			</div>
+			<div id="chat-remove-user">
+				<input id="button-remove-user" type="button" value="Remove user">
+			</div>
+		</div>
         <form id="roomConfForm" class="room__form">
-			<label for="room_name">Room name:</label>
-			<input type="text" id="room_name" name="name" value=${room.name}>
+			<label for="room_name">Name:</label>
+			<input type="text" class="room_name" name="name" value=${room.name}><br><br>
 
-			<label for="room_picture">Room Picture:</label>
-			<input type="file" id="room_picture" name="room_picture" accept="image/*">
-
-			<button type="submit">Update</button>
+			<label for="room_picture">New Room Picture:</label><br><br>
+			<div class="new-pic">
+				<input type="file" class="room_picture" name="room_picture" accept="image/*">
+			</div>
+			<div id="submit-delete-block">
+				<button type="submit" id="submit-edit">Update</button>
+				<input id="chat-delete" type="button" value="Delete">
+			</div>
 	    </form>
-        <input id="chat-delete" type="button" value="Delete chat">
-        <input id="chat-conf-close" type="button" value="Close conf chat">
+        <input id="chat-conf-close" type="button" value="Close conf chat" style="display:none;">
         `;
 	document.getElementById('roomConfForm').addEventListener('submit', update_room);
     document.getElementById('chat-add-user').addEventListener('click', chat_add_user);
