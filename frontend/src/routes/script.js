@@ -127,13 +127,6 @@ fileInput.addEventListener('change', function() {
 
 registerSubmit.addEventListener("submit", register_form);
 
-
-fileInput.addEventListener('change', function() {
-    fileChosen.textContent = this.files[0].name;
-	avatar.style.backgroundImage = "url(../static/assets/login/avatar_happy.png)";
-
-});
-
 async function register_form(event) {
 	event.preventDefault();
 	

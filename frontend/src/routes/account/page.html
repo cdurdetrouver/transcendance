@@ -3,8 +3,11 @@
 <div id="page">
 	<div id="background">
 		<div id="container">
-			<div id="sheet">
+			<div id="logout">
+				<span class="text">LOGOUT</span>
 				<img src="../../static/assets/header/login.png" alt="logout image" class="buttons" id="logout-button">
+			</div>
+			<div id="sheet">
 				<img src="../routes/assets/images/account/profile_sheet.png" alt="sheet image" id="sheet-image">
 				<div id="main-page">
 					<div id="user-info">
@@ -14,37 +17,42 @@
 								<span class="label"></span>
 							</div>
 							<span class="text" id="label-username">USERNAME:</span>
-							<div class="text" id="username-label">
+							<div class="text" id="username">
+								<!-- edit-username -->
 								<span class="label"></span>
 								<button class=" edit-button">
 									<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
 								</button>
-								<form id="edit-username">
-									<input type="text" class="edit-input"  id="username" name="username" placeholder="new username">
-									<input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+								<form id="username-form">
+									<input type="text" class="edit-input"  id="username-input" name="username" placeholder="new username">
 									<input type="submit" value="Submit">
 								</form>
 							</div>
-							<div class="text" id="password-label">
-								<span class="label">Change your password</span>
+							<div class="text" id="edit-password">
+								<span class="label">change password</span>
 								<button class="buttons edit-button">
 									<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
 								</button>
-								<div id="edit-password">
+								<form id="edit-password">
 									<input type="text" class="edit-input" id="current-password" placeholder="Current password">
 									<input type="text" class="edit-input" id="new-password" placeholder="New password">
 									<input type="text" class="edit-input" id="confirm-password" placeholder="Confirm new password">
 									<button type="submit" value="Submit"></button>
-								</div>
+								</form>
 							</div>
 						</div>
 					</div>
 					<div id="profile-picture-container">
-						<img src="../../static/assets/header/login.png" alt="Profile Picture" id="profile-picture">
+						<div id="profile-picture">
+							<img src="../../static/assets/header/login.png" alt="Profile Picture">
+						</div>
+						<form>
+							<label for="edit-profile-picture" class="buttons edit-button" id="edit-profile-button">
+								<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
+							</label>
+							<input type="file" id="edit-profile-picture" name="edit-profile-picture" accept="image/*">
+						</form>
 					</div>
-					<button class="buttons edit-button" id="edit-profile-picture">
-						<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
-					</button>
 					<div  class="stats text" id="wins">
 						<span>WINS</span>
 					</div>

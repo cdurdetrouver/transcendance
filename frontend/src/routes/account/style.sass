@@ -57,18 +57,26 @@ body
                 .buttons:hover
                     transform: scale(1.2)
 
+                #logout
+                    background-color: #a58c6b
+                    position: absolute
+                    left: 75%
+                    top: 16%
+                    width: 15%
+                    height: 25%
+                    display: flex
+                    justify-content: space-evenly
+                    flex-direction: column
+                    align-items: center
+
+                    img
+                        width: 60%
+
                 #sheet
                     display: flex
                     justify-content: center
                     align-items: center
                     position: relative
-                    
-                    #logout-button
-                        position: absolute
-                        width: 6%
-                        top: 8%
-                        left: 69%
-                        z-index: 1111
 
                     #sheet-image
                         width: 50vw
@@ -128,24 +136,27 @@ body
                                 .edit-input
                                     width: 80%
 
-                                #username-label
+                                #username
                                     display: flex
 
                                     button
                                         display: none
 
-                                    #edit-username
+                                    form
                                         display: none
                                 
-                                #password-label
+                                #edit-password
                                     display: none
+
+                                    img
+                                        width: 50%
 
                                     span
                                         white-space: nowrap
                                         padding: 2px
                                         background-color: #ada2a0
 
-                                    #edit-password
+                                    form
                                         display: none
                                         flex-direction: column
 
@@ -197,24 +208,32 @@ body
                         #edit-logo-left
                             top: 88%
 
-                    #edit-profile-picture
-                        display: none
-                        position: absolute
-                        top: 29%
-                        left: 58%
-
-                        img
-                            width: 30%
-
                     #profile-picture-container
                         position: absolute
                         top: 11%
-                        left: 37%
-                        width: 30%
-                        height: 20%
+                        left: 31%
+                        width: 41%
+                        height: 23%
+                        display: flex
+                        justify-content: center
 
                         #profile-picture
-                            width: 100%
+                            width: 73%
+                            img
+                                width: 100%
+                            
+                        form
+                            label
+                                display: none
+                                position: absolute
+                                top: 73%
+                                left: 73%
+                                width: 17%
+
+                                img
+                                    width: 100%
+                            input
+                                display: none
 
                         
                     .button-image

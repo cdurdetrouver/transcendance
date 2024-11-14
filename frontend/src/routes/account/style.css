@@ -58,18 +58,26 @@ body #page #background #container .buttons {
 body #page #background #container .buttons:hover {
   transform: scale(1.2);
 }
+body #page #background #container #logout {
+  background-color: #a58c6b;
+  position: absolute;
+  left: 75%;
+  top: 16%;
+  width: 15%;
+  height: 25%;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+}
+body #page #background #container #logout img {
+  width: 60%;
+}
 body #page #background #container #sheet {
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-}
-body #page #background #container #sheet #logout-button {
-  position: absolute;
-  width: 6%;
-  top: 8%;
-  left: 69%;
-  z-index: 1111;
 }
 body #page #background #container #sheet #sheet-image {
   width: 50vw;
@@ -130,24 +138,27 @@ body #page #background #container #sheet #main-page #user-info #current-info #la
 body #page #background #container #sheet #main-page #user-info #current-info .edit-input {
   width: 80%;
 }
-body #page #background #container #sheet #main-page #user-info #current-info #username-label {
+body #page #background #container #sheet #main-page #user-info #current-info #username {
   display: flex;
 }
-body #page #background #container #sheet #main-page #user-info #current-info #username-label button {
+body #page #background #container #sheet #main-page #user-info #current-info #username button {
   display: none;
 }
-body #page #background #container #sheet #main-page #user-info #current-info #username-label #edit-username {
+body #page #background #container #sheet #main-page #user-info #current-info #username form {
   display: none;
 }
-body #page #background #container #sheet #main-page #user-info #current-info #password-label {
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password {
   display: none;
 }
-body #page #background #container #sheet #main-page #user-info #current-info #password-label span {
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password img {
+  width: 50%;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password span {
   white-space: nowrap;
   padding: 2px;
   background-color: #ada2a0;
 }
-body #page #background #container #sheet #main-page #user-info #current-info #password-label #edit-password {
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password form {
   display: none;
   flex-direction: column;
 }
@@ -199,24 +210,33 @@ body #page #background #container #sheet #edit-profile #edit-logo-right {
 body #page #background #container #sheet #edit-profile #edit-logo-left {
   top: 88%;
 }
-body #page #background #container #sheet #edit-profile-picture {
-  display: none;
-  position: absolute;
-  top: 29%;
-  left: 58%;
-}
-body #page #background #container #sheet #edit-profile-picture img {
-  width: 30%;
-}
 body #page #background #container #sheet #profile-picture-container {
   position: absolute;
   top: 11%;
-  left: 37%;
-  width: 30%;
-  height: 20%;
+  left: 31%;
+  width: 41%;
+  height: 23%;
+  display: flex;
+  justify-content: center;
 }
 body #page #background #container #sheet #profile-picture-container #profile-picture {
+  width: 73%;
+}
+body #page #background #container #sheet #profile-picture-container #profile-picture img {
   width: 100%;
+}
+body #page #background #container #sheet #profile-picture-container form label {
+  display: none;
+  position: absolute;
+  top: 73%;
+  left: 73%;
+  width: 17%;
+}
+body #page #background #container #sheet #profile-picture-container form label img {
+  width: 100%;
+}
+body #page #background #container #sheet #profile-picture-container form input {
+  display: none;
 }
 body #page #background #container #sheet .button-image {
   width: 100%;
