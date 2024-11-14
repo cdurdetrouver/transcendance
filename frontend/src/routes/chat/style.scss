@@ -372,6 +372,45 @@
 					}
 				}	
 			}
+			#chat-user-input {
+				margin-left: 30px;
+			}
+			#chat-user-submit {
+				background-image: url(../../static/assets/yes.png);
+				width: 20px;
+				height: 20px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-color: transparent;
+				outline: none;
+				border: none;	
+				cursor: pointer;
+				transition: transform 0.1s ease;
+				&:hover{
+					transform: scale(1.02);
+					border: none;
+					background-color: transparent;
+				}
+			}
+			#chat-conf-close {
+				background-image: url(../../static/assets/login/arrow.png);
+				width: 20px;
+				height: 20px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-color: transparent;
+				outline: none;
+				border: none;	
+				cursor: pointer;
+				transition: transform 0.1s ease;
+				&:hover{
+					transform: scale(1.02);
+					border: none;
+					background-color: transparent;
+				}
+			}
 			#roomConfForm {
 				margin-left: 30px;
 				.new-pic {
@@ -428,6 +467,16 @@
 
 		.lower-left {
 			position: relative;
+			.user-list {
+				height: 175px;
+				font-family: isaac-bold;
+				color: #2d2d2d;
+				width: 80%;
+				list-style-type: none;
+				overflow-y: scroll;
+				scrollbar-width: thin; 
+				scrollbar-color: #888 transparent;
+			}
 		}
 	}
 }
@@ -445,13 +494,12 @@
 	width: 100%;
 	height: 75px;
 	display: flex;
-	align-items: center; /* Aligns content vertically */
+	align-items: center;
 
 	&:hover {
 		background-color: #858582;
 
 	}
-	
 	.room-pic {
 		display: inline-flex;
 		align-items: center; 
@@ -462,6 +510,30 @@
 	{
 		display: inline-flex;
 		align-items: center;
+	}
+}
+.invite-test {
+	width: 100%;
+	height: 75px;
+	display: flex;
+	align-items: center;
+
+	&:hover {
+		background-color: #858582;
+	}
+	.room-pic {
+		display: inline-flex;
+		align-items: center; 
+		margin-right: 10px; 
+	}
+
+	.room-name-left
+	{
+		display: inline-flex;
+		align-items: center;
+	}
+	.invite-yes:hover {
+		background-color: #fbfb2e;
 	}
 }
 .validate {
@@ -506,10 +578,10 @@ input[type="text"] {
 }
 input[type="text"]:focus {
 	border-color: #66afe9; 
-	outline: none;          
+	outline: none;
 	box-shadow: none;
 }
-.room_name::placeholder {
+.input-text-chat::placeholder {
 	font-family: isaac-bold;
 	color: gray;
 	opacity: 0.7;
@@ -532,5 +604,44 @@ input[type="text"]:focus {
 	transition: transform 0.2s ease;
 	&:hover {
 		transform: scale(1.05);
+	}
+}
+.invite-yes{
+	margin-left: 35%;
+	background-image: url(../../static/assets/yes.png);
+	width: 20px;
+	height: 20px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;	
+	cursor: pointer;
+	transition: transform 0.1s ease;
+	&:hover{
+		transform: scale(1.3);
+		border: none;
+		background-color: transparent;
+	}
+}
+
+.invite-no{
+	margin-left: 15px;
+	background-image: url(../../static/assets/no.png);
+	width: 20px;
+	height: 20px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;	
+	cursor: pointer;
+	transition: transform 0.1s ease;
+	&:hover{
+		transform: scale(1.3);
+		border: none;
+		background-color: transparent;
 	}
 }

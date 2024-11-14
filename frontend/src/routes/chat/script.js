@@ -92,7 +92,7 @@ async function create_room() {
         <div class="create-room-form">
             <form id="roomForm" class="room__form">
                 <label for="room_name"></label>
-                <input type="text" class="room_name" name="name" placeholder="Enter room name" required><br><br>
+                <input type="text" class="input-text-chat" name="name" placeholder="Enter room name" required><br><br>
                 
                 <label for="room_picture">Room Picture:</label><br>
                 <div class="form-row">
@@ -113,9 +113,13 @@ async function create_room() {
     document.querySelector('.chat-conf-close').addEventListener('click', close_create_room);
 }
 
-async function toggleUserList(displayStyle) {
-    const userList = document.querySelector('.lower-left');
-    userList.style.display = displayStyle;
+async function toggleDisplay(element, displayStyle) {
+    const userList = document.querySelector(element);
+	if (userList) {
+        userList.style.display = displayStyle;
+    } else {
+        console.warn(`Element with selector "${element}" not found.`);
+    };
 }
 
 async function add_user(username) {
@@ -133,38 +137,31 @@ async function add_user(username) {
 	});
     const data = await response.json();
     if (response.status === 200) {
-			toggleUserList("none");
+			toggleDisplay('.lower-left', "none");
+			open_conf();
             console.log("add user request succes: " + data['User status']);
-            const chat_conf = document.querySelector('.chat-conf');
-            chat_conf.innerHTML = `
-                <t1>${data['User status']}</t1>
-                <input id="chat-add-user-close" type="button" value="close">
-            `;
-            document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()
-			});
+			customalert('Invitation sent', 'Plz say yes ' + username + ' !', false);
     }
     else if (response.status === 303 || response.status === 404 || response.status === 403) {
-			toggleUserList("none");
-
             console.log("add user request: " + data['error']);
-            const chat_conf = document.querySelector('.chat-conf');
-            chat_conf.innerHTML = `
-                <t1>${data['User status']}</t1>
-                <input id="chat-add-user-close" type="button" value="close">
-            `;
-            document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()
-			});
+			customalert(data['error'], 'No friend for U lol' , true);
     }
     return;
 }
 
 async function chat_add_user() {
-	toggleUserList("flex");
+	toggleDisplay('.lower-left', "flex");
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-    <input id="chat-user-input" type="text" size="100" placeholder="username"><br>
-    <input id="chat-user-submit" type="button" value="add user">
-    <input id="chat-conf-close" type="button" value="close">
+	<h3>Group configuration</h3>
+	<div id="user-add-remove-block">
+		<div id="chat-add-user">
+			<input id="button-add-user" type="button" value="Add user">
+		</div>
+	</div>
+   	<input id="chat-user-input" type="text" size="100" placeholder="username">
+	<input id="chat-user-submit" type="button">
+    <input id="chat-conf-close" type="button">
     `;
 
 	document.getElementById('chat-user-input').addEventListener('input', async function() {
@@ -188,8 +185,7 @@ async function chat_add_user() {
 	});
     document.querySelector('#chat-conf-close').addEventListener('click', function(event) {
 		open_conf()
-		toggleUserList("none");
-
+		toggleDisplay('.lower-left', "none");
 	});
 }
 
@@ -208,33 +204,57 @@ async function remove_user(username) {
     let ret;
     const data = await response.json();
     if (response.status === 200) {
+			toggleDisplay('.lower-left', "none");
+			open_conf();
+			customalert('User removed', 'Goodbye ' + username + ', nobody liked you', false);
             console.log("Remove user request succes: " + data['User status']);
             ret = data['User status'];
         }
     if (response.status === 404 || response.status === 403 || response.status === 400) {
                 console.log("error: " + data['error']);
+				customalert(data['error'], 'Learn to write, noob' , true);
                 ret = data['error'];
     }
     return ret;
 }
 
 async function chat_remove_user() {
+	toggleDisplay('.lower-left', "flex");
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-    <input id="chat-user-input" type="text" size="100" placeholder="username"><br>
-    <input id="chat-user-submit" type="button" value="remove user">
-    <input id="chat-conf-close" type="button" value="close">
+	<h3>Group configuration</h3>
+	<div id="user-add-remove-block">
+		<div id="chat-add-user">
+			<input id="button-remove-user" type="button" value="Remove user">
+		</div>
+	</div>
+   	<input id="chat-user-input" type="text" size="100" placeholder="username">
+	<input id="chat-user-submit" type="button">
+    <input id="chat-conf-close" type="button">
     `;
+
+	document.getElementById('chat-user-input').addEventListener('input', async function() {
+		const query = this.value;
+		if (query.length > 0) {
+			const response = await searchUsers(query, 5);
+			if (response.status === 200) {
+				const data = await response.json();
+				updateUserList(data.users);
+			} else {
+				updateUserList([]);
+			}
+		} else {
+			updateUserList([]);
+		}
+	});
     const input_user = document.querySelector('#chat-user-input');
-    document.querySelector('#chat-user-submit').addEventListener('click', async function(event) {
-        const ret = await remove_user(input_user.value, room);
-        const chat_conf = document.querySelector('.chat-conf');
-        chat_conf.innerHTML = `
-        <t1>${ret}</t1>
-        <input id="chat-add-user-close" type="button" value="close">
-        `;
-        document.getElementById('chat-add-user-close').addEventListener('click', open_conf);});
-    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {
+		remove_user(input_user.value, room)
+	});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {
+		open_conf()
+		toggleDisplay('.lower-left', "none");
+	});
 }
 
 async function update_room(event) {
@@ -357,7 +377,7 @@ async function open_conf() {
 		</div>
         <form id="roomConfForm" class="room__form">
 			<label for="room_name">Name:</label>
-			<input type="text" class="room_name" name="name" value=${room.name}><br><br>
+			<input type="text" class="input-text-chat" name="name" value=${room.name}><br><br>
 
 			<label for="room_picture">New Room Picture:</label><br><br>
 			<div class="new-pic">
@@ -462,7 +482,6 @@ async function open_chat(room_selected) {
 		}
 		else if (data.type == 'list-chat') {
 			const chatLog = document.querySelector('#chat-log');
-		
 			for (const index in data.messages) {
 				const message = data.messages[index];
 				const username = message.author ? message.author.username : "";
@@ -537,20 +556,17 @@ async function open_chat(room_selected) {
     {
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
+		if (message == ''){
+			console.log("coucou");
+			return;
+		}
         chatSocket.send(JSON.stringify({
             'type': "chat",
             'message': message
         }));
         messageInputDom.value = '';
     };
-    document.querySelector('#chat-message-close').onclick = function chat_close(e)
-    {
-        if (chatSocket)
-            chatSocket.close();
-        const chat_box = document.querySelector('.chat-block');
-        chat_box.innerHTML = `<t1>No chat selected</t1>`;
-    };
-    document.querySelector('#chat-message-refresh').onclick = function(e)
+    document.querySelector('#chat-message-refresh').onclick = function (e)
     {
         chatSocket.send(JSON.stringify({
             'type': "refresh_mess",
@@ -572,6 +588,7 @@ async function print_chats() {
     else {
         const rooms = ret_rooms.rooms
         const chat_list = document.querySelector('.chat-list');
+		chat_list.innerHTML = ``;
         for (const room_l of rooms)
             {				
                 const chat = document.createElement('li');
@@ -617,6 +634,9 @@ async function accept_invitation(room_id, value) {
     else if (response.status === 400 || response.status === 404 || response.status === 403){
         console.log("error: ", data['error'])
     }
+	const roomid = "room."+ room_id;
+	console.log(roomid);
+	toggleDisplay(roomid, "none")
         return;   
 }
 
@@ -642,14 +662,19 @@ async function print_invitations() {
 				if (room_picture == "http://localhost:8000null")
 					room_picture = "../../static/assets/jpg/default_picture.jpg"
                 invite.innerHTML = `
-				<li class="room">
+				<li class="room ${room_l.id}">
 				    <span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
 			        <span class="room-name-left">${room_l.name}</span>
+					<input id="invitation-accept-${room_l.id}" class="invite-yes" type="button" >
+					<input id="invitation-refuse-${room_l.id}" class="invite-no" type="button">
                 </li>
-
                 `;
                 invite_list.appendChild(invite);
 
+				const btn_accept = document.getElementById(`invitation-accept-${room_l.id}`)
+				const btn_refuse = document.getElementById(`invitation-refuse-${room_l.id}`)
+				btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
+				btn_refuse.addEventListener('click', function(event) {accept_invitation(room_l.id, "FALSE")});
 
 				invite.addEventListener('click', function(event) {
 						open_invitation(room_l);
@@ -728,7 +753,7 @@ function updateUserList(users) {
 		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
 
 		userItem.innerHTML = `
-		<li class="user-search-list" >
+		<li class="room" >
 			<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span>
 			<span class="room-name-left">${user.username}</span>
 		</li>
@@ -758,10 +783,6 @@ function open_invitation(room_l) {
 	}
 
     chat_box.innerHTML = `
-	<div id=chat-header> 
-		<span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
-		<span class="room-name">${room.name}</span>
-	</div>
 	<h1>Accept invite to see the content of chat</h1>
     `;
 
@@ -769,16 +790,6 @@ function open_invitation(room_l) {
 	<div class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </div>
 	<div class="room-name-right"> ${room.name}  </div>
 	`
-	chat_conf.innerHTML = `
-	<div> invited by ${room.created_by.username} </div>
-	<input id="invitation-accept-${room_l.id}" type="button" value="Accept invitation">
-	<input id="invitation-refuse-${room_l.id}" type="button" value="Refuse invitation">
-	`;
-
-	const btn_accept = document.getElementById(`invitation-accept-${room_l.id}`)
-	const btn_refuse = document.getElementById(`invitation-refuse-${room_l.id}`)
-	btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
-	btn_refuse.addEventListener('click', function(event) {accept_invitation(room_l.id, "FALSE")});
 
 	print_member(room);
 }
