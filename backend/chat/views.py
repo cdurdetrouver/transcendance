@@ -247,7 +247,7 @@ def delete_user(user, room):
     if (len(list_user) == 0):
         room.delete()
     else:
-        send_chat(room, user.username + " leave the chat")
+        send_chat(room, user.username + " left the chat")
     return JsonResponse({"User status": "Deleted from {} successfully.".format(room.name)}, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(

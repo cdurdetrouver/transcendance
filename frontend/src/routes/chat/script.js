@@ -276,6 +276,7 @@ async function update_room(event) {
         chat_title.innerHTML = `
         ${room.name}
         `;
+        customalert("Room updated", "a new day, a new style !");
         print_chats();
     }
     else if (response.status === 404 || response.status === 400 || response.status === 403) {
@@ -286,7 +287,6 @@ async function update_room(event) {
 
 async function chat_close(params) {
     const chat_box = document.querySelector('.chat-block');
-    chat_box.innerHTML = `<t1>No chat selected</t1>`;
     print_chats();
 }
 
@@ -301,11 +301,8 @@ async function chat_delete(event) {
     if (response.status === 200) {
         console.log(`Chat ${room.id} deleted successfully.`);
 	    const chat_delete = document.querySelector('.chat-block');
-        chat_delete.innerHTML = `
-        <t1>Chat ${room.name} deleted successfully.</t1>
-        <input id="chat-conf-close" type="button" value="Close chat">
-        `;
-        document.querySelector('#chat-conf-close').addEventListener('click', chat_close);
+        customalert("Chat deleted", room.name + " was obliterated !")
+        chat_close();
         if (chatSocket)
             chatSocket.close();
     }
@@ -431,8 +428,13 @@ async function open_chat(room_selected) {
 	<input id="chat-message-submit" type="button" value="Send">
 	<input id="chat-message-refresh" type="button" value="refresh">
     `;
-    if (await check_admin() == true) 
+    if (await check_admin() == true)
+    {
+        toggleDisplay(".chat-conf","")
 		open_conf();
+    }
+    else
+        toggleDisplay(".chat-conf","none")
 	
 	open_chat_info(room, room_picture);
 	print_member(room);
@@ -447,8 +449,9 @@ async function open_chat(room_selected) {
         const data = JSON.parse(e.data);
         console.log(data);
         if (data.type == 'announce') {
+            console.log("test")
             const chat_log = document.querySelector('#chat-log')
-            if (chat_log)
+            if (chat_log && data.message.author)
                 chat_log.value += (data.message.author.username + ' : ' + data.content + '\n');
         }
         else if (data.type == 'chat')
@@ -490,7 +493,10 @@ async function open_chat(room_selected) {
 				const content = message.content;
 
 				const messageElement = document.createElement('div');
+
 				messageElement.classList.add('chat-message');
+                if (!message.author)
+				    messageElement.classList.add('announce');
 				messageElement.textContent = `${content}`;
 				
 				if (message.author)
@@ -770,29 +776,13 @@ function updateUserList(users) {
 
 function open_invitation(room_l) {
 	room = room_l;
-    console.log(room);
-    // console.log(room.participants[0]);
 
-    const chat_box = document.querySelector('.chat-block');
-	const chat_conf = document.querySelector('.chat-conf');
 	const room_info = document.querySelector('.room-info');
-	const room_users = document.querySelector('.room-users');
-
-	let room_picture = config.backendUrl + room.room_picture;
-	if (room_picture == "http://localhost:8000null")
-	{
-		room_picture = "../../static/assets/jpg/default_picture.jpg"
-	}
-
-    chat_box.innerHTML = `
-	<h1>Accept invite to see the content of chat</h1>
-    `;
 
 	room_info.innerHTML = `
-	<div class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </div>
-	<div class="room-name-right"> ${room.name}  </div>
+	<h1>Group info</h1>
+	<div class="leave-room"><div>
 	`
-
 	print_member(room);
 }
 
