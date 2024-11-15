@@ -428,6 +428,18 @@ async function open_chat(room_selected) {
 	<input id="chat-message-submit" type="button" value="Send">
 	<input id="chat-message-refresh" type="button" value="refresh">
     `;
+
+    console.log('gfg');
+    let lastScrollTop = 0;
+    const chat_log =  document.getElementById('chat-log');
+    chat_log.onscroll = function (e) {
+        if (chat_log.scrollTop == 0){
+            chatSocket.send(JSON.stringify({
+                'type': "refresh_mess",
+            }));
+            console.log("End");
+          }
+    }; 
     if (await check_admin() == true)
     {
         toggleDisplay(".chat-conf","")
@@ -512,11 +524,11 @@ async function open_chat(room_selected) {
 					nameDiv.textContent = `${username}`;
 					nameDiv.innerHTML = `<span>${username}</span>`; // Set username
 					nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
-					chatLog.appendChild(nameDiv);
+					chatLog.prepend(nameDiv);
 				}
 
 				chatLog.scrollTop = chatLog.scrollHeight;
-				chatLog.appendChild(messageElement);
+				chatLog.prepend(messageElement);
 
 			}
 		}
@@ -678,7 +690,6 @@ async function print_invitations() {
                 </li>
                 `;
                 invite_list.appendChild(invite);
-
 				const btn_accept = document.getElementById(`invitation-accept-${room_l.id}`)
 				const btn_refuse = document.getElementById(`invitation-refuse-${room_l.id}`)
 				btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
@@ -748,7 +759,7 @@ export async function initComponent(params) {
 export async function cleanupComponent(params) {
     if (chatSocket)
         chatSocket.close();
-    const container = document.querySelector('.chat_container');
+    const container = document.querySelector('.background');
     container.replaceWith(container.cloneNode(true));
 }
 
