@@ -12,14 +12,21 @@ ButtonGithub.href = `https://github.com/login/oauth/authorize?client_id=${config
 const ButtonIntra = document.querySelector("#intra");
 ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login')}&response_type=code`;
 
+const localButton = document.querySelector("#local");
+
+localButton.addEventListener("click", function() {
+	console.log("cc local button");
+	customalert("Error", "Please login", 1);
+});
+
+
 const loginPopin = document.querySelector("#login-container button");
 const loginButton = document.querySelector("#login-container button");
-
 const popin = document.querySelector("#popin-container");
 const account = document.querySelector("#account");
 
 function enableAccount() {
-	account.classList.remove("disabled-link");
+	account.classList.remove("disabled");
 }
 
 async function getProfilePicture() {

@@ -1,6 +1,6 @@
 @font-face {
   font-family: "isaac";
-  src: url(../routes/assets/font/IsaacGame.ttf);
+  src: url(../routes/assets/font/isaac_bold.ttf);
 }
 
 body, html {
@@ -69,11 +69,8 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
   gap: 4%;
-}
-#page-container #page-content #sheet #selection-mode #local:disabled, #page-container #page-content #sheet #selection-mode #online:disabled {
-  cursor: not-allowed;
-  border: none;
 }
 #page-container #page-content #sheet #selection-mode .button {
   padding: 10px 20px;
@@ -81,10 +78,16 @@ body, html {
   color: rgb(69, 57, 59);
   cursor: pointer;
   font-family: isaac;
-  font-size: 3.5vw;
+  font-size: 5vw;
   text-decoration: none;
   border: none;
   transition: transform 0.3s ease;
+}
+#page-container #page-content #sheet #selection-mode a:active,
+#page-container #page-content #sheet #selection-mode a:hover:disabled {
+  cursor: not-allowed;
+  border: none;
+  pointer-events: none;
 }
 #page-container #page-content #login-container {
   position: absolute;
