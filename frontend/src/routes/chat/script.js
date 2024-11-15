@@ -429,7 +429,6 @@ async function open_chat(room_selected) {
 	<input id="chat-message-refresh" type="button" value="refresh">
     `;
 
-    console.log('gfg');
     let lastScrollTop = 0;
     const chat_log =  document.getElementById('chat-log');
     chat_log.onscroll = function (e) {
