@@ -187,7 +187,7 @@ html, body {
   color: #2d2d2d;
   overflow-y: auto;
   margin-left: 50px;
-  margin-top: 50px;
+  margin-top: 60px;
   width: 88%;
   height: 100%;
   resize: none;
@@ -201,6 +201,12 @@ html, body {
 .flex-container .middle .chat-block .chat-output-block #chat-log .chat-message {
   border-radius: 20px;
   margin-left: 35px;
+}
+.flex-container .middle .chat-block .chat-output-block #chat-log .announce {
+  position: relative;
+  left: 130px;
+  padding: 15px;
+  width: 60%;
 }
 .flex-container .middle .chat-block .chat-output-block #chat-log .gamek-link {
   display: block;
