@@ -126,7 +126,7 @@ class Router {
 			const module = await import(`${scriptUrl}`);
 
 			if (module && typeof module.initComponent === 'function') {
-				await module.initComponent();
+				module.initComponent();
 			}
 
 			this.activeScripts.push(module);
