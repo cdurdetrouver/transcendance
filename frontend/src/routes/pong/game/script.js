@@ -6,6 +6,15 @@ import { router } from '../../../app.js';
 const canvas = document.getElementById("pongCanvas");
 const ctx = canvas.getContext("2d");
 
+const backgroundCanvas = document.getElementById("backgroundCanvas");
+const backgroundCtx = backgroundCanvas.getContext("2d");
+
+const lifeCanvas = document.getElementById("lifeCanvas");
+const lifeCtx = lifeCanvas.getContext("2d");
+
+const heartImage = new Image();
+heartImage.src = '../../../static/assets/pong/heart.png'; 
+
 const paddleWidth = 10;
 const paddleHeight = 75;
 const ballRadius = 8;
@@ -40,7 +49,41 @@ let socket;
 let pingIntervalID;
 let pingSpan;
 
-function handleKeydown(e) {
+function drawBackground() {
+    backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+
+    const backgroundImage = new Image();
+    backgroundImage.src = '../../../static/assets/background/pongBG2.png'	;
+    backgroundImage.onload = () => {
+        backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+    };
+}
+
+function centerPongCanvas() {
+    const bgWidth = backgroundCanvas.width;
+    const bgHeight = backgroundCanvas.height;
+    const pongWidth = canvas.width;
+    const pongHeight = canvas.height;
+
+    const centerX = (bgWidth - pongWidth) / 2;
+    const centerY = (bgHeight - pongHeight) / 2;
+    canvas.style.left = `${centerX}px`;
+    canvas.style.top = `${centerY}px`;
+}
+
+function drawScores() {
+    lifeCtx.clearRect(0, 0, canvas.width, 40); 
+	
+    for (let i = 0; i < player1Score; i++) {
+        lifeCtx.drawImage(heartImage, 20 + i * 30, 10, 20, 20); 
+    }
+
+    for (let i = 0; i < player2Score; i++) {
+        lifeCtx.drawImage(heartImage, canvas.width - 200 + i * 30, 10, 20, 20); 
+    }
+}
+
+function handleKeydown(e) {	
 	if (viewer || !game_started)
 		return;
 
@@ -75,9 +118,7 @@ function draw(interpolatedState) {
 	ctx.fill();
 	ctx.closePath();
 
-	ctx.font = '20px Arial';
-	ctx.fillText(`${player1.username}: ${player1Score}`, 20, 20);
-	ctx.fillText(`${player2.username}: ${player2Score}`, canvas.width - 200, 20);
+	drawScores();
 }
 
 function draw_reset() {
@@ -93,9 +134,7 @@ function draw_reset() {
 	ctx.fill();
 	ctx.closePath();
 
-	ctx.font = '20px Arial';
-	ctx.fillText(`${player1.username}: ${player1Score}`, 20, 20);
-	ctx.fillText(`${player2.username}: ${player2Score}`, canvas.width - 200, 20);
+	drawScores();
 }
 
 function interpolateGameState(currentTime) {
@@ -296,6 +335,8 @@ export async function initComponent() {
 	document.addEventListener('keyup', handleKeyup);
 
 	draw_reset();
+	centerPongCanvas();
+	drawBackground();
 
 	gameLoop();
 }
