@@ -21,14 +21,19 @@ canvas {
 
 #backgroundCanvas {
 	position: absolute;
+
     z-index: 0; /* Behind the game canvas */
 }
 
 #pongCanvas {
+
 	position: absolute;
+
     z-index: 1; /* In front of the background */
 }
 #lifeCanvas {
+
 	position: absolute;
+
     z-index: 1; /* In front of the background */
 }

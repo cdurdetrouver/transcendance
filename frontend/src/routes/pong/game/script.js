@@ -13,7 +13,10 @@ const lifeCanvas = document.getElementById("lifeCanvas");
 const lifeCtx = lifeCanvas.getContext("2d");
 
 const heartImage = new Image();
-heartImage.src = '../../../static/assets/pong/heart.png'; 
+heartImage.src = '../../../static/assets/pong/heart.png';
+
+const heartEmptyImage = new Image();
+heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
 
 const paddleWidth = 10;
 const paddleHeight = 75;
@@ -49,6 +52,10 @@ let socket;
 let pingIntervalID;
 let pingSpan;
 
+let player1InitialScore;
+let player2InitialScore;
+
+
 function drawBackground() {
     backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
 
@@ -60,6 +67,10 @@ function drawBackground() {
 }
 
 function centerPongCanvas() {
+
+	const leftX = 200;
+	const topY = 100;
+
     const bgWidth = backgroundCanvas.width;
     const bgHeight = backgroundCanvas.height;
     const pongWidth = canvas.width;
@@ -67,19 +78,25 @@ function centerPongCanvas() {
 
     const centerX = (bgWidth - pongWidth) / 2;
     const centerY = (bgHeight - pongHeight) / 2;
-    canvas.style.left = `${centerX}px`;
-    canvas.style.top = `${centerY}px`;
+    canvas.style.left = `${centerX + leftX}px`;
+    canvas.style.top = `${centerY + topY}px`;
+	backgroundCanvas.style.left = `${leftX}px`;
+	backgroundCanvas.style.top = `${topY}px`;
+	lifeCanvas.style.left = `${leftX}px`;
+	lifeCanvas.style.top = `${topY}px`;
 }
 
 function drawScores() {
-    lifeCtx.clearRect(0, 0, canvas.width, 40); 
+    lifeCtx.clearRect(0, 0, canvas.width, 100);
 	
-    for (let i = 0; i < player1Score; i++) {
-        lifeCtx.drawImage(heartImage, 20 + i * 30, 10, 20, 20); 
-    }
+    for (let i = 0; i < player1InitialScore; i++) {
+		let heartToDraw = (i < player1Score) ? heartImage : heartEmptyImage; 
+        lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50); // Draw heart at calculated position
+		}
 
-    for (let i = 0; i < player2Score; i++) {
-        lifeCtx.drawImage(heartImage, canvas.width - 200 + i * 30, 10, 20, 20); 
+    for (let i = 0; i < player2InitialScore; i++) {	
+		let heartToDraw = (i < player2Score) ? heartImage : heartEmptyImage; 
+        lifeCtx.drawImage(heartToDraw, canvas.width - 200 + i * 50, 10, 50, 50); 
     }
 }
 
@@ -167,6 +184,12 @@ function interpolateGameState(currentTime) {
 }
 
 function updateGame(data) {
+	if (lastGameState == null	)
+	{
+		player1InitialScore = data.player1.score;
+		player2InitialScore = data.player2.score
+	}
+	console.log("TEST " + player1InitialScore);
 	lastUpdateTime = Date.now();
 	lastGameState = {
 		ball: { x: ballX, y: ballY, speed_x: ballspeedX, speed_y: ballspeedY },
@@ -188,6 +211,7 @@ function updateGame(data) {
 	paddle2speed = data.player2.speed;
 	player1Score = data.player1.score;
 	player2Score = data.player2.score;
+
 }
 
 function gameLoop() {
@@ -299,6 +323,9 @@ export async function initComponent() {
 	ballspeedY = 4;
 	player1Score = 0;
 	player2Score = 0;
+	firstUpdate = 0;
+	player1InitialScore = 0;
+	player2InitialScore = 0;
 
 	lastUpdateTime = Date.now();
 	lastGameState = null;
