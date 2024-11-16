@@ -1,305 +1,256 @@
 import { customalert } from "../../../../components/alert/script.js";
 import { router } from '../../../../app.js';
 
-const gameCanvas = document.getElementById("game-layer");
-const ctx = gameCanvas.getContext("2d");
+const canvas = document.getElementById("pongCanvas");
+const ctx = canvas.getContext("2d");
 
-let frames = 0;
+const backgroundCanvas = document.getElementById("backgroundCanvas");
+const backgroundCtx = backgroundCanvas.getContext("2d");
 
+const lifeCanvas = document.getElementById("lifeCanvas");
+const lifeCtx = lifeCanvas.getContext("2d");
+
+const heartImage = new Image();
+heartImage.src = '../../../static/assets/pong/heart.png'; 
+
+const paddleWidth = 10;
+const paddleHeight = 75;
+const ballRadius = 8;
+
+
+function drawBackground() {
+    backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+
+    const backgroundImage = new Image();
+    backgroundImage.src = '../../../static/assets/background/pongBG2.png';
+    backgroundImage.onload = () => {
+        backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+    };
+}
+
+function centerPongCanvas() {
+    const bgWidth = backgroundCanvas.width;
+    const bgHeight = backgroundCanvas.height;
+    const pongWidth = canvas.width;
+    const pongHeight = canvas.height;
+
+    const centerX = (bgWidth - pongWidth) / 2;
+    const centerY = (bgHeight - pongHeight) / 2;
+    canvas.style.left = `${centerX}px`;
+    canvas.style.top = `${centerY}px`;
+}
+
+function drawScores(player1Score, player2Score) {
+    lifeCtx.clearRect(0, 0, canvas.width, 40); 
+	
+    for (let i = 0; i < player1Score; i++) {
+        lifeCtx.drawImage(heartImage, 20 + i * 30, 10, 20, 20); 
+    }
+
+    for (let i = 0; i < player2Score; i++) {
+        lifeCtx.drawImage(heartImage, canvas.width - 200 + i * 30, 10, 20, 20); 
+    }
+}
+
+function draw_reset() {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	ctx.fillStyle = 'black';
+	ctx.fillRect(5, (canvas.height - paddleHeight) / 2, paddleWidth, paddleHeight);
+	ctx.fillRect(canvas.width - paddleWidth - 5, (canvas.height - paddleHeight) / 2, paddleWidth, paddleHeight);
+
+	ctx.beginPath();
+	ctx.arc(canvas.width / 2, canvas.height / 2, ballRadius, 0, Math.PI * 2);
+	ctx.fillStyle = 'red';
+	ctx.fill();
+	ctx.closePath();
+
+	drawScores(3, 3);
+}
 
 class PongGame {
     constructor(player1, player2) {
         this.player1 = player1;
         this.player2 = player2;
-
-        this.counter = 3;
-        this.PlayerLife = 3;
-
-        this.gameCanvas = document.getElementById("game-layer");
-        this.ctx = this.gameCanvas.getContext("2d");
-
-        this.uiCanvas = document.getElementById("ui-layer");
-        this.uiCtx = this.uiCanvas.getContext("2d");
-
-        this.bgCanvas = document.getElementById("background-layer");
-        this.bgCtx = this.bgCanvas.getContext('2d');
-
-        this.background = new Image();
-        this.background.src = 'floor.png';
-
-        this.pong = {
-            isRunning: false,
-            leftPlayerScore: this.PlayerLife,
-            rightPlayerScore: this.PlayerLife,
-            ball: null,
-            leftPaddle: null,
-            rightPaddle: null,
-            border: null,
-        };
-
-        this.loop = null;
-
-        this.keys = [];
-
-        
-        frames = 0;
-    }
-
-    async waitSpace() {
-        return new Promise((resolve) => {
-            function onKeyDown(event) {
-                if (event.code === 'Space') {
-                    document.removeEventListener('keydown', onKeyDown);
-                    resolve();
-                }
-            }
-            document.addEventListener('keydown', onKeyDown);
-        });
-    }
-
-    startCountdown() {
-        this.counter = 3;
-        const countdownTimer = setInterval(() => {
-            this.counter--;
-            if (this.counter < 0) {
-                clearInterval(countdownTimer);
-            }
-        }, 1000);
-    }
-
-    updateScoreboard() {
-        this.uiCtx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
-        this.uiCtx.font = '3vw arial';
-        this.uiCtx.fillStyle = 'rgba(255, 0, 0, 0.8)';
-        this.uiCtx.textAlign = 'left';
-        this.uiCtx.textBaseline = 'middle';
-        let heartsLeft = '♥'.repeat(this.pong.leftPlayerScore);
-        this.uiCtx.fillText(heartsLeft, 8, 25);
-
-        this.uiCtx.font = '3vw arial';
-        this.uiCtx.fillStyle = 'rgba(255, 0, 0, 0.8)';
-        this.uiCtx.textAlign = 'right';
-        this.uiCtx.textBaseline = 'middle';
-        let hearts = '♥'.repeat(this.pong.rightPlayerScore);
-        this.uiCtx.fillText(hearts, 1080, 25);
+        this.winner = null;
     }
 
     async gameStart() {
-        this.bgCtx.fillStyle = "blue";
-        this.bgCtx.fill();
-        this.initializeGame();
-        this.updateScoreboard();
-        this.ctx.font = '3vw Arial';
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'bottom';
-        this.ctx.fillText('Press \'spacebar\' to start', this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 150);
-        this.manageAddEvent();
-        await this.waitSpace();
-        this.pong.isRunning = true;
-        this.startCountdown();
-        await this.updateGame();
-    }
+        this.game_ended = false;
 
-    manageAddEvent() {
-        window.addEventListener('keydown', (e) => {
-            this.keys[e.key] = true;
-            console.log(this.keys);
+        this.player1Score = 3;
+        this.player2Score = 3;
+
+        this.paddle1Y = (canvas.height - paddleHeight) / 2;
+        this.paddle2Y = (canvas.height - paddleHeight) / 2;
+        this.paddle1speed = 0;
+        this.paddle2speed = 0;
+        this.paddle1moveup = false;
+        this.paddle1movedown = false;
+        this.paddle2moveup = false;
+        this.paddle2movedown = false;
+        this.ballX = canvas.width / 2;
+        this.ballY = canvas.height / 2;
+        this.ballspeedX = 3;
+        this.ballspeedY = 3;
+
+        await new Promise(resolve => {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === ' ') {
+                    resolve();
+                }
+            });
         });
-        window.addEventListener('keyup', (e) => {
-            this.keys[e.key] = false;
-            console.log(this.keys);
+
+        this.game_started = true;
+
+        window.addEventListener('keydown', (e) => this.inputDown(e));
+        window.addEventListener('keyup', (e) => this.inputUp(e));
+
+        draw_reset();
+
+        return new Promise(resolve => {
+            this.gameLoop(resolve);
         });
     }
 
-    initializeGame() {
-        this.pong.ball = new Ball(this.gameCanvas.width / 2, this.gameCanvas.height / 2);
-        this.pong.leftPaddle = new Paddle(120, this.gameCanvas.height / 2 - 30, "w", "s");
-        this.pong.rightPaddle = new Paddle(this.gameCanvas.width - 130, this.gameCanvas.height / 2 - 30, "ArrowUp", "ArrowDown");
-        this.pong.border = new Border(110, 110, 880, 480);
-        this.render();
-    }
-
-    clear() {
-        this.ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
-    }
-
-    stop() {
-        if (this.loop !== null) {
-            console.log("Stopping animation loop");
-            cancelAnimationFrame(this.loop);
-            this.loop = null;
+    inputUp(event) {
+        if (event.key === 'w') {
+            this.paddle1moveup = false;
+        }
+        else if (event.key === 's') {
+            this.paddle1movedown = false;
+        }
+        else if (event.key === 'ArrowUp') {
+            this.paddle2moveup = false;
+        }
+        else if (event.key === 'ArrowDown') {
+            this.paddle2movedown = false;
         }
     }
 
-    gameOver(winner) {
-        this.ctx.font = '7vw Arial';
-        this.ctx.fillStyle = 'rgba(1, 130, 0, 1)';
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'bottom';
-        this.ctx.fillText(winner + ' win', this.gameCanvas.width / 2, this.gameCanvas.height / 2);
-        this.winner = winner;
-
-        this.ctx.font = '3vw Arial';
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'bottom';
-        this.ctx.fillText('Press \'enter\' to restart', this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 150);
-        this.stop();
-        // this.initializeGame();
-        this.clear();
-        console.log("Game over");
-    }
-
-    async updateGame() {
-        frames++;
-        console.log("Updating game", this.pong.isRunning);
-        if (frames > 1000) {
-            this.winner = this.player1;
-            return;
+    inputDown(event) {
+        if (event.key === 'w') {
+            this.paddle1moveup = true;
         }
-
-
-        if (!this.pong.isRunning) return;
-
-        this.clear();
-        if (this.pong.rightPlayerScore == 0) {
-            this.gameOver(this.player1);
-            return;
+        else if (event.key === 's') {
+            this.paddle1movedown = true;
         }
-        if (this.pong.leftPlayerScore == 0) {
-            this.gameOver(this.player2);
-            return;
+        else if (event.key === 'ArrowUp') {
+            this.paddle2moveup = true;
         }
-
-        if (this.counter >= 0 && this.pong.rightPlayerScore && this.pong.leftPlayerScore) {
-            this.ctx.font = '10vw Arial';
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            this.ctx.textAlign = 'center';
-            this.ctx.textBaseline = 'middle';
-            this.ctx.fillText(this.counter === 0 ? 'GO' : this.counter, this.gameCanvas.width / 2, this.gameCanvas.height / 2);
-        } else {
-            this.pong.ball.x += this.pong.ball.vx;
-            this.pong.ball.y += this.pong.ball.vy;
-        }
-        this.pong.leftPaddle.move();
-        this.pong.rightPaddle.move();
-
-        this.pong.leftPaddle.newPos();
-        this.pong.rightPaddle.newPos();
-
-        this.ballImpact(this.pong.ball, [this.pong.leftPaddle, this.pong.rightPaddle], this.pong.border);
-        this.render();
-        await new Promise(requestAnimationFrame);
-        await this.updateGame();
-    }
-
-    ballImpact(ball, paddles, border) {
-        // Impact top bottom 
-        if (ball.y > this.gameCanvas.height - border.y - ball.radius || ball.y < border.y + ball.radius) {
-            ball.vy = -ball.vy;
-        }
-
-        for (let paddle of paddles) {
-            if (RectCircleColliding(ball, paddle)) {
-                ball.vx = -ball.vx;
-
-                let paddleCenterY = paddle.y + Math.abs(paddle.height / 2);
-                let impactY = ball.y - paddleCenterY;
-                let impactRatio = impactY / Math.abs(paddle.height / 2);
-
-                ball.vy = impactRatio * 4;
-
-                this.pong.ball.color = "red";
-
-                break;
-            } else {
-                this.pong.ball.color = "skyblue";
-            }
-        }
-
-        if (ball.x > this.gameCanvas.width - border.x - ball.radius) {
-            this.pong.rightPlayerScore--;
-            this.updateScoreboard();
-            this.newRound();
-        } else if (ball.x < ball.radius + border.x) {
-            this.pong.leftPlayerScore--;
-            this.updateScoreboard();
-            this.newRound();
+        else if (event.key === 'ArrowDown') {
+            this.paddle2movedown = true;
         }
     }
 
-    render() {
-        this.pong.leftPaddle.render();
-        this.pong.rightPaddle.render();
-        this.pong.ball.render();
-        this.pong.border.render();
-    }
-}
+    draw () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-class Paddle {
-    constructor(x, y, upKey, downKey, pongGame) {
-        this.width = 10;
-        this.height = 60;
-        this.color = "red";
-        this.speedY = 0;
-        this.x = x;
-        this.y = y;
-        this.upKey = upKey;
-        this.downKey = downKey;
+        ctx.fillStyle = 'black';
+        ctx.fillRect(5, this.paddle1Y, paddleWidth, paddleHeight);
+        ctx.fillRect(canvas.width - paddleWidth - 5, this.paddle2Y, paddleWidth, paddleHeight);
 
-        this.pongGame = pongGame;
-    }
-
-    move(keys) {
-        this.speedY = 0;
-        if (keys && keys[this.upKey] && this.y > pong.border.y + 2) { this.speedY = -8; }
-        if (keys && keys[this.downKey] && this.y < gameCanvas.height - pong.border.y - this.height - 2) { this.speedY = 8; }
-    }
-
-    newPos() {
-        this.y += this.speedY;
-        if (this.y < 0) this.y = 0;
-        if (this.y + this.height > gameCanvas.height) this.y = gameCanvas.height - this.height;
-    }
-
-    render() {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-}
-
-class Ball {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.vx = 5;
-        this.vy = 0;
-        this.radius = 15;
-        this.color = "skyblue";
-    }
-
-    render() {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-        ctx.closePath();
-        ctx.fillStyle = this.color;
+        ctx.arc(this.ballX, this.ballY, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = 'red';
         ctx.fill();
-    }
-}
+        ctx.closePath();
 
-class Border {
-    constructor(x, y, w, h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.color = "black";
+        drawScores(this.player1Score, this.player2Score);
     }
 
-    render() {
-        ctx.lineWidth = 2
-        ctx.strokeRect(this.x, this.y, this.w, this.h);
+    update() {
+        if (this.player1Score === 0) {
+            this.winner = this.player2;
+            this.game_ended = true;
+        }
+        else if (this.player2Score === 0) {
+            this.winner = this.player1;
+            this.game_ended = true;
+        }
+
+        
+        if (RectCircleColliding({ x: this.ballX, y: this.ballY, radius: ballRadius }, { x: 5, y: this.paddle1Y, width: paddleWidth, height: paddleHeight })) {
+            this.ballspeedX = -this.ballspeedX;
+            this.ballspeedY = (this.ballY - (this.paddle1Y + paddleHeight / 2)) / 8;
+        }
+        else if (this.ballX + this.ballspeedX < 0) {
+            this.player1Score--;
+            this.ballX = canvas.width / 2;
+            this.ballY = canvas.height / 2;
+            this.ballspeedX = 3;
+            this.ballspeedY = 3;
+        }
+
+
+        if (RectCircleColliding({ x: this.ballX, y: this.ballY, radius: ballRadius }, { x: canvas.width - paddleWidth - 5, y: this.paddle2Y, width: paddleWidth, height: paddleHeight })) {
+            this.ballspeedX = -this.ballspeedX;
+            this.ballspeedY = (this.ballY - (this.paddle2Y + paddleHeight / 2)) / 8;
+        }
+        else if (this.ballX + this.ballspeedX > canvas.width) {
+            this.player2Score--;
+            this.ballX = canvas.width / 2;
+            this.ballY = canvas.height / 2;
+            this.ballspeedX = 3;
+            this.ballspeedY = 3;
+        }
+
+        if (this.ballY - ballRadius < 0 || this.ballY + ballRadius > canvas.height) {
+            this.ballspeedY = -this.ballspeedY;
+        }
+
+        if (this.paddle1moveup && this.paddle1Y > 0) {
+            this.paddle1speed = -10;
+        }
+        else if (this.paddle1movedown && this.paddle1Y < canvas.height - paddleHeight) {
+            this.paddle1speed = 10;
+        }
+        else {
+            this.paddle1speed = 0;
+        }
+
+        if (this.paddle2moveup && this.paddle2Y > 0) {
+            this.paddle2speed = -10;
+        }
+        else if (this.paddle2movedown && this.paddle2Y < canvas.height - paddleHeight) {
+            this.paddle2speed = 10;
+        }
+        else {
+            this.paddle2speed = 0;
+        }
+
+        this.paddle1Y += this.paddle1speed;
+        if (this.paddle1Y < 0) {
+            this.paddle1Y = 0;
+        }
+        else if (this.paddle1Y > canvas.height - paddleHeight) {
+            this.paddle1Y = canvas.height - paddleHeight;
+        }
+
+        this.paddle2Y += this.paddle2speed;
+        if (this.paddle2Y < 0) {
+            this.paddle2Y = 0;
+        }
+        else if (this.paddle2Y > canvas.height - paddleHeight) {
+            this.paddle2Y = canvas.height - paddleHeight;
+        }
+
+        this.ballX += this.ballspeedX;
+        this.ballY += this.ballspeedY;
+    }
+
+    async gameLoop(resolve) {
+        if (!this.game_ended) {
+            this.update();
+            this.draw();
+            requestAnimationFrame(() => this.gameLoop(resolve));
+        }
+        else
+        {
+            draw_reset();
+            resolve();
+        }
     }
 }
 
@@ -425,10 +376,26 @@ class Tournament {
 export async function initComponent() {
     const urlParams = new URLSearchParams(window.location.search);
     players = urlParams.get('players').split(',');
+    players.forEach(player => {
+        if (player.length ===0) {
+            customalert("Error", "Player name cannot be empty.");
+            router.navigate('/tournament');
+        }
+        else if (player.length > 10) {
+            customalert("Error", "Player name cannot be longer than 10 characters.");
+            router.navigate('/tournament');
+        }
+    });
 
 	const tournament = new Tournament(players);
 
+    draw_reset();
+	centerPongCanvas();
+	drawBackground();
+
+    // the game is starting
     const winner = await tournament.playTournament();
 
     customalert("Winner", `${winner} wins the tournament!`);
+    // game is finished
 }
