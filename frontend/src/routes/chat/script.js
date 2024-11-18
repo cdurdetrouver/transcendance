@@ -428,17 +428,17 @@ async function open_chat(room_selected) {
 	<input id="chat-message-submit" type="button" value="Send">
 	<input id="chat-message-refresh" type="button" value="refresh">
     `;
-
-    let lastScrollTop = 0;
     const chat_log =  document.getElementById('chat-log');
+    let first_mess = true;
     chat_log.onscroll = function (e) {
+        console.log(chat_log.scrollTop);
         if (chat_log.scrollTop == 0){
             chatSocket.send(JSON.stringify({
                 'type': "refresh_mess",
             }));
-            console.log("End");
-          }
-    }; 
+        }
+    };
+    chat_log.scrollTop = chat_log.scrollHeight;
     if (await check_admin() == true)
     {
         toggleDisplay(".chat-conf","")
@@ -460,7 +460,6 @@ async function open_chat(room_selected) {
         const data = JSON.parse(e.data);
         console.log(data);
         if (data.type == 'announce') {
-            console.log("test")
             const chat_log = document.querySelector('#chat-log')
             if (chat_log && data.message.author)
                 chat_log.value += (data.message.author.username + ' : ' + data.content + '\n');
@@ -491,13 +490,15 @@ async function open_chat(room_selected) {
 
 			chatLog.appendChild(nameDiv);
 
-			// Append message to chat log
 			chatLog.scrollTop = chatLog.scrollHeight;
 			chatLog.appendChild(messageElement);
 
 		}
 		else if (data.type == 'list-chat') {
+            if (data.messages[0] == null)
+                return;
 			const chatLog = document.querySelector('#chat-log');
+            data.messages.reverse();
 			for (const index in data.messages) {
 				const message = data.messages[index];
 				const username = message.author ? message.author.username : "";
@@ -506,12 +507,14 @@ async function open_chat(room_selected) {
 				const messageElement = document.createElement('div');
 
 				messageElement.classList.add('chat-message');
-                if (!message.author)
+                if (!message.author) {
 				    messageElement.classList.add('announce');
+                    console.log("author not found ?? ici");
+                }
+                
 				messageElement.textContent = `${content}`;
 				
-				if (message.author)
-				{
+				if (message.author) {
 					const profile_picture = message.author.picture_remote ? message.author.picture_remote : config.backendUrl + message.author.profile_picture;
 					const profileImg = document.createElement('img');
 					profileImg.src = profile_picture;
@@ -521,15 +524,19 @@ async function open_chat(room_selected) {
 					const nameDiv = document.createElement('div');
 					nameDiv.classList.add('nameDiv');
 					nameDiv.textContent = `${username}`;
-					nameDiv.innerHTML = `<span>${username}</span>`; // Set username
+					nameDiv.innerHTML = `<span>${username}</span>`;
 					nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
 					chatLog.prepend(nameDiv);
 				}
-
-				chatLog.scrollTop = chatLog.scrollHeight;
 				chatLog.prepend(messageElement);
-
-			}
+            }
+            if (first_mess == true) {
+                chat_log.scrollTop = chat_log.scrollHeight;
+                first_mess = false;
+            }
+            else if (chat_log.scrollTop == 0) {
+                chat_log.scrollTop = 660;
+            }
 		}
 		
         else if (data.type == 'invitation') {
