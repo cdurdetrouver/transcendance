@@ -1,0 +1,102 @@
+body {
+	text-align: center;
+}
+canvas {
+	display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+@font-face {
+	font-family: isaac;
+	src: url(../../assets/font/IsaacGame.ttf);
+  }
+
+@font-face {
+    font-family: isaac-bold;
+    src: url('http://localhost:5500/routes/assets/font/isaac_bold.ttf') format('truetype');
+}
+#background-image {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%; 
+    background-image: url('../../../static/assets/background/background_1.png');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    z-index: -1;
+}
+
+#container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	#game-canvas {
+		position: relative;
+		left: -26.5%;
+		margin-bottom: 620px;
+	
+		#backgroundCanvas {
+			position: absolute;
+			z-index: 0;
+			border-radius: 40px;
+		}
+		#pongCanvas {
+			position: absolute;
+			z-index: 1; 
+		}
+		#lifeCanvas {
+			position: absolute;
+			z-index: 1; 
+		}
+	}
+	#player-block {
+		font-family: isaac-bold;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+		width: 1000px;
+		#player1 {
+			display: flex;
+			align-items: center;
+			.profile-pic {
+				display: inline-flex;
+				align-items: center; 
+				margin-right: 10px; 
+			}
+			.player-name
+			{
+				display: inline-flex;
+				align-items: center;
+			}
+		}
+		#player2 {
+			display: flex;
+			align-items: center;
+			.profile-pic {
+				display: inline-flex;
+				align-items: center; 
+				margin-left: 10px; 
+			}
+			.player-name
+			{
+				display: inline-flex;
+				align-items: center;
+			}
+		}
+	}
+
+}
+.profile-pic img
+{
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	overflow: hidden;
+}
