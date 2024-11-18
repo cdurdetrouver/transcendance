@@ -73,15 +73,14 @@ def user_detail(request):
 		username = request.data.get('username')
 		profile_picture = request.FILES.get('profilePicture')
 
-		succes, error = is_valid_username(username)
-		if not succes:
-			return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
-
 		data = {}
 		if profile_picture is not None:
 			data['profile_picture'] = profile_picture
 
 		if username is not None and username != user.username:
+			succes, error = is_valid_username(username)
+			if not succes:
+				return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
 			data['username'] = username
 
 		serializer = UserSerializer(user, data=data, partial=True)
@@ -481,8 +480,9 @@ def verify_2fa_token(request):
 		properties={
 			'password': openapi.Schema(type=openapi.TYPE_STRING, description='Current password'),
 			'new_password': openapi.Schema(type=openapi.TYPE_STRING, description='New password'),
+			'confirm_password': openapi.Schema(type=openapi.TYPE_STRING, description='Confirm password'),
 		},
-		required=['password', 'new_password']
+		required=['password', 'new_password', 'confirm_password']
 	),
 	responses={
 		200: openapi.Response(description="Password changed successfully"),
@@ -494,10 +494,18 @@ def change_password(request):
 	user = request.user
 	password = request.data.get('password')
 	new_password = request.data.get('new_password')
+	confirm_password = request.data.get('confirm_password')
+
+	print("salut")
+
+	print(password, new_password, confirm_password)
 
 	if user.user_type != "email":
 		return JsonResponse({'error': 'Invalid user type'}, status=status.HTTP_400_BAD_REQUEST)
 	
+	if confirm_password != new_password:
+		return JsonResponse({'error': 'Password does not match'}, status=status.HTTP_400_BAD_REQUEST)
+
 	if not password or not new_password:
 		return JsonResponse({'error': 'Password fields cannot be empty'}, status=status.HTTP_400_BAD_REQUEST)
 	

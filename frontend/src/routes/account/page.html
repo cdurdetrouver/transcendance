@@ -33,10 +33,10 @@
 								<button class="buttons edit-button">
 									<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
 								</button>
-								<form id="edit-password">
-									<input type="text" class="edit-input" id="current-password" placeholder="Current password">
-									<input type="text" class="edit-input" id="new-password" placeholder="New password">
-									<input type="text" class="edit-input" id="confirm-password" placeholder="Confirm new password">
+								<form>
+									<input type="password" name="current-password" class="edit-input" id="current-password" placeholder="Current password">
+									<input type="password" name="new-password" class=edit-input" id="new-password" placeholder="New password">
+									<input type="password" name="confirm-password" class="edit-input" id="confirm-password" placeholder="Confirm new password">
 									<button type="submit" value="Submit"></button>
 								</form>
 							</div>
@@ -50,6 +50,7 @@
 							<label for="edit-profile-picture" class="buttons edit-button" id="edit-profile-button">
 								<img src="../routes/assets/images/account/edit_logo.png" alt="Edit Logo" class="edit-logo-mode">
 							</label>
+							<input type="hidden" class="edit-input"  id="username-input" name="username">
 							<input type="file" id="edit-profile-picture" name="edit-profile-picture" accept="image/*">
 						</form>
 					</div>

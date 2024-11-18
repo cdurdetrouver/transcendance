@@ -1,6 +1,6 @@
 import { customalert } from '../../components/alert/script.js';
 import config from '../../env/config.js';
-import { get_user, logout, update_user } from '../../components/user/script.js';
+import { get_user, logout, update_user, update_password } from '../../components/user/script.js';
 import { router } from '../../app.js';
 import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 import { deleteCookie, setCookie } from '../../../components/storage/script.js';
@@ -121,7 +121,7 @@ export async function initComponent() {
 		setPersonalUser(me);
 }
 
-// document.getElementById("edit-password form").addEventListener('submit', handleFormSubmit);
+document.getElementById("edit-password").addEventListener('submit', handleFormPassword);
 document.getElementById("username-form").addEventListener('submit', handleFormUsername);
 document.querySelector("#profile-picture-container input").addEventListener('change', handleFormProfilePicture);
 
@@ -227,6 +227,35 @@ async function changeDisplayPassword() {
 	// inputPassword.style.display = "flex";
 	editPasswordButton.style.display = "flex";
 	editPassword.style.display = "none";
+}
+
+
+async function handleFormPassword(event) {
+	console.log("EDIT PASSWORD");
+
+	event.preventDefault();
+	const form = document.querySelector("#edit-password form");
+	const formData = new FormData(form);
+	
+	const inputs = form.elements;
+	// for (const input of inputs) {
+	// 	console.log(`${input.name}: ${input.value}`);
+	// }
+
+	let response = await update_password(formData);
+
+	if (response.status === 200) {
+		customalert('Success', 'Password updated successfully', false);
+		// let data = await response.json();
+		// setPersonalUser(data.user);
+		// deleteCookie('user');
+		// setCookie('user', JSON.stringify(data.user), 5 / 1440);
+		changeDisplayPassword();
+	}
+	else {
+		let data = await response.json();
+		customalert('Error', data.error, true);
+	}
 }
 
 const deleteButton = document.querySelector("#delete-profile .buttons");

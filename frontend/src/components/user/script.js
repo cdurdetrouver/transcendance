@@ -106,6 +106,15 @@ async function update_user(formData) {
 	return response;
 }
 
+async function update_password(formData) {
+	const response = await fetch(config.backendUrl + '/user/change_password/' , {
+		method: 'PUT',
+		body: formData,
+		credentials: 'include'
+	});
+	return response;
+}
+
 async function delete_user() {
 	const response = await fetch(config.backendUrl + "/user/", {
 		method: "DELETE",
@@ -129,4 +138,4 @@ async function logout() {
 	deleteCookie('user');
 }
 
-export { login, register, get_user, update_user, delete_user, refresh_token, logout, login_tierce };
+export { login, register, get_user, update_user, update_password, delete_user, refresh_token, logout, login_tierce };

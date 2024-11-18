@@ -108,7 +108,7 @@ async function register_form(event) {
 	const profile_picture = document.querySelector('input[name="profilePicture').files[0];
 
 	if (password !== confirmPassword) {
-		customalert('Error', 'Password do not match.', true);
+		customalert('Error', 'Password does not match.', true);
 		return
 	}
 
