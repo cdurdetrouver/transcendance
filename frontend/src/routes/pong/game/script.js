@@ -68,8 +68,8 @@ function drawBackground() {
 
 function centerPongCanvas() {
 
-	const leftX = 200;
-	const topY = 100;
+	const leftX = 0;
+	const topY = 0;
 
     const bgWidth = backgroundCanvas.width;
     const bgHeight = backgroundCanvas.height;
@@ -78,6 +78,7 @@ function centerPongCanvas() {
 
     const centerX = (bgWidth - pongWidth) / 2;
     const centerY = (bgHeight - pongHeight) / 2;
+
     canvas.style.left = `${centerX + leftX}px`;
     canvas.style.top = `${centerY + topY}px`;
 	backgroundCanvas.style.left = `${leftX}px`;
@@ -313,6 +314,21 @@ async function get_game_players(game_id) {
 
 	player1 = response_game_data.player1;
 	player2 = response_game_data.player2;
+
+	const profilePicture1 = player1.picture_remote ? player1.picture_remote : config.backendUrl + player1.profile_picture;
+	const profilePicture2 = player2.picture_remote ? player2.picture_remote : config.backendUrl + player2.profile_picture;
+	const player1block = document.getElementById('player1');
+	const player2block = document.getElementById('player2');
+
+	player1block.innerHTML = `
+	<span class="profile-pic"> <img src="${profilePicture1}" height=100 alt="Room Picture"> </span> 
+	<span class="player-name">${player1.username}</span>
+	`;
+
+	player2block.innerHTML = `
+	<span class="player-name">${player2.username}</span>
+	<span class="profile-pic"> <img src="${profilePicture2}" height=100 alt="Room Picture"> </span>
+	`;
 }
 
 export async function initComponent() {
@@ -330,7 +346,6 @@ export async function initComponent() {
 	ballspeedY = 4;
 	player1Score = 0;
 	player2Score = 0;
-	firstUpdate = 0;
 	player1InitialScore = 0;
 	player2InitialScore = 0;
 

@@ -1,7 +1,17 @@
+
 <div id="background-image"></div>
-<h1>Pong Game</h1>
-<canvas id="backgroundCanvas" width="1025" height="605"></canvas>
-<canvas id="lifeCanvas" width="1025" height="100"></canvas>
-<canvas id="pongCanvas" width="800" height="400"></canvas>
-<p id="status"></p>
-<p class="ping">Ping: <span id="ping">15</span> ms</p>
+<div id="container">
+	<!-- <h3>Pong Game</h3> -->
+	<p id="status"></p>
+	<p class="ping">Ping: <span id="ping">15</span> ms</p>
+	<div id="game-canvas">
+		<canvas id="backgroundCanvas" width="1025" height="605"></canvas>
+		<canvas id="lifeCanvas" width="1025" height="100"></canvas>
+		<canvas id="pongCanvas" width="800" height="400"></canvas>
+	</div>
+	<div id="player-block">
+		<div class="player" id="player1"></div>
+		<div class="player" id="player2"></div>
+	</div>
+
+</div>
