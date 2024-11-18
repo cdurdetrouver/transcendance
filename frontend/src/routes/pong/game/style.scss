@@ -37,10 +37,9 @@ canvas {
 	justify-content: center;
 	align-items: center;
 	#game-canvas {
-		position: relative;
-		left: -26.5%;
-		margin-bottom: 620px;
-	
+		height: 605px;
+		width: 1025px;
+		position: relative;	
 		#backgroundCanvas {
 			position: absolute;
 			z-index: 0;
@@ -53,6 +52,35 @@ canvas {
 		#lifeCanvas {
 			position: absolute;
 			z-index: 1; 
+		}
+		.return-menu {
+			position: relative;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			top: 50%;
+			z-index: 5;
+			#button-return {
+				position: absolute;
+				font-family: isaac-bold;
+				font-size: 0.8rem;
+				background-image: url(../../../static/assets/sheets/Button.png);
+				width: 150px;
+				height: 60px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-color: transparent;
+				outline: none;
+				border: none;
+				cursor: pointer;
+				transition: transform 0.1s ease;
+				&:hover{
+					transform: scale(1.02);
+					border: none;
+					background-color: transparent;
+				}
+			}
 		}
 	}
 	#player-block {
