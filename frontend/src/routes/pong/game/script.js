@@ -225,6 +225,20 @@ function gameLoop() {
 		draw_reset();
 }
 
+function closeButton()
+{
+	console.log("game close function");
+	const buttonDiv = document.createElement('div');
+	buttonDiv.className = 'return-menu'; 
+	buttonDiv.innerHTML =  `<input id="button-return" type="button" value="Return to menu">
+	`;
+	const parentDiv = document.getElementById("game-canvas");
+	
+	parentDiv.appendChild(buttonDiv)
+    // document.getElementById('return-menu').addEventListener('click', returnMenu);
+
+}
+
 class PongSocket {
 	constructor(game_room) {
 		this.socket = null;
@@ -252,6 +266,7 @@ class PongSocket {
 			customalert('Game Over', data.message + " winner is " + winner);
 			game_ended = true;
 			clearInterval(pingIntervalID);
+			closeButton();
 		}
 		else if (data.type === 'viewer')
 			viewer = true;

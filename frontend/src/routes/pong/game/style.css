@@ -39,9 +39,9 @@ canvas {
   align-items: center;
 }
 #container #game-canvas {
+  height: 605px;
+  width: 1025px;
   position: relative;
-  left: -26.5%;
-  margin-bottom: 620px;
 }
 #container #game-canvas #backgroundCanvas {
   position: absolute;
@@ -55,6 +55,35 @@ canvas {
 #container #game-canvas #lifeCanvas {
   position: absolute;
   z-index: 1;
+}
+#container #game-canvas .return-menu {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  z-index: 5;
+}
+#container #game-canvas .return-menu #button-return {
+  position: absolute;
+  font-family: isaac-bold;
+  font-size: 0.8rem;
+  background-image: url(../../../static/assets/sheets/Button.png);
+  width: 150px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+#container #game-canvas .return-menu #button-return:hover {
+  transform: scale(1.02);
+  border: none;
+  background-color: transparent;
 }
 #container #player-block {
   font-family: isaac-bold;
