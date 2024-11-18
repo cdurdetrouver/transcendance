@@ -489,6 +489,8 @@ def verify_2fa_token(request):
 		400: openapi.Response(description="Invalid user type or incorrect current password"),
 	}
 )
+# def change_password_view(request):
+#     print("cc")
 @api_view(['PUT'])
 def change_password(request):
 	user = request.user
@@ -496,9 +498,9 @@ def change_password(request):
 	new_password = request.data.get('new_password')
 	confirm_password = request.data.get('confirm_password')
 
-	print("salut")
+	# print("salut")
 
-	print(password, new_password, confirm_password)
+	# print(password, new_password, confirm_password)
 
 	if user.user_type != "email":
 		return JsonResponse({'error': 'Invalid user type'}, status=status.HTTP_400_BAD_REQUEST)
