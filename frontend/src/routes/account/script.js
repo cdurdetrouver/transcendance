@@ -237,7 +237,10 @@ async function handleFormPassword(event) {
 	const form = document.querySelector("#edit-password form");
 	const formData = new FormData(form);
 	
-	const inputs = form.elements;
+	// if (form) {
+	// 	console.log("cc form");
+	// }
+	// const inputs = form.elements;
 	// for (const input of inputs) {
 	// 	console.log(`${input.name}: ${input.value}`);
 	// }

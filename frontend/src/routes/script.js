@@ -4,6 +4,7 @@ import { login, register } from '../components/user/script.js';
 import {customalert} from '../components/alert/script.js';
 import config from '../env/config.js';
 
+
 const ButtonGoogle = document.querySelector("#google");
 ButtonGoogle.href = `https://accounts.google.com/o/oauth2/auth?client_id=${config.google_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=google')}&response_type=code&scope=openid%20email%20profile`;
 const ButtonGithub = document.querySelector("#github");
@@ -28,16 +29,13 @@ function enableAccount() {
 	account.classList.remove("disabled");
 }
 
-async function getProfilePicture() {
-	let user = await get_user();
+async function getProfilePicture(user) {
 	let profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
 	let imgElement = document.querySelector("#login-container img");
 	imgElement.src = profilePicture;
 }
 
 let userCookie = getCookie('user');
-
-await get_user();
 
 if (userCookie) {
 	loginPopin.style.display = "none";
@@ -48,7 +46,6 @@ if (userCookie) {
 else {
 	loginPopin.style.display = "flex";
 }
-
 
 loginButton.addEventListener("click", function() {
 	console.log("login button");
@@ -171,3 +168,14 @@ async function register_form(event) {
 	}
 }
 
+export async function initComponent() {
+	const user = await get_user();
+
+	if (user) {
+		getProfilePicture(user);
+	}
+}
+
+export async function cleanupComponent() {
+	//remove envent listener
+}
