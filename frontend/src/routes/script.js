@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/dev
 import { getCookie } from '../components/storage/script.js';
 import { get_user } from '../components/user/script.js';
 import { login, register } from '../components/user/script.js';
