@@ -39,7 +39,7 @@ canvas {
 	#game-canvas {
 		height: 605px;
 		width: 1025px;
-		position: relative;	
+		position: relative;
 		#backgroundCanvas {
 			position: absolute;
 			z-index: 0;
@@ -90,6 +90,7 @@ canvas {
 		flex-direction: row;
 		justify-content: space-between;
 		width: 1000px;
+		margin-top: 15px;
 		#player1 {
 			display: flex;
 			align-items: center;

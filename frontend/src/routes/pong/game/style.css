@@ -92,6 +92,7 @@ canvas {
   flex-direction: row;
   justify-content: space-between;
   width: 1000px;
+  margin-top: 15px;
 }
 #container #player-block #player1 {
   display: flex;
