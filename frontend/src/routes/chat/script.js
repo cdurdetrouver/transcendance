@@ -502,14 +502,13 @@ async function open_chat(room_selected) {
 			for (const index in data.messages) {
 				const message = data.messages[index];
 				const username = message.author ? message.author.username : "";
-                messageElement.textContent = `${message.content}`;
 				const messageElement = document.createElement('div');
 				messageElement.classList.add('chat-message');
                 
+                messageElement.textContent = `${message.content}`;
                 if (!message.author)
 				    messageElement.classList.add('announce');
-				
-                else {
+                if (message.author) {
 					const profile_picture = message.author.picture_remote ? message.author.picture_remote : config.backendUrl + message.author.profile_picture;
 					const profileImg = document.createElement('img');
 					profileImg.src = profile_picture;
@@ -521,9 +520,16 @@ async function open_chat(room_selected) {
 					nameDiv.textContent = `${username}`;
 					nameDiv.innerHTML = `<span>${username}</span>`;
 					nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
-					chatLog.appendChild(nameDiv);
+                    if (first_mess)
+					    chatLog.appendChild(nameDiv);
+                    else
+					    chatLog.prepend(nameDiv);
 				}
-				chatLog.prepend(messageElement);
+                if (first_mess)
+                    chatLog.appendChild(messageElement);
+                else
+                    chatLog.prepend(messageElement);
+				chatLog.prepend();
             }
             if (first_mess == true) {
                 chat_log.scrollTop = chat_log.scrollHeight;
