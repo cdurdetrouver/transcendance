@@ -125,7 +125,6 @@ class GameThread(threading.Thread):
 		self.group_name = group_name
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
-		self.nb_viewer = 0
 
 		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1)
 		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, self.game.player1_character)
@@ -182,8 +181,6 @@ class GameThread(threading.Thread):
 				current_time = time.time()
 				self.delta_time = current_time - last_time
 				last_time = current_time
-
-				self.game.nb_viewers = self.nb_viewer
 
 				self.ball.update()
 				self.paddle1.move()
@@ -273,9 +270,6 @@ class GameThread(threading.Thread):
 				'winner': Winner.id
 			}
 		)
-
-	async def add_viewer(self):
-		self.nb_viewer += 1
 
 	async def set_player_direction(self, player, data):
 		if player == "player1":

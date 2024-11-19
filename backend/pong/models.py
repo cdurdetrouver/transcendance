@@ -7,7 +7,6 @@ class Game(models.Model):
 	finished = models.BooleanField(default=False)
 	started = models.BooleanField(default=False)
 	nb_players = models.IntegerField(default=0)
-	nb_viewers = models.IntegerField(default=0)
 	player1 = models.ForeignKey(User, related_name='games_as_player1', on_delete=models.SET_NULL, null=True, blank=True)
 	player2 = models.ForeignKey(User, related_name='games_as_player2', on_delete=models.SET_NULL, null=True, blank=True)
 	winner = models.ForeignKey(User, related_name='games_won', on_delete=models.SET_NULL, null=True, blank=True)
