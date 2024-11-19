@@ -499,6 +499,8 @@ async function open_chat(room_selected) {
                 return;
 			const chatLog = document.querySelector('#chat-log');
             data.messages.reverse();
+            let last_height_chat = chat_log.scrollHeight;
+            console.log("before height : ", chat_log.scrollHeight);
 			for (const index in data.messages) {
 				const message = data.messages[index];
 				const username = message.author ? message.author.username : "";
@@ -513,7 +515,6 @@ async function open_chat(room_selected) {
                 }
                 
 				messageElement.textContent = `${content}`;
-				
 				if (message.author) {
 					const profile_picture = message.author.picture_remote ? message.author.picture_remote : config.backendUrl + message.author.profile_picture;
 					const profileImg = document.createElement('img');
@@ -530,12 +531,13 @@ async function open_chat(room_selected) {
 				}
 				chatLog.prepend(messageElement);
             }
+            console.log("after height : ", chat_log.scrollHeight);
             if (first_mess == true) {
                 chat_log.scrollTop = chat_log.scrollHeight;
                 first_mess = false;
             }
             else if (chat_log.scrollTop == 0) {
-                chat_log.scrollTop = 660;
+                chat_log.scrollTop = chat_log.scrollHeight - last_height_chat;
             }
 		}
 		
