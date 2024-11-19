@@ -18,8 +18,63 @@ heartImage.src = '../../../static/assets/pong/heart.png';
 const heartEmptyImage = new Image();
 heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
 
-const paddleWidth = 10;
-const paddleHeight = 75;
+const ballImage = new Image();
+ballImage.src = '../../../static/assets/pong/bullet.png';
+
+const paddleHeadImage = new Image();
+paddleHeadImage.src = '../../../static/assets/pong/isaac_head.png';
+
+const paddleHeadImage2 = new Image();
+paddleHeadImage2.src = '../../../static/assets/pong/isaac_head_2.png';
+
+const idleImage = new Image();
+idleImage.src = '../../../static/assets/pong/resting.png';
+
+const cart = new Image();
+cart.src = '../../../static/assets/pong/minecart.png';
+
+const cart_head = new Image();
+cart_head.src = '../../../static/assets/pong/isaac_head_cart.png';
+
+const paddleBodyAnimationFrames = [
+    '../../../static/assets/pong/moving_frame_1.png',
+    '../../../static/assets/pong/moving_frame_2.png',
+    '../../../static/assets/pong/moving_frame_3.png',
+    '../../../static/assets/pong/moving_frame_4.png',
+    '../../../static/assets/pong/moving_frame_5.png',
+    '../../../static/assets/pong/moving_frame_6.png',
+    '../../../static/assets/pong/moving_frame_7.png',
+    '../../../static/assets/pong/moving_frame_8.png',
+    '../../../static/assets/pong/moving_frame_9.png',
+];
+
+const paddleBodyImages = paddleBodyAnimationFrames.map((src) => {
+    const img = new Image();
+    img.src = src;
+    return img;
+});
+
+let currentBodyFrame = 0; // To track the current body animation frame
+let animationIntervalID = null;
+
+function startBodyAnimation() {
+    if (animationIntervalID) return;
+
+    animationIntervalID = setInterval(() => {
+        currentBodyFrame = (currentBodyFrame + 1) % paddleBodyImages.length;
+    }, 100); 
+}
+
+function stopBodyAnimation() {
+    if (animationIntervalID) {
+        clearInterval(animationIntervalID);
+        animationIntervalID = null;
+        currentBodyFrame = 0;
+    }
+}
+
+const paddleWidth = 56;
+const paddleHeight = 66;
 const ballRadius = 8;
 
 let paddle1Y;
@@ -54,6 +109,34 @@ let pingSpan;
 
 let player1InitialScore;
 let player2InitialScore;
+
+
+const paddleImage = new Image();
+paddleImage.src = '../../../static/assets/pong/isaac.png';
+
+let flippedPaddleImage;
+
+paddleImage.onload = () => {
+    // Create an offscreen canvas
+    const offscreenCanvas = document.createElement('canvas');
+    offscreenCanvas.width = paddleWidth;
+    offscreenCanvas.height = paddleHeight;
+
+    const offscreenCtx = offscreenCanvas.getContext('2d');
+
+    // Flip the image horizontally
+    offscreenCtx.scale(-1, 1);
+    offscreenCtx.drawImage(
+        paddleImage,
+        -paddleWidth,
+        0,
+        paddleWidth,
+        paddleHeight
+    );
+
+    // Store the flipped image
+    flippedPaddleImage = offscreenCanvas;
+};
 
 
 function drawBackground() {
@@ -106,8 +189,10 @@ function handleKeydown(e) {
 		return;
 
 	if (e.key === 'ArrowUp') {
+		startBodyAnimation();
 		socket.send(JSON.stringify({ message: 'keydown', direction: 'up' }));
 	} else if (e.key === 'ArrowDown') {
+		startBodyAnimation();
 		socket.send(JSON.stringify({ message: 'keydown', direction: 'down' }));
 	}
 }
@@ -117,8 +202,10 @@ function handleKeyup(e) {
 		return;
 
 	if (e.key === 'ArrowUp') {
+		stopBodyAnimation();
 		socket.send(JSON.stringify({ message: 'keyup', direction: 'up' }));
 	} else if (e.key === 'ArrowDown') {
+		stopBodyAnimation();
 		socket.send(JSON.stringify({ message: 'keyup', direction: 'down' }));
 	}
 }
@@ -126,15 +213,52 @@ function handleKeyup(e) {
 function draw(interpolatedState) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	ctx.fillStyle = 'black';
-	ctx.fillRect(5, interpolatedState.paddle1Y, paddleWidth, paddleHeight);
-	ctx.fillRect(canvas.width - paddleWidth - 5, interpolatedState.paddle2Y, paddleWidth, paddleHeight);
+	
+    // Draw Player 1 paddle
+    const paddle1BodyImage = (paddle1moveup || paddle1movedown)
+        ? paddleBodyImages[currentBodyFrame]
+        : idleImage; 
+    // Draw body
+    ctx.drawImage(
+        paddle1BodyImage,
+        15,
+        interpolatedState.paddle1Y + 38, // Offset by head height
+        34,
+        paddleHeight - 32
+    );
 
-	ctx.beginPath();
-	ctx.arc(interpolatedState.ballX, interpolatedState.ballY, ballRadius, 0, Math.PI * 2);
-	ctx.fillStyle = 'red';
-	ctx.fill();
-	ctx.closePath();
+    // Draw head
+    ctx.drawImage(
+        paddleHeadImage2,
+        5,
+        interpolatedState.paddle1Y, // Draw at the top of the paddle
+        paddleHeadImage2.width, // Use natural width of the head
+        paddleHeadImage2.height // Use natural height of the head
+    );
+
+	// Draw Player 2 paddle
+
+    const paddle2BodyImage = (paddle2moveup || paddle2movedown)
+        ? paddleBodyImages[currentBodyFrame]
+        : idleImage;
+
+    ctx.drawImage(
+        paddle2BodyImage,
+        canvas.width - paddleWidth - 5,
+        interpolatedState.paddle2Y + paddleHeadImage.height,
+        paddleWidth,
+        paddleHeight - paddleHeadImage.height
+    );
+
+    ctx.drawImage(
+        paddleHeadImage,
+        canvas.width - paddleWidth - 5,
+        interpolatedState.paddle2Y,
+        paddleHeadImage.width, // Use natural width of the head
+        paddleHeadImage.height // Use natural height of the head
+    );
+
+	ctx.drawImage(ballImage, interpolatedState.ballX - ballRadius, interpolatedState.ballY - ballRadius, ballRadius * 2, ballRadius * 2);
 
 	drawScores();
 }
@@ -142,15 +266,38 @@ function draw(interpolatedState) {
 function draw_reset() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	ctx.fillStyle = 'black';
-	ctx.fillRect(5, (canvas.height - paddleHeight) / 2, paddleWidth, paddleHeight);
-	ctx.fillRect(canvas.width - paddleWidth - 5, (canvas.height - paddleHeight) / 2, paddleWidth, paddleHeight);
+    // Draw Player 1 paddle
+    const paddle1BodyImage = (paddle1moveup || paddle1movedown)
+        ? paddleBodyImages[currentBodyFrame]
+        : idleImage; // Default body frame when idle
 
-	ctx.beginPath();
-	ctx.arc(canvas.width / 2, canvas.height / 2, ballRadius, 0, Math.PI * 2);
-	ctx.fillStyle = 'red';
-	ctx.fill();
-	ctx.closePath();
+    // Draw body
+    ctx.drawImage(
+        paddle1BodyImage,
+        15,
+        (canvas.height - paddleHeight) / 2 + 38, // Offset by head height
+        34,
+        paddleHeight - 32
+    );
+
+    // Draw head
+    ctx.drawImage(
+        paddleHeadImage2,
+        5,
+        (canvas.height - paddleHeight) / 2, // Draw at the top of the paddle
+        paddleHeadImage2.width, // Use natural width of the head
+        paddleHeadImage2.height // Use natural height of the head
+    );
+
+	ctx.drawImage(
+		cart_head,
+		canvas.width - paddleWidth - 5,
+		(canvas.height - paddleHeight) / 2,
+		paddleWidth,
+		paddleHeight
+	);
+
+	ctx.drawImage(ballImage, canvas.width / 2 - ballRadius, canvas.height / 2 - ballRadius, ballRadius * 2, ballRadius * 2);
 
 	drawScores();
 }
@@ -225,17 +372,20 @@ function gameLoop() {
 		draw_reset();
 }
 
+
 function closeButton()
 {
 	console.log("game close function");
 	const buttonDiv = document.createElement('div');
 	buttonDiv.className = 'return-menu'; 
-	buttonDiv.innerHTML =  `<input id="button-return" type="button" value="Return to menu">
+	buttonDiv.innerHTML =  `<input id="button-return" type="button" value="Return to menu" data-link>
 	`;
 	const parentDiv = document.getElementById("game-canvas");
 	
 	parentDiv.appendChild(buttonDiv)
-    // document.getElementById('return-menu').addEventListener('click', returnMenu);
+	document.getElementById('button-return').addEventListener('click', function() {
+        window.location.href = '/character';
+    });
 
 }
 
@@ -410,6 +560,9 @@ export function cleanupComponent() {
 	}
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	stopPaddleAnimation(); // Stop the paddle animation
+
 
 	document.removeEventListener('keydown', handleKeydown);
 	document.removeEventListener('keyup', handleKeyup);

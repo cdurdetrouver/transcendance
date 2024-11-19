@@ -6,8 +6,8 @@ from asgiref.sync import async_to_sync
 BALL_RADIUS = 8
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 400
-PADDLE_WIDTH = 10
-PADDLE_HEIGHT = 75
+PADDLE_WIDTH = 56
+PADDLE_HEIGHT = 66
 
 class Ball:
 	def __init__(self, x, y, speed):
