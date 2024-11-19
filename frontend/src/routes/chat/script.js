@@ -430,8 +430,9 @@ async function open_chat(room_selected) {
     `;
     const chat_log =  document.getElementById('chat-log');
     let first_mess = true;
+    let end_hist = false;
     chat_log.onscroll = function (e) {
-        if (chat_log.scrollTop == 0){
+        if (chat_log.scrollTop == 0 && !end_hist){
             chatSocket.send(JSON.stringify({
                 'type': "refresh_mess",
             }));
@@ -494,8 +495,10 @@ async function open_chat(room_selected) {
 
 		}
 		else if (data.type == 'list-chat') {
-            if (data.messages[0] == null)
+            if (data.messages[0] == null) {
+                end_hist = true;//end of history
                 return;
+            }
 			const chatLog = document.querySelector('#chat-log');
             data.messages.reverse();
             let last_height_chat = chat_log.scrollHeight;
@@ -506,8 +509,9 @@ async function open_chat(room_selected) {
 				messageElement.classList.add('chat-message');
                 
                 messageElement.textContent = `${message.content}`;
-                if (!message.author)
-				    messageElement.classList.add('announce');
+                if (!message.author) {
+                    messageElement.classList.add('announce');
+                }
                 if (message.author) {
 					const profile_picture = message.author.picture_remote ? message.author.picture_remote : config.backendUrl + message.author.profile_picture;
 					const profileImg = document.createElement('img');
@@ -529,7 +533,6 @@ async function open_chat(room_selected) {
                     chatLog.appendChild(messageElement);
                 else
                     chatLog.prepend(messageElement);
-				chatLog.prepend();
             }
             if (first_mess == true) {
                 chat_log.scrollTop = chat_log.scrollHeight;
