@@ -431,7 +431,6 @@ async function open_chat(room_selected) {
     const chat_log =  document.getElementById('chat-log');
     let first_mess = true;
     chat_log.onscroll = function (e) {
-        console.log(chat_log.scrollTop);
         if (chat_log.scrollTop == 0){
             chatSocket.send(JSON.stringify({
                 'type': "refresh_mess",
@@ -500,22 +499,17 @@ async function open_chat(room_selected) {
 			const chatLog = document.querySelector('#chat-log');
             data.messages.reverse();
             let last_height_chat = chat_log.scrollHeight;
-            console.log("before height : ", chat_log.scrollHeight);
 			for (const index in data.messages) {
 				const message = data.messages[index];
 				const username = message.author ? message.author.username : "";
-				const content = message.content;
-
+                messageElement.textContent = `${message.content}`;
 				const messageElement = document.createElement('div');
-
 				messageElement.classList.add('chat-message');
-                if (!message.author) {
-				    messageElement.classList.add('announce');
-                    console.log("author not found ?? ici");
-                }
                 
-				messageElement.textContent = `${content}`;
-				if (message.author) {
+                if (!message.author)
+				    messageElement.classList.add('announce');
+				
+                else {
 					const profile_picture = message.author.picture_remote ? message.author.picture_remote : config.backendUrl + message.author.profile_picture;
 					const profileImg = document.createElement('img');
 					profileImg.src = profile_picture;
@@ -527,11 +521,10 @@ async function open_chat(room_selected) {
 					nameDiv.textContent = `${username}`;
 					nameDiv.innerHTML = `<span>${username}</span>`;
 					nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
-					chatLog.prepend(nameDiv);
+					chatLog.appendChild(nameDiv);
 				}
 				chatLog.prepend(messageElement);
             }
-            console.log("after height : ", chat_log.scrollHeight);
             if (first_mess == true) {
                 chat_log.scrollTop = chat_log.scrollHeight;
                 first_mess = false;
@@ -563,6 +556,7 @@ async function open_chat(room_selected) {
 			// Append the message element to the chat log
 			chatLog.appendChild(messageElement);
 			chatLog.appendChild(messageElement);
+            chat_log.scrollTop = chat_log.scrollHeight;
         }
 		else if (data.type == 'error') {
 			customalert('error !', 'Message too longs', true);
