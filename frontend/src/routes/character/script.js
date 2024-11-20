@@ -162,6 +162,14 @@ export async function initComponent() {
 	});
 
 	document.addEventListener('keydown', handleKeydown);
+
+	document.querySelectorAll('.game').forEach(game => {
+		game.addEventListener('click', function (e) {
+			const selectedCharacter = names[currentIndex];
+			const baseHref = e.target.getAttribute('href');
+			e.target.setAttribute('href', `${baseHref}?character=${encodeURIComponent(selectedCharacter)}`);
+		});
+	});
   }
   
   export async function cleanupComponent() {
