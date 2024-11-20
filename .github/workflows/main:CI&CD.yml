@@ -40,8 +40,7 @@ jobs:
           - uses: actions/checkout@v4
           - name: Send Discord message
             run: |
-              curl -X POST -H 'Content-type: application/json' --data '{"content":"New PR for review", "embeds":[{"image":{"url":"https://tenor.com/wreO.gif"}}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
-
+              curl -X POST -H 'Content-type: application/json' --data '{"content":"New PR for review", "embeds":[{"image":{"url":"https://c.tenor.com/GAFexEI2-SUAAAAd/tenor.gif"}}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   build:
     name: Build and Push Docker Images
@@ -75,7 +74,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Send Discord message
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"content":"New commit pushed to dev branch", "embeds":[{"image":{"url":"https://tenor.com/bTsYc.gif"}}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"content":"New commit pushed to dev branch", "embeds":[{"image":{"url":"https://c.tenor.com/ubajHa-XmxAAAAAd/tenor.gif"}}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   # deploy:
   #   name: Deploy to EC2
