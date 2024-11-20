@@ -36,6 +36,18 @@ cart.src = '../../../static/assets/pong/minecart_66x56.png';
 const cart_head = new Image();
 cart_head.src = '../../../static/assets/pong/isaac_head_cart.png';
 
+const cart_head_right = new Image();
+cart_head_right.src = '../../../static/assets/pong/isaac_head_cart_right.png';
+
+const cart_head_down = new Image();
+cart_head_down .src = '../../../static/assets/pong/isaac_head_cart_down.png';
+
+const cart_head_up = new Image();
+cart_head_up .src = '../../../static/assets/pong/isaac_head_cart_up.png';
+
+const wheel = new Image();
+wheel.src = '../../../static/assets/pong/wheel.png';
+
 const paddleBodyAnimationFrames = [
     '../../../static/assets/pong/moving_frame_1.png',
     '../../../static/assets/pong/moving_frame_2.png',
@@ -109,34 +121,6 @@ let pingSpan;
 
 let player1InitialScore;
 let player2InitialScore;
-
-
-const paddleImage = new Image();
-paddleImage.src = '../../../static/assets/pong/isaac.png';
-
-let flippedPaddleImage;
-
-paddleImage.onload = () => {
-    // Create an offscreen canvas
-    const offscreenCanvas = document.createElement('canvas');
-    offscreenCanvas.width = paddleWidth;
-    offscreenCanvas.height = paddleHeight;
-
-    const offscreenCtx = offscreenCanvas.getContext('2d');
-
-    // Flip the image horizontally
-    offscreenCtx.scale(-1, 1);
-    offscreenCtx.drawImage(
-        paddleImage,
-        -paddleWidth,
-        0,
-        paddleWidth,
-        paddleHeight
-    );
-
-    // Store the flipped image
-    flippedPaddleImage = offscreenCanvas;
-};
 
 
 function drawBackground() {
@@ -222,28 +206,34 @@ function draw(interpolatedState) {
     ctx.drawImage(
         paddle1BodyImage,
         15,
-        interpolatedState.paddle1Y + 38, // Offset by head height
+        interpolatedState.paddle1Y + 38, 
         34,
         paddleHeight - 32
     );
 
+	let headPlayer1;
+	if (paddle1movedown)
+		headPlayer1 = cart_head_down;
+	else if(paddle1moveup)
+		headPlayer1 = cart_head_up;
+	else
+		headPlayer1 = cart_head_right;
+
     // Draw head
     ctx.drawImage(
-        paddleHeadImage2,
+        headPlayer1,
         5,
-        interpolatedState.paddle1Y, // Draw at the top of the paddle
-        paddleHeadImage2.width, // Use natural width of the head
-        paddleHeadImage2.height // Use natural height of the head
+        interpolatedState.paddle1Y, 
+        paddleHeadImage2.width, 
+        paddleHeadImage2.height 
     );
 
 	// Draw Player 2 paddle
-
-    const wobbleAmplitude = 3; // Maximum wobble in pixels
-    const wobbleSpeed = 0.30;  // Wobble speed
+    const wobbleAmplitude = 2;
+    const wobbleSpeed = 0.30;
     let wobbleOffset = 0;
 
     if (paddle2moveup || paddle2movedown) {
-        // Apply wobble if Player 2 is moving
         wobbleOffset = Math.sin(time) * wobbleAmplitude;
     }
 
@@ -251,16 +241,34 @@ function draw(interpolatedState) {
         cart,
         canvas.width - paddleWidth - 5, //emplacement x 
         interpolatedState.paddle2Y + wobbleOffset, // emplacement y
+        cart.width,
+        cart.height
+    );
+	time += wobbleSpeed;
+
+	//wheel
+    ctx.drawImage(
+        wheel,
+        canvas.width - paddleWidth - 5, //emplacement x 
+        interpolatedState.paddle2Y, // emplacement y
         paddleWidth,
         paddleHeight
     );
-	time += wobbleSpeed;
+
+	//head
+	let headPlayer2;
+	if (paddle2movedown)
+		headPlayer2 = cart_head_down;
+	else if(paddle2moveup)
+		headPlayer2 = cart_head_up;
+	else
+		headPlayer2 = cart_head;
     ctx.drawImage(
-        cart_head,
+        headPlayer2,
         canvas.width - paddleWidth - 5,
         interpolatedState.paddle2Y - 13,
-        cart_head.width,
-        cart_head.height
+        headPlayer2.width,
+        headPlayer2.height
     );
 
 	ctx.drawImage(ballImage, interpolatedState.ballX - ballRadius, interpolatedState.ballY - ballRadius, ballRadius * 2, ballRadius * 2);
@@ -274,7 +282,7 @@ function draw_reset() {
     // Draw Player 1 paddle
     const paddle1BodyImage = (paddle1moveup || paddle1movedown)
         ? paddleBodyImages[currentBodyFrame]
-        : idleImage; // Default body frame when idle
+        : idleImage;
 
     // Draw body
     ctx.drawImage(
@@ -289,18 +297,36 @@ function draw_reset() {
     ctx.drawImage(
         paddleHeadImage2,
         5,
-        (canvas.height - paddleHeight) / 2, // Draw at the top of the paddle
-        paddleHeadImage2.width, // Use natural width of the head
-        paddleHeadImage2.height // Use natural height of the head
+        (canvas.height - paddleHeight) / 2, 
+        paddleHeadImage2.width, 
+        paddleHeadImage2.height 
     );
 
-	ctx.drawImage(
-		cart_head,
-		canvas.width - paddleWidth - 5,
-		(canvas.height - paddleHeight) / 2,
-		paddleWidth,
-		paddleHeight
-	);
+	//PLayer 2
+    ctx.drawImage(
+        cart,
+        canvas.width - paddleWidth - 5, //emplacement x 
+		(canvas.height - paddleHeight) / 2, // emplacement y
+        paddleWidth,
+        paddleHeight
+    );
+
+    ctx.drawImage(
+        wheel,
+        canvas.width - paddleWidth - 5, //emplacement x 
+		(canvas.height - paddleHeight) / 2, // emplacement y
+        paddleWidth,
+        paddleHeight
+    );
+
+    ctx.drawImage(
+        cart_head,
+        canvas.width - paddleWidth - 5,
+        (canvas.height - paddleHeight) / 2 - 13,
+        cart_head.width,
+        cart_head.height
+    );
+
 
 	ctx.drawImage(ballImage, canvas.width / 2 - ballRadius, canvas.height / 2 - ballRadius, ballRadius * 2, ballRadius * 2);
 
