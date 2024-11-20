@@ -31,7 +31,7 @@ const idleImage = new Image();
 idleImage.src = '../../../static/assets/pong/resting.png';
 
 const cart = new Image();
-cart.src = '../../../static/assets/pong/minecart.png';
+cart.src = '../../../static/assets/pong/minecart_66x56.png';
 
 const cart_head = new Image();
 cart_head.src = '../../../static/assets/pong/isaac_head_cart.png';
@@ -209,11 +209,11 @@ function handleKeyup(e) {
 		socket.send(JSON.stringify({ message: 'keyup', direction: 'down' }));
 	}
 }
+let time = 0;
 
 function draw(interpolatedState) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	
     // Draw Player 1 paddle
     const paddle1BodyImage = (paddle1moveup || paddle1movedown)
         ? paddleBodyImages[currentBodyFrame]
@@ -238,24 +238,29 @@ function draw(interpolatedState) {
 
 	// Draw Player 2 paddle
 
-    const paddle2BodyImage = (paddle2moveup || paddle2movedown)
-        ? paddleBodyImages[currentBodyFrame]
-        : idleImage;
+    const wobbleAmplitude = 3; // Maximum wobble in pixels
+    const wobbleSpeed = 0.30;  // Wobble speed
+    let wobbleOffset = 0;
+
+    if (paddle2moveup || paddle2movedown) {
+        // Apply wobble if Player 2 is moving
+        wobbleOffset = Math.sin(time) * wobbleAmplitude;
+    }
 
     ctx.drawImage(
-        paddle2BodyImage,
-        canvas.width - paddleWidth - 5,
-        interpolatedState.paddle2Y + paddleHeadImage.height,
+        cart,
+        canvas.width - paddleWidth - 5, //emplacement x 
+        interpolatedState.paddle2Y + wobbleOffset, // emplacement y
         paddleWidth,
-        paddleHeight - paddleHeadImage.height
+        paddleHeight
     );
-
+	time += wobbleSpeed;
     ctx.drawImage(
-        paddleHeadImage,
+        cart_head,
         canvas.width - paddleWidth - 5,
-        interpolatedState.paddle2Y,
-        paddleHeadImage.width, // Use natural width of the head
-        paddleHeadImage.height // Use natural height of the head
+        interpolatedState.paddle2Y - 13,
+        cart_head.width,
+        cart_head.height
     );
 
 	ctx.drawImage(ballImage, interpolatedState.ballX - ballRadius, interpolatedState.ballY - ballRadius, ballRadius * 2, ballRadius * 2);
