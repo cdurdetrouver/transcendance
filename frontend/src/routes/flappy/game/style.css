@@ -1,0 +1,55 @@
+@font-face {
+    font-family: flappyFont;
+    src: url(../../static/assets/fonts/flappy.TTF);
+}
+
+/* Container for canvases and leaderboard */
+.container {
+    display: flex;
+    justify-content: center;    /* Center canvasWrapper and leaderboard horizontally */
+    align-items: center;        /* Center canvasWrapper and leaderboard vertically */
+	flex-direction: column;
+    height: 90vh;               /* Use 90% of viewport height */
+    padding-right: 20px;        /* Space for the leaderboard */
+    position: relative;
+}
+
+/* Canvas Wrapper for background and game canvases */
+.canvasWrapper {
+    position: relative;
+    width: 800px;               /* Canvas width */
+    height: 600px;              /* Canvas height */
+    display: block;             /* Block-level element to contain canvases */
+    margin-right: 50px;         /* Space between the canvases and the leaderboard */
+}
+
+/* Superposing the canvases */
+#backgroundCanvas, #gameCanvas {
+    position: absolute;         /* Stack canvases on top of each other */
+    top: 0;
+    left: 0;
+    z-index: 0;                 /* Background canvas underneath */
+    width: 100%;                /* Full width of the canvasWrapper */
+    height: 100%;               /* Full height of the canvasWrapper */
+	border: solid;
+	-webkit-box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6); 
+	box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6);
+}
+
+#gameCanvas {
+    z-index: 1;                 /* Game canvas on top */
+}
+
+/* Username positioned at the bottom-left of the canvasWrapper */
+#user_username {
+    position: absolute;          /* Absolute positioning relative to canvasWrapper */
+    top: 5%   ;                /* 10px from the bottom of the canvasWrapper */
+    left: 20%;                  /* Align to the left of the canvasWrapper */
+    font-size: 24px;
+    font-family: flappyFont;
+    color: #000;
+    z-index: 2;                  /* Ensure it's above the canvases */
+    background-color: rgba(255, 255, 255, 0.7); /* Optional: background for better visibility */
+    padding: 5px;
+    border-radius: 5px;
+}

@@ -1,6 +1,6 @@
 from django.urls import re_path
 from pong.consumers import PongConsumer, MatchmakingConsumer, PrivateMatchmakingConsumer
-from flappy.consumers import FlappyConsumer, FlappyMatchmakingConsumer, FlappyPrivate
+from flappy.consumers import FlappyConsumer, FlappyMatchmakingConsumer
 from chat.consumers import ChatConsumer
 
 websocket_urlpatterns = [

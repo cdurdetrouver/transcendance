@@ -44,6 +44,10 @@
 		"files": "/flappy"
 	},
 	{
+		"path": "/flappy/game",
+		"files": "/flappy/game"
+	},
+	{
 		"path": "/character",
 		"files": "/character"
 	},

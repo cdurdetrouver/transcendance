@@ -185,8 +185,8 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'pong'
             }))
-        elif data["message"] == "keyup" or data["message"] == "keydown":
-            await self.GameThread.set_player_direction(self.player, data)
+        elif data["message"] == "jump":
+            await self.GameThread.set_player_jump(self.player, data)
 
     async def game_error(self,event):
         await self.send(text_data=json.dumps({

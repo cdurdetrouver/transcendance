@@ -1,61 +1,20 @@
 import threading
 import time
 import random
+import queue
 from asgiref.sync import async_to_sync
 
-BALL_RADIUS = 8
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 400
-PADDLE_WIDTH = 10
-PADDLE_HEIGHT = 75
+GRAVITY = 0.2
+JUMP_STRENGTH = -5.5
+OBSTACLE_WIDTH = 60
+HOLE_HEIGHT = 200
+OBSTACLE_SPACING = 300
+HOLE_MIN_HEIGHT = 100
+HOLE_MAX_HEIGHT = 400
+HEIGHT = 600
+WIDTH = 800
 
-class Ball:
-	def __init__(self, x, y, speed):
-		self.default_position = [x, y]
-		self.default_velocity = [speed * random.choice([1, -1]), speed * random.choice([1, -1])]
-
-		self.position = [x, y]
-		self.velocity = [speed, speed]
-
-	def change_force(self, force):
-		if self.velocity[0] < 0:
-			self.velocity[0] = -force
-		else:
-			self.velocity[0] = force
-
-		if self.velocity[1] < 0:
-			self.velocity[1] = -force
-		else:
-			self.velocity[1] = force
-
-	def update(self):
-		self.position[0] += self.velocity[0]
-		self.position[1] += self.velocity[1]
-
-	def check_collision(self, paddle):
-		distX = abs(self.position[0] - paddle.position[0] - PADDLE_WIDTH / 2)
-		distY = abs(self.position[1] - paddle.position[1] - PADDLE_HEIGHT / 2)
-
-		if (distX > (PADDLE_WIDTH / 2 + BALL_RADIUS)):
-			return False
-		elif (distY > (PADDLE_HEIGHT / 2 + BALL_RADIUS)):
-			return False
-		elif (distX <= (PADDLE_WIDTH / 2)):
-			return True
-		elif (distY <= (PADDLE_HEIGHT / 2)):
-			return True
-
-		dx = distX - PADDLE_WIDTH / 2
-		dy = distY - PADDLE_HEIGHT / 2
-		return (dx * dx + dy * dy <= (BALL_RADIUS * BALL_RADIUS))
-
-	def reset(self):
-		self.position = self.default_position.copy()
-		self.velocity = self.default_velocity.copy()
-		self.velocity[0] *= random.choice([1, -1])
-		self.velocity[1] *= random.choice([1, -1])
-
-class Paddle:
+class Player:
 	characters = [
 		{
 			'force': 4,
@@ -88,34 +47,46 @@ class Paddle:
 			'force': 3
 		}
 	]
-	def __init__(self, x, y, character):
+	def __init__(self, character):
 		self.character = self.characters[int(character)]
 
-		self.default_position = [x, y]
-		self.default_speed = self.character['speed']
-		self.default_force = self.character['force']
-		self.life = self.character['life']
-		self.moveup = False
-		self.movedown = False
+		self.position = [100, HEIGHT / 2]
+		self.velocity = 0
 
-		self.position = [x, y]
-		self.speed = self.character['speed']
-		self.force = self.character['force']
+		self.width = 36
+		self.height = 42
 
-	def move(self):
-		if self.moveup:
-			self.position[1] -= self.speed
-		elif self.movedown:
-			self.position[1] += self.speed
+		self.can_jump = True
+
+	def	jump(self):
+		self.velocity = JUMP_STRENGTH
+		self.can_jump = False
+
+	def update(self):
+		self.velocity += GRAVITY
+		self.position[1] += self.velocity
+
 		if self.position[1] < 0:
 			self.position[1] = 0
-		elif self.position[1] + PADDLE_HEIGHT > SCREEN_HEIGHT:
-			self.position[1] = SCREEN_HEIGHT - PADDLE_HEIGHT
 
-	def reset(self):
-		self.position = self.default_position.copy()
-		self.speed = self.default_speed.copy()
-		self.force = self.default_force.copy()
+	def collide(self, obstacle):
+		topObstacleHeight = obstacle.holeY
+		bottomObstacleY = obstacle.holeY + HOLE_HEIGHT
+
+		test1 = self.position[0] < obstacle.x + OBSTACLE_WIDTH
+		test2 = self.position[0] + self.width > obstacle.x
+		test3 = self.position[1] < topObstacleHeight or self.position[1] + self.height > bottomObstacleY
+		test4 = self.position[1] >= HEIGHT
+
+		return test1 and test2 and test3 or test4
+	
+class Obstacle:
+	def __init__(self, x):
+		self.x = x
+		self.holeY =  HOLE_MIN_HEIGHT + random.random() * (HOLE_MAX_HEIGHT - HOLE_MIN_HEIGHT)
+
+	def update(self, game_speed):
+		self.x -= 3 + game_speed
 
 class GameThread(threading.Thread):
 	def __init__(self, game, group_name, channel_layer):
@@ -125,12 +96,12 @@ class GameThread(threading.Thread):
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
 
-		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1)
-		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, self.game.player1_character)
-		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 3)
+		self.player1 = Player(self.game.player1_character)
+		self.player2 = Player(self.game.player2_character)
 
-		self.game.player1_score = self.paddle1.life
-		self.game.player2_score = self.paddle2.life
+		self.game_speed = 0
+
+		self.obstacles = queue.Queue()
 
 	def __str__(self):
 		string = f"{self.group_name} - {self.game.player1} vs {self.game.player2} | score: {self.game.player1_score} - {self.game.player2_score}"
@@ -139,30 +110,24 @@ class GameThread(threading.Thread):
 		return string
 
 	def serialize(self):
-		return {
+		obstacles = []
+		for obstacle in list(self.obstacles.queue):
+			obstacles.append({
+				"x": obstacle.x,
+				"holeY": obstacle.holeY
+			})
 
+		return {
 			"player1": {
-				"x": self.paddle1.position[0],
-				"y": self.paddle1.position[1],
-				"speed": self.paddle1.speed,
-				"score": self.paddle1.life,
-				"movedown": self.paddle1.movedown,
-				"moveup": self.paddle1.moveup
+				"y": self.player1.position[1],
+				"score": self.game.player1_score
 			},
 			"player2": {
-				"x": self.paddle2.position[0],
-				"y": self.paddle2.position[1],
-				"speed": self.paddle2.speed,
-				"score": self.paddle2.life,
-				"movedown": self.paddle2.movedown,
-				"moveup": self.paddle2.moveup
+				"y": self.player2.position[1],
+				"score": self.game.player2_score
 			},
-			"ball": {
-				"x": self.ball.position[0],
-				"y": self.ball.position[1],
-				"speed_x": self.ball.velocity[0],
-				"speed_y": self.ball.velocity[1]
-			}
+			"obstacles": obstacles,
+			"game_speed": self.game_speed
 		}
 
 	def run(self):
@@ -181,57 +146,33 @@ class GameThread(threading.Thread):
 				self.delta_time = current_time - last_time
 				last_time = current_time
 
-				self.ball.update()
-				self.paddle1.move()
-				self.paddle2.move()
+				if self.obstacles.empty() or self.obstacles.queue[-1].x < WIDTH - OBSTACLE_SPACING:
+					self.obstacles.put(Obstacle(WIDTH))
 
-				if self.ball.position[1] - BALL_RADIUS < 0 or self.ball.position[1] + BALL_RADIUS > SCREEN_HEIGHT:
-					self.ball.velocity[1] = -self.ball.velocity[1]
-					self.ball.position[1] = max(min(self.ball.position[1], SCREEN_HEIGHT - BALL_RADIUS), BALL_RADIUS)
+				self.player1.update()
+				self.player2.update()
 
-				if self.ball.check_collision(self.paddle1):
-					self.ball.change_force(self.paddle1.force)
-					self.ball.velocity[0] = -self.ball.velocity[0]
-					self.ball.position[0] = self.paddle1.position[0] + PADDLE_WIDTH + BALL_RADIUS
+				for obstacle in list(self.obstacles.queue):
+					obstacle.update(self.game_speed)
+					if obstacle.x < -OBSTACLE_WIDTH:
+						self.obstacles.get()
+						self.game.player1_score += 1
+						self.game.player2_score += 1
+						self.game_speed += 0.1
+					elif self.player1.collide(obstacle):
+						self.game_over(self.game.player2)
+						break
+					elif self.player2.collide(obstacle):
+						self.game_over(self.game.player1)
+						break
 
-					paddleCenterY = self.paddle1.position[1] + PADDLE_HEIGHT / 2
-					impactY = self.ball.position[1] - paddleCenterY
-					impactRatio = impactY / (PADDLE_HEIGHT / 2)
-
-					self.ball.velocity[1] = impactRatio * self.ball.velocity[1]
-
-
-				if self.ball.check_collision(self.paddle2):
-					self.ball.change_force(self.paddle2.force)
-					self.ball.velocity[0] = -self.ball.velocity[0]
-					self.ball.position[0] = self.paddle2.position[0] - BALL_RADIUS
-
-					paddleCenterY = self.paddle2.position[1] + PADDLE_HEIGHT / 2
-					impactY = self.ball.position[1] - paddleCenterY
-					impactRatio = impactY / (PADDLE_HEIGHT / 2)
-
-					self.ball.velocity[1] = impactRatio * self.ball.velocity[1]
-
-				if self.ball.position[0] - BALL_RADIUS < 0 :
-					self.paddle1.life -= 1
-					self.ball.reset()
-
-				if self.ball.position[0] + BALL_RADIUS > SCREEN_WIDTH:
-					self.paddle2.life -= 1
-					self.ball.reset()
-
-				if self.paddle1.life <= 0:
-					self.game_over(self.game.player2)
-				elif self.paddle2.life <= 0:
-					self.game_over(self.game.player1)
-				else :
-					async_to_sync(self.channel_layer.group_send)(
-						self.group_name,
-						{
-							'type': 'game.update',
-							'message': self.serialize()
-						}
-					)
+				async_to_sync(self.channel_layer.group_send)(
+					self.group_name,
+					{
+						'type': 'game.update',
+						'message': self.serialize()
+					}
+				)
 
 				self.game.save()
 
@@ -270,17 +211,13 @@ class GameThread(threading.Thread):
 			}
 		)
 
-	async def set_player_direction(self, player, data):
-		if player == "player1":
-			if data["direction"] == "up":
-				self.paddle1.moveup = data["message"] == "keydown"
-			else:
-				self.paddle1.movedown = data["message"] == "keydown"
-		else:
-			if data["direction"] == "up":
-				self.paddle2.moveup= data["message"] == "keydown"
-			else:
-				self.paddle2.movedown = data["message"] == "keydown"
+	async def set_player_jump(self, player, data):
+		player_jump = self.player1 if player == self.game.player1 else self.player2
+
+		if data['pressed'] and player_jump.can_jump:
+			player_jump.jump()
+		elif not data['pressed']:
+			player_jump.can_jump = True
 
 	def stop(self):
 		print("Game stopped")
