@@ -56,8 +56,12 @@
 		"files": "/user/2FA"
 	},
 	{
-		"path" : "/pong/multiplayer",
+		"path" : "/multiplayer",
 		"files" : "/pong/multiplayer"
+	},
+	{
+		"path" : "/multiplayer/game",
+		"files" : "/pong/multiplayer/game"
 	},
 	{
 		"path" : "/pong/private",
