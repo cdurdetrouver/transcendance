@@ -200,7 +200,8 @@ html, body {
 }
 .flex-container .middle .chat-block .chat-output-block #chat-log .chat-message {
   border-radius: 20px;
-  margin-left: 35px;
+  margin-left: 40px;
+  margin-top: 8px;
 }
 .flex-container .middle .chat-block .chat-output-block #chat-log .announce {
   position: relative;
