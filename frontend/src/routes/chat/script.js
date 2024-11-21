@@ -470,7 +470,8 @@ async function open_chat(room_selected) {
 			const username = data.message.author.username;
 			const content = data.message.content;
 
-			const messageElement = document.createElement('div');
+			const messageElement = document.createElement('p');
+			const chat = document.createElement('div');
 			messageElement.classList.add('chat-message');
 			messageElement.textContent = `${content}`;
 		
@@ -488,10 +489,11 @@ async function open_chat(room_selected) {
 			nameDiv.innerHTML = `<span>${username}</span>`; 
 			nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
 
-			chatLog.appendChild(nameDiv);
+			chat.appendChild(nameDiv);
+			chat.appendChild(messageElement);
 
+            chatLog.appendChild(chat);
 			chatLog.scrollTop = chatLog.scrollHeight;
-			chatLog.appendChild(messageElement);
 
 		}
 		else if (data.type == 'list-chat') {
@@ -500,7 +502,7 @@ async function open_chat(room_selected) {
                 return;
             }
 			const chatLog = document.querySelector('#chat-log');
-            if (!first_mess)
+            // if (!first_mess)
                 data.messages.reverse();
             let last_height_chat = chat_log.scrollHeight;
 			for (const index in data.messages) {
@@ -529,9 +531,9 @@ async function open_chat(room_selected) {
 					chat.appendChild(nameDiv);
 				}
                 chat.appendChild(messageElement);
-                if (first_mess)
-                    chatLog.appendChild(chat);
-                else
+                // if (first_mess)
+                //     chatLog.appendChild(chat);
+                // else
                 chatLog.prepend(chat);
             }
             if (first_mess == true) {
