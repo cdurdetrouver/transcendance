@@ -207,7 +207,6 @@ async function remove_user(username) {
     const data = await response.json();
     if (response.status === 200) {
 			toggleDisplay('.lower-left', "none");
-			open_conf();
 			customalert('User removed', 'Goodbye ' + username + ', nobody liked you', false);
             console.log("Remove user request succes: " + data['User status']);
             ret = data['User status'];
@@ -217,7 +216,6 @@ async function remove_user(username) {
 				customalert(data['error'], 'Learn to write, noob' , true);
                 ret = data['error'];
     }
-    return ret;
 }
 
 async function chat_remove_user() {
@@ -317,7 +315,7 @@ async function chat_close_conf() {
     chat_conf.innerHTML = `
      <input id="chat-conf-close" type="button" value="chat conf">
     `;
-    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf();});
 }
 
 async function check_admin() {
@@ -341,9 +339,23 @@ async function check_admin() {
 }
 
 async function leave_chat(params) {
-    remove_user(user.username);
-    chat_close();
-    print_chats();
+    await remove_user(user.username);
+    await print_chats();
+    const middle_block = document.querySelector(".middle");
+    middle_block.innerHTML =`
+    <div class="chat-block"></div>
+    `;
+    const block_r = document.querySelector(".right");
+    block_r.innerHTML =`
+	<div class="room-info"></div>
+	<div id="user-profile"></div>
+	<div class="room-users"></div>
+	<div class="chat-conf"></div>
+	<div class="lower-left">
+    <ul class="user-list"></ul>
+	</div>
+	`;
+    chatSocket.close();
 }
 
 async function send_pong_link(params) {
