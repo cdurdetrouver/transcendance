@@ -44,6 +44,10 @@
 		"files": "/flappy"
 	},
 	{
+		"path": "/flappy/game",
+		"files": "/flappy/game"
+	},
+	{
 		"path": "/character",
 		"files": "/character"
 	},
@@ -56,8 +60,12 @@
 		"files": "/user/2FA"
 	},
 	{
-		"path" : "/pong/multiplayer",
+		"path" : "/multiplayer",
 		"files" : "/pong/multiplayer"
+	},
+	{
+		"path" : "/multiplayer/game",
+		"files" : "/pong/multiplayer/game"
 	},
 	{
 		"path" : "/pong/private",

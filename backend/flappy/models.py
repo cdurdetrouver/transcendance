@@ -1,15 +1,15 @@
 from django.db import models
 from user.models import User
 
-class Game(models.Model):
+class FlappyGame(models.Model):
 
 	room_name = models.CharField(max_length=255)
 	finished = models.BooleanField(default=False)
 	started = models.BooleanField(default=False)
 	nb_players = models.IntegerField(default=0)
-	player1 = models.ForeignKey(User, related_name='pong_as_player1', on_delete=models.SET_NULL, null=True, blank=True)
-	player2 = models.ForeignKey(User, related_name='pong_as_player2', on_delete=models.SET_NULL, null=True, blank=True)
-	winner = models.ForeignKey(User, related_name='pong_won', on_delete=models.SET_NULL, null=True, blank=True)
+	player1 = models.ForeignKey(User, related_name='flappy_as_player1', on_delete=models.SET_NULL, null=True, blank=True)
+	player2 = models.ForeignKey(User, related_name='flappy_as_player2', on_delete=models.SET_NULL, null=True, blank=True)
+	winner = models.ForeignKey(User, related_name='flappy_won', on_delete=models.SET_NULL, null=True, blank=True)
 	player1_score = models.IntegerField(default=0)
 	player2_score = models.IntegerField(default=0)
 	player1_character = models.TextField(default='0')
