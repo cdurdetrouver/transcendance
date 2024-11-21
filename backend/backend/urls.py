@@ -41,6 +41,7 @@ urlpatterns = [
 	path('user/', include('user.urls')),
 	path('chat/', include('chat.urls')),
 	path('pong/', include('pong.urls')),
+	path('flappy/', include('flappy.urls')),
 	path('login/', login),
 	path('logout/', logout),
 	path('register/', register),

@@ -1,3 +1,35 @@
-<h1><span id="user_username"></span> !</h1>
-<canvas id="gameCanvas" width="800" height="600"></canvas>
-<script src="script.js"></script>
+{{Header}}
+<div class="container">
+	<div class="waiting">
+		<div class="waiting__message">
+			<p>Ready to play ?</p>
+			<div class="users">
+				<div class="user" id="player">
+					<div class="user_picture">
+						<img src="../../static/assets/jpg/default_picture.jpg" alt="player picture">
+					</div>
+					<div class="user__name">
+						<p>Player</p>
+					</div>
+					<div class="user__status">
+						<!-- svg -->
+					</div>
+				</div>
+				<div class="user" id="opponent">
+					<div class="user_picture">
+						<img src="../../static/assets/jpg/default_picture.jpg" alt="opponent picture">
+					</div>
+					<div class="user__name">
+						<p>Opponent</p>
+					</div>
+					<div class="user__status">
+						<!-- svg -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="waiting__button">
+			<button id="search">Search</button>
+		</div>
+	</div>
+</div>

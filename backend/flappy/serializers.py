@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Game
+from .models import FlappyGame
 from drf_yasg import openapi
 from user.serializers import UserSerializer
 
-class GameSerializer(serializers.ModelSerializer):
+class FlappyGameSerializer(serializers.ModelSerializer):
 	player1 = UserSerializer(read_only=True)
 	player2 = UserSerializer(read_only=True)
 	winner = UserSerializer(read_only=True)
@@ -27,7 +27,7 @@ class GameSerializer(serializers.ModelSerializer):
 	)
 
 	class Meta:
-		model = Game
+		model = FlappyGame
 		fields = [
 			'id', 'room_name', 'finished', 'started', 'nb_players',
 			'player1', 'player2', 'winner', 'player1_score', 'player2_score',

@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'user',
     'chat',
     'pong',
+    'flappy',
 ]
 
 MIDDLEWARE = [
