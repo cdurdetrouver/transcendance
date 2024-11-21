@@ -408,10 +408,8 @@ async function open_chat(room_selected) {
     const chat_box = document.querySelector('.chat-block');
 	const chat_conf = document.querySelector('.chat-conf');
 	let room_picture = config.backendUrl + room.room_picture;
-	if (room_picture == "http://localhost:8000null")
-	{
+	if (room.room_picture == null)
 		room_picture = "../../static/assets/jpg/default_picture.jpg"
-	}
 
     chat_box.innerHTML = `
 	<div class="chat-output-block">
@@ -485,7 +483,6 @@ async function open_chat(room_selected) {
 
 			const nameDiv = document.createElement('div');
 			nameDiv.classList.add('nameDiv');
-			nameDiv.textContent = `${username}`;
 			nameDiv.innerHTML = `<span>${username}</span>`; 
 			nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
 
@@ -502,8 +499,7 @@ async function open_chat(room_selected) {
                 return;
             }
 			const chatLog = document.querySelector('#chat-log');
-            // if (!first_mess)
-                data.messages.reverse();
+            data.messages.reverse();
             let last_height_chat = chat_log.scrollHeight;
 			for (const index in data.messages) {
 				const message = data.messages[index];
@@ -525,24 +521,20 @@ async function open_chat(room_selected) {
 
 					const nameDiv = document.createElement('div');
 					nameDiv.classList.add('nameDiv');
-					nameDiv.textContent = `${username}`;
 					nameDiv.innerHTML = `<span>${username}</span>`;
 					nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
 					chat.appendChild(nameDiv);
 				}
                 chat.appendChild(messageElement);
-                // if (first_mess)
-                //     chatLog.appendChild(chat);
-                // else
                 chatLog.prepend(chat);
             }
-            if (first_mess == true) {
-                chat_log.scrollTop = chat_log.scrollHeight;
-                first_mess = false;
-            }
-            else if (chat_log.scrollTop == 0) {
+            // if (first_mess == true) {
+                // chat_log.scrollTop = chat_log.scrollHeight;
+            //     first_mess = false;
+            // }
+            // else if (chat_log.scrollTop == 0) {
                 chat_log.scrollTop = chat_log.scrollHeight - last_height_chat;
-            }
+            // }
 		}
 		
         else if (data.type == 'invitation') {
@@ -627,7 +619,7 @@ async function print_chats() {
                 const chat = document.createElement('li');
                 chat.id = room_l.id
                 let room_picture = config.backendUrl + room_l.room_picture;
-				if (room_picture == "http://localhost:8000null")
+				if (room_l.room_picture == null)
 				{
 					room_picture = "../../static/assets/jpg/default_picture.jpg"
 				}
@@ -692,7 +684,7 @@ async function print_invitations() {
             {
                 const invite = document.createElement('li');
                 let room_picture = config.backendUrl + room_l.room_picture;
-				if (room_picture == "http://localhost:8000null")
+				if (room_l.room_picture == null)
 					room_picture = "../../static/assets/jpg/default_picture.jpg"
                 invite.innerHTML = `
 				<li class="room room-id-${room_l.id}">
