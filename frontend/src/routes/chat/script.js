@@ -603,7 +603,7 @@ async function print_chats() {
     const ret_rooms = await get_user_chats();
     if (!ret_rooms)
         {
-            const chat_error = document.querySelector('.chat-list');
+            const chat_error = document.querySelector('.chat-names');
             chat_error.innerHTML = `
             <div class="chat-info">
                 <h2>no chat found</h2>
@@ -612,7 +612,7 @@ async function print_chats() {
         }
     else {
         const rooms = ret_rooms.rooms
-        const chat_list = document.querySelector('.chat-list');
+        const chat_list = document.querySelector('.chat-names');
 		chat_list.innerHTML = ``;
         for (const room_l of rooms)
             {				
