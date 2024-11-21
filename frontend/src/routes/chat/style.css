@@ -75,6 +75,13 @@ html, body {
   cursor: pointer;
   transition: transform 0.1s ease;
 }
+
+.chat-names {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
 .flex-container .left .left-top .create-box #create-room-btn:hover {
   transform: scale(1.02);
   border: none;
@@ -105,9 +112,6 @@ html, body {
   margin-left: 50px;
   min-height: 450px;
   list-style-type: none;
-  overflow-y: scroll;
-  scrollbar-width: thin;
-  scrollbar-color: #888 transparent;
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
