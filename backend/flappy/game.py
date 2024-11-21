@@ -212,7 +212,7 @@ class GameThread(threading.Thread):
 		)
 
 	async def set_player_jump(self, player, data):
-		player_jump = self.player1 if player == self.game.player1 else self.player2
+		player_jump = self.player1 if player == "player1" else self.player2
 
 		if data['pressed'] and player_jump.can_jump:
 			player_jump.jump()
