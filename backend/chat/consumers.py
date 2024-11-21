@@ -42,6 +42,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return
         self.room = await get_room(self.room_group_id)
         if (not self.room):
+            self.room_group_name = "not_allowed"
             await self.disconnect(404)
             await self.close()
             return
