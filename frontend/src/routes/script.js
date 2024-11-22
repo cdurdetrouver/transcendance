@@ -25,18 +25,6 @@ async function getProfilePicture(user) {
 	imgElement.src = profilePicture;
 }
 
-let userCookie = getCookie('user');
-
-if (userCookie) {
-	loginPopin.style.display = "none";
-	//getProfilePicture();
-	isLoggedIn = true;
-}
-
-else {
-	loginPopin.style.display = "flex";
-}
-
 const accountButton = document.querySelector("#account");
 const onlineButton = document.querySelector("#online");
 const chatButton = document.querySelector("#chat");
@@ -46,7 +34,6 @@ accountButton.addEventListener("click", function(event) {
 		customalert("Error", "Please login", 1);
 		event.preventDefault();
 	}
-
 });
 
 onlineButton.addEventListener("click", function(event) {
@@ -188,10 +175,16 @@ export async function initComponent() {
 	const user = await get_user();
 
 	if (user) {
+		loginPopin.style.display = "none";
+		isLoggedIn = true;
 		getProfilePicture(user);
+	}
+	else {
+		loginPopin.style.display = "flex";
 	}
 }
 
 export async function cleanupComponent() {
 	//remove envent listener
+
 }
