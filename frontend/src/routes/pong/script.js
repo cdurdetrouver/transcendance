@@ -3,6 +3,9 @@ import { get_user } from '../.././components/user/script.js';
 import { customalert } from '../../components/alert/script.js';
 import { router } from '../../app.js';
 
+const checkImageSrc = "../../static/assets/yes.png"; // Replace with the correct path to your green tick image
+const crossImageSrc = "../../static/assets/no.png"; // Replace with the correct path to your red cross image
+
 const svgcheck = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
     <defs>
@@ -57,7 +60,7 @@ class MatchmakingSocket {
       setPlayer(opponent, true);
       let WaitingTextDiv = document.querySelector('.waiting__message');
       let WaitingText = WaitingTextDiv.querySelector('p');
-      WaitingText.innerHTML = "Match found!";
+      WaitingText.innerHTML = "";
       WaitingTextDiv.classList.remove('show');
       clearTimeout(searchButtonTimeoutId);
       SearchButton.style.opacity = "0.2";
@@ -90,19 +93,24 @@ class MatchmakingSocket {
 }
 
 function setSVGContent(element, svgContent) {
-  element.innerHTML = svgContent;
+	let img = element.querySelector('img');
+    if (!img) {
+        img = document.createElement('img');
+        element.appendChild(img);
+    }
+	img.src = svgContent;
 }
 
 function toggleSvgStatus(opponent = false, status = false) {
   if (opponent == true) {
     let div = document.getElementById('opponent');
     let userNameDiv = div.querySelector('.user__status');
-    setSVGContent(userNameDiv, status ? svgcheck : svgcross);
+    setSVGContent(userNameDiv, status ? checkImageSrc : crossImageSrc);
   }
   else {
     let div = document.getElementById('player');
     let userNameDiv = div.querySelector('.user__status');
-    setSVGContent(userNameDiv, status ? svgcheck : svgcross);
+    setSVGContent(userNameDiv, status ? checkImageSrc : crossImageSrc);
   }
 }
 
@@ -154,7 +162,7 @@ async function handleClick() {
     SearchStatus = false;
     SearchButton.innerHTML = "Search";
     SearchButton.style.backgroundColor = "green";
-    WaitingText.innerHTML = "Ready to play ?";
+    WaitingText.innerHTML = "";
     WaitingTextDiv.classList.remove('show');
     toggleSvgStatus(false, false);
 

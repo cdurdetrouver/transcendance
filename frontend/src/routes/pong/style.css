@@ -86,9 +86,9 @@
     z-index: 2; /* Bring it to the front */
 }
 
-.user__status svg {
-	width: 50px;
-	height: 50px;
+.user__status img {
+	width: 40px;
+	height: 40px;
 }
 
 .waiting__message {
@@ -98,9 +98,9 @@
 	background-repeat: no-repeat;
 	width: 50px;
 	height: 50px;
-	background-color: #cac5bd;
+	background-color: #e8d9de;
 	padding: 1rem;
-	border-radius: 20	px;
+	border-radius: 50%;
 	position: relative;
 }
 
@@ -129,7 +129,7 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	background-image: conic-gradient(from var(--angle), transparent 90%, grey);
-	border-radius: 1.5rem;
+	border-radius: 50%;
 	position: absolute;
 	padding: 5px;
 	z-index: -1;
@@ -148,11 +148,33 @@
 }
 
 .users {
+	position: relative;
+	gap: 3rem;
+	background-image: url("../../static/assets/pong/sheet.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+	height: 850px;
+	width: 850px;
+	z-index: 0;
+}
+
+.users h1 {
+	font-family: isaac-bold;
+	color: #372b2d;
+	margin-top: 100px;
+	margin-bottom: 50px;
+}
+
+#player-container {
+	position: relative;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	gap: 3rem;
+	z-index: 0;
+
 }
 
 .waiting__button #search {
