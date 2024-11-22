@@ -3,6 +3,9 @@ import { get_user } from '../.././components/user/script.js';
 import { customalert } from '../../components/alert/script.js';
 import { router } from '../../app.js';
 
+const checkImageSrc = "../../static/assets/yes.png"; // Replace with the correct path to your green tick image
+const crossImageSrc = "../../static/assets/no.png"; // Replace with the correct path to your red cross image
+
 const svgcheck = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
     <defs>
@@ -28,6 +31,7 @@ let searchButtonTimeoutId = null;
 let SearchButton = null;
 let SearchStatus = false;
 let socket = null;
+let character = null;
 
 class MatchmakingSocket {
   constructor() {
@@ -43,13 +47,18 @@ class MatchmakingSocket {
     let data = JSON.parse(event.data);
     console.log(data);
     if (data.type == "error") {
-      get_user().then((response) => {
-        if (response == null) {
-          customalert("Error", "You are not logged in", true);
-          router.navigate('/login');
-        }
-        this.open();
-      });
+      customalert("Error", data.message, true);
+      SearchButton.style.opacity = "1";
+      SearchButton.style.cursor = "pointer";
+      SearchButton.addEventListener('click', handleClick);
+      SearchStatus = false;
+      SearchButton.innerHTML = "Search";
+      SearchButton.style.backgroundColor = "green";
+      let WaitingTextDiv = document.querySelector('.waiting__message');
+      let WaitingText = WaitingTextDiv.querySelector('p');
+      WaitingText.innerHTML = "";
+      WaitingTextDiv.classList.remove('show');
+      toggleSvgStatus(false, false);
     }
     if (data.type === 'match_found') {
       toggleSvgStatus(true, true);
@@ -57,7 +66,7 @@ class MatchmakingSocket {
       setPlayer(opponent, true);
       let WaitingTextDiv = document.querySelector('.waiting__message');
       let WaitingText = WaitingTextDiv.querySelector('p');
-      WaitingText.innerHTML = "Match found!";
+      WaitingText.innerHTML = "";
       WaitingTextDiv.classList.remove('show');
       clearTimeout(searchButtonTimeoutId);
       SearchButton.style.opacity = "0.2";
@@ -74,7 +83,7 @@ class MatchmakingSocket {
 
   open() {
     if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
-      this.socket = new WebSocket(config.websocketurl + "/ws/pong/matchmaking/");
+      this.socket = new WebSocket(config.websocketurl + "/ws/pong/matchmaking/?character=" + character);
       this.socket.onopen = this.onopen.bind(this);
       this.socket.onmessage = this.onmessage.bind(this);
       this.socket.onclose = this.onclose.bind(this);
@@ -90,19 +99,24 @@ class MatchmakingSocket {
 }
 
 function setSVGContent(element, svgContent) {
-  element.innerHTML = svgContent;
+	let img = element.querySelector('img');
+    if (!img) {
+        img = document.createElement('img');
+        element.appendChild(img);
+    }
+	img.src = svgContent;
 }
 
 function toggleSvgStatus(opponent = false, status = false) {
   if (opponent == true) {
     let div = document.getElementById('opponent');
     let userNameDiv = div.querySelector('.user__status');
-    setSVGContent(userNameDiv, status ? svgcheck : svgcross);
+    setSVGContent(userNameDiv, status ? checkImageSrc : crossImageSrc);
   }
   else {
     let div = document.getElementById('player');
     let userNameDiv = div.querySelector('.user__status');
-    setSVGContent(userNameDiv, status ? svgcheck : svgcross);
+    setSVGContent(userNameDiv, status ? checkImageSrc : crossImageSrc);
   }
 }
 
@@ -144,7 +158,7 @@ async function handleClick() {
     SearchButton.style.opacity = "0.2";
     SearchButton.style.cursor = "not-allowed";
     SearchButton.style.backgroundColor = "red";
-    WaitingText.innerHTML = "Waiting for another player...";
+    WaitingText.innerHTML = "";
     WaitingTextDiv.classList.add('show');
     toggleSvgStatus(false, true);
 
@@ -154,7 +168,7 @@ async function handleClick() {
     SearchStatus = false;
     SearchButton.innerHTML = "Search";
     SearchButton.style.backgroundColor = "green";
-    WaitingText.innerHTML = "Ready to play ?";
+    WaitingText.innerHTML = "";
     WaitingTextDiv.classList.remove('show');
     toggleSvgStatus(false, false);
 
@@ -167,6 +181,13 @@ export async function initComponent() {
   if (!user) {
     customalert("Error", "You are not logged in", true);
     router.navigate('/login?return=/pong');
+  }
+
+  let urlParams = new URLSearchParams(window.location.search);
+  character = urlParams.get('character');
+  if (!character) {
+    customalert("Error", "Character not found", true);
+    router.navigate('/character');
   }
 
   setPlayer(user);

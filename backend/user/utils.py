@@ -189,6 +189,12 @@ def get_google_user(code):
 
 def is_valid_username(username):
 	message = ""
+
+	existing_user = User.objects.filter(username=username).first()
+	if existing_user:
+		message ="Username is already taken."
+		return False, message
+
 	if len(username) < 3:
 		message = "Username is too short. It should be at least 3 characters long."
 		return False, message
