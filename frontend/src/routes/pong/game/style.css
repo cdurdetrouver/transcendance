@@ -38,25 +38,30 @@ canvas {
   justify-content: center;
   align-items: center;
 }
-#container #game-canvas {
+#container #stat-and-game {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+#container #stat-and-game #game-canvas {
   height: 605px;
   width: 1025px;
   position: relative;
 }
-#container #game-canvas #backgroundCanvas {
+#container #stat-and-game #game-canvas #backgroundCanvas {
   position: absolute;
   z-index: 0;
   border-radius: 40px;
 }
-#container #game-canvas #pongCanvas {
+#container #stat-and-game #game-canvas #pongCanvas {
   position: absolute;
   z-index: 1;
 }
-#container #game-canvas #lifeCanvas {
+#container #stat-and-game #game-canvas #lifeCanvas {
   position: absolute;
   z-index: 1;
 }
-#container #game-canvas .return-menu {
+#container #stat-and-game #game-canvas .return-menu {
   position: relative;
   display: flex;
   justify-content: center;
@@ -64,7 +69,7 @@ canvas {
   top: 50%;
   z-index: 5;
 }
-#container #game-canvas .return-menu #button-return {
+#container #stat-and-game #game-canvas .return-menu #button-return {
   position: absolute;
   font-family: isaac-bold;
   font-size: 0.8rem;
@@ -80,7 +85,7 @@ canvas {
   cursor: pointer;
   transition: transform 0.1s ease;
 }
-#container #game-canvas .return-menu #button-return:hover {
+#container #stat-and-game #game-canvas .return-menu #button-return:hover {
   transform: scale(1.02);
   border: none;
   background-color: transparent;

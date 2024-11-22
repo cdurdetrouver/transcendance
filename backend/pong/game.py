@@ -150,7 +150,8 @@ class GameThread(threading.Thread):
 				"speed": self.paddle1.speed,
 				"score": self.paddle1.life,
 				"movedown": self.paddle1.movedown,
-				"moveup": self.paddle1.moveup
+				"moveup": self.paddle1.moveup,
+				"force": self.paddle1.force
 			},
 			"player2": {
 				"x": self.paddle2.position[0],
@@ -158,7 +159,8 @@ class GameThread(threading.Thread):
 				"speed": self.paddle2.speed,
 				"score": self.paddle2.life,
 				"movedown": self.paddle2.movedown,
-				"moveup": self.paddle2.moveup
+				"moveup": self.paddle2.moveup,
+				"force": self.paddle2.force
 			},
 			"ball": {
 				"x": self.ball.position[0],

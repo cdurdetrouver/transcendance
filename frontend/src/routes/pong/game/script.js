@@ -32,9 +32,14 @@ const cart_head_right = new Image();
 cart_head_right.src = '../../../static/assets/pong/isaac_head_cart_right.png';
 
 const cart_head_down = new Image();
-cart_head_down .src = '../../../static/assets/pong/isaac_head_cart_down.png';
+cart_head_down.src = '../../../static/assets/pong/isaac_head_cart_down.png';
 const cart_head_up = new Image();
-cart_head_up .src = '../../../static/assets/pong/isaac_head_cart_up.png';
+cart_head_up.src = '../../../static/assets/pong/isaac_head_cart_up.png';
+
+const boot = new Image();
+boot.src = '../../../static/assets/pong/boot.png'
+const sword = new Image();
+sword.src = '../../../static/assets/pong/sword.png'
 
 const paddleBodyAnimationFrames = [
     '../../../static/assets/pong/moving_frame_1.png',
@@ -108,7 +113,22 @@ let pingIntervalID;
 let pingSpan;
 
 let player1InitialScore;
+let player1Force;
+let player1Speed;
+
 let player2InitialScore;
+let player2Force;
+let player2Speed;
+
+const customFont = new FontFace('isaac', 'url(http://localhost:5500/routes/assets/font/IsaacGame.ttf)');
+
+customFont.load().then((loadedFont) => {
+    document.fonts.add(loadedFont);
+    console.log('Custom font loaded and added to document');
+    drawStats(); // Call drawStats after the font is loaded
+}).catch((error) => {
+    console.error('Failed to load custom font:', error);
+});
 
 
 function drawBackground() {
@@ -119,6 +139,22 @@ function drawBackground() {
     backgroundImage.onload = () => {
         backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
     };
+}
+
+function drawStats() {
+    // Clear any previous drawing
+    // backgroundCtx.clearRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+
+    // Draw background if needed
+    // drawBackground();
+
+    // Apply the custom font
+    backgroundCtx.font = "14px isaac";
+    backgroundCtx.fillStyle = "white"; // Set text color
+
+    // Draw the boot image and text
+    backgroundCtx.drawImage(boot, 20, 80, 38, 24);
+    backgroundCtx.fillText("1.0", 70, 100);
 }
 
 function centerPongCanvas() {
@@ -143,7 +179,7 @@ function centerPongCanvas() {
 }
 
 function drawScores() {
-    lifeCtx.clearRect(0, 0, canvas.width, 100);
+    lifeCtx.clearRect(0, 0, canvas.width, 70);
 	
     for (let i = 0; i < player1InitialScore; i++) {
 		let heartToDraw = (i < player1Score) ? heartImage : heartEmptyImage; 
@@ -288,7 +324,11 @@ function updateGame(data) {
 	if (lastGameState == null	)
 	{
 		player1InitialScore = data.player1.score;
+		player1Force = data.player1.force;
+		player1Speed = data.player1.speed;
 		player2InitialScore = data.player2.score
+	
+		drawStats();
 	}
 	console.log("TEST " + player1InitialScore);
 	lastUpdateTime = Date.now();
