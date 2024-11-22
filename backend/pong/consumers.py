@@ -4,6 +4,7 @@ import asyncio
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
+from urllib.parse import parse_qs
 
 from user.utils import get_user_by_token
 from user.serializers import UserSerializer
@@ -37,8 +38,18 @@ class PrivateMatchmakingConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
-        url_params = self.scope['url_route']['kwargs']
-        self.character = url_params.get('character', '0')
+        query_string = self.scope['query_string'].decode()
+        query_params = parse_qs(query_string)
+        self.character = query_params.get('character', ['0'])[0]
+
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in the waiting list'
+                }))
+                await self.close()
+                return
 
         self.waiting_players.append(self)
 
@@ -84,6 +95,20 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             return
         self.user = result
         self.blocked_users = await sync_to_async(list)(self.user.blocked_users.all())
+
+        query_string = self.scope['query_string'].decode()
+        query_params = parse_qs(query_string)
+        self.character = query_params.get('character', ['0'])[0]
+
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in the waiting list'
+                }))
+                await self.close()
+                return
+
         self.waiting_players.append(self)
 
         if len(self.waiting_players) >= 2:
@@ -98,7 +123,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             game_room_name = f"game_room_{player1.channel_name}_{player2.channel_name}"
             game_room_name = re.sub(r'[^a-zA-Z0-9._-]', '', game_room_name)[:50]
 
-            game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1=player1.user, player2=player2.user)
+            game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1=player1.user, player2=player2.user, player1_character=player1.character, player2_character=player2.character)
             await sync_to_async(game.save)()
 
             await player1.send(text_data=json.dumps({
@@ -158,7 +183,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         await sync_to_async(lambda: self.game.player2)()
         await sync_to_async(lambda: self.game.winner)()
 
-        # No one can join wjen game as started
         if self.game.started:
             await self.send(text_data=json.dumps({
                 'type': 'error',
@@ -176,6 +200,15 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in that game'
+                }))
+                await self.close()
+                return
 
         await asyncio.sleep(1)
         self.waiting_players.append(self.user.id)

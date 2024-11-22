@@ -89,7 +89,10 @@ class Paddle:
 		}
 	]
 	def __init__(self, x, y, character):
-		self.character = self.characters[int(character)]
+		if int(character) < 0 or int(character) >= len(self.characters):
+			self.character = self.characters[0]
+		else:
+			self.character = self.characters[int(character)]
 
 		self.default_position = [x, y]
 		self.default_speed = self.character['speed']
@@ -127,7 +130,7 @@ class GameThread(threading.Thread):
 
 		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1)
 		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, self.game.player1_character)
-		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 3)
+		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, self.game.player2_character)
 
 		self.game.player1_score = self.paddle1.life
 		self.game.player2_score = self.paddle2.life
