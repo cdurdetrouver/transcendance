@@ -436,7 +436,6 @@ async function open_chat(room_selected) {
 		<input id="chat-message-pong" type="button" value="Send pong link">
 	</div>
 	<input id="chat-message-submit" type="button" value="Send">
-	<input id="chat-message-refresh" type="button" value="refresh">
     `;
     const chat_log =  document.getElementById('chat-log');
     let first_mess = true;
@@ -602,12 +601,6 @@ async function open_chat(room_selected) {
             'message': message
         }));
         messageInputDom.value = '';
-    };
-    document.querySelector('#chat-message-refresh').onclick = function (e)
-    {
-        chatSocket.send(JSON.stringify({
-            'type': "refresh_mess",
-        }));
     };
 }
 
