@@ -148,6 +148,8 @@ html, body {
 }
 .flex-container .middle {
   width: 700px;
+  display: flex;
+  justify-content: center;
 }
 .flex-container .middle .chat-block {
   width: inherit;
@@ -161,11 +163,16 @@ html, body {
 .flex-container .middle .chat-block .chat-output-block {
   width: inherit;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 .flex-container .middle .chat-block .chat-output-block #chat-header {
   font-family: isaac-bold;
   color: #2d2d2d;
   padding-top: 30px;
+  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -182,9 +189,10 @@ html, body {
   overflow: hidden;
 }
 .flex-container .middle .chat-block .chat-output-block #chat-header .room-name {
-  display: inline-flex;
-  align-items: center;
+  /* align-items: center; */
   font-size: 2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .flex-container .middle .chat-block .chat-output-block #chat-log {
   font-family: isaac-bold;
@@ -505,8 +513,10 @@ html, body {
   margin-right: 10px;
 }
 .room .room-name-left {
-  display: inline-flex;
+  /* display: inline-flex; */
   align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .invite-test {
@@ -524,8 +534,10 @@ html, body {
   margin-right: 10px;
 }
 .invite-test .room-name-left {
-  display: inline-flex;
+  /* display: inline-flex; */
   align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .invite-test .invite-yes:hover {
   background-color: #fbfb2e;
@@ -570,6 +582,8 @@ input[type=text] {
   box-shadow: none;
   background-color: #e9dadf;
   font-family: isaac-bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 input[type=text]:focus {
