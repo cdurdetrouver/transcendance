@@ -21,14 +21,14 @@ heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png';
 const ballImage = new Image();
 ballImage.src = '../../../static/assets/pong/bullet.png';
 
-const paddleHeadImage = new Image();
-paddleHeadImage.src = '../../../static/assets/pong/isaac_head.png';
 
 const paddleHeadImage2 = new Image();
 paddleHeadImage2.src = '../../../static/assets/pong/isaac_head_2.png';
 
 const idleImage = new Image();
 idleImage.src = '../../../static/assets/pong/resting.png';
+const idleImageLeft = new Image();
+idleImageLeft.src = '../../../static/assets/pong/resting_left.png';
 
 const cart = new Image();
 cart.src = '../../../static/assets/pong/minecart_66x56.png';
@@ -210,7 +210,6 @@ function draw(interpolatedState) {
         34,
         paddleHeight - 32
     );
-
 	let headPlayer1;
 	if (paddle1movedown)
 		headPlayer1 = cart_head_down;
@@ -218,43 +217,27 @@ function draw(interpolatedState) {
 		headPlayer1 = cart_head_up;
 	else
 		headPlayer1 = cart_head_right;
-
     // Draw head
     ctx.drawImage(
         headPlayer1,
         5,
         interpolatedState.paddle1Y, 
-        paddleHeadImage2.width, 
-        paddleHeadImage2.height 
+        cart_head.width, 
+        cart_head.height 
     );
 
 	// Draw Player 2 paddle
-    const wobbleAmplitude = 2;
-    const wobbleSpeed = 0.30;
-    let wobbleOffset = 0;
-
-    if (paddle2moveup || paddle2movedown) {
-        wobbleOffset = Math.sin(time) * wobbleAmplitude;
-    }
+	const paddle2BodyImage = (paddle2moveup || paddle2movedown)
+	? paddleBodyImages[currentBodyFrame]
+	: idleImageLeft; 
 
     ctx.drawImage(
-        cart,
-        canvas.width - paddleWidth - 5, //emplacement x 
-        interpolatedState.paddle2Y + wobbleOffset, // emplacement y
-        cart.width,
-        cart.height
+        paddle2BodyImage,
+        canvas.width - paddleWidth,
+        interpolatedState.paddle2Y + 38,
+        34,
+        paddleHeight - 32
     );
-	time += wobbleSpeed;
-
-	//wheel
-    ctx.drawImage(
-        wheel,
-        canvas.width - paddleWidth - 5, //emplacement x 
-        interpolatedState.paddle2Y, // emplacement y
-        paddleWidth,
-        paddleHeight
-    );
-
 	//head
 	let headPlayer2;
 	if (paddle2movedown)
@@ -265,10 +248,10 @@ function draw(interpolatedState) {
 		headPlayer2 = cart_head;
     ctx.drawImage(
         headPlayer2,
-        canvas.width - paddleWidth - 5,
-        interpolatedState.paddle2Y - 13,
-        headPlayer2.width,
-        headPlayer2.height
+        canvas.width - paddleWidth - 10,
+        interpolatedState.paddle2Y,
+		cart_head.width,
+        cart_head.height
     );
 
 	ctx.drawImage(ballImage, interpolatedState.ballX - ballRadius, interpolatedState.ballY - ballRadius, ballRadius * 2, ballRadius * 2);

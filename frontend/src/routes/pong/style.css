@@ -194,19 +194,3 @@
 .game {
 	display: none;
 }
-
-.user_picture {
-	position: relative;
-	z-index: 1;
-
-}
-
-#player {
-	position: relative;
-	background-image: url("../../static/assets/pong/polaroid.png");
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	z-index: 1000; /* Higher than .user_picture img */
-    padding: 20px; /* Optional, adds space for the background around content */
-}
