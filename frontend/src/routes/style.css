@@ -83,12 +83,7 @@ body, html {
   border: none;
   transition: transform 0.3s ease;
 }
-#page-container #page-content #sheet #selection-mode a:active,
-#page-container #page-content #sheet #selection-mode a:hover:disabled {
-  cursor: not-allowed;
-  border: none;
-  pointer-events: none;
-}
+
 #page-container #page-content #login-container {
   position: absolute;
   top: 28%;
@@ -109,6 +104,7 @@ body, html {
 #page-container #page-content #login-container button {
   background-color: transparent;
   font-family: isaac;
+
   font-size: 2vw;
   border: none;
 }
@@ -150,7 +146,7 @@ body, html {
   position: relative;
 }
 #page-container #page-content #popin-container #popin-content form .text {
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 #page-container #page-content #popin-container #popin-content #title {
   font-family: isaac;
@@ -257,13 +253,14 @@ body, html {
   width: 30%;
 }
 #page-container #page-content #popin-container #popin-content #register-content {
+  padding: 4%;
   font-family: isaac;
   display: none;
   flex-direction: row;
   transform: rotate(3deg);
 }
 #page-container #page-content #popin-container #popin-content #register-content .text {
-  font-size: 1.4rem;
+  font-size: 1rem;
 }
 #page-container #page-content #popin-container #popin-content #register-content #test {
   display: flex;
@@ -272,7 +269,7 @@ body, html {
   padding-left: 50px;
 }
 #page-container #page-content #popin-container #popin-content #register-content #test #avatar-register {
-  padding-left: 35%;
+  padding-left: 30%;
   padding-top: 5%;
 }
 #page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #avatar {
@@ -302,7 +299,7 @@ body, html {
   background-repeat: no-repeat;
   background-size: contain;
   position: absolute;
-  top: 95%;
+  top: 86%;
   right: 5%;
   font-size: 35px;
   cursor: pointer;

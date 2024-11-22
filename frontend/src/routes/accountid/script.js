@@ -1,68 +1,8 @@
 import { customalert } from '../../components/alert/script.js';
 import config from '../../env/config.js';
-import { get_user, logout } from '../../components/user/script.js';
+import { get_user, logout, update_user, update_password } from '../../components/user/script.js';
 import { router } from '../../app.js';
-import { handleDeleteAccount  } from '../user/edit/script.js';
-
-async function get_games(user_id) {
-	const response = await fetch(config.backendUrl + '/user/games/' + user_id, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		credentials: 'include'
-	});
-	if (response.status !== 200) {
-		console.error('Error connecting to user');
-		customalert('Error', 'Error get games for user', true);
-		return null;
-	}
-	const games = await response.json();
-	console.log(games);
-	return games.games;
-}
-
-function addGame(player1, player1_score, player2, player2_score) {
-	const game_list = document.querySelector('.game-list');
-	const game = document.createElement('li');
-
-	game.innerHTML = `
-		<div class="game-info">
-			<div>${player1.username}</div>
-			<div class="score">${player1_score} - ${player2_score}</div>
-			<div>${player2.username}</div>
-		</div>
-	`;
-	game_list.appendChild(game);
-}
-
-function setPersonalUser(user) {
-	const username = user.username;
-	const email = user.email;
-	// const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
-	const profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
-
-	var profilePictureContainer = document.getElementById("profile-picture-container");
-
-	if (profilePictureContainer) {
-		console.log("profile exist");
-
-		// var image = document.createElement("img");
-		let imgElement = document.querySelector('#profile-picture');
-		imgElement.src = profilePicture;
-
-	}
-	else {
-		console.log("user infos does not exist");
-	}
-	const usernameInfo = document.querySelector("#username .label");
-	const emailInfo = document.querySelector("#email .label");
-
-
-	usernameInfo.textContent = username;
-	emailInfo.textContent = email;
-
-}
+import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 
 function setUser(user) {
 	const userDiv = document.querySelector('.container');
@@ -79,6 +19,27 @@ function setUser(user) {
 	userDiv.innerHTML = userHtml;
 }
 
+function setPersonalUser(user) {
+	const username = user.username;
+	const email = user.email;
+	const profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+
+	var profilePictureContainer = document.querySelector("#profile-picture");
+
+	if (profilePictureContainer) {
+		let imgElement = document.querySelector('#profile-picture img');
+		imgElement.src = profilePicture;
+	}
+	else {
+		console.log("user infos does not exist");
+	}
+	const usernameInfo = document.querySelector("#username .label");
+	const emailInfo = document.querySelector("#email .label");
+
+	usernameInfo.textContent = username;
+	emailInfo.textContent = email;
+}
+
 export async function initComponent() {
 	let me = await get_user();
 	if (!me) {
@@ -87,7 +48,6 @@ export async function initComponent() {
 	}
 	const urlparams = new URLSearchParams(window.location.search);
 	const id = urlparams.get('id');
-
 	let user = null;
 
 	if (id) {
@@ -99,26 +59,37 @@ export async function initComponent() {
 			credentials: 'include'
 		});
 		if (response.status !== 200) {
-			console.error('Error connecting to user');
 			customalert('Error', 'Error get user', true);
 			router.navigate('/');
 		}
 		user = await response.json();
 	}
-
-	const games = await get_games(id || me.id);
-	if (!games)
-		router.navigate('/');
-	for (const game of games) {
-		addGame(game.player1, game.player1_score, game.player2, game.player2_score);
-	}
-
 	if (user)
 		setUser(user.user);
 	else
 		setPersonalUser(me);
 }
 
-export async function cleanupComponent() {
-}
+const blockButton = document.querySelector("#block-user .buttons");
+const confirmationPopin = document.getElementById("confirmation-popin");
+const yesButton = document.getElementById("yes-button");
+const noButton = document.getElementById("no-button");
+const logoutButton = document.getElementById("logout-button");
 
+blockButton.addEventListener("click", function() {
+	confirmationPopin.style.display = "flex";
+});
+
+yesButton.addEventListener("click", function() {
+	confirmationPopin.style.display = "none";
+	//block user function
+});
+
+noButton.addEventListener("click", function() {
+	confirmationPopin.style.display = "none";
+});
+
+logoutButton.addEventListener("click", function() {
+	logout();
+	router.navigate('/');
+});

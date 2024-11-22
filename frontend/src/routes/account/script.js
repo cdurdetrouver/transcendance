@@ -123,10 +123,10 @@ export async function initComponent() {
 
 document.getElementById("edit-password").addEventListener('submit', handleFormPassword);
 document.getElementById("username-form").addEventListener('submit', handleFormUsername);
-document.querySelector("#profile-picture-container input").addEventListener('change', handleFormProfilePicture);
+document.querySelector("#profile-picture-container").addEventListener('change', handleFormProfilePicture);
 
 const editProfileButton = document.querySelector("#edit-profile .buttons");
-const editProfilePicture = document.querySelector("#edit-profile-button");
+const editProfilePicture = document.querySelector("#edit-profile button");
 const password = document.querySelector("#edit-password");
 
 editProfileButton.addEventListener("click", function() {
@@ -236,14 +236,15 @@ async function handleFormPassword(event) {
 	event.preventDefault();
 	const form = document.querySelector("#edit-password form");
 	const formData = new FormData(form);
-	
-	// if (form) {
-	// 	console.log("cc form");
-	// }
-	// const inputs = form.elements;
-	// for (const input of inputs) {
-	// 	console.log(`${input.name}: ${input.value}`);
-	// }
+
+	const newPassword = document.querySelector('input[name="new-password"]').value;
+	const confirmPassword = document.querySelector('input[name="confirm-password"]').value;
+
+	if (newPassword !== confirmPassword) {
+		console.log("password do not match");
+		customalert('Error', 'Password do not match.', true);
+		return
+	}
 
 	let response = await update_password(formData);
 

@@ -12,22 +12,12 @@ ButtonGithub.href = `https://github.com/login/oauth/authorize?client_id=${config
 const ButtonIntra = document.querySelector("#intra");
 ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login')}&response_type=code`;
 
-const localButton = document.querySelector("#local");
-
-localButton.addEventListener("click", function() {
-	console.log("cc local button");
-	customalert("Error", "Please login", 1);
-});
-
-
 const loginPopin = document.querySelector("#login-container button");
 const loginButton = document.querySelector("#login-container button");
 const popin = document.querySelector("#popin-container");
 const account = document.querySelector("#account");
 
-function enableAccount() {
-	account.classList.remove("disabled");
-}
+let isLoggedIn = false;
 
 async function getProfilePicture(user) {
 	let profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
@@ -40,12 +30,38 @@ let userCookie = getCookie('user');
 if (userCookie) {
 	loginPopin.style.display = "none";
 	//getProfilePicture();
-	enableAccount();
+	isLoggedIn = true;
 }
 
 else {
 	loginPopin.style.display = "flex";
 }
+
+const accountButton = document.querySelector("#account");
+const onlineButton = document.querySelector("#online");
+const chatButton = document.querySelector("#chat");
+
+accountButton.addEventListener("click", function(event) {
+	if (!isLoggedIn) {
+		customalert("Error", "Please login", 1);
+		event.preventDefault();
+	}
+
+});
+
+onlineButton.addEventListener("click", function(event) {
+	if (!isLoggedIn) {
+		customalert("Error", "Please login", 1);
+		event.preventDefault();
+	}
+});
+
+chatButton.addEventListener("click", function(event) {
+	if (!isLoggedIn) {
+		customalert("Error", "Please login", 1);
+		event.preventDefault();
+	}
+});
 
 loginButton.addEventListener("click", function() {
 	console.log("login button");
