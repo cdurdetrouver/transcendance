@@ -552,7 +552,7 @@ async function open_chat(room_selected) {
         else if (data.type == 'invitation') {
 			const chatLog = document.querySelector('#chat-log');
 			const username = data.message && data.message.author ? data.message.author.username : 'Unknown User';
-			const invitationLink = `${config.frontendUrl}/pong/private?match_name=${data.match_name}`; 
+			const invitationLink = `${config.frontendUrl}/character?match_name=${data.match_name}`; 
 	
 			// Create message element
 			const messageElement = document.createElement('div');
