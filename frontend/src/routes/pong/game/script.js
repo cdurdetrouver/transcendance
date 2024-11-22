@@ -14,39 +14,27 @@ const lifeCtx = lifeCanvas.getContext("2d");
 
 const heartImage = new Image();
 heartImage.src = '../../../static/assets/pong/heart.png';
-
 const heartEmptyImage = new Image();
 heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
 
 const ballImage = new Image();
 ballImage.src = '../../../static/assets/pong/bullet.png';
 
-
-const paddleHeadImage2 = new Image();
-paddleHeadImage2.src = '../../../static/assets/pong/isaac_head_2.png';
-
 const idleImage = new Image();
 idleImage.src = '../../../static/assets/pong/resting.png';
 const idleImageLeft = new Image();
 idleImageLeft.src = '../../../static/assets/pong/resting_left.png';
 
-const cart = new Image();
-cart.src = '../../../static/assets/pong/minecart_66x56.png';
 
 const cart_head = new Image();
 cart_head.src = '../../../static/assets/pong/isaac_head_cart.png';
-
 const cart_head_right = new Image();
 cart_head_right.src = '../../../static/assets/pong/isaac_head_cart_right.png';
 
 const cart_head_down = new Image();
 cart_head_down .src = '../../../static/assets/pong/isaac_head_cart_down.png';
-
 const cart_head_up = new Image();
 cart_head_up .src = '../../../static/assets/pong/isaac_head_cart_up.png';
-
-const wheel = new Image();
-wheel.src = '../../../static/assets/pong/wheel.png';
 
 const paddleBodyAnimationFrames = [
     '../../../static/assets/pong/moving_frame_1.png',
@@ -66,7 +54,7 @@ const paddleBodyImages = paddleBodyAnimationFrames.map((src) => {
     return img;
 });
 
-let currentBodyFrame = 0; // To track the current body animation frame
+let currentBodyFrame = 0;
 let animationIntervalID = null;
 
 function startBodyAnimation() {
@@ -198,11 +186,9 @@ let time = 0;
 function draw(interpolatedState) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw Player 1 paddle
     const paddle1BodyImage = (paddle1moveup || paddle1movedown)
         ? paddleBodyImages[currentBodyFrame]
         : idleImage; 
-    // Draw body
     ctx.drawImage(
         paddle1BodyImage,
         15,
@@ -217,7 +203,6 @@ function draw(interpolatedState) {
 		headPlayer1 = cart_head_up;
 	else
 		headPlayer1 = cart_head_right;
-    // Draw head
     ctx.drawImage(
         headPlayer1,
         5,
@@ -226,7 +211,6 @@ function draw(interpolatedState) {
         cart_head.height 
     );
 
-	// Draw Player 2 paddle
 	const paddle2BodyImage = (paddle2moveup || paddle2movedown)
 	? paddleBodyImages[currentBodyFrame]
 	: idleImageLeft; 
@@ -238,7 +222,6 @@ function draw(interpolatedState) {
         34,
         paddleHeight - 32
     );
-	//head
 	let headPlayer2;
 	if (paddle2movedown)
 		headPlayer2 = cart_head_down;
@@ -262,57 +245,13 @@ function draw(interpolatedState) {
 function draw_reset() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw Player 1 paddle
-    const paddle1BodyImage = (paddle1moveup || paddle1movedown)
-        ? paddleBodyImages[currentBodyFrame]
-        : idleImage;
+    ctx.drawImage(idleImage, 15, (canvas.height - paddleHeight) / 2 + 38, 34, paddleHeight - 32);
+    ctx.drawImage(cart_head_right, 5, (canvas.height - paddleHeight) / 2, cart_head.width, cart_head.height );
 
-    // Draw body
-    ctx.drawImage(
-        paddle1BodyImage,
-        15,
-        (canvas.height - paddleHeight) / 2 + 38, // Offset by head height
-        34,
-        paddleHeight - 32
-    );
-
-    // Draw head
-    ctx.drawImage(
-        paddleHeadImage2,
-        5,
-        (canvas.height - paddleHeight) / 2, 
-        paddleHeadImage2.width, 
-        paddleHeadImage2.height 
-    );
-
-	//PLayer 2
-    ctx.drawImage(
-        cart,
-        canvas.width - paddleWidth - 5, //emplacement x 
-		(canvas.height - paddleHeight) / 2, // emplacement y
-        paddleWidth,
-        paddleHeight
-    );
-
-    ctx.drawImage(
-        wheel,
-        canvas.width - paddleWidth - 5, //emplacement x 
-		(canvas.height - paddleHeight) / 2, // emplacement y
-        paddleWidth,
-        paddleHeight
-    );
-
-    ctx.drawImage(
-        cart_head,
-        canvas.width - paddleWidth - 5,
-        (canvas.height - paddleHeight) / 2 - 13,
-        cart_head.width,
-        cart_head.height
-    );
-
+    ctx.drawImage(idleImageLeft, canvas.width - paddleWidth, (canvas.height - paddleHeight) / 2 + 38, 34, paddleHeight - 32);
+    ctx.drawImage(cart_head, canvas.width - paddleWidth - 10, (canvas.height - paddleHeight) / 2, cart_head.width, cart_head.height);
 
 	ctx.drawImage(ballImage, canvas.width / 2 - ballRadius, canvas.height / 2 - ballRadius, ballRadius * 2, ballRadius * 2);
-
 	drawScores();
 }
 
@@ -582,7 +521,7 @@ export function cleanupComponent() {
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	stopPaddleAnimation(); // Stop the paddle animation
+	stopPaddleAnimation();
 
 
 	document.removeEventListener('keydown', handleKeydown);
