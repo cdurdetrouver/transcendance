@@ -1,4 +1,3 @@
-
 import { getCookie } from '../components/storage/script.js';
 import { get_user } from '../components/user/script.js';
 import { login, register } from '../components/user/script.js';
@@ -136,8 +135,7 @@ fileInput.addEventListener('change', function() {
 
 async function register_form(event) {
 	event.preventDefault();
-	
-	
+
 	const username = document.querySelector('input[name="username"]').value;
 	const email = document.querySelector('input[name="email"]').value;
 	const password = document.querySelector('input[name="password-register"]').value;

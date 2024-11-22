@@ -4,7 +4,7 @@ import asyncio
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
-import time
+from urllib.parse import parse_qs
 
 from user.utils import get_user_by_token
 from user.serializers import UserSerializer
@@ -28,6 +28,7 @@ class PrivateMatchmakingConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         self.user = result
+        self.friends = await sync_to_async(list)(self.user.friends.all())
         game_room_name = self.scope['url_route']['kwargs']['room_name']
         if not self.friends:
             await self.send(text_data=json.dumps({
@@ -36,9 +37,19 @@ class PrivateMatchmakingConsumer(AsyncWebsocketConsumer):
             }))
             await self.close()
             return
-        
-        url_params = self.scope['url_route']['kwargs']
-        self.character = url_params.get('character', '0')
+
+        query_string = self.scope['query_string'].decode()
+        query_params = parse_qs(query_string)
+        self.character = query_params.get('character', ['0'])[0]
+
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in the waiting list'
+                }))
+                await self.close()
+                return
 
         self.waiting_players.append(self)
 
@@ -84,6 +95,20 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             return
         self.user = result
         self.blocked_users = await sync_to_async(list)(self.user.blocked_users.all())
+
+        query_string = self.scope['query_string'].decode()
+        query_params = parse_qs(query_string)
+        self.character = query_params.get('character', ['0'])[0]
+
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in the waiting list'
+                }))
+                await self.close()
+                return
+
         self.waiting_players.append(self)
 
         if len(self.waiting_players) >= 2:
@@ -98,7 +123,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             game_room_name = f"game_room_{player1.channel_name}_{player2.channel_name}"
             game_room_name = re.sub(r'[^a-zA-Z0-9._-]', '', game_room_name)[:50]
 
-            game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1=player1.user, player2=player2.user)
+            game = await sync_to_async(Game.objects.create)(room_name=game_room_name , player1=player1.user, player2=player2.user, player1_character=player1.character, player2_character=player2.character)
             await sync_to_async(game.save)()
 
             await player1.send(text_data=json.dumps({
@@ -137,7 +162,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.user = None
         self.room_group_name = None
         self.game = None
-        self.type = None
         self.GameThread = None
 
     async def connect(self):
@@ -159,6 +183,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         await sync_to_async(lambda: self.game.player2)()
         await sync_to_async(lambda: self.game.winner)()
 
+        if self.game.started:
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'Game has already started'
+            }))
+            await self.close()
+            return
+
         if self.game.finished:
             await self.send(text_data=json.dumps({
                 'type': 'error',
@@ -167,34 +199,30 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
-        if ((self.user != self.game.player1 and self.user != self.game.player2) or self.game.started):
-            print(self.games)
-            self.GameThread = self.games[self.room_group_name]
-            await self.GameThread.add_viewer()
-            await self.send(text_data=json.dumps({
-                'type': 'viewer',
-                'message': 'You are not a player in this game',
-                'game_id': self.game.id
-            }))
-            self.type = 'viewer'
-            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        else:
-            self.type = 'player'
-            self.waiting_players.append(self.user.id)
-            self.player = 'player1' if self.user == self.game.player1 else 'player2'
-            await sync_to_async(self.game.save)()
-            await self.send(text_data=json.dumps({
-                'type': 'waiting',
-                'message': 'Waiting for opponent to join',
-                'game_id': self.game.id
-            }))
-            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in that game'
+                }))
+                await self.close()
+                return
+
+        await asyncio.sleep(1)
+        self.waiting_players.append(self.user.id)
+        self.player = 'player1' if self.user == self.game.player1 else 'player2'
+        await sync_to_async(self.game.save)()
+        await self.send(text_data=json.dumps({
+            'type': 'waiting',
+            'message': 'Waiting for opponent to join',
+            'game_id': self.game.id
+        }))
 
         if not self.game.started and self.game.player1.id in self.waiting_players and self.game.player2.id in self.waiting_players:
-            time.sleep(0.1)
             self.waiting_players.remove(self.game.player1.id)
             self.waiting_players.remove(self.game.player2.id)
-            print("Try to start game")
             try :
                 self.GameThread = GameThread(self.game, self.room_group_name, self.channel_layer)
                 self.games[self.room_group_name] = self.GameThread
@@ -202,21 +230,20 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.game.started = True
                 await sync_to_async(self.game.save)()
             except Exception as e:
-                print(e)
-                await self.send(text_data=json.dumps({
-                    'type': 'error',
-                    'message': 'Failed to start game'
-                }))
-                await self.close()
+                print("this error", e)
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'game.error',
+                        'message': 'Failed to start game',
+                    }
+                )
                 return
 
     async def disconnect(self, close_code):
         if not self.user:
             return
-        if self.type == 'viewer':
-            self.game.nb_viewers -= 1
-            await sync_to_async(self.game.save)()
-        elif self.game.finished:
+        if self.game.finished:
             return
         else:
             self.game.nb_players -= 1
@@ -247,8 +274,22 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'pong'
             }))
-        elif self.type != 'viewer' and (data["message"] == "keyup" or data["message"] == "keydown"):
+        elif data["message"] == "keyup" or data["message"] == "keydown":
             await self.GameThread.set_player_direction(self.player, data)
+
+    async def game_error(self,event):
+        await self.send(text_data=json.dumps({
+            'type': 'error',
+            'message': event['message'],
+        }))
+        self.game.finished = True
+        await sync_to_async(self.game.save)()
+        if self.room_group_name in self.games:
+            self.GameThread.stop()
+            del self.games[self.room_group_name]
+        del self.GameThread
+        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        await self.close()
 
     async def game_started(self, event):
         self.GameThread = self.games[self.room_group_name]

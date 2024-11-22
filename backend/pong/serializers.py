@@ -16,11 +16,9 @@ class GameSerializer(serializers.ModelSerializer):
 			'finished': openapi.Schema(type=openapi.TYPE_BOOLEAN),
 			'started': openapi.Schema(type=openapi.TYPE_BOOLEAN),
 			'nb_players': openapi.Schema(type=openapi.TYPE_INTEGER),
-			'nb_viewers': openapi.Schema(type=openapi.TYPE_INTEGER),
 			'player1': UserSerializer.user_swagger,
 			'player2': UserSerializer.user_swagger,
 			'winner': UserSerializer.user_swagger,
-			'winner_id': openapi.Schema(type=openapi.TYPE_INTEGER),
 			'player1_score': openapi.Schema(type=openapi.TYPE_INTEGER),
 			'player2_score': openapi.Schema(type=openapi.TYPE_INTEGER),
 			'created_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME),
@@ -31,7 +29,7 @@ class GameSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Game
 		fields = [
-			'id', 'room_name', 'finished', 'started', 'nb_players', 'nb_viewers',
+			'id', 'room_name', 'finished', 'started', 'nb_players',
 			'player1', 'player2', 'winner', 'player1_score', 'player2_score',
 			'created_at', 'updated_at'
 		]

@@ -44,6 +44,10 @@
 		"files": "/flappy"
 	},
 	{
+		"path": "/flappy/game",
+		"files": "/flappy/game"
+	},
+	{
 		"path": "/character",
 		"files": "/character"
 	},
@@ -56,6 +60,18 @@
 		"files": "/user/2FA"
 	},
 	{
+		"path" : "/multiplayer",
+		"files" : "/pong/multiplayer"
+	},
+	{
+		"path" : "/multiplayer/game",
+		"files" : "/pong/multiplayer/game"
+	},
+	{
+		"path" : "/pong/private",
+		"files" : "/pong/private"
+	},
+	{
 		"path": "/404",
 		"files": "/404"
 	},
@@ -66,5 +82,13 @@
 	{
 		"path": "/accountid",
 		"files": "/accountid"
+	},
+	{
+		"path": "/tournament",
+		"files": "/pong/tournament"
+	},
+	{
+		"path": "/tournament/game",
+		"files": "/pong/tournament/game"
 	}
 ]
