@@ -65,7 +65,7 @@ export async function initComponent() {
 		user = await response.json();
 	}
 	if (user)
-		setUser(user.user);
+		setPersonalUser(user.user);
 	else
 		setPersonalUser(me);
 }

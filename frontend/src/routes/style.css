@@ -104,9 +104,11 @@ body, html {
 #page-container #page-content #login-container button {
   background-color: transparent;
   font-family: isaac;
-
+  transition: transform 0.3s ease;
   font-size: 2vw;
   border: none;
+  color: #313131;
+
 }
 #page-container #page-content #login-container button:hover {
   transform: scale(1.2);
@@ -219,7 +221,6 @@ body, html {
 #page-container #page-content #popin-container #popin-content #login-content #app-login {
   display: flex;
   flex-direction: column;
-  padding-top: 5%;
 }
 #page-container #page-content #popin-container #popin-content #login-content #app-login a {
   margin-top: 20px;

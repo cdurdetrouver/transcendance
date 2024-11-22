@@ -491,8 +491,8 @@ def verify_2fa_token(request):
 @api_view(['PUT'])
 def change_password(request):
 	user = request.user
-	password = request.data.get('password')
-	new_password = request.data.get('new_password')
+	password = request.data.get('current-password')
+	new_password = request.data.get('new-password')
 
 	if user.user_type != "email":
 		return JsonResponse({'error': 'Invalid user type'}, status=status.HTTP_400_BAD_REQUEST)

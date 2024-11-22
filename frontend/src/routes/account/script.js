@@ -5,40 +5,11 @@ import { router } from '../../app.js';
 import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 import { deleteCookie, setCookie } from '../../../components/storage/script.js';
 
+const urlparams = new URLSearchParams(window.location.search);
+const id = urlparams.get('id');
 
-// async function get_games(user_id) {
-// 	const response = await fetch(config.backendUrl + '/user/games/' + user_id, {
-// 		method: 'GET',
-// 		headers: {
-// 			'Content-Type': 'application/json'
-// 		},
-// 		credentials: 'include'
-// 	});
-// 	if (response.status !== 200) {
-// 		console.error('Error connecting to user');
-// 		customalert('Error', 'Error get games for user', true);
-// 		return null;
-// 	}
-// 	const games = await response.json();
-// 	console.log(games);
-// 	return games.games;
-// }
-
-// function addGame(player1, player1_score, player2, player2_score) {
-// 	const game_list = document.querySelector('.game-list');
-// 	const game = document.createElement('li');
-
-// 	game.innerHTML = `
-// 		<div class="game-info">
-// 			<div>${player1.username}</div>
-// 			<div class="score">${player1_score} - ${player2_score}</div>
-// 			<div>${player2.username}</div>
-// 		</div>
-// 	`;
-// 	game_list.appendChild(game);
-// }
-
-function setPersonalUser(user) {
+function displayUser(user)
+{
 	const username = user.username;
 	const email = user.email;
 	// const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
@@ -63,22 +34,21 @@ function setPersonalUser(user) {
 
 	usernameInfo.textContent = username;
 	emailInfo.textContent = email;
+}
+
+
+function setPersonalUser(user) {
+	displayUser(user);
+
 
 }
 
 function setUser(user) {
-	const userDiv = document.querySelector('.container');
-	const username = user.username;
-	const email = user.email;
-	const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
-	const userHtml = `
-		<div class="user__info">
-			<p class="user__info__username">${username}</p>
-			<p class="user__info__email">${email}</p>
-			<img src="${profilePicture}" alt="Profile Picture">
-		</div>
-	`;
-	userDiv.innerHTML = userHtml;
+	displayUser(user);
+	document.querySelector("#edit-profile span").textContent = "INVITE TO CHAT";
+	document.querySelector("#delete-profile span").textContent = "BLOCK USER";
+	document.querySelector("#label-email").style.display = "none";
+	document.querySelector("#who span").textContent = "THEM";
 }
 
 export async function initComponent() {
@@ -108,13 +78,6 @@ export async function initComponent() {
 		user = await response.json();
 	}
 
-	// const games = await get_games(id || me.id);
-	// if (!games)
-	// 	router.navigate('/');
-	// for (const game of games) {
-	// 	addGame(game.player1, game.player1_score, game.player2, game.player2_score);
-	// }
-
 	if (user)
 		setUser(user.user);
 	else
@@ -126,19 +89,23 @@ document.getElementById("username-form").addEventListener('submit', handleFormUs
 document.querySelector("#profile-picture-container").addEventListener('change', handleFormProfilePicture);
 
 const editProfileButton = document.querySelector("#edit-profile .buttons");
-const editProfilePicture = document.querySelector("#edit-profile button");
+const editProfilePicture = document.querySelector("#profile-picture-container label");
 const password = document.querySelector("#edit-password");
 
 editProfileButton.addEventListener("click", function() {
-	console.log("edit profile");
-	editUsernameButton.style.display = "flex";
-	password.style.display = "flex";
-	editProfilePicture.style.display = "flex";
+	if (id) {
+		console.log("invite to chat");
+	}
+	else {
+		console.log("edit profile");
+		editUsernameButton.style.display = "flex";
+		password.style.display = "flex";
+		editProfilePicture.style.display = "flex";
+	}
 });
 
 editProfilePicture.addEventListener("click", function() {
-	console.log("bonjour");
-	document.querySelector("#profile-picture-container input").click();
+		document.querySelector("#profile-picture-container input").click();
 });
 
 async function handleFormProfilePicture(event) {
@@ -225,7 +192,7 @@ editPasswordButton.addEventListener("click", function() {
 
 async function changeDisplayPassword() {
 	// inputPassword.style.display = "flex";
-	editPasswordButton.style.display = "flex";
+	editPasswordButton.style.display = "none";
 	editPassword.style.display = "none";
 }
 
@@ -275,11 +242,40 @@ deleteButton.addEventListener("click", function() {
 });
 
 yesButton.addEventListener("click", function() {
-	console.log("yes button");
-	confirmationPopin.style.display = "none";
-	handleDeleteAccount();
-
+	deleteOrBlock(id);
 });
+
+async function deleteOrBlock(id) {
+	try {
+		confirmationPopin.style.display = "none";
+	
+		if (id) {
+			const response = await fetch(config.backendUrl + '/user/block/' + id, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include'
+			});
+			
+			if (response.status !== 200) {
+				console.error('Error blocking user');
+				customalert('Error', 'Error blocking user', true);
+				router.navigate('/');
+				return;
+			}
+			customalert("Success", "User blocked", false)
+		}
+		else {
+			handleDeleteAccount();
+		}
+	}
+	catch (error) {
+		console.error("An error occurred:", error.message);
+		customalert("Error", "An unexpected error occurred", true);
+	}
+
+};
 
 noButton.addEventListener("click", function() {
 	console.log("no button");

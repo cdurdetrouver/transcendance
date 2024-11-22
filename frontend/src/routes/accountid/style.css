@@ -163,27 +163,27 @@ body #page #background #container #sheet #main-page #current-info #edit-password
   display: none;
   flex-direction: column;
 }
-body #page #background #container #sheet #main-page block-user {
+body #page #background #container #sheet #main-page #block-user {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 90%;
   height: 10%;
 }
-body #page #background #container #sheet #main-page block-user button {
+body #page #background #container #sheet #main-page #block-user button {
   white-space: nowrap;
   font-size: 2vw;
   left: 10%;
 }
-body #page #background #container #sheet #main-page block-user img {
+body #page #background #container #sheet #main-page #block-user img {
   width: 8%;
   vertical-align: middle;
 }
-body #page #background #container #sheet #main-page block-user #logo-left {
+body #page #background #container #sheet #main-page #block-user #logo-left {
   top: 88%;
   left: 100%;
 }
-body #page #background #container #sheet #main-page block-user #logo-right {
+body #page #background #container #sheet #main-page #block-user #logo-right {
   top: 88%;
   left: 0%;
 }
@@ -301,6 +301,4 @@ body #page #background #confirmation-popin #no-button {
   left: 60%;
   width: 23%;
   height: 18%;
-}
-
-/*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map */

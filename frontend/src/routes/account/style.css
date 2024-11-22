@@ -85,6 +85,11 @@ body #page #background #container #sheet #sheet-image {
   justify-content: center;
   align-items: center;
 }
+body #page #background #container #sheet #who {
+  position: absolute;
+  top: 0%;
+  left: 29%;
+}
 body #page #background #container #sheet #main-page {
   position: absolute;
   left: 9%;
@@ -228,8 +233,8 @@ body #page #background #container #sheet #profile-picture-container #profile-pic
 body #page #background #container #sheet #profile-picture-container form label {
   display: none;
   position: absolute;
-  top: 73%;
-  left: 73%;
+  top: 88%;
+  left: 86%;
   width: 17%;
 }
 body #page #background #container #sheet #profile-picture-container form label img {

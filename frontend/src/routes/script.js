@@ -15,8 +15,6 @@ ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.i
 const loginPopin = document.querySelector("#login-container button");
 const loginButton = document.querySelector("#login-container button");
 const popin = document.querySelector("#popin-container");
-const account = document.querySelector("#account");
-
 let isLoggedIn = false;
 
 async function getProfilePicture(user) {
@@ -100,8 +98,7 @@ async function login_form(event) {
 		loginPopin.style.display = "none";
 		// logoutPopin.style.display = "flex";
 		popin.style.display = "none";
-		enableAccount()
-		await getProfilePicture();
+		initComponent();
 	}
 	else {
 		const data = await response.json();
@@ -162,8 +159,8 @@ async function register_form(event) {
 		// logoutPopin.style.display = "flex";
 		popin.style.display = "none";
 		loginForm.style.display = "flex";
-		enableAccount();
-		await getProfilePicture();
+		getProfilePicture();//ca marche pas je dois refresh pou avoir la photo de profil
+		initComponent();
 	}
 	else {
 		const data = await response.json();
