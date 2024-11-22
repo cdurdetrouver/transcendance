@@ -105,11 +105,16 @@
 }
 
 @keyframes rotate {
-	from {
-		--angle: 0deg;
-	}
-
-	to {
+    0% {
+        --angle: 0deg;
+    }
+    30% {
+        --angle: 45deg;
+    }
+    70% {
+        --angle: 315deg;
+    }
+	100% {
 		--angle: 360deg;
 	}
 }

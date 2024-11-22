@@ -31,6 +31,7 @@ let searchButtonTimeoutId = null;
 let SearchButton = null;
 let SearchStatus = false;
 let socket = null;
+let character = null;
 
 class MatchmakingSocket {
   constructor() {
@@ -46,13 +47,18 @@ class MatchmakingSocket {
     let data = JSON.parse(event.data);
     console.log(data);
     if (data.type == "error") {
-      get_user().then((response) => {
-        if (response == null) {
-          customalert("Error", "You are not logged in", true);
-          router.navigate('/login');
-        }
-        this.open();
-      });
+      customalert("Error", data.message, true);
+      SearchButton.style.opacity = "1";
+      SearchButton.style.cursor = "pointer";
+      SearchButton.addEventListener('click', handleClick);
+      SearchStatus = false;
+      SearchButton.innerHTML = "Search";
+      SearchButton.style.backgroundColor = "green";
+      let WaitingTextDiv = document.querySelector('.waiting__message');
+      let WaitingText = WaitingTextDiv.querySelector('p');
+      WaitingText.innerHTML = "";
+      WaitingTextDiv.classList.remove('show');
+      toggleSvgStatus(false, false);
     }
     if (data.type === 'match_found') {
       toggleSvgStatus(true, true);
@@ -77,7 +83,7 @@ class MatchmakingSocket {
 
   open() {
     if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
-      this.socket = new WebSocket(config.websocketurl + "/ws/pong/matchmaking/");
+      this.socket = new WebSocket(config.websocketurl + "/ws/pong/matchmaking/?character=" + character);
       this.socket.onopen = this.onopen.bind(this);
       this.socket.onmessage = this.onmessage.bind(this);
       this.socket.onclose = this.onclose.bind(this);
@@ -175,6 +181,13 @@ export async function initComponent() {
   if (!user) {
     customalert("Error", "You are not logged in", true);
     router.navigate('/login?return=/pong');
+  }
+
+  let urlParams = new URLSearchParams(window.location.search);
+  character = urlParams.get('character');
+  if (!character) {
+    customalert("Error", "Character not found", true);
+    router.navigate('/character');
   }
 
   setPlayer(user);
