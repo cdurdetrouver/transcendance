@@ -144,7 +144,7 @@ async function handleClick() {
     SearchButton.style.opacity = "0.2";
     SearchButton.style.cursor = "not-allowed";
     SearchButton.style.backgroundColor = "red";
-    WaitingText.innerHTML = "Waiting for another player...";
+    WaitingText.innerHTML = "";
     WaitingTextDiv.classList.add('show');
     toggleSvgStatus(false, true);
 

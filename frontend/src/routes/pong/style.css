@@ -1,5 +1,22 @@
-.container {
+@font-face {
+    font-family: isaac-bold;
+    src: url('http://localhost:5500/routes/assets/font/isaac_bold.ttf') format('truetype');
+}
 
+#background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
+	background-image: url("../../static/assets/background/background_1.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: -1;
+}
+
+.container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -26,15 +43,47 @@
 	text-align: center;
 }
 
-.user__name p {
-	font-size: 2rem;
-	margin: 0;
+.user__name {
+	font-family: isaac-bold;
+	font-size: 1rem;
+	background-image: url(../../static/assets/pong/nametag.png);
+	width: 230px;
+	height: 60px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;
 }
 
+.user_picture {
+    width: 250px;
+    height: 250px;
+    position: relative;
+    background-image: url("../../static/assets/pong/player-sheet.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.user_picture::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit; 
+    z-index: 2; 
+    pointer-events: none; /
+}
 .user_picture img {
-	width: 150px;
-	height: 150px;
-	border-radius: 30%;
+	margin-top: 40px;
+	width: 170px;
+	height: 170px;
+    position: relative; /* Establish stacking context */
+    z-index: 2; /* Bring it to the front */
 }
 
 .user__status svg {
@@ -43,10 +92,15 @@
 }
 
 .waiting__message {
-	font-size: 1.5rem;
-	background-color: white;
+	background-image: url("../../static/assets/pong/vs.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 50px;
+	height: 50px;
+	background-color: #cac5bd;
 	padding: 1rem;
-	border-radius: 1.5rem;
+	border-radius: 20	px;
 	position: relative;
 }
 
@@ -79,7 +133,7 @@
 	position: absolute;
 	padding: 5px;
 	z-index: -1;
-	animation: 2s rotate linear infinite;
+	animation: 1.5s rotate linear infinite;
 	display: none;
 }
 
