@@ -27,6 +27,16 @@ const accountButton = document.querySelector("#account");
 const onlineButton = document.querySelector("#online");
 const chatButton = document.querySelector("#chat");
 
+function updateButtonState(button) {
+	if (isLoggedIn) {
+		console.log("update");
+		button.classList.remove("disabled");
+	}
+	else {
+		button.classList.add("disabled");
+	}
+}
+
 accountButton.addEventListener("click", function(event) {
 	if (!isLoggedIn) {
 		customalert("Error", "Please login", 1);
@@ -175,6 +185,9 @@ export async function initComponent() {
 		loginPopin.style.display = "none";
 		isLoggedIn = true;
 		getProfilePicture(user);
+		updateButtonState(accountButton);
+		updateButtonState(onlineButton);
+		updateButtonState(chatButton);
 	}
 	else {
 		loginPopin.style.display = "flex";

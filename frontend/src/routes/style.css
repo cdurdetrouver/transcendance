@@ -84,6 +84,12 @@ body, html {
   transition: transform 0.3s ease;
 }
 
+#page-container #page-content #sheet #selection-mode .disabled {
+  /*background-color: #cccccc;*/
+  color: #666666;
+  cursor: not-allowed
+}
+
 #page-container #page-content #login-container {
   position: absolute;
   top: 28%;
