@@ -1,5 +1,4 @@
 import threading
-import asyncio
 import time
 import random
 from asgiref.sync import async_to_sync
@@ -90,7 +89,10 @@ class Paddle:
 		}
 	]
 	def __init__(self, x, y, character):
-		self.character = self.characters[int(character)]
+		if int(character) < 0 or int(character) >= len(self.characters):
+			self.character = self.characters[0]
+		else:
+			self.character = self.characters[int(character)]
 
 		self.default_position = [x, y]
 		self.default_speed = self.character['speed']
@@ -125,11 +127,10 @@ class GameThread(threading.Thread):
 		self.group_name = group_name
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
-		self.nb_viewer = 0
 
 		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1)
 		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, self.game.player1_character)
-		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, 3)
+		self.paddle2 = Paddle(SCREEN_WIDTH - PADDLE_WIDTH - 5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, self.game.player2_character)
 
 		self.game.player1_score = self.paddle1.life
 		self.game.player2_score = self.paddle2.life
@@ -182,8 +183,6 @@ class GameThread(threading.Thread):
 				current_time = time.time()
 				self.delta_time = current_time - last_time
 				last_time = current_time
-
-				self.game.nb_viewers = self.nb_viewer
 
 				self.ball.update()
 				self.paddle1.move()
@@ -273,9 +272,6 @@ class GameThread(threading.Thread):
 				'winner': Winner.id
 			}
 		)
-
-	async def add_viewer(self):
-		self.nb_viewer += 1
 
 	async def set_player_direction(self, player, data):
 		if player == "player1":

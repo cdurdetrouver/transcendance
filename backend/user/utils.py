@@ -108,12 +108,15 @@ def get_intra_user(code):
 	user_db = User.objects.filter(email=user.email).first()
 	if user_db:
 		return user_db
-	return User.objects.create(
-		username=user.login,
-		email=user.email,
-		picture_remote=user.image.get('link'),
-		user_type='intra'
-	)
+	elif is_valid_username(user.name)[0] == False:
+			return None
+	else:
+		return User.objects.create(
+			username=user.login,
+			email=user.email,
+			picture_remote=user.image.get('link'),
+			user_type='intra'
+		)
 
 def get_github_user(code):
 	client_id = os.getenv('GITHUB_ID')
@@ -143,12 +146,15 @@ def get_github_user(code):
 	user_db = User.objects.filter(email=user.email).first()
 	if user_db:
 		return user_db
-	return User.objects.create(
-		username=user.login,
-		email=user.email,
-		picture_remote=user.avatar_url,
-		user_type='github'
-	)
+	elif is_valid_username(user.name)[0] == False:
+			return None
+	else:
+		return User.objects.create(
+			username=user.login,
+			email=user.email,
+			picture_remote=user.avatar_url,
+			user_type='github'
+		)
 
 def get_google_user(code):
 	client_id = os.getenv('GOOGLE_ID')
@@ -180,19 +186,28 @@ def get_google_user(code):
 	user_db = User.objects.filter(email=user.email).first()
 	if user_db:
 		return user_db
-	return User.objects.create(
-		username=user.name,
-		email=user.email,
-		picture_remote=user.picture,
-		user_type='google'
-	)
+	elif is_valid_username(user.name)[0] == False:
+			return None
+	else:
+		return User.objects.create(
+			username=user.name,
+			email=user.email,
+			picture_remote=user.picture,
+			user_type='google'
+		)
 
 def is_valid_username(username):
 	message = ""
+
+	existing_user = User.objects.filter(username=username).first()
+	if existing_user:
+		message ="Username is already taken."
+		return False, message
+
 	if len(username) < 3:
 		message = "Username is too short. It should be at least 3 characters long."
 		return False, message
-	if len(username) > 20:
+	if len(username) > 15:
 		message ="Username is too long. It should be no more than 20 characters long."
 		return False, message
 

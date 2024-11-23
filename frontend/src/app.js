@@ -146,7 +146,11 @@ class Router {
 	async _clearDynamicAssets() {
 		for (const script of this.activeScripts) {
 			if (script && typeof script.cleanupComponent === 'function') {
-				await script.cleanupComponent();
+				try {
+					await script.cleanupComponent();;
+				} catch (error) {
+					console.error(`Error Cleanup script :`, error);
+				}
 			}
 		}
 

@@ -234,6 +234,14 @@ def register(request):
 
 	serializer = UserSerializer(data=user_data)
 
+	is_existing_user = User.objects.filter(email=user_data['email']).exists()
+	if is_existing_user:
+		return JsonResponse({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+	
+	is_existing_user = User.objects.filter(username=user_data['username']).exists()
+	if is_existing_user:
+		return JsonResponse({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
 	if serializer.is_valid():
 		succes, error = is_valid_username(serializer.validated_data['username'])
 		if not succes:
