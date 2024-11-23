@@ -260,7 +260,7 @@ body, html {
   width: 30%;
 }
 #page-container #page-content #popin-container #popin-content #register-content {
-  padding: 4%;
+  padding: 2%;
   font-family: isaac;
   display: none;
   flex-direction: row;

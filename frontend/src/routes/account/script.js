@@ -31,7 +31,6 @@ function displayUser(user)
 	const usernameInfo = document.querySelector("#username .label");
 	const emailInfo = document.querySelector("#email .label");
 
-
 	usernameInfo.textContent = username;
 	emailInfo.textContent = email;
 }
@@ -39,15 +38,19 @@ function displayUser(user)
 
 function setPersonalUser(user) {
 	displayUser(user);
-
-
 }
+
+const inviteOrEditButton = document.querySelector("#edit-profile span");
+const blockOrDeleteButton = document.querySelector("#delete-profile span");
 
 function setUser(user) {
 	displayUser(user);
-	document.querySelector("#edit-profile span").textContent = "INVITE TO CHAT";
-	document.querySelector("#delete-profile span").textContent = "BLOCK USER";
+	inviteOrEditButton.textContent = "INVITE TO CHAT";
+	document.querySelector("#edit-logo-left").src = "../../static/assets/header/chat.png"
+	document.querySelector("#edit-logo-right").src = "../../static/assets/header/chat.png"
+	blockOrDeleteButton.textContent = "BLOCK USER";
 	document.querySelector("#label-email").style.display = "none";
+	document.querySelector(".label").style.display = "none";
 	document.querySelector("#who span").textContent = "THEM";
 }
 
@@ -72,7 +75,7 @@ export async function initComponent() {
 		});
 		if (response.status !== 200) {
 			console.error('Error connecting to user');
-			customalert('Error', 'Error get user', true);
+			customalert('Error', 'User does not exist', true);
 			router.navigate('/');
 		}
 		user = await response.json();
@@ -88,13 +91,14 @@ document.getElementById("edit-password").addEventListener('submit', handleFormPa
 document.getElementById("username-form").addEventListener('submit', handleFormUsername);
 document.querySelector("#profile-picture-container").addEventListener('change', handleFormProfilePicture);
 
-const editProfileButton = document.querySelector("#edit-profile .buttons");
+// const editProfileButton = document.querySelector("#edit-profile .buttons");
 const editProfilePicture = document.querySelector("#profile-picture-container label");
 const password = document.querySelector("#edit-password");
 
-editProfileButton.addEventListener("click", function() {
+inviteOrEditButton.addEventListener("click", function() {
 	if (id) {
 		console.log("invite to chat");
+
 	}
 	else {
 		console.log("edit profile");
@@ -229,13 +233,13 @@ async function handleFormPassword(event) {
 	}
 }
 
-const deleteButton = document.querySelector("#delete-profile .buttons");
+// const deleteButton = document.querySelector("#delete-profile .buttons");
 const confirmationPopin = document.getElementById("confirmation-popin");
 const yesButton = document.getElementById("yes-button");
 const noButton = document.getElementById("no-button");
 const logoutButton = document.getElementById("logout-button");
 
-deleteButton.addEventListener("click", function() {
+blockOrDeleteButton.addEventListener("click", function() {
 	console.log("delete button");
 	// handleDeleteAccount();
 	confirmationPopin.style.display = "flex";
@@ -259,12 +263,12 @@ async function deleteOrBlock(id) {
 			});
 			
 			if (response.status !== 200) {
-				console.error('Error blocking user');
-				customalert('Error', 'Error blocking user', true);
+				customalert('Error', 'User doesnt exist', true);
 				router.navigate('/');
 				return;
 			}
 			customalert("Success", "User blocked", false)
+			document.querySelector("#who span").textContent = "UGLY";
 		}
 		else {
 			handleDeleteAccount();

@@ -69,12 +69,6 @@ closeButton.addEventListener("click", function() {
     popin.style.display = "none";
 });
 
-// window.addEventListener("click", function(event) {
-//     if (event.target === popin) {
-//         popin.style.display = "none";
-//     }
-// });
-
 const loginForm = document.querySelector("#login-content");
 const registerForm = document.querySelector("#register-content");
 const registerButton = document.querySelector("#login-content button");
@@ -106,7 +100,6 @@ async function login_form(event) {
 		console.log("login success");
 		customalert('Login successful', 'You are now logged in');
 		loginPopin.style.display = "none";
-		// logoutPopin.style.display = "flex";
 		popin.style.display = "none";
 		initComponent();
 	}
