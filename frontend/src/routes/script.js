@@ -27,7 +27,7 @@ export async function initComponent() {
 	const backFromQrcode = document.querySelector("#qrcode-content .back-to-login");
 	
 	const loginPopin = document.querySelector("#login-container button");
-	const loginForm = document.querySelector("#login-content form");
+	const loginForm = document.querySelector("#login-content");
 	const loginSubmit = document.querySelector("#default-login form");
 	
 	const registerForm = document.querySelector("#register-content");
@@ -36,7 +36,7 @@ export async function initComponent() {
 	const fileInput = document.getElementById('chk');
 	const fileChosen = document.getElementById('file-chosen');
 	const avatar = document.querySelector("#avatar");
-	const backFromRegsiter = document.querySelector("#register-content .back-to-login");
+	const backFromRegister = document.querySelector("#register-content .back-to-login");
 
 	
 	ButtonGithub.href = `https://github.com/login/oauth/authorize?client_id=${config.github_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=github')}&scope=user`;
@@ -97,7 +97,7 @@ export async function initComponent() {
 		document.querySelector("#title").innerHTML = "REGISTER";
 	});
 	
-	backFromRegsiter.addEventListener("click", function() {
+	backFromRegister.addEventListener("click", function() {
 		registerForm.style.display = "none";
 		loginForm.style.display = "flex";
 		document.querySelector("#title").innerHTML = "LOGIN";
@@ -199,9 +199,6 @@ async function register_form(event, registerForm, loginPopin, popin, loginForm, 
 		customalert('Error', data.error, true);
 	}
 }
-
-
-
 
 export async function cleanupComponent() {
 	//remove envent listener

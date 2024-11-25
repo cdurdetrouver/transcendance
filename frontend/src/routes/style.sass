@@ -2,7 +2,7 @@
     font-family: "isaac"
     src: url(../routes/assets/font/isaac_bold.ttf)
 
-body
+body, html
     background-image: url("../routes/assets/images/home/background.png")
     background-position: center
     background-repeat: no-repeat
@@ -55,6 +55,7 @@ body
                     align-items: center
 
                 #selection-mode
+                    background-color: #4CAF50
                     position: absolute
                     left: 24%
                     top: 0%
@@ -185,7 +186,7 @@ body
                 margin-top: -10px
                 margin-bottom: 10px
 
-            .button:hove
+            .button:hover
                 transform: scale(1.05)
                 border: none
                 background-color: transparent
@@ -254,6 +255,17 @@ body
 
                     #intra-logo
                         width: 30%
+            .back-to-login
+                background-image: url(../static/assets/login/arrow.png)
+                background-repeat: no-repeat
+                background-size: contain
+                position: absolute
+                top: 86%
+                right: 5%
+                font-size: 35px
+                cursor: pointer
+                width: 20px
+                height: 20px
 
             #register-content
                 padding: 2%
@@ -304,16 +316,3 @@ body
                 position: absolute
                 top: 27%
                 left: 10%
-
-            .back-to-login
-                background-image: url(../static/assets/login/arrow.png)
-                background-repeat: no-repeat
-                background-size: contain
-                position: absolute
-                top: 86%
-                right: 5%
-                font-size: 35px
-                cursor: pointer
-                width: 20px
-                height: 20px
-

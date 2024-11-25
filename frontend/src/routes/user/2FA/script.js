@@ -45,7 +45,7 @@ export async function getQrcode() {
 	});
 
 	const data = await response.json();
-
+	console.log(data);
 	if (response.status === 200) {
 		const qr_code = data.qr_code;
 		secret = data.secret;
