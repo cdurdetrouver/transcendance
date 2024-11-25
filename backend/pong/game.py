@@ -253,7 +253,15 @@ class GameThread(threading.Thread):
 	def game_over(self, Winner):
 		self.game.finished = True
 		self.game.winner = Winner
+		if self.game.player1 == Winner:
+			self.game.player1.wins += 1
+			self.game.player2.looses += 1
+		else:
+			self.game.player2.wins += 1
+			self.game.player1.looses += 1
 		self.game.save()
+		self.game.player1.save()
+		self.game.player2.save()
 		self.stop()
 
 		async_to_sync(self.channel_layer.group_send)(
