@@ -245,7 +245,7 @@ html, body {
 .flex-container .middle .chat-block #chat-input-block #chat-message-input {
   width: 83%;
   border-radius: 5px;
-  background-color: #9d9d93;
+  background-color: #c7b29a;
   outline: none;
   border: none;
   height: 35px;
@@ -258,9 +258,13 @@ html, body {
 }
 .flex-container .middle .chat-block #chat-input-block #chat-message-pong {
   background-color: transparent;
-  height: 35px;
-  width: 35px;
+  height: 40px;
+  width: 40px;
   background-image: url("../../static/assets/chat/play.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
   outline: none;
   border: none;
   cursor: pointer;
