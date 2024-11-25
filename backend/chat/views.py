@@ -37,6 +37,8 @@ def get_user_chats(request):
     return JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
 
 def check_admin(user, room):
+    if (not room.created_by):
+        return False
     if (room.created_by.id == user.id):
         return True
     return False

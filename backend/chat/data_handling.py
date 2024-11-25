@@ -93,3 +93,10 @@ def save_announce(room, announce):
     room.save()
     mess.save()
     return mess
+
+def delete_mess_of(user):
+    chats = Room.objects.filter(participants=user).all()
+    for chat in chats:
+        messages = chat.messages.filter(author=user).all()
+        for mess in messages:
+            mess.delete()

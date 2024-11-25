@@ -815,7 +815,7 @@ function print_member(room) {
 		userItem.classList.add('room');
 
 		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
-		if (user.username == room.created_by.username)
+		if (room.created_by && user.username == room.created_by.username)
 		{
 			userItem.innerHTML = `
 				<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
