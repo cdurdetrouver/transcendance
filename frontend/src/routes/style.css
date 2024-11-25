@@ -207,8 +207,8 @@ body, html {
 #page-container #page-content #popin-container #popin-content #login-content {
   display: flex;
   flex-direction: row;
-  padding-top: 19px;
   padding-left: 50px;
+  padding-top: 3%;
   transform: rotate(3deg);
 }
 #page-container #page-content #popin-container #popin-content #login-content #default-login {
@@ -227,10 +227,11 @@ body, html {
 #page-container #page-content #popin-container #popin-content #login-content #app-login {
   display: flex;
   flex-direction: column;
+  padding-left: 14%;
 }
 #page-container #page-content #popin-container #popin-content #login-content #app-login a {
   margin-top: 20px;
-  width: 54%;
+  width: 38%;
   margin-left: 60px;
   background-color: #fffcfc;
   color: black;
@@ -300,6 +301,14 @@ body, html {
 #page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #submit-register {
   position: relative;
   left: -29%;
+}
+#page-container #page-content #popin-container #popin-content #qrcode-content {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 27%;
+  left: 10%;
 }
 #page-container #page-content #popin-container #popin-content #register-content #test #back-to-login {
   background-image: url(../static/assets/login/arrow.png);

@@ -115,7 +115,7 @@ const registerSubmit = registerForm.querySelector("form");
 
 const fileInput = document.getElementById('chk');
 const fileChosen = document.getElementById('file-chosen');
-const avatar = document.querySelector(".avatar");
+const avatar = document.querySelector("#avatar");
 const backToLogin = document.querySelector("#back-to-login");
 
 
@@ -130,7 +130,6 @@ backToLogin.addEventListener("click", function() {
 fileInput.addEventListener('change', function() {
 	fileChosen.textContent = this.files[0].name;
 	avatar.style.backgroundImage = "url(../static/assets/login/avatar_happy.png)";
-
 });
 
 registerSubmit.addEventListener("submit", register_form);
@@ -181,11 +180,26 @@ export async function initComponent() {
 		updateButtonState(accountButton);
 		updateButtonState(onlineButton);
 		updateButtonState(chatButton);
+		const button_qr_code = document.getElementById('gen-qrcode');
+		button_qr_code.addEventListener('click', getQrcode);
+
+		const button_verify_2fa = document.getElementById('verify-2fa');
+		button_verify_2fa.addEventListener('click', enable2FA);
 	}
 	else {
 		loginPopin.style.display = "flex";
 	}
 }
+
+
+const qrcode = document.querySelector("#qrcode");
+const qrcodePopin = document.querySelector("#qrcode-content");
+
+qrcode.addEventListener("click", function() {
+	loginPopin.style.display = "none";
+	loginForm.style.display = "none";
+	qrcodePopin.style.display = "flex";
+});
 
 export async function cleanupComponent() {
 	//remove envent listener
