@@ -1,0 +1,38 @@
+@font-face {
+    font-family: isaac-bold;
+    src: url('../../routes/assets/font/isaac_bold.ttf') format('truetype');
+}
+
+#background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
+	background-image: url("../../../static/assets/background/background_1.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: -1;
+}
+
+#container {
+    position: relative;
+    left:30%;
+    background-image: url("../../../static/assets/tournament/sheet.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+	height: 600px;
+	width: 600px;
+	z-index: 0;    
+}
+
+#container #title {
+    text-align: center;
+    position: relative;
+    font-family: isaac-bold;
+    font-size: 2.5rem;
+    padding-top: 10px;
+    padding-bottom: 50px;
+}
