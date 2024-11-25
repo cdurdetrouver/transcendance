@@ -433,7 +433,7 @@ async function open_chat(room_selected) {
 	</div>
 	<div id="chat-input-block">	
 		<input id="chat-message-input" type="text" placeholder="Aa"><br>
-		<input id="chat-message-pong" type="button" value="Send pong link">
+		<input id="chat-message-pong" type="button">
 	</div>
 	<input id="chat-message-submit" type="button" value="Send">
     `;

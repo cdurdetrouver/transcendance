@@ -75,13 +75,6 @@ html, body {
   cursor: pointer;
   transition: transform 0.1s ease;
 }
-
-.chat-names {
-  overflow-y: scroll;
-  scrollbar-width: thin;
-  scrollbar-color: #888 transparent;
-}
-
 .flex-container .left .left-top .create-box #create-room-btn:hover {
   transform: scale(1.02);
   border: none;
@@ -122,6 +115,9 @@ html, body {
   margin-left: 50px;
   min-height: 450px;
   list-style-type: none;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
@@ -148,8 +144,6 @@ html, body {
 }
 .flex-container .middle {
   width: 700px;
-  display: flex;
-  justify-content: center;
 }
 .flex-container .middle .chat-block {
   width: inherit;
@@ -163,16 +157,11 @@ html, body {
 .flex-container .middle .chat-block .chat-output-block {
   width: inherit;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
 }
 .flex-container .middle .chat-block .chat-output-block #chat-header {
   font-family: isaac-bold;
   color: #2d2d2d;
   padding-top: 30px;
-  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -189,10 +178,9 @@ html, body {
   overflow: hidden;
 }
 .flex-container .middle .chat-block .chat-output-block #chat-header .room-name {
-  /* align-items: center; */
+  display: inline-flex;
+  align-items: center;
   font-size: 2rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .flex-container .middle .chat-block .chat-output-block #chat-log {
   font-family: isaac-bold;
@@ -212,8 +200,7 @@ html, body {
 }
 .flex-container .middle .chat-block .chat-output-block #chat-log .chat-message {
   border-radius: 20px;
-  margin-left: 40px;
-  margin-top: 8px;
+  margin-left: 35px;
 }
 .flex-container .middle .chat-block .chat-output-block #chat-log .announce {
   position: relative;
@@ -258,7 +245,7 @@ html, body {
 .flex-container .middle .chat-block #chat-input-block #chat-message-input {
   width: 83%;
   border-radius: 5px;
-  background-color: #9d9d93;
+  background-color: #c7b29a;
   outline: none;
   border: none;
   height: 35px;
@@ -270,15 +257,23 @@ html, body {
   outline: none;
 }
 .flex-container .middle .chat-block #chat-input-block #chat-message-pong {
-  height: 35px;
-  width: 35px;
-  background-color: #9d9d93;
-  border-radius: 5px;
+  background-color: transparent;
+  height: 40px;
+  width: 40px;
+  background-image: url("../../static/assets/chat/play.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
   outline: none;
   border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
 }
 .flex-container .middle .chat-block #chat-input-block #chat-message-pong:hover {
-  background-color: #898984;
+  transform: scale(1.02);
+  border: none;
+  background-color: transparent;
 }
 .flex-container .right {
   font-family: isaac-bold;
@@ -513,10 +508,8 @@ html, body {
   margin-right: 10px;
 }
 .room .room-name-left {
-  /* display: inline-flex; */
+  display: inline-flex;
   align-items: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .invite-test {
@@ -534,10 +527,8 @@ html, body {
   margin-right: 10px;
 }
 .invite-test .room-name-left {
-  /* display: inline-flex; */
+  display: inline-flex;
   align-items: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .invite-test .invite-yes:hover {
   background-color: #fbfb2e;
@@ -582,8 +573,6 @@ input[type=text] {
   box-shadow: none;
   background-color: #e9dadf;
   font-family: isaac-bold;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 input[type=text]:focus {
@@ -664,4 +653,8 @@ input[type=text]:focus {
   transform: scale(1.3);
   border: none;
   background-color: transparent;
+}
+
+#chat-message-submit {
+  display: none;
 }/*# sourceMappingURL=style.css.map */

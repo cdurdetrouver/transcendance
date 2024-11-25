@@ -246,9 +246,9 @@
 					#chat-message-input {
 						width: 83%;
 						border-radius: 5px;
-						background-color: #9d9d93;
+						background-color: #c7b29a;
 						outline: none;
-						border: none;
+						border : none;
 						height: 35px;
 						margin-left: 10px;
 						margin-right: 10px;
@@ -258,14 +258,22 @@
 						}
 					}
 					#chat-message-pong {
-						height: 35px;
-						width: 35px;
-						background-color: #9d9d93;
-						border-radius: 5px;
+						background-color: transparent;
+						height: 40px;
+						width: 40px;
+						background-image: url('../../static/assets/chat/play.png');
+						background-size: contain;
+						background-repeat: no-repeat;
+						background-position: center;
+						background-color: transparent;
 						outline: none;
 						border: none;
-						&:hover {
-							background-color: #898984;
+						cursor: pointer;
+						transition: transform 0.1s ease;
+						&:hover{
+							transform: scale(1.02);
+							border: none;
+							background-color: transparent;
 						}
 					}
 				}
@@ -650,4 +658,7 @@ input[type="text"]:focus {
 		border: none;
 		background-color: transparent;
 	}
+}
+#chat-message-submit {
+	display: none;
 }
