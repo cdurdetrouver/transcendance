@@ -258,14 +258,18 @@
 						}
 					}
 					#chat-message-pong {
+						background-color: transparent;
 						height: 35px;
 						width: 35px;
-						background-color: #9d9d93;
-						border-radius: 5px;
+						background-image: url('../../static/assets/chat/play.png');
 						outline: none;
 						border: none;
-						&:hover {
-							background-color: #898984;
+						cursor: pointer;
+						transition: transform 0.1s ease;
+						&:hover{
+							transform: scale(1.02);
+							border: none;
+							background-color: transparent;
 						}
 					}
 				}
@@ -650,4 +654,7 @@ input[type="text"]:focus {
 		border: none;
 		background-color: transparent;
 	}
+}
+#chat-message-submit {
+	display: none;
 }
