@@ -14,6 +14,7 @@ class User(AbstractUser):
 	user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='email')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	last_login = models.DateTimeField(auto_now=True)
 
 	profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
 	picture_remote = models.URLField(null=True, blank=True)
@@ -26,6 +27,9 @@ class User(AbstractUser):
 	blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
 	friends = models.ManyToManyField('self', symmetrical=False, related_name='friends_with', blank=True)
 	invite_list_id = ArrayField(models.IntegerField(), blank=True, null=True)
+
+	wins = models.IntegerField(default=0)
+	looses = models.IntegerField(default=0)
 
 	def save(self, *args, **kwargs):
 		if not self.pk and self.user_type == 'email' and self.password:
