@@ -2,16 +2,14 @@
   font-family: "isaac";
   src: url(../routes/assets/font/isaac_bold.ttf);
 }
-
-body, html {
+body {
   background-image: url("../routes/assets/images/home/background.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   height: 100%;
 }
-
-#page-container {
+body #page-container {
   position: relative;
   width: 100%;
   height: 100%;
@@ -19,24 +17,24 @@ body, html {
   align-items: center;
   justify-content: center;
 }
-#page-container #page-content {
+body #page-container #page-content {
   position: relative;
   width: 100%;
   height: 100%;
 }
-#page-container #page-content .text {
+body #page-container #page-content .text {
   font-family: isaac;
   font-size: 1rem;
 }
-#page-container #page-content a:hover {
+body #page-container #page-content a:hover {
   transform: scale(1.2);
 }
-#page-container #page-content button:hover {
+body #page-container #page-content button:hover {
   transform: scale(1.05);
   border: none;
   background-color: transparent;
 }
-#page-container #page-content #log-sheet {
+body #page-container #page-content #log-sheet {
   position: absolute;
   width: 22%;
   top: 20%;
@@ -44,25 +42,24 @@ body, html {
   z-index: 111;
   rotate: -10deg;
 }
-#page-container #page-content #sheet {
+body #page-container #page-content #sheet {
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
-#page-container #page-content #sheet #sheet-image {
+body #page-container #page-content #sheet #sheet-image {
   width: 44%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-#page-container #page-content #sheet #selection-mode {
+body #page-container #page-content #sheet #selection-mode {
   position: absolute;
   left: 24%;
   top: 0%;
   width: 41%;
   height: 85%;
-  justify-content: center;
   max-width: 100%;
   max-height: 100%;
   transform: translate(10%, 10%) rotate(-5deg);
@@ -72,7 +69,7 @@ body, html {
   justify-content: space-evenly;
   gap: 4%;
 }
-#page-container #page-content #sheet #selection-mode .button {
+body #page-container #page-content #sheet #selection-mode .button {
   padding: 10px 20px;
   background: transparent;
   color: rgb(69, 57, 59);
@@ -83,14 +80,11 @@ body, html {
   border: none;
   transition: transform 0.3s ease;
 }
-
-#page-container #page-content #sheet #selection-mode .disabled {
-  /*background-color: #cccccc;*/
+body #page-container #page-content #sheet #selection-mode .disabled {
   color: #666666;
-  cursor: not-allowed
+  cursor: not-allowed;
 }
-
-#page-container #page-content #login-container {
+body #page-container #page-content #login-container {
   position: absolute;
   top: 28%;
   left: 6%;
@@ -107,30 +101,21 @@ body, html {
   text-overflow: ellipsis;
   z-index: 1111;
 }
-#page-container #page-content #login-container button {
+body #page-container #page-content #login-container button {
   background-color: transparent;
   font-family: isaac;
   transition: transform 0.3s ease;
   font-size: 2vw;
   border: none;
   color: #313131;
-
 }
-#page-container #page-content #login-container button:hover {
+body #page-container #page-content #login-container button:hover {
   transform: scale(1.2);
 }
-#page-container #page-content #login-container img {
+body #page-container #page-content #login-container img {
   width: 50%;
 }
-#page-container #page-content #login-container #separator {
-  margin-left: 20px;
-  margin-right: 20px;
-  display: inline-block;
-  border-radius: 18%;
-  width: 5px;
-  height: 240px;
-}
-#page-container #page-content #popin-container {
+body #page-container #page-content #popin-container {
   display: none;
   position: fixed;
   top: 0%;
@@ -142,7 +127,7 @@ body, html {
   align-items: center;
   z-index: 9999;
 }
-#page-container #page-content #popin-container #popin-content {
+body #page-container #page-content #popin-content {
   background-image: url("../static/assets/sheets/login2.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -153,10 +138,10 @@ body, html {
   height: 400px;
   position: relative;
 }
-#page-container #page-content #popin-container #popin-content form .text {
+body #page-container #page-content form .text {
   font-size: 1rem;
 }
-#page-container #page-content #popin-container #popin-content #title {
+body #page-container #page-content #title {
   font-family: isaac;
   color: #313131;
   font-size: 2rem;
@@ -166,7 +151,7 @@ body, html {
   top: 11%;
   transform: rotate(3deg);
 }
-#page-container #page-content #popin-container #popin-content #close-button {
+body #page-container #page-content #close-button {
   background-image: url(../static/assets/login/cross.png);
   background-repeat: no-repeat;
   background-size: contain;
@@ -178,11 +163,11 @@ body, html {
   height: 4%;
   border: none;
 }
-#page-container #page-content #popin-container #popin-content input {
+body #page-container #page-content input {
   border: none;
   background-color: #ccc7c6;
 }
-#page-container #page-content #popin-container #popin-content .button {
+body #page-container #page-content .button {
   font-family: isaac;
   font-size: 1rem;
   background-image: url(../static/assets/sheets/Button.png);
@@ -199,24 +184,24 @@ body, html {
   margin-top: -10px;
   margin-bottom: 10px;
 }
-#page-container #page-content #popin-container #popin-content .button:hover{
-	transform: scale(1.05);
-	border: none;
-	background-color: transparent;
+body #page-container #page-content .button:hove {
+  transform: scale(1.05);
+  border: none;
+  background-color: transparent;
 }
-#page-container #page-content #popin-container #popin-content #login-content {
+body #page-container #page-content #login-content {
   display: flex;
   flex-direction: row;
   padding-left: 50px;
   padding-top: 3%;
   transform: rotate(3deg);
 }
-#page-container #page-content #popin-container #popin-content #login-content #default-login {
+body #page-container #page-content #login-content #default-login {
   display: flex;
   flex-direction: column;
   width: 150%;
 }
-#page-container #page-content #popin-container #popin-content #login-content .separator {
+body #page-container #page-content #login-content .separator {
   margin-left: 20px;
   margin-right: 20px;
   display: inline-block;
@@ -224,12 +209,20 @@ body, html {
   width: 5px;
   height: 240px;
 }
-#page-container #page-content #popin-container #popin-content #login-content #app-login {
+body #page-container #page-content #login-content #separator {
+  margin-left: 20px;
+  margin-right: 20px;
+  display: inline-block;
+  border-radius: 18%;
+  width: 5px;
+  height: 240px;
+}
+body #page-container #page-content #login-content #app-login {
   display: flex;
   flex-direction: column;
   padding-left: 14%;
 }
-#page-container #page-content #popin-container #popin-content #login-content #app-login a {
+body #page-container #page-content #login-content #app-login a {
   margin-top: 20px;
   width: 38%;
   margin-left: 60px;
@@ -244,43 +237,43 @@ body, html {
   text-decoration: none;
   transition: transform 0.3s ease;
 }
-#page-container #page-content #popin-container #popin-content #login-content #app-login a:hover {
+body #page-container #page-content #login-content #app-login a:hover {
   transform: scale(1.05);
 }
-#page-container #page-content #popin-container #popin-content #login-content #app-login img {
+body #page-container #page-content #login-content #app-login img {
   width: 20%;
 }
-#page-container #page-content #popin-container #popin-content #login-content #app-login #github {
+body #page-container #page-content #login-content #app-login #github {
   color: white;
   background-color: #2b2e31;
 }
-#page-container #page-content #popin-container #popin-content #login-content #app-login #intra {
+body #page-container #page-content #login-content #app-login #intra {
   background-color: rgb(240, 240, 240);
 }
-#page-container #page-content #popin-container #popin-content #login-content #app-login #intra-logo {
+body #page-container #page-content #login-content #app-login #intra-logo {
   width: 30%;
 }
-#page-container #page-content #popin-container #popin-content #register-content {
+body #page-container #page-content #register-content {
   padding: 2%;
   font-family: isaac;
   display: none;
   flex-direction: row;
   transform: rotate(3deg);
 }
-#page-container #page-content #popin-container #popin-content #register-content .text {
+body #page-container #page-content #register-content .text {
   font-size: 1rem;
 }
-#page-container #page-content #popin-container #popin-content #register-content #test {
+body #page-container #page-content #register-content #test {
   display: flex;
   flex-direction: row;
   padding-top: 11px;
   padding-left: 50px;
 }
-#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register {
+body #page-container #page-content #register-content #test #avatar-register {
   padding-left: 30%;
-  padding-top: 5%;
+  padding-top: 3%;
 }
-#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #avatar {
+body #page-container #page-content #register-content #test #avatar-register #avatar {
   position: relative;
   background-image: url(../static/assets/login/avatar_sad.png);
   background-repeat: no-repeat;
@@ -291,18 +284,18 @@ body, html {
   display: inline-block;
   transition: transform 0.2s ease;
 }
-#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #avatar:hover {
+body #page-container #page-content #register-content #test #avatar-register #avatar:hover {
   transform: scale(1.05);
 }
-#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #file-chosen {
+body #page-container #page-content #register-content #test #file-chosen {
   position: relative;
   top: -15px;
 }
-#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #submit-register {
+body #page-container #page-content #register-content #test #submit-register {
   position: relative;
   left: -29%;
 }
-#page-container #page-content #popin-container #popin-content #qrcode-content {
+body #page-container #page-content #qrcode-content {
   display: none;
   justify-content: center;
   align-items: center;
@@ -310,7 +303,7 @@ body, html {
   top: 27%;
   left: 10%;
 }
-#page-container #page-content #popin-container #popin-content #register-content #test #back-to-login {
+body #page-container #page-content .back-to-login {
   background-image: url(../static/assets/login/arrow.png);
   background-repeat: no-repeat;
   background-size: contain;
@@ -321,6 +314,4 @@ body, html {
   cursor: pointer;
   width: 20px;
   height: 20px;
-}
-
-/*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map */

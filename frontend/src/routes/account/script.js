@@ -5,9 +5,6 @@ import { router } from '../../app.js';
 import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 import { deleteCookie, setCookie } from '../../../components/storage/script.js';
 
-const urlparams = new URLSearchParams(window.location.search);
-const id = urlparams.get('id');
-
 function displayUser(user)
 {
 	const username = user.username;
@@ -40,11 +37,10 @@ function setPersonalUser(user) {
 	displayUser(user);
 }
 
-const inviteOrEditButton = document.querySelector("#edit-profile span");
-const blockOrDeleteButton = document.querySelector("#delete-profile span");
 
-function setUser(user) {
+function setUser(user, inviteOrEditButton, blockOrDeleteButton) {
 	displayUser(user);
+
 	inviteOrEditButton.textContent = "INVITE TO CHAT";
 	document.querySelector("#edit-logo-left").src = "../../static/assets/header/chat.png"
 	document.querySelector("#edit-logo-right").src = "../../static/assets/header/chat.png"
@@ -73,44 +69,94 @@ export async function initComponent() {
 			},
 			credentials: 'include'
 		});
+		const data = await response.json();
 		if (response.status !== 200) {
 			console.error('Error connecting to user');
-			customalert('Error', 'User does not exist', true);
+			customalert('Error', data.error, true);
 			router.navigate('/');
 		}
-		user = await response.json();
+		user = data
 	}
+	const inviteOrEditButton = document.querySelector("#edit-profile span");
+	const blockOrDeleteButton = document.querySelector("#delete-profile span");
 
 	if (user)
-		setUser(user.user);
+		setUser(user.user, inviteOrEditButton, blockOrDeleteButton);
 	else
 		setPersonalUser(me);
+
+		
+	document.getElementById("edit-password").addEventListener('submit', handleFormPassword);
+	document.getElementById("username-form").addEventListener('submit', handleFormUsername);
+	document.querySelector("#profile-picture-container").addEventListener('change', handleFormProfilePicture);
+	
+	const editProfilePicture = document.querySelector("#profile-picture-container label");
+	const password = document.querySelector("#edit-password");
+	
+	inviteOrEditButton.addEventListener("click", function() {
+		if (id) {
+			console.log("invite to chat");
+	
+		}
+		else {
+			console.log("edit profile");
+			editUsernameButton.style.display = "flex";
+			password.style.display = "flex";
+			editProfilePicture.style.display = "flex";
+		}
+	});
+	
+	editProfilePicture.addEventListener("click", function() {
+			document.querySelector("#profile-picture-container input").click();
+	});
+	const confirmationPopin = document.getElementById("confirmation-popin");
+	const yesButton = document.getElementById("yes-button");
+	const noButton = document.getElementById("no-button");
+	const logoutButton = document.getElementById("logout-button");
+
+	blockOrDeleteButton.addEventListener("click", function() {
+		console.log("delete button");
+		confirmationPopin.style.display = "flex";
+	});
+
+	yesButton.addEventListener("click", function() {
+		deleteOrBlock(id, confirmationPopin);
+	});
+	noButton.addEventListener("click", function() {
+		console.log("no button");
+		confirmationPopin.style.display = "none";
+	});
+	
+	logoutButton.addEventListener("click", function() {
+		console.log("logout button");
+		logout();
+		router.navigate('/');
+	});
+
+	const editPasswordButton = document.querySelector("#edit-password .edit-button");
+	const editPassword = document.querySelector("#edit-password form");
+	const labelPassword = document.querySelector("#edit-password  .label");
+
+	editPasswordButton.addEventListener("click", function() {
+		console.log("edit password");
+		labelPassword.style.display = "none";
+		editPasswordButton.style.display = "none";
+		editPassword.style.display = "flex";
+	});
+
+	const editUsernameButton = document.querySelector("#username button")
+	const usernameForm = document.querySelector("#username form");
+	const labelUsername = document.querySelector("#username .label");
+
+	editUsernameButton.addEventListener("click", function() {
+		console.log("edit username");
+		
+		labelUsername.style.display = "none";
+		editUsernameButton.style.display = "none";
+		usernameForm.style.display = "flex";
+	});
+
 }
-
-document.getElementById("edit-password").addEventListener('submit', handleFormPassword);
-document.getElementById("username-form").addEventListener('submit', handleFormUsername);
-document.querySelector("#profile-picture-container").addEventListener('change', handleFormProfilePicture);
-
-// const editProfileButton = document.querySelector("#edit-profile .buttons");
-const editProfilePicture = document.querySelector("#profile-picture-container label");
-const password = document.querySelector("#edit-password");
-
-inviteOrEditButton.addEventListener("click", function() {
-	if (id) {
-		console.log("invite to chat");
-
-	}
-	else {
-		console.log("edit profile");
-		editUsernameButton.style.display = "flex";
-		password.style.display = "flex";
-		editProfilePicture.style.display = "flex";
-	}
-});
-
-editProfilePicture.addEventListener("click", function() {
-		document.querySelector("#profile-picture-container input").click();
-});
 
 async function handleFormProfilePicture(event) {
 	console.log("EDIT PROFILE PICTURE");
@@ -143,18 +189,6 @@ async function handleFormProfilePicture(event) {
     }
 }
 
-const editUsernameButton = document.querySelector("#username button")
-const usernameForm = document.querySelector("#username form");
-const labelUsername = document.querySelector("#username .label");
-
-editUsernameButton.addEventListener("click", function() {
-	console.log("edit username");
-	
-	labelUsername.style.display = "none";
-	editUsernameButton.style.display = "none";
-	usernameForm.style.display = "flex";
-});
-
 async function changeDisplayUsername() {
 	labelUsername.style.display = "flex";
 	editUsernameButton.style.display = "flex";
@@ -182,17 +216,6 @@ async function handleFormUsername(event) {
 		customalert('Error', data.error, true);
 	}
 }
-
-const editPasswordButton = document.querySelector("#edit-password .edit-button");
-const editPassword = document.querySelector("#edit-password form");
-const labelPassword = document.querySelector("#edit-password  .label");
-
-editPasswordButton.addEventListener("click", function() {
-	console.log("edit password");
-	labelPassword.style.display = "none";
-	editPasswordButton.style.display = "none";
-	editPassword.style.display = "flex";
-});
 
 async function changeDisplayPassword() {
 	// inputPassword.style.display = "flex";
@@ -234,36 +257,22 @@ async function handleFormPassword(event) {
 }
 
 // const deleteButton = document.querySelector("#delete-profile .buttons");
-const confirmationPopin = document.getElementById("confirmation-popin");
-const yesButton = document.getElementById("yes-button");
-const noButton = document.getElementById("no-button");
-const logoutButton = document.getElementById("logout-button");
 
-blockOrDeleteButton.addEventListener("click", function() {
-	console.log("delete button");
-	// handleDeleteAccount();
-	confirmationPopin.style.display = "flex";
-});
-
-yesButton.addEventListener("click", function() {
-	deleteOrBlock(id);
-});
-
-async function deleteOrBlock(id) {
+async function deleteOrBlock(id, confirmationPopin) {
 	try {
 		confirmationPopin.style.display = "none";
 	
 		if (id) {
-			const response = await fetch(config.backendUrl + '/user/block/' + id, {
-				method: 'GET',
+			const response = await fetch(config.backendUrl + '/user/block/' + id + '/', {
+				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
 				credentials: 'include'
 			});
-			
+			const data = await response.json();
 			if (response.status !== 200) {
-				customalert('Error', 'User doesnt exist', true);
+				customalert('Error', data.error, true);
 				router.navigate('/');
 				return;
 			}
@@ -280,16 +289,3 @@ async function deleteOrBlock(id) {
 	}
 
 };
-
-noButton.addEventListener("click", function() {
-	console.log("no button");
-	confirmationPopin.style.display = "none";
-});
-
-logoutButton.addEventListener("click", function() {
-	console.log("logout button");
-	logout();
-	router.navigate('/');
-	// disabledAccount();
-});
-

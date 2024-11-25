@@ -6,7 +6,7 @@ import config from '../../../env/config.js';
 
 let secret = '';
 
-async function enable2FA() {
+export async function enable2FA() {
 	let token = document.getElementById('2fa_code').value;
 	if (token === '') {
 		customalert('Error', 'Token cannot be empty', true);
@@ -37,7 +37,7 @@ async function enable2FA() {
 	}
 }
 
-async function getQrcode() {
+export async function getQrcode() {
 	console.log('getQrcode');
 	const response = await fetch(config.backendUrl + '/user/generate-2fa-qr/', {
 		method: 'GET',
