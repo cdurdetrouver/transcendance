@@ -65,7 +65,7 @@ export async function initComponent() {
 
 	let user = null;
 
-	if (id) {
+	if (id && id != me.id) {
 		const response = await fetch(config.backendUrl + '/user/' + id, {
 			method: 'GET',
 			headers: {
