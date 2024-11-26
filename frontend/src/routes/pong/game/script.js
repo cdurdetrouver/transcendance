@@ -25,21 +25,31 @@ idleImage.src = '../../../static/assets/pong/resting.png';
 const idleImageLeft = new Image();
 idleImageLeft.src = '../../../static/assets/pong/resting_left.png';
 
-
-const cart_head = new Image();
-cart_head.src = '../../../static/assets/pong/isaac_head_cart.png';
-const cart_head_right = new Image();
-cart_head_right.src = '../../../static/assets/pong/isaac_head_cart_right.png';
-
-const cart_head_down = new Image();
-cart_head_down.src = '../../../static/assets/pong/isaac_head_cart_down.png';
-const cart_head_up = new Image();
-cart_head_up.src = '../../../static/assets/pong/isaac_head_cart_up.png';
-
 const boot = new Image();
 boot.src = '../../../static/assets/pong/boot.png'
 const sword = new Image();
 sword.src = '../../../static/assets/pong/sword.png'
+
+function loadImages(characterNames) {
+    const images = {};
+
+    characterNames.forEach(name => {
+        images[name] = {
+            front: new Image(),
+            back: new Image(),
+            left: new Image(),
+            right: new Image(),
+        };
+        images[name].front.src = `../../../static/assets/pong/head/${name}_front.png`;
+        images[name].back.src = `../../../static/assets/pong/head/${name}_back.png`;
+        images[name].left.src = `../../../static/assets/pong/head/${name}_left.png`;
+        images[name].right.src = `../../../static/assets/pong/head/${name}_right.png`;
+    });
+    return images;
+}
+
+const characterMap = ['isaac', 'cain', 'maggie', 'juda','isaac', 'eve'];
+const characterImages = loadImages(characterMap);
 
 const paddleBodyAnimationFrames = [
     '../../../static/assets/pong/moving_frame_1.png',
@@ -115,10 +125,12 @@ let pingSpan;
 let player1InitialScore;
 let player1Force;
 let player1Speed;
+let player1Character;
 
 let player2InitialScore;
 let player2Force;
 let player2Speed;
+let player2Character;
 
 
 function drawBackground() {
@@ -208,36 +220,44 @@ function handleKeyup(e) {
 }
 
 function draw(interpolatedState) {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const player1Name = characterMap[player1Character];
+    const player2Name = characterMap[player2Character];
 
     const paddle1BodyImage = (paddle1moveup || paddle1movedown)
         ? paddleBodyImages[currentBodyFrame]
-        : idleImage; 
+        : idleImage;
+
     ctx.drawImage(
         paddle1BodyImage,
         15,
-        interpolatedState.paddle1Y + 38, 
+        interpolatedState.paddle1Y + 38,
         34,
         paddleHeight - 32
     );
-	let headPlayer1;
-	if (paddle1movedown)
-		headPlayer1 = cart_head_down;
-	else if(paddle1moveup)
-		headPlayer1 = cart_head_up;
-	else
-		headPlayer1 = cart_head_right;
+
+    let headPlayer1;
+    if (paddle1movedown) {
+        headPlayer1 = characterImages[player1Name].front;
+    } else if (paddle1moveup) {
+        headPlayer1 = characterImages[player1Name].back;
+    } else {
+        headPlayer1 = characterImages[player1Name].right;
+    }
+
     ctx.drawImage(
         headPlayer1,
         5,
-        interpolatedState.paddle1Y, 
-        cart_head.width, 
-        cart_head.height 
+        interpolatedState.paddle1Y,
+        56,
+		characterImages[player1Name].right.height
     );
 
-	const paddle2BodyImage = (paddle2moveup || paddle2movedown)
-	? paddleBodyImages[currentBodyFrame]
-	: idleImageLeft; 
+    // Paddle 2 logic
+    const paddle2BodyImage = (paddle2moveup || paddle2movedown)
+        ? paddleBodyImages[currentBodyFrame]
+        : idleImageLeft;
 
     ctx.drawImage(
         paddle2BodyImage,
@@ -246,37 +266,82 @@ function draw(interpolatedState) {
         34,
         paddleHeight - 32
     );
-	let headPlayer2;
-	if (paddle2movedown)
-		headPlayer2 = cart_head_down;
-	else if(paddle2moveup)
-		headPlayer2 = cart_head_up;
-	else
-		headPlayer2 = cart_head;
+
+    let headPlayer2;
+    if (paddle2movedown) {
+        headPlayer2 = characterImages[player2Name].front;
+    } else if (paddle2moveup) {
+        headPlayer2 = characterImages[player2Name].back;
+    } else {
+        headPlayer2 = characterImages[player2Name].left;
+    }
+
     ctx.drawImage(
         headPlayer2,
         canvas.width - paddleWidth - 10,
         interpolatedState.paddle2Y,
-		cart_head.width,
-        cart_head.height
+		56,
+		characterImages[player2Name].right.height
     );
 
-	ctx.drawImage(ballImage, interpolatedState.ballX - ballRadius, interpolatedState.ballY - ballRadius, ballRadius * 2, ballRadius * 2);
+    // Draw the ball
+    ctx.drawImage(
+        ballImage,
+        interpolatedState.ballX - ballRadius,
+        interpolatedState.ballY - ballRadius,
+        ballRadius * 2,
+        ballRadius * 2
+    );
 
-	drawScores();
+    drawScores();
 }
 
+
 function draw_reset() {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.drawImage(idleImage, 15, (canvas.height - paddleHeight) / 2 + 38, 34, paddleHeight - 32);
-    ctx.drawImage(cart_head_right, 5, (canvas.height - paddleHeight) / 2, cart_head.width, cart_head.height );
+    const player1Name = characterMap[player1Character];
+    const player2Name = characterMap[player2Character];
 
-    ctx.drawImage(idleImageLeft, canvas.width - paddleWidth, (canvas.height - paddleHeight) / 2 + 38, 34, paddleHeight - 32);
-    ctx.drawImage(cart_head, canvas.width - paddleWidth - 10, (canvas.height - paddleHeight) / 2, cart_head.width, cart_head.height);
+    ctx.drawImage(
+        idleImage,
+        15,
+        (canvas.height - paddleHeight) / 2 + 38,
+        34,
+        paddleHeight - 32
+    );
+    ctx.drawImage(
+        characterImages[player1Name].right,
+        5,
+        (canvas.height - paddleHeight) / 2,
+        characterImages[player1Name].right.width,
+        characterImages[player1Name].right.height
+    );
 
-	ctx.drawImage(ballImage, canvas.width / 2 - ballRadius, canvas.height / 2 - ballRadius, ballRadius * 2, ballRadius * 2);
-	drawScores();
+    ctx.drawImage(
+        idleImageLeft,
+        canvas.width - paddleWidth,
+        (canvas.height - paddleHeight) / 2 + 38,
+        34,
+        paddleHeight - 32
+    );
+    ctx.drawImage(
+        characterImages[player2Name].left,
+        canvas.width - paddleWidth - 10,
+        (canvas.height - paddleHeight) / 2,
+        characterImages[player2Name].left.width,
+        characterImages[player2Name].left.height
+    );
+
+    ctx.drawImage(
+        ballImage,
+        canvas.width / 2 - ballRadius,
+        canvas.height / 2 - ballRadius,
+        ballRadius * 2,
+        ballRadius * 2
+    );
+
+    drawScores();
 }
 
 function interpolateGameState(currentTime) {
@@ -314,12 +379,13 @@ function updateGame(data) {
 		player1InitialScore = data.player1.score;
 		player1Force = data.player1.force;
 		player1Speed = data.player1.speed;
+		player1Character = data.player1.id.id;
 		player2InitialScore = data.player2.score
 		player2Force = data.player2.force;
 		player2Speed = data.player2.speed;
+		player2Character = data.player2.id.id;
 		drawStats();
 	}
-	console.log("TEST " + player1InitialScore);
 	lastUpdateTime = Date.now();
 	lastGameState = {
 		ball: { x: ballX, y: ballY, speed_x: ballspeedX, speed_y: ballspeedY },
@@ -488,6 +554,8 @@ export async function initComponent() {
 	player2Score = 0;
 	player1InitialScore = 0;
 	player2InitialScore = 0;
+	player1Character = 0;
+	player2Character = 0;
 
 	lastUpdateTime = Date.now();
 	lastGameState = null;

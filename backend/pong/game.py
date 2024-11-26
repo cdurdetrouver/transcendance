@@ -60,32 +60,38 @@ class Paddle:
 		{
 			'force': 4,
 			'life': 3,
-			'speed': 4
+			'speed': 4,
+			'id':0
 		},
 		{
 			'force': 5,
 			'life': 2,
-			'speed': 5
+			'speed': 5,
+			'id':1
 		},
 		{
 			'force': 4,
 			'life': 4,
-			'speed': 3
+			'speed': 3,
+			'id':2
 		},
 		{
 			'force': 6,
 			'life': 1,
-			'speed': 4
+			'speed': 4,
+			'id':3
 		},
 		{
 			'force': 4,
 			'life': 1,
-			'speed': 4
+			'speed': 4,
+			'id':4
 		},
 		{
 			'life': 3,
 			'speed': 4,
-			'force': 3
+			'force': 3,
+			'id':5
 		}
 	]
 	def __init__(self, x, y, character):
@@ -151,7 +157,8 @@ class GameThread(threading.Thread):
 				"score": self.paddle1.life,
 				"movedown": self.paddle1.movedown,
 				"moveup": self.paddle1.moveup,
-				"force": self.paddle1.force
+				"force": self.paddle1.force,
+				"id":self.paddle1.character
 			},
 			"player2": {
 				"x": self.paddle2.position[0],
@@ -160,7 +167,8 @@ class GameThread(threading.Thread):
 				"score": self.paddle2.life,
 				"movedown": self.paddle2.movedown,
 				"moveup": self.paddle2.moveup,
-				"force": self.paddle2.force
+				"force": self.paddle2.force,
+				"id":self.paddle2.character
 			},
 			"ball": {
 				"x": self.ball.position[0],
