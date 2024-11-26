@@ -128,9 +128,14 @@ export async function initComponent() {
 	});
 
 	twofaOrAddFriend.addEventListener("click", function() {
-		popin.style.display = "flex";
-		document.querySelector("#confirmation-content span").textContent = "Activate 2FA?";
-		twofa = true;
+		if (!id) {
+			popin.style.display = "flex";
+			document.querySelector("#confirmation-content span").textContent = "Activate 2FA?";
+			twofa = true;	
+		}
+		else {
+			addFriend(id);
+		}
 	});
 
 	yesButton.addEventListener("click", function() {
@@ -149,6 +154,11 @@ export async function initComponent() {
 	
 	generateQrcode.addEventListener("click", function() {
 		getQrcode();
+	});
+
+	document.querySelector("#submit-code").addEventListener("click", function() {
+		console.log("submit button");
+		enable2FA();
 	});
 
 	logoutButton.addEventListener("click", function() {
@@ -180,6 +190,23 @@ export async function initComponent() {
 		usernameForm.style.display = "flex";
 	});
 
+}
+
+async function addFriend(id) {
+	const response = await fetch(config.backendUrl + '/user/friend/' + id + '/', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		credentials: 'include'
+	});
+	if (response.status === 200) {
+		customalert('Success', 'Friend added', false);
+	}
+	else {
+		const data = await response.json();
+		customalert('Error', data.error);
+	}
 }
 
 async function handleFormProfilePicture(event) {

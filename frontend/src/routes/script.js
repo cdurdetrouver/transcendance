@@ -21,8 +21,6 @@ export async function initComponent() {
 	const closeButton = document.querySelector("#close-button");
 	
 	const qrcodePopin = document.querySelector("#qrcode-content");
-	const button_qr_code = document.getElementById('gen-qrcode');
-	const button_verify_2fa = document.getElementById('verify-2fa');
 	const backFromQrcode = document.querySelector("#qrcode-content .back-to-login");
 	
 	const loginPopin = document.querySelector("#login-container button");
@@ -86,7 +84,7 @@ export async function initComponent() {
 	loginButton.addEventListener("click", function() {
 		popin.style.display = "flex";
 	});
-	loginSubmit.addEventListener('submit', (event) => login_form(event, popin, loginPopin));
+	loginSubmit.addEventListener('submit', (event) => login_form(event, popin, loginPopin, loginForm, qrcodePopin));
 	
 	//REGISTER
 
@@ -116,18 +114,10 @@ export async function initComponent() {
 	});
 
 	registerSubmit.addEventListener("submit",  (event) => register_form(event, registerForm, loginPopin, popin, loginForm, user));
-	button_qr_code.addEventListener('click', getQrcode);
-	button_verify_2fa.addEventListener('click', enable2FA);
-
-	// qrcode.addEventListener("click", function() {
-	// 	loginForm.style.display = "none";
-	// 	qrcodePopin.style.display = "flex";
-	// });
 
 	closeButton.addEventListener("click", function() {
 		popin.style.display = "none";
 	});
-
 }
 
 function updateButtonState(onlineButton, accountButton, chatButton, isLoggedIn) {
@@ -147,13 +137,25 @@ async function getProfilePicture(user) {
 	imgElement.src = profilePicture;
 }
 
-async function login_form(event, loginPopin, popin) {
+async function login_form(event, loginPopin, popin, loginForm, qrcodePopin) {
 	event.preventDefault();
 
 	const email = document.querySelector('input[name="email"]').value;
 	const password = document.querySelector('input[name="password"]').value;
 	const response = await login(email, password);
+	const data = await response.json();
 	
+	if (data.two_factor_enabled) {
+		qrcodePopin.style.display = "flex";
+		loginForm.style.display = "none";
+		document.querySelector("#title").textContent = "2FA";
+		document.querySelector("#submit-code").addEventListener("click", function() {
+			console.log("submit button");
+			
+		});
+		return;
+	}
+
 	if (response.status === 200) {
 		customalert('Login successful', 'You are now logged in');
 		loginPopin.style.display = "none";
@@ -161,7 +163,6 @@ async function login_form(event, loginPopin, popin) {
 		initComponent();
 	}
 	else {
-		const data = await response.json();
 		customalert('Login failed', data.error, true);
 	}
 }

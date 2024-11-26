@@ -346,6 +346,9 @@ body
                     width: 31%
                     aspect-ratio: 228 / 129
 
+                    button
+                        transition: transform 0.3s ease
+
                     #close-button
                         background-image: url(../static/assets/login/cross.png)
                         background-repeat: no-repeat
@@ -370,17 +373,22 @@ body
 
                     #generate-qrcode
                         display: flex
-                        flex-direction: row
+                        align-items: center
                         font-size: 1rem
 
-                    #verify-qrcode
-                        display: none
 
                     .qrcode
                         display: none
                         flex-direction: row-reverse
                         align-items: center
                         width: 100%
+
+                        #submit-code
+                            position: absolute
+                            top: 70%
+                            left: 50%
+                            width: 30%
+                            height: 10%
 
                         #scan
                             font-size: 1.7vw

@@ -347,6 +347,9 @@ body #page #background #popin #qrcode-content {
   width: 31%;
   aspect-ratio: 228/129;
 }
+body #page #background #popin #qrcode-content button {
+  transition: transform 0.3s ease;
+}
 body #page #background #popin #qrcode-content #close-button {
   background-image: url(../static/assets/login/cross.png);
   background-repeat: no-repeat;
@@ -371,17 +374,21 @@ body #page #background #popin #qrcode-content img {
 }
 body #page #background #popin #qrcode-content #generate-qrcode {
   display: flex;
-  flex-direction: row;
+  align-items: center;
   font-size: 1rem;
-}
-body #page #background #popin #qrcode-content #verify-qrcode {
-  display: none;
 }
 body #page #background #popin #qrcode-content .qrcode {
   display: none;
   flex-direction: row-reverse;
   align-items: center;
   width: 100%;
+}
+body #page #background #popin #qrcode-content .qrcode #submit-code {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  width: 30%;
+  height: 10%;
 }
 body #page #background #popin #qrcode-content .qrcode #scan {
   font-size: 1.7vw;

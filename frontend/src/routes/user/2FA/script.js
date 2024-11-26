@@ -7,7 +7,7 @@ import config from '../../../env/config.js';
 let secret = '';
 
 export async function enable2FA() {
-	let token = document.getElementById('2fa_code').value;
+	let token = document.getElementById('code').value;
 	if (token === '') {
 		customalert('Error', 'Token cannot be empty', true);
 		return;
@@ -25,15 +25,15 @@ export async function enable2FA() {
 		credentials: 'include',
 	});
 
+	const data = await response.json();
 	if (response.status === 200) {
-		const data = await response.json();
 		deleteCookie('user');
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
 		customalert('Success', '2FA enabled successfully', false);
-		router.navigate('/user/edit');
+		router.navigate('/account');
 	}
 	else {
-		customalert('Error', 'Failed to enable 2FA', true);
+		customalert('Error', data.error, true);
 	}
 }
 
