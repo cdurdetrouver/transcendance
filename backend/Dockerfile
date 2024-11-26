@@ -29,4 +29,5 @@ EXPOSE 8000
 # Copy the script to the container
 COPY script.sh .
 RUN chmod +x script.sh
-ENTRYPOINT [ "sh", "script.sh", "8000"]
+ENTRYPOINT [ "sh", "script.sh"]
+CMD [ "./manage.py", "runserver", "0.0.0.0:8000"]
