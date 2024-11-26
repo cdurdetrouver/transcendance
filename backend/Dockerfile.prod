@@ -16,6 +16,10 @@ RUN pip install -r requirements.txt
 RUN python -m spacy download en_core_web_sm
 RUN python -m spacy download fr_core_news_sm
 
+# Install cron
+RUN apt-get update
+RUN apt-get install -y cron
+
 # Copy project
 COPY . .
 

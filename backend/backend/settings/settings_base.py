@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework_swagger',
+    'django_crontab',
 
     # django apps
     'django.contrib.admin',
@@ -178,3 +179,7 @@ REST_FRAMEWORK = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CRONJOBS = [
+    ('* * * * *', 'user.tasks.my_cron_job'),
+]

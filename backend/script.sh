@@ -16,7 +16,13 @@ else
   SETTINGS_OPTION="--settings=$2"
 fi
 
+touch /var/log/cron.log
+printenv | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID|LANG|PWD|GPG_KEY|_=' >> /etc/environment
+
 # Run the Django management commands
 python3 manage.py makemigrations $SETTINGS_OPTION
 python3 manage.py migrate $SETTINGS_OPTION
+python3 manage.py crontab remove $SETTINGS_OPTION
+python3 manage.py crontab add $SETTINGS_OPTION
+service cron start
 python3 manage.py runserver 0.0.0.0:$PORT $SETTINGS_OPTION

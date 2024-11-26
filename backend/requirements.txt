@@ -13,3 +13,4 @@ pyotp==2.9.0
 qrcode==7.4.2
 nltk==3.9.1
 spacy
+django-crontab==0.7.1
