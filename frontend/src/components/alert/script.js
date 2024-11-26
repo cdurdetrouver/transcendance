@@ -17,12 +17,17 @@ function customalert(title, description, error = false) {
 	display = true;
 	alertDiv.getElementsByClassName('alert__title')[0].innerText = title;
 	alertDiv.getElementsByClassName('alert__description')[0].innerText = description;
+	alertDiv.style.display = 'flex'
+
 
 	timeoutid = setTimeout(() => {
 		alertDiv.classList.remove('error');
 		alertDiv.classList.remove('success');
 		display = false;
 	}, 4000); 
+	timeoutid = setTimeout(() => {
+		alertDiv.style.display = 'none'
+	}, 4500); 
 }
 
 function clearalert() {
