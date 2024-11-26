@@ -84,6 +84,10 @@
 		"files": "/accountid"
 	},
 	{
+		"path": "/gdpr",
+		"files": "/gdpr"
+	},
+	{
 		"path": "/tournament",
 		"files": "/pong/tournament"
 	},
