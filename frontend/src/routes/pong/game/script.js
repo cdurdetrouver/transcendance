@@ -120,16 +120,6 @@ let player2InitialScore;
 let player2Force;
 let player2Speed;
 
-const customFont = new FontFace('isaac', 'url(../../../assets/font/IsaacGame.ttf)');
-
-customFont.load().then((loadedFont) => {
-    document.fonts.add(loadedFont);
-    console.log('Custom font loaded and added to document');
-    drawStats();
-}).catch((error) => {
-    console.error('Failed to load custom font:', error);
-});
-
 
 function drawBackground() {
     backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
@@ -142,8 +132,8 @@ function drawBackground() {
 }
 
 function drawStats() {
-    backgroundCtx.font = "14px isaac";
-    backgroundCtx.fillStyle = "white"; // Set text color
+    backgroundCtx.font = "14px";
+    backgroundCtx.fillStyle = "white";
 
     backgroundCtx.drawImage(boot, 20, 80, 38, 24);
     backgroundCtx.fillText(player1Speed, 70, 100);
