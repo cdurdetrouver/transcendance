@@ -470,13 +470,17 @@ async function open_chat(room_selected) {
         console.log(data);
         if (data.type == 'announce') {
             const messageElement = document.createElement('p');
-			const chat = document.createElement('div');
-			messageElement.classList.add('chat-message');
             const chat_log = document.querySelector('#chat-log')
+			const chat = document.createElement('div');
+
+			messageElement.classList.add('chat-message');
             messageElement.textContent = `${data.content}`;
             messageElement.classList.add('announce');
+
             chat.appendChild(messageElement);
-            chat_log.prepend(chat);
+            chat_log.appendChild(chat);
+			chat_log.scrollTop = chat_log.scrollHeight;
+
         }
         else if (data.type == 'chat')
 		{
