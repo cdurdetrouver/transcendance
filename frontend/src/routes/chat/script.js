@@ -469,9 +469,14 @@ async function open_chat(room_selected) {
         const data = JSON.parse(e.data);
         console.log(data);
         if (data.type == 'announce') {
+            const messageElement = document.createElement('p');
+			const chat = document.createElement('div');
+			messageElement.classList.add('chat-message');
             const chat_log = document.querySelector('#chat-log')
-            if (chat_log && data.message.author)
-                chat_log.value += (data.message.author.username + ' : ' + data.content + '\n');
+            messageElement.textContent = `${data.content}`;
+            messageElement.classList.add('announce');
+            chat.appendChild(messageElement);
+            chat_log.prepend(chat);
         }
         else if (data.type == 'chat')
 		{
@@ -539,13 +544,7 @@ async function open_chat(room_selected) {
                 chat.appendChild(messageElement);
                 chatLog.prepend(chat);
             }
-            // if (first_mess == true) {
-                // chat_log.scrollTop = chat_log.scrollHeight;
-            //     first_mess = false;
-            // }
-            // else if (chat_log.scrollTop == 0) {
-                chat_log.scrollTop = chat_log.scrollHeight - last_height_chat;
-            // }
+            chat_log.scrollTop = chat_log.scrollHeight - last_height_chat;
 		}
 		
         else if (data.type == 'invitation') {
