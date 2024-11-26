@@ -4,6 +4,7 @@ import { get_user, logout, update_user, update_password } from '../../components
 import { router } from '../../app.js';
 import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 import { deleteCookie, setCookie } from '../../../components/storage/script.js';
+import { getQrcode, enable2FA } from '../user/2FA/script.js';
 
 function displayUser(user)
 {
@@ -38,13 +39,14 @@ function setPersonalUser(user) {
 }
 
 
-function setUser(user, inviteOrEditButton, blockOrDeleteButton) {
+function setUser(user, inviteOrEditButton, blockOrDeleteButton, twofaOrAddFriend) {
 	displayUser(user);
 
 	inviteOrEditButton.textContent = "INVITE TO CHAT";
 	document.querySelector("#edit-logo-left").src = "../../static/assets/header/chat.png"
 	document.querySelector("#edit-logo-right").src = "../../static/assets/header/chat.png"
 	blockOrDeleteButton.textContent = "BLOCK USER";
+	twofaOrAddFriend.textContent = "ADD FRIEND";
 	document.querySelector("#label-email").style.display = "none";
 	document.querySelector(".label").style.display = "none";
 	document.querySelector("#who span").textContent = "THEM";
@@ -77,15 +79,18 @@ export async function initComponent() {
 		}
 		user = data
 	}
+
+	var twofa;
+
 	const inviteOrEditButton = document.querySelector("#edit-profile span");
 	const blockOrDeleteButton = document.querySelector("#delete-profile span");
+	const twofaOrAddFriend = document.querySelector("#friend-or-2fa span");
 
 	if (user)
-		setUser(user.user, inviteOrEditButton, blockOrDeleteButton);
+		setUser(user.user, inviteOrEditButton, blockOrDeleteButton, twofaOrAddFriend);
 	else
 		setPersonalUser(me);
 
-		
 	document.getElementById("edit-password").addEventListener('submit', handleFormPassword);
 	document.getElementById("username-form").addEventListener('submit', handleFormUsername);
 	document.querySelector("#profile-picture-container").addEventListener('change', handleFormProfilePicture);
@@ -109,24 +114,43 @@ export async function initComponent() {
 	editProfilePicture.addEventListener("click", function() {
 			document.querySelector("#profile-picture-container input").click();
 	});
-	const confirmationPopin = document.getElementById("confirmation-popin");
+	const popin = document.getElementById("popin");
 	const yesButton = document.getElementById("yes-button");
 	const noButton = document.getElementById("no-button");
 	const logoutButton = document.getElementById("logout-button");
+	const qrcodeContent = document.getElementById("qrcode-content");
+	const confirmationContent = document.getElementById("confirmation-content");
+	const generateQrcode = document.querySelector("#generate-qrcode");
 
 	blockOrDeleteButton.addEventListener("click", function() {
 		console.log("delete button");
-		confirmationPopin.style.display = "flex";
+		popin.style.display = "flex";
+	});
+
+	twofaOrAddFriend.addEventListener("click", function() {
+		popin.style.display = "flex";
+		document.querySelector("#confirmation-content span").textContent = "Activate 2FA?";
+		twofa = true;
 	});
 
 	yesButton.addEventListener("click", function() {
-		deleteOrBlock(id, confirmationPopin);
+		if (!twofa) {
+			deleteOrBlock(id, popin);
+		}
+		else {
+			confirmationContent.style.display = "none";
+			qrcodeContent.style.display = "flex";
+		}
 	});
+
 	noButton.addEventListener("click", function() {
-		console.log("no button");
-		confirmationPopin.style.display = "none";
+		popin.style.display = "none";
 	});
 	
+	generateQrcode.addEventListener("click", function() {
+		getQrcode();
+	});
+
 	logoutButton.addEventListener("click", function() {
 		console.log("logout button");
 		logout();
@@ -258,9 +282,9 @@ async function handleFormPassword(event) {
 
 // const deleteButton = document.querySelector("#delete-profile .buttons");
 
-async function deleteOrBlock(id, confirmationPopin) {
+async function deleteOrBlock(id, popin) {
 	try {
-		confirmationPopin.style.display = "none";
+		popin.style.display = "none";
 	
 		if (id) {
 			const response = await fetch(config.backendUrl + '/user/block/' + id + '/', {

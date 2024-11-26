@@ -172,6 +172,10 @@ body #page #background #container #sheet #main-page #user-info #current-info #ed
 }
 body #page #background #container #sheet #main-page #user-info #current-info #edit-password form {
   display: none;
+  flex-direction: row;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password form #password-container {
+  display: flex;
   flex-direction: column;
 }
 body #page #background #container #sheet #delete-profile {
@@ -204,7 +208,7 @@ body #page #background #container #sheet #edit-profile {
   justify-content: space-between;
   width: 90%;
   height: 10%;
-  top: 84%;
+  top: 85%;
   left: 5%;
 }
 body #page #background #container #sheet #edit-profile button {
@@ -222,7 +226,7 @@ body #page #background #container #sheet #edit-profile #edit-logo-right {
 body #page #background #container #sheet #edit-profile #edit-logo-left {
   top: 88%;
 }
-body #page #background #container #sheet #friend {
+body #page #background #container #sheet #friend-or-2fa {
   position: absolute;
   align-items: center;
   justify-content: space-between;
@@ -231,19 +235,19 @@ body #page #background #container #sheet #friend {
   top: 77%;
   left: 5%;
 }
-body #page #background #container #sheet #friend button {
+body #page #background #container #sheet #friend-or-2fa button {
   white-space: nowrap;
   font-size: 2vw;
   left: 10%;
 }
-body #page #background #container #sheet #friend .edit-logo {
+body #page #background #container #sheet #friend-or-2fa .edit-logo {
   width: 10%;
   vertical-align: middle;
 }
-body #page #background #container #sheet #friend #edit-logo-right {
+body #page #background #container #sheet #friend-or-2fa #edit-logo-right {
   top: 88%;
 }
-body #page #background #container #sheet #friend #edit-logo-left {
+body #page #background #container #sheet #friend-or-2fa #edit-logo-left {
   top: 88%;
 }
 body #page #background #container #sheet #profile-picture-container {
@@ -292,7 +296,7 @@ body #page #background #container #sheet #wins {
 body #page #background #container #sheet #losses {
   left: 73%;
 }
-body #page #background #confirmation-popin {
+body #page #background #popin {
   position: absolute;
   display: none;
   align-items: center;
@@ -303,37 +307,96 @@ body #page #background #confirmation-popin {
   top: 0%;
   left: 0%;
 }
-body #page #background #confirmation-popin button {
+body #page #background #popin img {
+  width: 35%;
+}
+body #page #background #popin #confirmation-content {
+  position: absolute;
+  width: 31%;
+  aspect-ratio: 228/129;
+}
+body #page #background #popin #confirmation-content button {
   border: none;
   position: absolute;
   top: 60%;
   transition: transform 0.3s ease;
   font-size: 4vw;
 }
-body #page #background #confirmation-popin span {
+body #page #background #popin #confirmation-content span {
   position: absolute;
   top: 20%;
   left: 10%;
   font-size: 2.8vw;
 }
-body #page #background #confirmation-popin img {
-  width: 35%;
-}
-body #page #background #confirmation-popin #popin-postit {
-  position: absolute;
-  width: 31%;
-  aspect-ratio: 228/129;
-}
-body #page #background #confirmation-popin .button-popin:hover {
+body #page #background #popin #confirmation-content .button-popin:hover {
   transform: scale(1.2);
 }
-body #page #background #confirmation-popin #yes-button {
+body #page #background #popin #confirmation-content #yes-button {
   left: 15%;
   width: 27%;
   height: 18%;
 }
-body #page #background #confirmation-popin #no-button {
+body #page #background #popin #confirmation-content #no-button {
   left: 60%;
   width: 23%;
   height: 18%;
+}
+body #page #background #popin #qrcode-content {
+  display: none;
+  position: absolute;
+  width: 31%;
+  aspect-ratio: 228/129;
+}
+body #page #background #popin #qrcode-content #close-button {
+  background-image: url(../static/assets/login/cross.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: transparent;
+  position: absolute;
+  top: 17%;
+  right: 6%;
+  cursor: pointer;
+  height: 4%;
+  width: 4%;
+  border: none;
+}
+body #page #background #popin #qrcode-content span {
+  overflow-wrap: break-word;
+}
+body #page #background #popin #qrcode-content img {
+  position: absolute;
+  top: 38%;
+  left: 5%;
+  width: 25%;
+}
+body #page #background #popin #qrcode-content #generate-qrcode {
+  display: flex;
+  flex-direction: row;
+  font-size: 1rem;
+}
+body #page #background #popin #qrcode-content #verify-qrcode {
+  display: none;
+}
+body #page #background #popin #qrcode-content .qrcode {
+  display: none;
+  flex-direction: row-reverse;
+  align-items: center;
+  width: 100%;
+}
+body #page #background #popin #qrcode-content .qrcode #scan {
+  font-size: 1.7vw;
+  position: absolute;
+  top: 8%;
+  left: 2%;
+}
+body #page #background #popin #qrcode-content .qrcode #enter {
+  font-size: 1vw;
+  position: absolute;
+  top: 41%;
+  left: 40%;
+}
+body #page #background #popin #qrcode-content .qrcode #code {
+  position: absolute;
+  top: 54%;
+  left: 40%;
 }/*# sourceMappingURL=style.css.map */

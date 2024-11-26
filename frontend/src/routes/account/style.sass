@@ -171,8 +171,12 @@ body
 
                                     form
                                         display: none
-                                        flex-direction: column
+                                        flex-direction: row
 
+                                        #password-container
+                                            display: flex
+                                            flex-direction: column
+                                        #submit
                     #delete-profile
                         display: flex
                         align-items: center
@@ -203,7 +207,7 @@ body
                         justify-content: space-between
                         width: 90%
                         height: 10%
-                        top: 84%
+                        top: 85%
                         left: 5%
 
                         button
@@ -221,7 +225,7 @@ body
                         #edit-logo-left
                             top: 88%
                     
-                    #friend
+                    #friend-or-2fa
                         position: absolute
                         align-items: center
                         justify-content: space-between
@@ -291,7 +295,7 @@ body
                     #losses
                         left: 73%
 
-            #confirmation-popin
+            #popin
                 position: absolute
                 display: none
                 align-items: center
@@ -302,37 +306,96 @@ body
                 top: 0%
                 left: 0%
 
-                button
-                    border: none
-                    
-                    position: absolute
-                    top: 60%
-                    transition: transform 0.3s ease
-                    font-size: 4vw
-
-                span
-                    position: absolute
-                    top: 20%
-                    left: 10%
-                    font-size: 2.8vw
-
                 img
                     width: 35%
 
-                #popin-postit
+                #confirmation-content
                     position: absolute
                     width: 31%
                     aspect-ratio: 228 / 129
 
-                .button-popin:hover
-                    transform: scale(1.2)
+                    button
+                        border: none
+                        position: absolute
+                        top: 60%
+                        transition: transform 0.3s ease
+                        font-size: 4vw
 
-                #yes-button
-                    left: 15%
-                    width: 27%
-                    height: 18%
+                    span
+                        position: absolute
+                        top: 20%
+                        left: 10%
+                        font-size: 2.8vw
 
-                #no-button
-                    left: 60%
-                    width: 23%
-                    height: 18%
+                    .button-popin:hover
+                        transform: scale(1.2)
+
+                    #yes-button
+                        left: 15%
+                        width: 27%
+                        height: 18%
+
+                    #no-button
+                        left: 60%
+                        width: 23%
+                        height: 18%
+                
+                #qrcode-content
+                    display: none
+                    position: absolute
+                    width: 31%
+                    aspect-ratio: 228 / 129
+
+                    #close-button
+                        background-image: url(../static/assets/login/cross.png)
+                        background-repeat: no-repeat
+                        background-size: contain
+                        background-color: transparent
+                        position: absolute
+                        top: 17%
+                        right: 6%
+                        cursor: pointer
+                        height: 4%
+                        width: 4%
+                        border: none
+
+                    span
+                        overflow-wrap: break-word
+                    
+                    img
+                        position: absolute
+                        top: 38%
+                        left: 5%
+                        width: 25%
+
+                    #generate-qrcode
+                        display: flex
+                        flex-direction: row
+                        font-size: 1rem
+
+                    #verify-qrcode
+                        display: none
+
+                    .qrcode
+                        display: none
+                        flex-direction: row-reverse
+                        align-items: center
+                        width: 100%
+
+                        #scan
+                            font-size: 1.7vw
+                            position: absolute
+                            top: 8%
+                            left: 2%
+                        
+                        #enter
+                            font-size: 1vw
+                            position: absolute
+                            top: 41%
+                            left: 40%
+                        
+                        #code
+                            position: absolute
+                            top: 54%
+                            left: 40%
+                        

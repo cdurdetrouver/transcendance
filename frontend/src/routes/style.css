@@ -70,8 +70,6 @@ body #page-container #page-content #sheet #selection-mode, html #page-container 
   gap: 4%;
 }
 body #page-container #page-content #sheet #selection-mode .button, html #page-container #page-content #sheet #selection-mode .button {
-  width: 100%;
-  text-align: center;
   padding: 10px 20px;
   background: transparent;
   color: rgb(69, 57, 59);
@@ -316,6 +314,4 @@ body #page-container #page-content #qrcode-content, html #page-container #page-c
   position: absolute;
   top: 27%;
   left: 10%;
-}
-
-/*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map */

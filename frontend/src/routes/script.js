@@ -20,7 +20,6 @@ export async function initComponent() {
 	
 	const closeButton = document.querySelector("#close-button");
 	
-	const qrcode = document.querySelector("#qrcode");
 	const qrcodePopin = document.querySelector("#qrcode-content");
 	const button_qr_code = document.getElementById('gen-qrcode');
 	const button_verify_2fa = document.getElementById('verify-2fa');
@@ -120,10 +119,10 @@ export async function initComponent() {
 	button_qr_code.addEventListener('click', getQrcode);
 	button_verify_2fa.addEventListener('click', enable2FA);
 
-	qrcode.addEventListener("click", function() {
-		loginForm.style.display = "none";
-		qrcodePopin.style.display = "flex";
-	});
+	// qrcode.addEventListener("click", function() {
+	// 	loginForm.style.display = "none";
+	// 	qrcodePopin.style.display = "flex";
+	// });
 
 	closeButton.addEventListener("click", function() {
 		popin.style.display = "none";

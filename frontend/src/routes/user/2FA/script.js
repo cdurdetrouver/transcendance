@@ -38,7 +38,6 @@ export async function enable2FA() {
 }
 
 export async function getQrcode() {
-	console.log('getQrcode');
 	const response = await fetch(config.backendUrl + '/user/generate-2fa-qr/', {
 		method: 'GET',
 		credentials: 'include',
@@ -49,11 +48,11 @@ export async function getQrcode() {
 	if (response.status === 200) {
 		const qr_code = data.qr_code;
 		secret = data.secret;
-		const button_qr_code = document.getElementById('gen-qrcode');
-		button_qr_code.style.display = 'none';
-		const qr_code_div = document.getElementsByClassName('qr_code').item(0);
-		qr_code_div.style.display = 'block';
-		const qr_code_img = document.getElementById('img_qr_code');
+		const button_qr_code = document.querySelector("#generate-qrcode");
+		button_qr_code.style.display = "none";
+		const qr_code_div = document.getElementsByClassName("qrcode").item(0);
+		qr_code_div.style.display = "flex";
+		const qr_code_img = document.querySelector(".qrcode img");
 		qr_code_img.src = `data:image/png;base64,${qr_code}`
 	}
 	else {
