@@ -120,12 +120,12 @@ let player2InitialScore;
 let player2Force;
 let player2Speed;
 
-const customFont = new FontFace('isaac', 'url(http://localhost:5500/routes/assets/font/IsaacGame.ttf)');
+const customFont = new FontFace('isaac', 'url(../../../assets/font/IsaacGame.ttf)');
 
 customFont.load().then((loadedFont) => {
     document.fonts.add(loadedFont);
     console.log('Custom font loaded and added to document');
-    drawStats(); // Call drawStats after the font is loaded
+    drawStats();
 }).catch((error) => {
     console.error('Failed to load custom font:', error);
 });
@@ -142,19 +142,18 @@ function drawBackground() {
 }
 
 function drawStats() {
-    // Clear any previous drawing
-    // backgroundCtx.clearRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
-
-    // Draw background if needed
-    // drawBackground();
-
-    // Apply the custom font
     backgroundCtx.font = "14px isaac";
     backgroundCtx.fillStyle = "white"; // Set text color
 
-    // Draw the boot image and text
     backgroundCtx.drawImage(boot, 20, 80, 38, 24);
-    backgroundCtx.fillText("1.0", 70, 100);
+    backgroundCtx.fillText(player1Speed, 70, 100);
+	backgroundCtx.drawImage(sword, 27, 115, 26, 26);
+    backgroundCtx.fillText(player1Force, 70, 135);
+
+	backgroundCtx.drawImage(boot, backgroundCanvas.width - boot.width - 20, 80, 38, 24);
+    backgroundCtx.fillText(player2Speed, backgroundCanvas.width - 70, 100);
+	backgroundCtx.drawImage(sword, backgroundCanvas.width - sword.width - 27, 115, 26, 26);
+    backgroundCtx.fillText(player2Force, backgroundCanvas.width - 70, 135);
 }
 
 function centerPongCanvas() {
@@ -179,17 +178,17 @@ function centerPongCanvas() {
 }
 
 function drawScores() {
-    lifeCtx.clearRect(0, 0, canvas.width, 70);
+    lifeCtx.clearRect(0, 0, backgroundCanvas.width, 70);
 	
     for (let i = 0; i < player1InitialScore; i++) {
 		let heartToDraw = (i < player1Score) ? heartImage : heartEmptyImage; 
-        lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50); // Draw heart at calculated position
+        lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50);
 		}
 
-    for (let i = 0; i < player2InitialScore; i++) {	
-		let heartToDraw = (i < player2Score) ? heartImage : heartEmptyImage; 
-        lifeCtx.drawImage(heartToDraw, canvas.width - 200 + i * 50, 10, 50, 50); 
-    }
+	for (let i = 0; i < player2InitialScore; i++) {
+		let heartToDraw = (i < player2Score) ? heartImage : heartEmptyImage;
+		lifeCtx.drawImage(heartToDraw, backgroundCanvas.width - 20 - (i + 1) * 50, 10, 50, 50);
+		}
 }
 
 function handleKeydown(e) {	
@@ -217,7 +216,6 @@ function handleKeyup(e) {
 		socket.send(JSON.stringify({ message: 'keyup', direction: 'down' }));
 	}
 }
-let time = 0;
 
 function draw(interpolatedState) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -327,7 +325,8 @@ function updateGame(data) {
 		player1Force = data.player1.force;
 		player1Speed = data.player1.speed;
 		player2InitialScore = data.player2.score
-	
+		player2Force = data.player2.force;
+		player2Speed = data.player2.speed;
 		drawStats();
 	}
 	console.log("TEST " + player1InitialScore);
