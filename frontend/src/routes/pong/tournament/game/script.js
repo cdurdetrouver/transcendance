@@ -73,6 +73,8 @@ class PongGame {
         this.player1 = player1;
         this.player2 = player2;
         this.winner = null;
+        this.loser = null;
+
     }
 
     async gameStart() {
@@ -163,10 +165,12 @@ class PongGame {
     update() {
         if (this.player1Score === 0) {
             this.winner = this.player2;
+            this.loser = this.player1;
             this.game_ended = true;
         }
         else if (this.player2Score === 0) {
             this.winner = this.player1;
+            this.loser = this.player2;
             this.game_ended = true;
         }
 
@@ -280,10 +284,11 @@ function RectCircleColliding(circle, rect) {
 let players = [];
 
 class Match {
-    constructor(player1 = null, player2 = null, winner = null) {
+    constructor(player1 = null, player2 = null, winner = null, loser = null) {
         this.player1 = player1;
         this.player2 = player2;
         this.winner = winner;
+        this.loser = loser;
         this.left = null;
         this.right = null;
     }
@@ -354,9 +359,18 @@ class Tournament {
             let pongGame = new PongGame(match.player1, match.player2);
             await pongGame.gameStart();
             match.winner = pongGame.winner;
+            match.loser = pongGame.loser;
             console.log("Game ended");
             // await pongGame.clear();
             customalert("Winner", `${match.winner} wins the match!`);
+
+			const historic = document.getElementById("historic");
+			const matchHistoric = document.createElement('div');
+			matchHistoric.classList.add('matchHistory');
+			matchHistoric.textContent = `${match.winner} - ${match.loser}`;
+	
+			historic.appendChild(matchHistoric);
+
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
         return match.winner;
