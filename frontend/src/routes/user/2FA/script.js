@@ -12,7 +12,7 @@ export async function enable2FA() {
 		customalert('Error', 'Token cannot be empty', true);
 		return;
 	}
-	console.log(secret, token);
+	console.log("secret = ",secret, "token = ", token);
 	const response = await fetch(config.backendUrl + '/user/enable-2fa/', {
 		method: 'POST',
 		headers: {
@@ -33,7 +33,7 @@ export async function enable2FA() {
 		router.navigate('/account');
 	}
 	else {
-		customalert('Error', data.error, true);
+		customalert('Error', response, true);
 	}
 }
 

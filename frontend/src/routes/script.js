@@ -1,9 +1,8 @@
-import { getCookie } from '../components/storage/script.js';
+import { setCookie } from '../components/storage/script.js';
 import { get_user } from '../components/user/script.js';
 import { login, register } from '../components/user/script.js';
 import {customalert} from '../components/alert/script.js';
 import config from '../env/config.js';
-import { getQrcode, enable2FA } from './user/2FA/script.js';
 
 let isLoggedIn;
 
@@ -145,19 +144,22 @@ async function login_form(event, loginPopin, popin, loginForm, qrcodePopin) {
 	const response = await login(email, password);
 	const data = await response.json();
 	
+
 	if (data.two_factor_enabled) {
 		qrcodePopin.style.display = "flex";
 		loginForm.style.display = "none";
 		document.querySelector("#title").textContent = "2FA";
+
 		document.querySelector("#submit-code").addEventListener("click", function() {
 			console.log("submit button");
-			
+			form_2fa(event, data.user_id, loginPopin, qrcodePopin, popin);
 		});
 		return;
 	}
 
 	if (response.status === 200) {
 		customalert('Login successful', 'You are now logged in');
+		console.log("login successful");
 		loginPopin.style.display = "none";
 		popin.style.display = "none";
 		initComponent();
@@ -197,6 +199,37 @@ async function register_form(event, registerForm, loginPopin, popin, loginForm, 
 	else {
 		const data = await response.json();
 		customalert('Error', data.error, true);
+	}
+}
+
+async function form_2fa(event, id, loginPopin, qrcodePopin, popin) {
+	event.preventDefault();
+	const token = document.querySelector(".qrcode input").value;
+
+	const response = await fetch(config.backendUrl + '/user/verify-2fa/', {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			'token': token,
+			'user_id': id
+		}),
+		credentials: "include",
+	});
+	console.log("id = ", id);
+	if (response.status === 200) {
+		const data = await response.json();
+		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+		customalert('Login successful', 'You are now logged in');
+		loginPopin.style.display = "none";
+		qrcodePopin.style.display = "none";
+		popin.style.display = "none";
+		initComponent();
+	}
+	else {
+		const data = await response.json();
+		customalert('Login failed', data.error, true);
 	}
 }
 
