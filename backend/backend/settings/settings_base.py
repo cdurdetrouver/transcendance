@@ -181,5 +181,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CRONJOBS = [
-    ('* * * * *', 'user.tasks.my_cron_job'),
+    ('0 0 * * *', 'user.tasks.check_inactive_users'),
 ]
