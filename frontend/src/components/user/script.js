@@ -106,7 +106,7 @@ async function update_user(formData) {
 	return response;
 }
 
-async function update_password(formData) {
+export async function update_password(formData) {
 	const response = await fetch(config.backendUrl + '/user/change_password/' , {
 		method: 'PUT',
 		body: formData,
