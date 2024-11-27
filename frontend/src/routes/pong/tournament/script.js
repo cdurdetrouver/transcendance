@@ -36,7 +36,7 @@ export async function initComponent() {
   
     function updatePlayerList(index) {
       playersDiv.innerHTML = '';
-      players.forEach((player) => {
+      players.forEach((player, index) => {
         const playerElement = document.createElement('div');
 		playerElement.classList.add('newPlayer');
         playerElement.textContent = `${player}`;

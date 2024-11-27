@@ -22,13 +22,6 @@ const avatarIcon = document.getElementById('avatar-icon');
 export async function initComponent() {
 	const user = await get_user();
 
-	const usernameText = document.querySelector('.bottom .text-header');
-	avatarIcon.addEventListener("click", function() {
-		if (user)
-			return;
-		popin.style.display = "flex";
-	});
-
 	const sidebar = document.querySelector('.sidebar');
 	const iconImage = document.getElementById('iconImage');
 

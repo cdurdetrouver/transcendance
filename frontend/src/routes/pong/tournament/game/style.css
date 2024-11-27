@@ -1,3 +1,8 @@
+@font-face {
+    font-family: isaac-bold;
+    src: url('../../../assets/font/isaac_bold.ttf') format('truetype');
+}
+
 body {
 	text-align: center;
 }
@@ -32,7 +37,58 @@ canvas {
 	position: absolute;
     z-index: 1; /* In front of the background */
 }
-#historic {
+#matchList {
+	font-family: isaac-bold;
 	position: absolute;
 	left: 1300px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 400px;
+
+}
+#matchList .Matchline {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between; /* Ensures alignment */
+	gap: 10px;
+	margin-top: 10px;
+}
+#matchList .Matchline .player-left {
+	text-align: left; /* Ensures text aligns to the left */
+	width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+	padding-right: 20px;
+}
+#matchList .Matchline .player-right {
+	text-align: right; /* Ensures text aligns to the right */
+	width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+	padding-left: 20px;
+
+}
+.win {
+	background-image: url(../../../../static/assets/yes.png);
+	width: 20px;
+	height: 20px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;	
+}
+.lost {
+	background-image: url(../../../../static/assets/no.png);
+	width: 20px;
+	height: 20px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;	
 }

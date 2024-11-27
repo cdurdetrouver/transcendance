@@ -80,8 +80,8 @@ class PongGame {
     async gameStart() {
         this.game_ended = false;
 
-        this.player1Score = 3;
-        this.player2Score = 3;
+        this.player1Score = 1;
+        this.player2Score = 1;
 
         this.paddle1Y = (canvas.height - paddleHeight) / 2;
         this.paddle2Y = (canvas.height - paddleHeight) / 2;
@@ -334,7 +334,7 @@ class Tournament {
         }
 
         let nextRound = [];
-        for (let i = 0; i < matches.length; i += 2) {
+        for (let i = 0; i < matches.length; i += 2) {	
             let left = matches[i];
             let right = i + 1 < matches.length ? matches[i + 1] : null;
             let match = new Match();
@@ -357,6 +357,26 @@ class Tournament {
             console.log(`Match playing ${match.player1} vs ${match.player2}`);
             // Play the game
             let pongGame = new PongGame(match.player1, match.player2);
+			const matchList = document.getElementById("matchList");
+			const Matchline = document.createElement('div');
+			Matchline.classList.add('Matchline');
+			matchList.appendChild(Matchline);
+
+			const playerLine = document.createElement('div');
+			playerLine.classList.add('playerLine');
+
+			const player1block = document.createElement('div');
+			player1block.classList.add('player-left');
+			player1block.textContent = `${match.player1}`
+
+			const player2block = document.createElement('div');
+			player2block.classList.add('player-right');
+			player2block.textContent = `${match.player2}`
+
+			Matchline.appendChild(player1block);
+			Matchline.appendChild(player2block);
+
+
             await pongGame.gameStart();
             match.winner = pongGame.winner;
             match.loser = pongGame.loser;
@@ -364,12 +384,23 @@ class Tournament {
             // await pongGame.clear();
             customalert("Winner", `${match.winner} wins the match!`);
 
-			const historic = document.getElementById("historic");
-			const matchHistoric = document.createElement('div');
-			matchHistoric.classList.add('matchHistory');
-			matchHistoric.textContent = `${match.winner} - ${match.loser}`;
+			const playerLeftResult = document.createElement('div');
+			const playerRightResult = document.createElement('div');
+			if(match.winner == match.player1) {
+				playerLeftResult.classList.add('win');
+				playerRightResult.classList.add('lost');
+			}
+			else {
+				playerLeftResult.classList.add('lost');
+				playerRightResult.classList.add('win');
+			}
+			Matchline.prepend(playerLeftResult);
+			Matchline.appendChild(playerRightResult);
+
+
+
+			// matchHistoric.textContent = `${match.winner} - ${match.loser}`;
 	
-			historic.appendChild(matchHistoric);
 
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
