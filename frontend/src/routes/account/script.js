@@ -37,6 +37,7 @@ function addGame(player1, player1_score, player2, player2_score) {
 }
 
 function setPersonalUser(user) {
+	console.log(user);
 	const username = user.username;
 	const email = user.email;
 	// const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
