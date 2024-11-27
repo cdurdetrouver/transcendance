@@ -1,6 +1,7 @@
 import config from "../../env/config.js";
-import { get_user } from "../../components/user/script.js";
+import { get_user, searchUsers } from "../../components/user/script.js";
 import { router } from '../../app.js';
+import {customalert} from '../../components/alert/script.js';
 
 //show error si photo n'est pas au bon format
 
@@ -48,17 +49,6 @@ async function get_user_invitations(params) {
     return null;
 }
 
-async function created_room(c_room) {
-    const create_box = document.querySelector('.create-box');
-    create_box.innerHTML=`
-		 <li class="li-create-room-btn">
-			 <t1>Chat ${c_room.name} succesfully created</t1>
-            <input class="chat-conf-close" id=""submit type="button" value="Close">
-		 </li>
-    `;
-    document.querySelector('.chat-conf-close').addEventListener('click', close_create_room);
-}
-
 async function send_create_room(event) {
 	event.preventDefault();
     const form = event.target
@@ -74,8 +64,9 @@ async function send_create_room(event) {
     const data = await response.json();
     if (response.status === 200) {
         const c_room = data['room'];
-        created_room(c_room);
-        print_chats();
+        close_create_room();
+        customalert('Chat created !', c_room.name + ' has been created');
+        print_chats();  
         return;
     }
     else if (response.status === 404 || response.status === 403 || response.status === 400 || response.status === 303) {
@@ -87,32 +78,50 @@ async function send_create_room(event) {
 async function close_create_room() {
     const create_box = document.querySelector('.create-box');
     create_box.innerHTML=`
-		 <li class="li-create-room-btn">
+		 <div class="create-room">
 			<input id="create-room-btn" type="button" value="create room">
-		 </li>
+		 </div>
     `;
-    const create_room_btn = document.querySelector('.li-create-room-btn');
+    const create_room_btn = document.querySelector('.create-room');
     create_room_btn.addEventListener('click', create_room);
 }
 
 async function create_room() {
     const create_box = document.querySelector('.create-box');
     create_box.innerHTML=`
-        <li class="li-create-room-form">
+        <div class="create-room-form">
             <form id="roomForm" class="room__form">
-			    <label for="room_name">Room name:</label>
-			    <input type="text" id="room_name" name="name" required>
-
-			    <label for="room_picture">Room Picture:</label>
-			    <input type="file" id="room_picture" name="room_picture" accept="image/*">
-
-			    <button type="submit">Create</button>
-	        </form>
-            <input class="chat-conf-close" id=""submit type="button" value="Close">
-		</li>
+                <label for="room_name"></label>
+                <input type="text" class="input-text-chat" name="name" placeholder="Enter room name" required><br><br>
+                
+                <label for="room_picture">Room Picture:</label><br>
+                <div class="form-row">
+                    <div class="new-pic">
+                        <input type="file" class="room_picture" name="room_picture" accept="image/*">
+                    </div>
+                    <div class="validate">
+                        <button id="validate-room" type="submit">test</button>
+                    </div>
+                    <div class="close-element">
+                        <input class="chat-conf-close" type="button" value="Close">
+                    </div>
+                </div>
+            </form>
+        </div>
     `;
 	document.getElementById('roomForm').addEventListener('submit', send_create_room);
     document.querySelector('.chat-conf-close').addEventListener('click', close_create_room);
+}
+
+async function toggleDisplay(element, displayStyle) {
+    const userList = document.querySelector(element);
+	console.log(userList);
+	if (userList) {
+        userList.style.display = displayStyle;
+    } else {
+        console.warn(`Element with selector "${element}" not found.`);
+		console.log(document.querySelector(element));
+    };
 }
 
 async function add_user(username) {
@@ -130,36 +139,56 @@ async function add_user(username) {
 	});
     const data = await response.json();
     if (response.status === 200) {
+			toggleDisplay('.lower-left', "none");
+			open_conf();
             console.log("add user request succes: " + data['User status']);
-            const chat_conf = document.querySelector('.chat-conf');
-            chat_conf.innerHTML = `
-                <t1>${data['User status']}</t1>
-                <input id="chat-add-user-close" type="button" value="close">
-            `;
-            document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()});
+			customalert('Invitation sent', 'Plz say yes ' + username + ' !', false);
     }
     else if (response.status === 303 || response.status === 404 || response.status === 403) {
             console.log("add user request: " + data['error']);
-            const chat_conf = document.querySelector('.chat-conf');
-            chat_conf.innerHTML = `
-                <t1>${data['User status']}</t1>
-                <input id="chat-add-user-close" type="button" value="close">
-            `;
-            document.querySelector('#chat-add-user-close').addEventListener('click', function(event) {open_conf()});
+			customalert(data['error'], 'No friend for U lol' , true);
     }
     return;
 }
 
 async function chat_add_user() {
+	toggleDisplay('.lower-left', "flex");
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-    <input id="chat-user-input" type="text" size="100" placeholder="username"><br>
-    <input id="chat-user-submit" type="button" value="add user">
-    <input id="chat-conf-close" type="button" value="close">
+	<h3>Group configuration</h3>
+	<div id="user-add-remove-block">
+		<div id="chat-add-user">
+			<input id="button-add-user" type="button" value="Add user">
+		</div>
+	</div>
+   	<input id="chat-user-input" type="text" size="100" placeholder="username">
+	<input id="chat-user-submit" type="button">
+    <input id="chat-conf-close" type="button">
     `;
+
+	document.getElementById('chat-user-input').addEventListener('input', async function() {
+		const query = this.value;
+		if (query.length > 0) {
+			const response = await searchUsers(query, 5);
+			if (response.status === 200) {
+				const data = await response.json();
+				updateUserList(data.users);
+			} else {
+				updateUserList([]);
+			}
+		} else {
+			updateUserList([]);
+		}
+	});
+
     const input_user = document.querySelector('#chat-user-input');
-    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {add_user(input_user.value, room)});
-    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {
+		add_user(input_user.value, room)
+	});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {
+		open_conf()
+		toggleDisplay('.lower-left', "none");
+	});
 }
 
 async function remove_user(username) {
@@ -177,33 +206,55 @@ async function remove_user(username) {
     let ret;
     const data = await response.json();
     if (response.status === 200) {
+			toggleDisplay('.lower-left', "none");
+			customalert('User removed', 'Goodbye ' + username + ', nobody liked you', false);
             console.log("Remove user request succes: " + data['User status']);
             ret = data['User status'];
         }
     if (response.status === 404 || response.status === 403 || response.status === 400) {
                 console.log("error: " + data['error']);
+				customalert(data['error'], 'Learn to write, noob' , true);
                 ret = data['error'];
     }
-    return ret;
 }
 
 async function chat_remove_user() {
+	toggleDisplay('.lower-left', "flex");
     const chat_conf = document.querySelector('.chat-conf');
     chat_conf.innerHTML = `
-    <input id="chat-user-input" type="text" size="100" placeholder="username"><br>
-    <input id="chat-user-submit" type="button" value="remove user">
-    <input id="chat-conf-close" type="button" value="close">
+	<h3>Group configuration</h3>
+	<div id="user-add-remove-block">
+		<div id="chat-add-user">
+			<input id="button-remove-user" type="button" value="Remove user">
+		</div>
+	</div>
+   	<input id="chat-user-input" type="text" size="100" placeholder="username">
+	<input id="chat-user-submit" type="button">
+    <input id="chat-conf-close" type="button">
     `;
+
+	document.getElementById('chat-user-input').addEventListener('input', async function() {
+		const query = this.value;
+		if (query.length > 0) {
+			const response = await searchUsers(query, 5);
+			if (response.status === 200) {
+				const data = await response.json();
+				updateUserList(data.users);
+			} else {
+				updateUserList([]);
+			}
+		} else {
+			updateUserList([]);
+		}
+	});
     const input_user = document.querySelector('#chat-user-input');
-    document.querySelector('#chat-user-submit').addEventListener('click', async function(event) {
-        const ret = await remove_user(input_user.value, room);
-        const chat_conf = document.querySelector('.chat-conf');
-        chat_conf.innerHTML = `
-        <t1>${ret}</t1>
-        <input id="chat-add-user-close" type="button" value="close">
-        `;
-        document.getElementById('chat-add-user-close').addEventListener('click', open_conf);});
-    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
+    document.querySelector('#chat-user-submit').addEventListener('click', function(event) {
+		remove_user(input_user.value, room)
+	});
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {
+		open_conf()
+		toggleDisplay('.lower-left', "none");
+	});
 }
 
 async function update_room(event) {
@@ -219,10 +270,11 @@ async function update_room(event) {
     const data = await response.json();
     if (response.status === 200) {
         room = data['room'];
-	    const chat_title = document.getElementById('chat-name-title');
+		const chat_title = document.querySelector('#chat-header .room-name')
         chat_title.innerHTML = `
-        <t1>Chat ${room.name} selected</t1>
+        ${room.name}
         `;
+        customalert("Room updated", "a new day, a new style !");
         print_chats();
     }
     else if (response.status === 404 || response.status === 400 || response.status === 403) {
@@ -232,8 +284,7 @@ async function update_room(event) {
 }
 
 async function chat_close(params) {
-    const chat_box = document.querySelector('.chat-box');
-    chat_box.innerHTML = `<t1>No chat selected</t1>`;
+    const chat_box = document.querySelector('.chat-block');
     print_chats();
 }
 
@@ -247,12 +298,9 @@ async function chat_delete(event) {
     const data = await response.json();
     if (response.status === 200) {
         console.log(`Chat ${room.id} deleted successfully.`);
-	    const chat_delete = document.querySelector('.chat-box');
-        chat_delete.innerHTML = `
-        <t1>Chat ${room.name} deleted successfully.</t1>
-        <input id="chat-conf-close" type="button" value="Close chat">
-        `;
-        document.querySelector('#chat-conf-close').addEventListener('click', chat_close);
+	    const chat_delete = document.querySelector('.chat-block');
+        customalert("Chat deleted", room.name + " was obliterated !")
+        chat_close();
         if (chatSocket)
             chatSocket.close();
     }
@@ -267,31 +315,7 @@ async function chat_close_conf() {
     chat_conf.innerHTML = `
      <input id="chat-conf-close" type="button" value="chat conf">
     `;
-    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf()});
-}
-
-async function open_conf() {
-    const chat_conf = document.querySelector('.chat-conf');
-    chat_conf.innerHTML = `
-        <input id="chat-add-user" type="button" value="Add user">
-        <input id="chat-remove-user" type="button" value="Remove user">
-        <form id="roomConfForm" class="room__form">
-			<label for="room_name">Room name:</label>
-			<input type="text" id="room_name" name="name" value=${room.name}>
-
-			<label for="room_picture">Room Picture:</label>
-			<input type="file" id="room_picture" name="room_picture" accept="image/*">
-
-			<button type="submit">Update</button>
-	    </form>
-        <input id="chat-delete" type="button" value="Delete chat">
-        <input id="chat-conf-close" type="button" value="Close conf chat">
-        `;
-	document.getElementById('roomConfForm').addEventListener('submit', update_room);
-    document.getElementById('chat-add-user').addEventListener('click', chat_add_user);
-    document.getElementById('chat-remove-user').addEventListener('click', chat_remove_user);
-    document.getElementById('chat-delete').addEventListener('click', chat_delete);
-    document.getElementById('chat-conf-close').addEventListener('click', chat_close_conf);
+    document.querySelector('#chat-conf-close').addEventListener('click', function(event) {open_conf();});
 }
 
 async function check_admin() {
@@ -305,24 +329,84 @@ async function check_admin() {
     const data = await response.json();
     if (response.status === 200) {
             console.log(data['User status']);
-            open_conf();
+            return true;
     }
     else if (response.status === 404 || response.status === 403 || response.status === 400) {
             console.log(data['error']);
+			return false;
     }
-    return;
+    return false;
 }
 
 async function leave_chat(params) {
-    remove_user(user.username);
-    chat_close();
-    print_chats();
+    await remove_user(user.username);
+    await print_chats();
+    const middle_block = document.querySelector(".middle");
+    middle_block.innerHTML =`
+    <div class="chat-block"></div>
+    `;
+    const block_r = document.querySelector(".right");
+    block_r.innerHTML =`
+	<div class="room-info"></div>
+	<div id="user-profile"></div>
+	<div class="room-users"></div>
+	<div class="chat-conf"></div>
+	<div class="lower-left">
+    <ul class="user-list"></ul>
+	</div>
+	`;
+    chatSocket.close();
 }
 
 async function send_pong_link(params) {
     chatSocket.send(JSON.stringify({
         'type': "invitation",
     }));}
+
+async function open_chat_info(room, room_picture) {
+
+	const room_info = document.querySelector('.room-info');
+	room_info.innerHTML = `
+	<h1>Group info</h1>
+	<div class="leave-room">
+		<input id="chat-message-leave" type="button" value="leave chat">
+	</div>
+	`
+}
+
+async function open_conf() {
+    const chat_conf = document.querySelector('.chat-conf');
+    chat_conf.innerHTML = `
+		<h3>Group configuration</h3>
+		<div id="user-add-remove-block">
+			<div id="chat-add-user">
+				<input id="button-add-user" type="button" value="Add user">
+			</div>
+			<div id="chat-remove-user">
+				<input id="button-remove-user" type="button" value="Remove user">
+			</div>
+		</div>
+        <form id="roomConfForm" class="room__form">
+			<label for="room_name">Name:</label>
+			<input type="text" class="input-text-chat" name="name" value=${room.name}><br><br>
+
+			<label for="room_picture">New Room Picture:</label><br><br>
+			<div class="new-pic">
+				<input type="file" class="room_picture" name="room_picture" accept="image/*">
+			</div>
+			<div id="submit-delete-block">
+				<button type="submit" id="submit-edit">Update</button>
+				<input id="chat-delete" type="button" value="Delete">
+			</div>
+	    </form>
+        <input id="chat-conf-close" type="button" value="Close conf chat" style="display:none;">
+        `;
+	document.getElementById('roomConfForm').addEventListener('submit', update_room);
+    document.getElementById('chat-add-user').addEventListener('click', chat_add_user);
+    document.getElementById('chat-remove-user').addEventListener('click', chat_remove_user);
+    document.getElementById('chat-delete').addEventListener('click', chat_delete);
+    document.getElementById('chat-conf-close').addEventListener('click', chat_close_conf);
+}
 
 async function open_chat(room_selected) {
     if (chatSocket) {
@@ -333,29 +417,51 @@ async function open_chat(room_selected) {
     }
     room = room_selected;
     console.log(room);
-    const chat_box = document.querySelector('.chat-box');
+    const chat_box = document.querySelector('.chat-block');
+	const chat_conf = document.querySelector('.chat-conf');
+	let room_picture = config.backendUrl + room.room_picture;
+	if (room.room_picture == null)
+		room_picture = "../../static/assets/jpg/default_picture.jpg"
+
     chat_box.innerHTML = `
-        <li id='chat-name-title'>
-            <t1>Chat ${room.name} selected</t1>
-		</li>
-        <li>
-            <div class="chat-conf">
-                <input id="chat-conf-btn" type="button" value="chat conf">
-            </div>
-		</li>
-        <li>
-            <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-            <input id="chat-message-input" type="text" size="100" placeholder="Your message"><br>
-            <input id="chat-message-submit" type="button" value="Send">
-            <input id="chat-message-refresh" type="button" value="refresh">
-            <input id="chat-message-pong" type="button" value="Send pong link">
-            <input id="chat-message-close" type="button" value="close chat">
-            <input id="chat-message-leave" type="button" value="leave chat">
-		</li>
+	<div class="chat-output-block">
+		<div id=chat-header> 
+			<span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
+			<span class="room-name">${room.name}</span>
+		</div>
+		<div id="chat-log" style="overflow-y: auto; max-height: 80%;"></div>
+	</div>
+	<div id="chat-input-block">	
+		<input id="chat-message-input" type="text" placeholder="Aa"><br>
+		<input id="chat-message-pong" type="button">
+	</div>
+	<input id="chat-message-submit" type="button" value="Send">
     `;
-    document.querySelector('#chat-conf-btn').addEventListener('click', check_admin);
+    const chat_log =  document.getElementById('chat-log');
+    let first_mess = true;
+    let end_hist = false;
+    chat_log.onscroll = function (e) {
+        if (chat_log.scrollTop <= 20 && !end_hist){
+            chatSocket.send(JSON.stringify({
+                'type': "refresh_mess",
+            }));
+        }
+    };
+    chat_log.scrollTop = chat_log.scrollHeight;
+    if (await check_admin() == true)
+    {
+        toggleDisplay(".chat-conf","")
+		open_conf();
+    }
+    else
+        toggleDisplay(".chat-conf","none")
+	
+	open_chat_info(room, room_picture);
+	print_member(room);
+
     document.querySelector('#chat-message-pong').addEventListener('click', send_pong_link);
     document.querySelector('#chat-message-leave').addEventListener('click', leave_chat);
+
 
     chatSocket = new WebSocket(config.websocketurl + "/ws/chat/" + room.id + "/");
     chatSocket.onmessage = function(e)
@@ -363,19 +469,115 @@ async function open_chat(room_selected) {
         const data = JSON.parse(e.data);
         console.log(data);
         if (data.type == 'announce') {
+            const messageElement = document.createElement('p');
             const chat_log = document.querySelector('#chat-log')
-            if (chat_log)
-                chat_log.value += (data.content + '\n');
+			const chat = document.createElement('div');
+
+			messageElement.classList.add('chat-message');
+            messageElement.textContent = `${data.content}`;
+            messageElement.classList.add('announce');
+
+            chat.appendChild(messageElement);
+            chat_log.appendChild(chat);
+			chat_log.scrollTop = chat_log.scrollHeight;
+
         }
         else if (data.type == 'chat')
-            document.querySelector('#chat-log').value += (data.message.content + '\n');
-        else if (data.type == 'list-chat') {
-            for (const index in data.messages)
-                document.querySelector('#chat-log').value += (data.messages[index].content + '\n');
-        }
+		{
+			const chatLog = document.querySelector('#chat-log');
+			const username = data.message.author.username;
+			const content = data.message.content;
+
+			const messageElement = document.createElement('p');
+			const chat = document.createElement('div');
+			messageElement.classList.add('chat-message');
+			messageElement.textContent = `${content}`;
+		
+			const profile_picture =  data.message.author.picture_remote ?  data.message.author.picture_remote : config.backendUrl +  data.message.author.profile_picture;
+
+
+			const profileImg = document.createElement('img');
+			profileImg.src = profile_picture;
+			profileImg.alt = `${username}'s profile picture`; 
+			profileImg.classList.add('profile-pic'); 
+
+			const nameDiv = document.createElement('div');
+			nameDiv.classList.add('nameDiv');
+			nameDiv.innerHTML = `<span>${username}</span>`; 
+			nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
+
+			chat.appendChild(nameDiv);
+			chat.appendChild(messageElement);
+
+            chatLog.appendChild(chat);
+			chatLog.scrollTop = chatLog.scrollHeight;
+
+		}
+		else if (data.type == 'list-chat') {
+            if (data.messages[0] == null) {
+                end_hist = true;//end of history
+                return;
+            }
+			const chatLog = document.querySelector('#chat-log');
+            data.messages.reverse();
+            let last_height_chat = chat_log.scrollHeight;
+			for (const index in data.messages) {
+				const message = data.messages[index];
+				const username = message.author ? message.author.username : "";
+				const messageElement = document.createElement('p');
+				const chat = document.createElement('div');
+				messageElement.classList.add('chat-message');
+                
+                messageElement.textContent = `${message.content}`;
+                if (!message.author) {
+                    messageElement.classList.add('announce');
+                }
+                if (message.author) {
+					const profile_picture = message.author.picture_remote ? message.author.picture_remote : config.backendUrl + message.author.profile_picture;
+					const profileImg = document.createElement('img');
+					profileImg.src = profile_picture;
+					profileImg.alt = `${username}'s profile picture`;
+					profileImg.classList.add('profile-pic'); 
+
+					const nameDiv = document.createElement('div');
+					nameDiv.classList.add('nameDiv');
+					nameDiv.innerHTML = `<span>${username}</span>`;
+					nameDiv.querySelector('span').insertAdjacentElement('afterbegin', profileImg);
+					chat.appendChild(nameDiv);
+				}
+                chat.appendChild(messageElement);
+                chatLog.prepend(chat);
+            }
+            chat_log.scrollTop = chat_log.scrollHeight - last_height_chat;
+		}
+		
         else if (data.type == 'invitation') {
-            document.querySelector('#chat-log').value += `${config.frontendUrl}/privatematchmaking?match_name=${data.match_name}` + '\n';
+			const chatLog = document.querySelector('#chat-log');
+			const username = data.message && data.message.author ? data.message.author.username : 'Unknown User';
+			const invitationLink = `${config.frontendUrl}/character?match_name=${data.match_name}`; 
+	
+			// Create message element
+			const messageElement = document.createElement('div');
+			messageElement.classList.add('chat-message');
+			
+			// Create clickable link for the invitation
+			const linkElement = document.createElement('a');
+			linkElement.href = invitationLink;
+			linkElement.classList.add('gamek-link'); // Add your styles here
+			linkElement.innerHTML = `A pong room was created!<br>Click to join`; // Use innerHTML for line break
+			linkElement.target = "_blank"; // Opens link in a new tab
+			
+			// Append the link to the message element
+			messageElement.appendChild(linkElement);
+
+			// Append the message element to the chat log
+			chatLog.appendChild(messageElement);
+			chatLog.appendChild(messageElement);
+            chat_log.scrollTop = chat_log.scrollHeight;
         }
+		else if (data.type == 'error') {
+			customalert('error !', 'Message too longs', true);
+		}
     };
     
     chatSocket.onclose = function(e)
@@ -393,24 +595,15 @@ async function open_chat(room_selected) {
     {
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
+		if (message == ''){
+			console.log("coucou");
+			return;
+		}
         chatSocket.send(JSON.stringify({
             'type': "chat",
             'message': message
         }));
         messageInputDom.value = '';
-    };
-    document.querySelector('#chat-message-close').onclick = function chat_close(e)
-    {
-        if (chatSocket)
-            chatSocket.close();
-        const chat_box = document.querySelector('.chat-box');
-        chat_box.innerHTML = `<t1>No chat selected</t1>`;
-    };
-    document.querySelector('#chat-message-refresh').onclick = function(e)
-    {
-        chatSocket.send(JSON.stringify({
-            'type': "refresh_mess",
-        }));
     };
 }
 
@@ -418,30 +611,31 @@ async function print_chats() {
     const ret_rooms = await get_user_chats();
     if (!ret_rooms)
         {
-            const chat_error = document.querySelector('.chat-list');
+            const chat_error = document.querySelector('.chat-names');
             chat_error.innerHTML = `
-            <t1>List of chat</t1>
             <div class="chat-info">
-            <div>${"no chat found"}</div>
+                <h2>no chat found</h2>
             </div>
             `;
         }
     else {
         const rooms = ret_rooms.rooms
-        const chat_list = document.querySelector('.chat-list');
-        chat_list.innerHTML=`
-            <t1>List of chat</t1>
-        `;
+        const chat_list = document.querySelector('.chat-names');
+		chat_list.innerHTML = ``;
         for (const room_l of rooms)
-            {
+            {				
                 const chat = document.createElement('li');
                 chat.id = room_l.id
-                const room_picture = config.backendUrl + room_l.room_picture;
-                chat.innerHTML = `
-                <div class="chat-invitations-${room_l.id}">
-			        <t1>${room_l.name}</t1>
-                    <img src="${room_picture}" height=100 alt="Room Picture">
-                </div>
+                let room_picture = config.backendUrl + room_l.room_picture;
+				if (room_l.room_picture == null)
+				{
+					room_picture = "../../static/assets/jpg/default_picture.jpg"
+				}
+					chat.innerHTML = `
+                <li class="room">
+				    <span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
+			        <span class="room-name-left">${room_l.name}</span>
+                </li>
                 `;
                 chat.addEventListener('click', function(event) {
                     open_chat(room_l);
@@ -473,6 +667,9 @@ async function accept_invitation(room_id, value) {
     else if (response.status === 400 || response.status === 404 || response.status === 403){
         console.log("error: ", data['error'])
     }
+	const roomid = ".room.room-id-" + room_id;
+	console.log(roomid);
+	toggleDisplay(roomid, "none")
         return;   
 }
 
@@ -480,39 +677,41 @@ async function print_invitations() {
     const ret_rooms = await get_user_invitations();
     if (!ret_rooms)
         {
-            const chat_error = document.querySelector('.chat-list-invitations');
-            chat_error.innerHTML = `
-            <t1>List of invitations</t1>
-            <div class="chat-info-invitations">
-            <div>no invitations found</div>
-            </div>
-            `;
+            const no_invit = document.querySelector('.invitation');
+
+			const newH2 = document.createElement('h4');
+			newH2.textContent = 'No invitation, sorry :('; // Set the content of the new h2
+
+			const h1Element = no_invit.querySelector('h1');
+			h1Element.insertAdjacentElement('afterend', newH2);
         }
     else {
         const rooms = ret_rooms.invitation;
-        const chat_list = document.querySelector('.chat-list-invitations');
-        chat_list.innerHTML=`
-            <t1>List of invitations</t1>
-        `;
+        const invite_list = document.querySelector('.invitation-list');
         for (const room_l of rooms)
             {
-                const chat = document.createElement('li');
-                const room_picture = config.backendUrl + room_l.room_picture;
-                chat.innerHTML = `
-                <div class="chat-block-invitations-${room_l.id}">
-			        <t1>${room_l.name}</t1>
-                    <img src="${room_picture}" height=100 alt="Room Picture">
-                    <input id="invitation-accept-${room_l.id}" type="button" value="Accept invitation">
-                    <input id="invitation-refuse-${room_l.id}" type="button" value="Refuse invitation">
-
-                </div>
+                const invite = document.createElement('li');
+                let room_picture = config.backendUrl + room_l.room_picture;
+				if (room_l.room_picture == null)
+					room_picture = "../../static/assets/jpg/default_picture.jpg"
+                invite.innerHTML = `
+				<li class="room room-id-${room_l.id}">
+				    <span class="room-pic"> <img src="${room_picture}" height=100 alt="Room Picture"> </span>
+			        <span class="room-name-left">${room_l.name}</span>
+					<input id="invitation-accept-${room_l.id}" class="invite-yes" type="button" >
+					<input id="invitation-refuse-${room_l.id}" class="invite-no" type="button">
+                </li>
                 `;
-                chat_list.appendChild(chat);
-                const btn_accept = document.getElementById(`invitation-accept-${room_l.id}`)
-                const btn_refuse = document.getElementById(`invitation-refuse-${room_l.id}`)
-                btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
-                btn_refuse.addEventListener('click', function(event) {accept_invitation(room_l.id, "FALSE")});
-            };12345
+                invite_list.appendChild(invite);
+				const btn_accept = document.getElementById(`invitation-accept-${room_l.id}`)
+				const btn_refuse = document.getElementById(`invitation-refuse-${room_l.id}`)
+				btn_accept.addEventListener('click', function(event) {accept_invitation(room_l.id, "TRUE")});
+				btn_refuse.addEventListener('click', function(event) {accept_invitation(room_l.id, "FALSE")});
+
+				invite.addEventListener('click', function(event) {
+						open_invitation(room_l);
+				});
+            };
         }
 }
 
@@ -551,13 +750,87 @@ export async function initComponent(params) {
         router.navigate('/login');
     print_chats();
     print_invitations();
-    const create_room_btn = document.querySelector('.li-create-room-btn');
+    const create_room_btn = document.querySelector('.create-room');
     create_room_btn.addEventListener('click', create_room);
+
+	// document.getElementById('user-search').addEventListener('input', async function() {
+	// 	const query = this.value;
+	// 	if (query.length > 0) {
+	// 		const response = await searchUsers(query, 5);
+	// 		if (response.status === 200) {
+	// 			const data = await response.json();
+	// 			updateUserList(data.users);
+	// 		} else {
+	// 			updateUserList([]);
+	// 		}
+	// 	} else {
+	// 		updateUserList([]);
+	// 	}
+	// });
 }
 
 export async function cleanupComponent(params) {
     if (chatSocket)
         chatSocket.close();
-    const container = document.querySelector('.chat_container');
+    const container = document.querySelector('.background');
     container.replaceWith(container.cloneNode(true));
+}
+
+
+function updateUserList(users) {
+	const userList = document.querySelector('.user-list');
+	userList.innerHTML = '';
+	users.forEach(user => {
+		const userItem = document.createElement('li');
+		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+
+		userItem.innerHTML = `
+		<li class="room" >
+			<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span>
+			<span class="room-name-left">${user.username}</span>
+		</li>
+		`
+		userItem.addEventListener('click', () => {
+			document.getElementById('chat-user-input').value = user.username;
+		});
+		userList.appendChild(userItem);
+	});
+}
+
+
+function open_invitation(room_l) {
+	room = room_l;
+
+	const room_info = document.querySelector('.room-info');
+
+	room_info.innerHTML = `
+	<h1>Group info</h1>
+	<div class="leave-room"><div>
+	`
+	print_member(room);
+}
+
+function print_member(room) {
+	const userList = document.querySelector('.room-users');
+	userList.innerHTML = '';
+	room.participants.forEach(user => {
+		const userItem = document.createElement('li');
+		userItem.classList.add('room');
+
+		const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+		if (room.created_by && user.username == room.created_by.username)
+		{
+			userItem.innerHTML = `
+				<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
+				<span class="room-name-left">${user.username} (admin)</span>
+			`;
+		}
+		else {
+			userItem.innerHTML = `
+				<span class="room-pic"> <img src="${profile_picture}" height=100 alt="Room Picture"> </span> 
+				<span class="room-name-left">${user.username}</span>
+			`;
+		}
+		userList.appendChild(userItem);
+	});
 }

@@ -1,0 +1,103 @@
+.background {
+	width: 100%;
+	height: 100%;
+}
+
+.flex-container
+{
+	display: flex;
+	margin-left: 100px;
+	margin-top: 25px;
+	gap: 40px;
+}
+
+.block {
+	width: 500px;
+	height: 90vh;
+	background-color: #aaaa9f;
+	display: flex;
+	justify-content: left;
+	color: white;
+	font-size: 1rem;
+	border-radius: 8px;
+}
+
+.left {
+	overflow-y: scroll;
+	display: flex;
+	flex-direction: column;
+}
+
+.middle {
+	width: 700px;
+}
+
+.right {
+	display: flex;
+	flex-direction: column;
+}
+
+
+.chat-box {
+	width: inherit;
+}
+
+.room {
+	width: 100%;
+	height: 75px;
+	display: flex;
+	align-items: center; /* Aligns content vertically */
+}
+
+.room-pic {
+	display: inline-flex;
+	align-items: center; 
+	margin-right: 10px; 
+}
+
+.room-pic img
+{
+	width: 50px;
+    height: 50px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.room-name-left
+{
+	display: inline-flex;
+	align-items: center; /* Aligns text to the middle of the image */
+}
+
+
+.room:hover {
+	background-color: #858582;
+
+}
+
+
+.chat-list {
+	list-style-type: none; 
+	padding: 0; 
+	margin: 0; 
+}
+
+#chat-log {
+	width: 600px; /* or use a specific width like 600px */
+	height: 600px; /* set to desired height */
+	resize: none; /* optional, disables resizing */
+}
+
+
+.room-info 
+{
+	position: relative;
+	left : 50%;
+	transform: translateX(-10%);
+}
+
+.chat-conf {
+    position: absolute;
+    top: 50%; /* Position 50% from the top of the parent */
+    transform: translateY(-50%); /* Center it vertically relative to itself */
+}
