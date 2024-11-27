@@ -10,6 +10,9 @@ const backgroundCtx = backgroundCanvas.getContext("2d");
 const lifeCanvas = document.getElementById("lifeCanvas");
 const lifeCanvasCtx = lifeCanvas.getContext("2d");
 
+const ballImage = new Image();
+ballImage.src = '../../../../static/assets/multi/bullet.png';
+
 function drawBackground() {
     backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
 
@@ -23,12 +26,12 @@ function drawBackground() {
 function updateScoreCanvas() {
 	lifeCanvasCtx.clearRect(0, 0, lifeCanvas.width, lifeCanvas.height);
 
-	lifeCanvasCtx.font = "20px Arial";
+	lifeCanvasCtx.font = "20px arial";
 	lifeCanvasCtx.fillStyle = "#fff"; 
-	lifeCanvasCtx.fillText(`${player1Score}/5`, 20, lifeCanvas.height/2); 
-	lifeCanvasCtx.fillText(`${player2Score}/5`, lifeCanvas.width - 45, lifeCanvas.height/2); 
-	lifeCanvasCtx.fillText(`${player3Score}/5`, lifeCanvas.width / 2, lifeCanvas.height - 40); 
-	lifeCanvasCtx.fillText(`${player4Score}/5`,  lifeCanvas.width / 2 - 15,   60); 
+	lifeCanvasCtx.fillText(`${player1Score}/5`, 20, lifeCanvas.height/2); //gauche
+	lifeCanvasCtx.fillText(`${player2Score}/5`,  lifeCanvas.width / 2 - 15, 60); //top 
+	lifeCanvasCtx.fillText(`${player3Score}/5`, lifeCanvas.width / 2 - 15, lifeCanvas.height - 40);  //bas
+	lifeCanvasCtx.fillText(`${player4Score}/5`,  lifeCanvas.width - 60,   lifeCanvas.height/2	);
 
 }
 
@@ -144,18 +147,20 @@ function draw() {
 	ctx.fillRect(paddle3X, canvas.height - paddleWidth - 5, paddleHeight, paddleWidth);
 	ctx.fillRect(canvas.height - paddleWidth - 5, paddle4Y, paddleWidth, paddleHeight);
 
-	ctx.beginPath();
-	ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-	ctx.fillStyle = 'red';
-	ctx.fill();
-	ctx.closePath();
+	// ctx.beginPath();
+	// ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+	// ctx.fillStyle = 'red';
+	// ctx.fill();
+	// ctx.closePath();
 
-	// ctx.font = '20px Arial';
-	// backgroundCtx.font = '20px Arial'
-	// backgroundCtx.fillText(`${player1Score}/5`, 5, 5);
-	// ctx.fillText(`${player2}: ${player2Score}`, canvas.width - 200, 20);
-	// ctx.fillText(`${player3}: ${player3Score}`, 20, 40);
-	// ctx.fillText(`${player4}: ${player4Score}`, canvas.width - 200, 40);
+    ctx.drawImage(
+        ballImage,
+        ballX,
+        ballY,
+        ballRadius * 2,
+        ballRadius * 2
+    );
+
 }
 
 function ballReset() {
@@ -198,6 +203,7 @@ function updateScore() {
 	if (player1Score >= 5 || player2Score >= 5 || player3Score >= 5 || player4Score >= 5) {
 		game_ended = true;
 		customalert('Game Over', lastTouch + ' wins!');
+		closeButton();
 	}
 
 	lastTouch = null;
@@ -338,6 +344,22 @@ function gameLoop() {
 		document.removeEventListener('keydown', handleKeydown);
 		document.removeEventListener('keyup', handleKeyup);
 	}
+}
+
+function closeButton()
+{
+	console.log("game close function");
+	const buttonDiv = document.createElement('div');
+	buttonDiv.className = 'return-menu'; 
+	buttonDiv.innerHTML =  `<input id="button-return" type="button" value="Return to menu" data-link>
+	`;
+	const parentDiv = document.getElementById("game-canvas");
+	
+	parentDiv.appendChild(buttonDiv)
+	document.getElementById('button-return').addEventListener('click', function() {
+        router.navigate('/multiplayer');
+    });
+
 }
 
 export async function initComponent() {

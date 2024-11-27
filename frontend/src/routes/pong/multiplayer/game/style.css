@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Jersey+10&display=swap");
 body {
   text-align: center;
 }
@@ -35,7 +36,7 @@ canvas {
   align-items: center;
 }
 #container #game-canvas {
-  margin-top: 50px;
+  margin-top: 40px;
   height: 765px;
   width: 800px;
   position: relative;
@@ -67,7 +68,7 @@ canvas {
   transform: translateX(-50%);
 }
 #container #game-canvas .name.bottom-name {
-  bottom: -30px;
+  bottom: -50px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -77,7 +78,7 @@ canvas {
   transform: translateY(-50%) rotate(-90deg);
 }
 #container #game-canvas .name.right-name {
-  right: -50px;
+  right: -60px;
   top: 50%;
   transform: translateY(-50%) rotate(90deg);
 }
@@ -93,7 +94,7 @@ canvas {
   position: absolute;
   font-family: isaac-bold;
   font-size: 0.8rem;
-  background-image: url(../../../static/assets/sheets/Button.png);
+  background-image: url(../../../../static/assets/sheets/Button.png);
   width: 150px;
   height: 60px;
   background-size: contain;
