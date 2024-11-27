@@ -1,0 +1,112 @@
+body {
+	text-align: center;
+}
+canvas {
+	display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+@font-face {
+    font-family: isaac-bold;
+    src: url('../../../assets/font/isaac_bold.ttf') format('truetype');
+}
+#background-image {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%; 
+    background-image: url('../../../../static/assets/background/background_1.png');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    z-index: -1;
+}
+#container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	#game-canvas {
+		margin-top: 50px;
+		height: 765px;
+		width: 800px;
+		position: relative;
+		#backgroundCanvas {
+			position: absolute;
+			z-index: 0;
+			border-radius: 40px;
+		}
+		#pongCanvas {
+			position: absolute;
+			z-index: 1; 
+		}
+		#lifeCanvas {
+			position: absolute;
+			z-index: 1; 
+		}
+		.name {
+			position: absolute;
+			font-family: isaac-bold; 
+			font-size: 16px;
+			color: black;
+			text-align: center;
+			padding: 5px;
+			&.top-name {
+				top: -30px; 
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			&.bottom-name {
+				bottom: -30px; 
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			&.left-name {
+				left: -60px; 
+				top: 50%;
+				transform: translateY(-50%) rotate(-90deg); 
+			}
+
+			&.right-name {
+				right: -50px;
+				top: 50%;
+				transform: translateY(-50%) rotate(90deg); 
+			}
+		}
+		.return-menu {
+			position: relative;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			top: 50%;
+			z-index: 5;
+			#button-return {
+				position: absolute;
+				font-family: isaac-bold;
+				font-size: 0.8rem;
+				background-image: url(../../../static/assets/sheets/Button.png);
+				width: 150px;
+				height: 60px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-color: transparent;
+				outline: none;
+				border: none;
+				cursor: pointer;
+				transition: transform 0.1s ease;
+				&:hover{
+					transform: scale(1.02);
+					border: none;
+					background-color: transparent;
+				}
+			}
+		}
+	}
+}

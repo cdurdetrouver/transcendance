@@ -1,0 +1,98 @@
+@font-face {
+    font-family: isaac-bold;
+    src: url('../../routes/assets/font/isaac_bold.ttf') format('truetype');
+}
+
+#background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
+	background-image: url("../../../static/assets/background/background_1.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: -1;
+}
+#container {
+	font-family: isaac-bold;
+    position: relative;
+    left:30%;
+    background-image: url("../../../static/assets/multi/sheet.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+	height: 600px;
+	width: 600px;
+	z-index: 0;
+}
+#container #content {
+    position: relative;
+	display: flex;
+	flex-direction: column; /* Arrange children vertically */
+    justify-content: flex-start; /* Align children to the top */
+	padding-left: 80px;
+	padding-right: 100px;
+	min-height: 90%;
+	box-sizing: border-box;
+}
+#container #content #title {
+    text-align: center;
+    position: relative;
+    font-family: isaac-bold;
+    font-size: 2.5rem;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+#container #content h3 {
+	font-size: 1rem;
+	text-align: center;
+	line-height: 1.5;
+	word-spacing: 5px;
+}
+#container #content #nameAdd{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+    align-items: center;
+	gap: 10px;
+}
+#container #content #start {
+	margin-top: auto; 
+    align-self: center;
+	font-family: isaac-bold;
+	background-image: url(../../../static/assets/sheets/Button.png);
+	width: 200px;
+	height: 80px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;	
+	cursor: pointer;
+	transition: transform 0.2s ease;
+}
+#container #content #start:hover {
+	transform: scale(1.1);
+	border: none;
+	background-color: transparent;
+}
+input[type="text"] {
+	width: 60%; 
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid  grey; 
+	font-size: 16px;    
+	transition: 0.3s;    
+	box-shadow: none;    
+	background-color: #e9dadf;
+	font-family: isaac-bold; 
+}
+input[type="text"]:focus {
+	border-color: #66afe9; 
+	outline: none;
+	box-shadow: none;
+}

@@ -4,6 +4,46 @@ import { router } from '../../../../app.js';
 const canvas = document.getElementById("pongCanvas");
 const ctx = canvas.getContext("2d");
 
+const backgroundCanvas = document.getElementById("backgroundCanvas");
+const backgroundCtx = backgroundCanvas.getContext("2d");
+
+const lifeCanvas = document.getElementById("lifeCanvas");
+const lifeCanvasCtx = lifeCanvas.getContext("2d");
+
+function drawBackground() {
+    backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+
+    const backgroundImage = new Image();
+    backgroundImage.src = '../../../static/assets/multi/floor.png';
+    backgroundImage.onload = () => {
+        backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+    };
+}
+
+function updateScoreCanvas() {
+	lifeCanvasCtx.clearRect(0, 0, lifeCanvas.width, lifeCanvas.height);
+
+	lifeCanvasCtx.font = "20px Arial";
+	lifeCanvasCtx.fillStyle = "#fff"; 
+	lifeCanvasCtx.fillText(`${player1Score}/5`, 20, lifeCanvas.height/2); 
+	lifeCanvasCtx.fillText(`${player2Score}/5`, lifeCanvas.width - 45, lifeCanvas.height/2); 
+	lifeCanvasCtx.fillText(`${player3Score}/5`, lifeCanvas.width / 2, lifeCanvas.height - 40); 
+	lifeCanvasCtx.fillText(`${player4Score}/5`,  lifeCanvas.width / 2 - 15,   60); 
+
+}
+
+function centerPongCanvas() {
+    const bgWidth = backgroundCanvas.width;
+    const bgHeight = backgroundCanvas.height;
+    const pongWidth = canvas.width;
+    const pongHeight = canvas.height;
+
+    const centerX = (bgWidth - pongWidth) / 2;
+    const centerY = (bgHeight - pongHeight) / 2;
+    canvas.style.left = `${centerX}px`;
+    canvas.style.top = `${centerY}px`;
+}
+
 const paddleWidth = 10;
 const paddleHeight = 75;
 const ballRadius = 8;
@@ -110,11 +150,12 @@ function draw() {
 	ctx.fill();
 	ctx.closePath();
 
-	ctx.font = '20px Arial';
-	ctx.fillText(`${player1}: ${player1Score}`, 20, 20);
-	ctx.fillText(`${player2}: ${player2Score}`, canvas.width - 200, 20);
-	ctx.fillText(`${player3}: ${player3Score}`, 20, 40);
-	ctx.fillText(`${player4}: ${player4Score}`, canvas.width - 200, 40);
+	// ctx.font = '20px Arial';
+	// backgroundCtx.font = '20px Arial'
+	// backgroundCtx.fillText(`${player1Score}/5`, 5, 5);
+	// ctx.fillText(`${player2}: ${player2Score}`, canvas.width - 200, 20);
+	// ctx.fillText(`${player3}: ${player3Score}`, 20, 40);
+	// ctx.fillText(`${player4}: ${player4Score}`, canvas.width - 200, 40);
 }
 
 function ballReset() {
@@ -153,7 +194,7 @@ function updateScore() {
 	} else if (lastTouch == player4) {
 		player4Score++;
 	}
-
+	updateScoreCanvas();
 	if (player1Score >= 5 || player2Score >= 5 || player3Score >= 5 || player4Score >= 5) {
 		game_ended = true;
 		customalert('Game Over', lastTouch + ' wins!');
@@ -334,11 +375,24 @@ export async function initComponent() {
 		customalert('Error', 'Missing player names', true);
 		router.navigate('/pong');
 	}
+	const player1div = document.querySelector(".name.left-name");
+	const player2div = document.querySelector(".name.top-name");
+	const player3div = document.querySelector(".name.bottom-name");
+	const player4div = document.querySelector(".name.right-name");
+
+	player1div.innerHTML = player1;
+	player2div.innerHTML = player2;
+	player3div.innerHTML = player3;
+	player4div.innerHTML = player4;
+
+	
 
 	document.addEventListener('keydown', handleKeydown);
 	document.addEventListener('keyup', handleKeyup);
 
-
+	drawBackground();
+	updateScoreCanvas();
+	centerPongCanvas();
 	game_started = true;
 	gameLoop();
 }
