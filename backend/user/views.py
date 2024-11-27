@@ -71,7 +71,7 @@ def user_detail(request):
 	user = request.user
 	if request.method == 'PUT':
 		username = request.data.get('username')
-		profile_picture = request.FILES.get('profilePicture')
+		profile_picture = request.FILES.get('edit-profile-picture')
 
 		data = {}
 		if profile_picture is not None:
@@ -79,10 +79,11 @@ def user_detail(request):
 
 		if username is not None and username != user.username:
 			succes, error = is_valid_username(username)
+			print(username)
 			if not succes:
 				return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
 			data['username'] = username
-
+		
 		serializer = UserSerializer(user, data=data, partial=True)
 		if serializer.is_valid():
 			if profile_picture is not None and user.picture_remote is not None:
@@ -90,6 +91,7 @@ def user_detail(request):
 			if profile_picture is not None:
 				id = user.id
 				profile_picture.name = f'{id}.png'
+			print(profile_picture)
 			serializer.save()
 			return JsonResponse({'user': serializer.data}, status=status.HTTP_200_OK)
 		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]

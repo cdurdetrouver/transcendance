@@ -16,12 +16,10 @@ function displayUser(user)
 	var profilePictureContainer = document.querySelector("#profile-picture");
 
 	if (profilePictureContainer) {
-		console.log("profile exist");
+		console.log("profile picture", profilePicture);
 
-		// var image = document.createElement("img");
 		let imgElement = document.querySelector('#profile-picture img');
 		imgElement.src = profilePicture;
-
 	}
 	else {
 		console.log("user infos does not exist");
@@ -93,7 +91,8 @@ export async function initComponent() {
 
 	document.getElementById("edit-password").addEventListener('submit', handleFormPassword);
 	document.getElementById("username-form").addEventListener('submit', handleFormUsername);
-	document.querySelector("#profile-picture-container").addEventListener('change', handleFormProfilePicture);
+	document.querySelector("#profile-picture-container input").addEventListener('change', handleFormProfilePicture);
+
 	
 	const editProfilePicture = document.querySelector("#profile-picture-container label");
 	const password = document.querySelector("#edit-password");
@@ -111,9 +110,6 @@ export async function initComponent() {
 		}
 	});
 	
-	editProfilePicture.addEventListener("click", function() {
-			document.querySelector("#profile-picture-container input").click();
-	});
 	const popin = document.getElementById("popin");
 	const yesButton = document.getElementById("yes-button");
 	const noButton = document.getElementById("no-button");
@@ -216,21 +212,19 @@ async function handleFormProfilePicture(event) {
 	const form = document.querySelector("#profile-picture-container form");
 	const formData = new FormData(form);
 	console.log(formData);
-	let response = await update_user(formData);
 
 	try {
         let response = await update_user(formData);
-        if (!response.ok) {
-            throw new Error(`Server error: ${response.status} ${response.statusText}`);
-        }
-
+   
         let data = await response.json();
         if (response.status === 200) {
             customalert('Success', 'User updated successfully', false);
             setPersonalUser(data.user);
             deleteCookie('user');
             setCookie('user', JSON.stringify(data.user), 5 / 1440);
-        } else {
+			updateProfilePicture(data.user);
+        }
+		else {
             customalert('Error', data.error || 'Unknown error', true);
         }
     }
@@ -238,6 +232,13 @@ async function handleFormProfilePicture(event) {
         console.error("Error during the request: ", error);
         customalert('Error', error.message || 'An error occurred while updating the profile picture.', true);
     }
+}
+
+function updateProfilePicture(user) {
+	const profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+
+	let imgElement = document.querySelector('#profile-picture img');
+	imgElement.src = profilePicture + '?t=' + new Date().getTime();
 }
 
 async function changeDisplayUsername() {
