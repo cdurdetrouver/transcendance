@@ -42,6 +42,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return
         self.room = await get_room(self.room_group_id)
         if (not self.room):
+            self.room_group_name = "not_allowed"
             await self.disconnect(404)
             await self.close()
             return
@@ -75,6 +76,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if (text_data_json["type"] == "refresh_mess"):
             await self.refresh_last_mess()
         elif text_data_json["type"] == "chat":
+            if len(text_data_json["message"]) > 128:
+                await self.send(text_data=json.dumps({"type": "error", "content": "Message too long"}))
+                return
             message = await save_message(self.room, text_data_json, self.user)
             message_serializer = MessageSerializer(message)
             await self.channel_layer.group_send(

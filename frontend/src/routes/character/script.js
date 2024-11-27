@@ -1,3 +1,5 @@
+import { router } from "../../app.js";
+
 let carousel;
 let	item_a;
 let	item_b;
@@ -11,6 +13,7 @@ let	currdegB;
 let	currdegC;
 let	turn;
 let currentIndex;
+let match_name;
 
 setTimeout(function() {
     let preloadDiv = document.querySelector('div.preload');
@@ -153,6 +156,9 @@ export async function initComponent() {
 	turn = 0;
 	currentIndex = 0;
 
+	const urlParams = new URLSearchParams(window.location.search);
+  	match_name = urlParams.get('match_name');
+
 	document.querySelector(".next").addEventListener("click", function() {
 		rotate({ data: { d: "n" } });
 	});
@@ -166,7 +172,10 @@ export async function initComponent() {
 	document.querySelectorAll('.game').forEach(game => {
 		game.addEventListener('click', function (e) {
 			const baseHref = e.target.getAttribute('href');
-			e.target.setAttribute('href', `${baseHref}?character=${currentIndex}`);
+			if (baseHref === '/pong' && match_name)
+				router.navigate(baseHref + `/private?character=${currentIndex}&match_name=${match_name}`);
+			else
+				router.navigate(baseHref + `?character=${currentIndex}`);
 		});
 	});
   }

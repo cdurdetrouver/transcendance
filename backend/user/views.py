@@ -10,6 +10,7 @@ from drf_yasg import openapi
 from .utils import generate_access_token, generate_refresh_token, get_intra_user, get_github_user, get_google_user, is_valid_username, is_valid_password
 from .models import User
 from .serializers import UserSerializer, LoginSerializer
+from chat.data_handling import delete_mess_of
 from pong.models import Game
 from pong.serializers import GameSerializer
 import jwt
@@ -97,7 +98,7 @@ def user_detail(request):
 		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
 		return JsonResponse({'error':error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 	elif request.method == 'DELETE':
-		# Delete all chat etc...
+		delete_mess_of(user)
 		user.delete()
 		response = JsonResponse({'message': 'User deleted'}, status=status.HTTP_200_OK)
 		response.delete_cookie('refresh_token')

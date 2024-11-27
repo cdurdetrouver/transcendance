@@ -3,31 +3,15 @@ import { get_user } from '../.././components/user/script.js';
 import { customalert } from '../../components/alert/script.js';
 import { router } from '../../app.js';
 
-const svgcheck = `
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-    <defs>
-        <mask id="ipSCheckOne0">
-            <g fill="none" stroke-linejoin="round" stroke-width="4">
-                <path fill="#fff" stroke="#fff"
-                    d="M24 44a19.94 19.94 0 0 0 14.142-5.858A19.94 19.94 0 0 0 44 24a19.94 19.94 0 0 0-5.858-14.142A19.94 19.94 0 0 0 24 4A19.94 19.94 0 0 0 9.858 9.858A19.94 19.94 0 0 0 4 24a19.94 19.94 0 0 0 5.858 14.142A19.94 19.94 0 0 0 24 44Z" />
-                <path stroke="#000" stroke-linecap="round" d="m16 24l6 6l12-12" />
-            </g>
-        </mask>
-    </defs>
-    <path fill="#12d316" d="M0 0h48v48H0z" mask="url(#ipSCheckOne0)" />
-</svg>
-`;
-
-const svgcross = `
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 15 15">
-  <path fill="#ce0d0d" d="M3.64 2.27L7.5 6.13l3.84-3.84A.92.92 0 0 1 12 2a1 1 0 0 1 1 1a.9.9 0 0 1-.27.66L8.84 7.5l3.89 3.89A.9.9 0 0 1 13 12a1 1 0 0 1-1 1a.92.92 0 0 1-.69-.27L7.5 8.87l-3.85 3.85A.92.92 0 0 1 3 13a1 1 0 0 1-1-1a.9.9 0 0 1 .27-.66L6.16 7.5L2.27 3.61A.9.9 0 0 1 2 3a1 1 0 0 1 1-1c.24.003.47.1.64.27" />
-</svg>
-`;
+const checkImageSrc = "../../static/assets/yes.png"; 
+const crossImageSrc = "../../static/assets/no.png"; 
 
 let searchButtonTimeoutId = null;
 let SearchButton = null;
 let SearchStatus = false;
 let socket = null;
+let character = null;
+
 
 class MatchmakingSocket {
   constructor() {
@@ -57,7 +41,7 @@ class MatchmakingSocket {
       setPlayer(opponent, true);
       let WaitingTextDiv = document.querySelector('.waiting__message');
       let WaitingText = WaitingTextDiv.querySelector('p');
-      WaitingText.innerHTML = "Match found!";
+      WaitingText.innerHTML = "";
       WaitingTextDiv.classList.remove('show');
       clearTimeout(searchButtonTimeoutId);
       SearchButton.style.opacity = "0.2";
@@ -90,19 +74,24 @@ class MatchmakingSocket {
 }
 
 function setSVGContent(element, svgContent) {
-  element.innerHTML = svgContent;
+	let img = element.querySelector('img');
+    if (!img) {
+        img = document.createElement('img');
+        element.appendChild(img);
+    }
+	img.src = svgContent;
 }
 
 function toggleSvgStatus(opponent = false, status = false) {
   if (opponent == true) {
     let div = document.getElementById('opponent');
     let userNameDiv = div.querySelector('.user__status');
-    setSVGContent(userNameDiv, status ? svgcheck : svgcross);
+    setSVGContent(userNameDiv, status ? checkImageSrc : crossImageSrc);
   }
   else {
     let div = document.getElementById('player');
     let userNameDiv = div.querySelector('.user__status');
-    setSVGContent(userNameDiv, status ? svgcheck : svgcross);
+    setSVGContent(userNameDiv, status ? checkImageSrc : crossImageSrc);
   }
 }
 
@@ -144,7 +133,7 @@ async function handleClick() {
     SearchButton.style.opacity = "0.2";
     SearchButton.style.cursor = "not-allowed";
     SearchButton.style.backgroundColor = "red";
-    WaitingText.innerHTML = "Waiting for another player...";
+    WaitingText.innerHTML = "";
     WaitingTextDiv.classList.add('show');
     toggleSvgStatus(false, true);
 
@@ -154,7 +143,7 @@ async function handleClick() {
     SearchStatus = false;
     SearchButton.innerHTML = "Search";
     SearchButton.style.backgroundColor = "green";
-    WaitingText.innerHTML = "Ready to play ?";
+    WaitingText.innerHTML = "";
     WaitingTextDiv.classList.remove('show');
     toggleSvgStatus(false, false);
 

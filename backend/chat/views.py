@@ -37,6 +37,8 @@ def get_user_chats(request):
     return JsonResponse({'rooms': rooms_s}, status=status.HTTP_200_OK)
 
 def check_admin(user, room):
+    if (not room.created_by):
+        return False
     if (room.created_by.id == user.id):
         return True
     return False
@@ -247,7 +249,7 @@ def delete_user(user, room):
     if (len(list_user) == 0):
         room.delete()
     else:
-        send_chat(room, user.username + " leave the chat")
+        send_chat(room, user.username + " left the chat")
     return JsonResponse({"User status": "Deleted from {} successfully.".format(room.name)}, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(
