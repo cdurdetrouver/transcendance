@@ -220,11 +220,10 @@ body #page-container #page-content #login-content #separator, html #page-contain
 body #page-container #page-content #login-content #app-login, html #page-container #page-content #login-content #app-login {
   display: flex;
   flex-direction: column;
-  padding-left: 14%;
 }
 body #page-container #page-content #login-content #app-login a, html #page-container #page-content #login-content #app-login a {
   margin-top: 20px;
-  width: 38%;
+  width: 54%;
   margin-left: 60px;
   background-color: #fffcfc;
   color: black;
@@ -280,6 +279,13 @@ body #page-container #page-content #register-content #test, html #page-container
   flex-direction: row;
   padding-top: 11px;
   padding-left: 50px;
+}
+body #page-container #page-content #register-content #test #rgpd, html #page-container #page-content #register-content #test #rgpd {
+  color: rgb(69, 57, 59);
+  position: absolute;
+  top: 78%;
+  left: 10%;
+  text-decoration: none;
 }
 body #page-container #page-content #register-content #test #avatar-register, html #page-container #page-content #register-content #test #avatar-register {
   padding-left: 30%;
