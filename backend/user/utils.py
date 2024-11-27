@@ -108,7 +108,7 @@ def get_intra_user(code):
 	user_db = User.objects.filter(email=user.email).first()
 	if user_db:
 		return user_db
-	elif is_valid_username(user.name)[0] == False:
+	elif is_valid_username(user.login)[0] == False:
 			return None
 	else:
 		return User.objects.create(
@@ -146,7 +146,7 @@ def get_github_user(code):
 	user_db = User.objects.filter(email=user.email).first()
 	if user_db:
 		return user_db
-	elif is_valid_username(user.name)[0] == False:
+	elif is_valid_username(user.login)[0] == False:
 			return None
 	else:
 		return User.objects.create(

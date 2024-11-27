@@ -97,6 +97,7 @@ def user_detail(request):
 		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
 		return JsonResponse({'error':error_messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 	elif request.method == 'DELETE':
+		# Delete all chat etc...
 		user.delete()
 		response = JsonResponse({'message': 'User deleted'}, status=status.HTTP_200_OK)
 		response.delete_cookie('refresh_token')
@@ -307,6 +308,9 @@ def refresh_token(request):
 	expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
 	secure_cookie = not settings.DEBUG
 	response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+
+	user.last_login = datetime.datetime.utcnow()
+	user.save()
 	return response
 
 @swagger_auto_schema(
@@ -682,5 +686,8 @@ def complete_login(user):
 	expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
 	secure_cookie = not settings.DEBUG
 	response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+
+	user.last_login = datetime.datetime.utcnow()
+	user.save()
 
 	return response
