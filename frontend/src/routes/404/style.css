@@ -1,0 +1,47 @@
+@font-face {
+    font-family: isaac-bold;
+    src: url("http://localhost:5500/routes/assets/font/isaac_bold.ttf") format("truetype");
+  }
+
+content {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+div{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+a {
+    display: grid;
+    text-decoration: none;
+    outline-color: transparent;
+    justify-content: center;
+    align-items: center;
+    line-height: 3;
+    color: black;
+}
+
+.background {
+    font-family: isaac-bold;
+    font-size: 1.5rem;
+    position: center;
+    width: 100dvw;
+    height: 100dvh;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    background-color: #d2c7c3;
+    background-image: url("../../static/assets/background/background_1.png");
+    background-repeat: repeat;
+    background-size: cover;
+}
