@@ -2,6 +2,10 @@
   font-family: "isaac";
   src: url(../routes/assets/font/IsaacGame.ttf);
 }
+@font-face {
+	font-family: "isaac-bold";
+	src: url(../routes/assets/font/isaac_bold.ttf);
+  }
 body, html {
   background-image: url("../routes/assets/images/home/background.png");
   background-position: center;
@@ -268,9 +272,22 @@ body, html {
   padding-left: 50px;
 }
 #page-container #page-content #popin-container #popin-content #register-content #test #avatar-register {
-  padding-left: 35%;
-  padding-top: 5%;
+	padding-left: 35%;
 }
+#avatar-register a {
+	font-family: Isaac-bold;
+	font-size: 0.7rem;
+    text-decoration: none;
+    color: black;
+    display: inline-block;
+    transition: transform 0.5s ease;
+	margin-bottom: 5px;
+}
+#avatar-register a:hover {
+    transform: scale(1.001);
+}
+
+
 #page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #avatar {
   position: relative;
   background-image: url(../static/assets/login/avatar_sad.png);
@@ -281,9 +298,6 @@ body, html {
   left: -15px;
   display: inline-block;
   transition: transform 0.2s ease;
-}
-#page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #avatar:hover {
-  transform: scale(1.05);
 }
 #page-container #page-content #popin-container #popin-content #register-content #test #avatar-register #file-chosen {
   position: relative;

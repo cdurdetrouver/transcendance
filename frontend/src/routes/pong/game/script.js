@@ -2,6 +2,7 @@ import config from "../../../env/config.js";
 import { get_user } from '../../../../components/user/script.js';
 import { customalert } from "../../../components/alert/script.js";
 import { router } from '../../../app.js';
+import { deleteCookie } from "../../../components/storage/script.js";
 
 const canvas = document.getElementById("pongCanvas");
 const ctx = canvas.getContext("2d");
@@ -616,4 +617,7 @@ export function cleanupComponent() {
 
 	document.removeEventListener('keydown', handleKeydown);
 	document.removeEventListener('keyup', handleKeyup);
+
+	deleteCookie('user');
+	deleteCookie('access_token');
 }
