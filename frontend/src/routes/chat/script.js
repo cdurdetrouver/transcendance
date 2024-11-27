@@ -3,11 +3,6 @@ import { get_user, searchUsers } from "../../components/user/script.js";
 import { router } from '../../app.js';
 import {customalert} from '../../components/alert/script.js';
 
-//show error si photo n'est pas au bon format
-
-//for frontend team:
-//pong link redirect to their link sent
-//refresh juste affiche les 10 d'avant mais ils ne sont pas avant dans la box
 let chatSocket;
 let room;
 let user;
@@ -285,6 +280,21 @@ async function update_room(event) {
 
 async function chat_close(params) {
     const chat_box = document.querySelector('.chat-block');
+    const middle_block = document.querySelector(".middle");
+    middle_block.innerHTML =`
+    <div class="chat-block"></div>
+    `;
+    const block_r = document.querySelector(".right");
+    block_r.innerHTML =`
+	<div class="room-info"></div>
+	<div id="user-profile"></div>
+	<div class="room-users"></div>
+	<div class="chat-conf"></div>
+	<div class="lower-left">
+    <ul class="user-list"></ul>
+	</div>
+	`;
+    chatSocket.close();
     print_chats();
 }
 
@@ -340,22 +350,7 @@ async function check_admin() {
 
 async function leave_chat(params) {
     await remove_user(user.username);
-    await print_chats();
-    const middle_block = document.querySelector(".middle");
-    middle_block.innerHTML =`
-    <div class="chat-block"></div>
-    `;
-    const block_r = document.querySelector(".right");
-    block_r.innerHTML =`
-	<div class="room-info"></div>
-	<div id="user-profile"></div>
-	<div class="room-users"></div>
-	<div class="chat-conf"></div>
-	<div class="lower-left">
-    <ul class="user-list"></ul>
-	</div>
-	`;
-    chatSocket.close();
+    chat_close();
 }
 
 async function send_pong_link(params) {
