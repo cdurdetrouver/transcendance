@@ -139,7 +139,7 @@ async function getProfilePicture(user) {
 async function login_form(event, loginPopin, popin, loginForm, qrcodePopin) {
 	event.preventDefault();
 
-	const email = document.querySelector('input[name="email"]').value;
+	const email = document.querySelector('input[name="email-login"]').value;
 	const password = document.querySelector('input[name="password"]').value;
 	const response = await login(email, password);
 	const data = await response.json();

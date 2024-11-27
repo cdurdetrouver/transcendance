@@ -2,10 +2,6 @@
   font-family: "isaac";
   src: url(../routes/assets/font/isaac_bold.ttf);
 }
-@font-face {
-	font-family: "isaac-bold";
-	src: url(../routes/assets/font/isaac_bold.ttf);
-  }
 body, html {
   background-image: url("../routes/assets/images/home/background.png");
   background-position: center;
