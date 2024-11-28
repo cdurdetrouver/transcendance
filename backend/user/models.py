@@ -14,7 +14,7 @@ class User(AbstractUser):
 	user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='email')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
-	last_login = models.DateTimeField(auto_now=True)
+	last_login = models.DateTimeField(auto_now_add=True)
 
 	profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
 	picture_remote = models.URLField(null=True, blank=True)

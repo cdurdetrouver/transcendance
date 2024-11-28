@@ -1,10 +1,3 @@
-import { get_user} from '../../components/user/script.js';
-import { login, register } from '../user/script.js';
-import {customalert} from '../alert/script.js';
-import config from '../../env/config.js';
-
-
-
 setTimeout(function() {
     let headerElement = document.querySelector('header'); 
     
@@ -14,7 +7,6 @@ setTimeout(function() {
         console.error("Header element not found");
     }
 }, 100);
-
 
 function denyLink() {
 	const chatLink = document.getElementById('chat-link');
