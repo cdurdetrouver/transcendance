@@ -52,6 +52,47 @@ body
                 .buttons:hover
                     transform: scale(1.2)
 
+                #matchList 
+                    font-size: 0.7rem
+                    position: absolute
+                    left: 100px
+                    font-family: isaac-bold
+                    display: flex
+                    flex-direction: column
+                    align-items: center
+                    width: auto
+                    max-height: 300px
+                    overflow-y: scroll
+                    &::-webkit-scrollbar
+                         display: none
+
+                    .Matchline 
+                        position: relative
+                        display: flex
+                        flex-direction: row
+                        justify-content: space-between
+                        gap: 10px
+                        margin-top: 10px
+                        margin-bottom: 10px
+                        .player-left
+                            text-align: left
+                            width: 90px
+                            height: 20px
+                            white-space: nowrap
+                            overflow: hidden
+                            padding-right: 20px
+                            display: flex
+                            align-items: center
+                        .player-right
+                            text-align: right
+                            width: 90px
+                            height: 20px
+                            white-space: nowrap
+                            overflow: hidden
+                            padding-left: 20px
+                            display: flex
+                            align-items: center
+
                 #logout-sheet
                     width: 19%
                     position: absolute
