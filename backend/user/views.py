@@ -635,7 +635,7 @@ def friend_user(request, user_id):
 
 	if request.method == 'GET':
 		users_serializer = UserSerializer(user_to_friend.friends.all(), many=True)
-		return JsonResponse({'friends': users_serializer}, status=status.HTTP_200_OK)
+		return JsonResponse({'friends': users_serializer.data}, status=status.HTTP_200_OK)
 	elif request.method == 'POST':
 		user.friends.add(user_to_friend)
 		user.save()
