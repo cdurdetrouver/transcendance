@@ -79,6 +79,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             if len(text_data_json["message"]) > 128:
                 await self.send(text_data=json.dumps({"type": "error", "content": "Message too long"}))
                 return
+            if (await in_room(self.room, self.user) == False):
+                return await self.error("User is not register in room: {}".format(
+                self.room.name))
             message = await save_message(self.room, text_data_json, self.user)
             message_serializer = MessageSerializer(message)
             await self.channel_layer.group_send(

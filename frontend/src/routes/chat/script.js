@@ -747,21 +747,6 @@ export async function initComponent(params) {
     print_invitations();
     const create_room_btn = document.querySelector('.create-room');
     create_room_btn.addEventListener('click', create_room);
-
-	// document.getElementById('user-search').addEventListener('input', async function() {
-	// 	const query = this.value;
-	// 	if (query.length > 0) {
-	// 		const response = await searchUsers(query, 5);
-	// 		if (response.status === 200) {
-	// 			const data = await response.json();
-	// 			updateUserList(data.users);
-	// 		} else {
-	// 			updateUserList([]);
-	// 		}
-	// 	} else {
-	// 		updateUserList([]);
-	// 	}
-	// });
 }
 
 export async function cleanupComponent(params) {
