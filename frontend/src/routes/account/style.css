@@ -10,7 +10,6 @@ body {
   height: 100%;
 }
 body #page {
-  position: relative;
   height: 100%;
 }
 body #page .text {
@@ -53,6 +52,50 @@ body #page #background #container .buttons {
 }
 body #page #background #container .buttons:hover {
   transform: scale(1.2);
+}
+body #page #background #container #matchList {
+  font-size: 0.7rem;
+  position: absolute;
+  left: 100px;
+  font-family: isaac-bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  max-height: 300px;
+  overflow-y: scroll;
+}
+body #page #background #container #matchList::-webkit-scrollbar {
+  display: none;
+}
+body #page #background #container #matchList .Matchline {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+body #page #background #container #matchList .Matchline .player-left {
+  text-align: left;
+  width: 90px;
+  height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+}
+body #page #background #container #matchList .Matchline .player-right {
+  text-align: right;
+  width: 90px;
+  height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
 }
 body #page #background #container #logout-sheet {
   width: 19%;
@@ -407,4 +450,28 @@ body #page #background #popin #qrcode-content .qrcode #code {
   position: absolute;
   top: 54%;
   left: 40%;
+}
+
+.win {
+  background-image: url(../../static/assets/yes.png);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.lost {
+  background-image: url(../../static/assets/no.png);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
 }/*# sourceMappingURL=style.css.map */
