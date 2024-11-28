@@ -147,12 +147,6 @@ function draw() {
 	ctx.fillRect(paddle3X, canvas.height - paddleWidth - 5, paddleHeight, paddleWidth);
 	ctx.fillRect(canvas.height - paddleWidth - 5, paddle4Y, paddleWidth, paddleHeight);
 
-	// ctx.beginPath();
-	// ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-	// ctx.fillStyle = 'red';
-	// ctx.fill();
-	// ctx.closePath();
-
     ctx.drawImage(
         ballImage,
         ballX,
