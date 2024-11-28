@@ -33,6 +33,14 @@ class Ball:
 		self.position[1] += self.velocity[1]
 
 	def check_collision(self, paddle):
+		if self.position[0] + BALL_RADIUS > SCREEN_WIDTH / 5 and self.position[0] - BALL_RADIUS < SCREEN_WIDTH / 5 * 4:
+			return False
+
+		if self.position[0] < paddle.position[0] + PADDLE_WIDTH and paddle.position[0] < SCREEN_WIDTH / 2:
+			return False
+		elif self.position[0] > paddle.position[0] and paddle.position[0] > SCREEN_WIDTH / 2:
+			return False
+
 		distX = abs(self.position[0] - paddle.position[0] - PADDLE_WIDTH / 2)
 		distY = abs(self.position[1] - paddle.position[1] - PADDLE_HEIGHT / 2)
 
