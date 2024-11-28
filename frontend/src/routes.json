@@ -98,5 +98,10 @@
 	{
 		"path": "/friends",
 		"files": "/friends"
+	},
+	{
+		"path": "/stats",
+		"files": "/stats"
 	}
+
 ]
