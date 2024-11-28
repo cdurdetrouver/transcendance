@@ -143,3 +143,7 @@ a:link {
 	top: 10%;
 	z-index: -1;
 }
+
+.menu:hover {
+	cursor: pointer;
+}
