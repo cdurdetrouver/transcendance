@@ -1,10 +1,3 @@
-import { get_user} from '../../components/user/script.js';
-import { login, register } from '../user/script.js';
-import {customalert} from '../alert/script.js';
-import config from '../../env/config.js';
-
-
-
 setTimeout(function() {
     let headerElement = document.querySelector('header'); 
     
@@ -15,19 +8,7 @@ setTimeout(function() {
     }
 }, 100);
 
-
-const avatarIcon = document.getElementById('avatar-icon');
-
-
 export async function initComponent() {
-	const user = await get_user();
-
-	const usernameText = document.querySelector('.bottom .text-header');
-	avatarIcon.addEventListener("click", function() {
-		if (user)
-			return;
-		popin.style.display = "flex";
-	});
 
 	const sidebar = document.querySelector('.sidebar');
 	const iconImage = document.getElementById('iconImage');

@@ -50,6 +50,76 @@ function setUser(user, inviteOrEditButton, blockOrDeleteButton, twofaOrAddFriend
 	document.querySelector("#who span").textContent = "THEM";
 }
 
+function setHistoric (games) {
+	
+    if (!Array.isArray(games)) {
+        console.error("Invalid data: 'games' should be an array", games);
+        return;
+	}
+    games.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+	const matchList = document.getElementById("matchList");
+
+	games.forEach(game => {
+		const Matchline = document.createElement('div');
+		Matchline.classList.add('Matchline');
+		matchList.appendChild(Matchline);
+
+		const playerLine = document.createElement('div');
+		playerLine.classList.add('playerLine');
+
+		const player1block = document.createElement('div');
+		player1block.classList.add('player-left');
+		player1block.textContent = `${game.player1.username}`
+
+		const player2block = document.createElement('div');
+		player2block.classList.add('player-right');
+		player2block.textContent = `${game.player2.username}`
+
+		Matchline.appendChild(player1block);
+		Matchline.appendChild(player2block);
+
+		const playerLeftResult = document.createElement('div');
+		const playerRightResult = document.createElement('div');
+		if (game.winner != null) {
+			if(game.winner.username == game.player1.username) {
+				playerLeftResult.classList.add('win');
+				playerRightResult.classList.add('lost');
+			}
+			else {
+				playerLeftResult.classList.add('lost');
+				playerRightResult.classList.add('win');
+			}
+			Matchline.prepend(playerLeftResult);
+			Matchline.appendChild(playerRightResult);
+		}
+	});
+}
+
+async function getHistoric(id) {
+
+	let games = null;
+	if (id) {
+		const response = await fetch(config.backendUrl + '/user/games/' + id, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		});
+		const data = await response.json();
+		if (response.status !== 200) {
+			console.error('Error connecting to user game history');
+			customalert('Error', data.error, true);
+			router.navigate('/');
+		}
+		games = data;
+	}
+	console.log(games);
+	if (games)
+		setHistoric(games.games);
+}
+
 export async function initComponent() {
 	let me = await get_user();
 	if (!me) {
@@ -78,8 +148,12 @@ export async function initComponent() {
 		user = data
 	}
 
-	var twofa;
+	if (user == null)
+		getHistoric(me.id)
+	else 
+		getHistoric(user.user.id)
 
+	var twofa;
 	const inviteOrEditButton = document.querySelector("#edit-profile span");
 	const blockOrDeleteButton = document.querySelector("#delete-profile span");
 	const twofaOrAddFriend = document.querySelector("#friend-or-2fa span");
@@ -88,6 +162,7 @@ export async function initComponent() {
 		setUser(user.user, inviteOrEditButton, blockOrDeleteButton, twofaOrAddFriend);
 	else
 		setPersonalUser(me);
+
 
 	document.getElementById("edit-password").addEventListener('submit', handleFormPassword);
 	document.getElementById("username-form").addEventListener('submit', handleFormUsername);
