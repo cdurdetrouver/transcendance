@@ -2,12 +2,95 @@ import config from "../../../env/config.js";
 import { get_user } from '../../../../components/user/script.js';
 import { customalert } from "../../../components/alert/script.js";
 import { router } from '../../../app.js';
+import { deleteCookie } from "../../../components/storage/script.js";
 
 const canvas = document.getElementById("pongCanvas");
 const ctx = canvas.getContext("2d");
 
-const paddleWidth = 10;
-const paddleHeight = 75;
+const backgroundCanvas = document.getElementById("backgroundCanvas");
+const backgroundCtx = backgroundCanvas.getContext("2d");
+
+const lifeCanvas = document.getElementById("lifeCanvas");
+const lifeCtx = lifeCanvas.getContext("2d");
+
+const heartImage = new Image();
+heartImage.src = '../../../static/assets/pong/heart.png';
+const heartEmptyImage = new Image();
+heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
+
+const ballImage = new Image();
+ballImage.src = '../../../static/assets/pong/bullet.png';
+
+const idleImage = new Image();
+idleImage.src = '../../../static/assets/pong/resting.png';
+const idleImageLeft = new Image();
+idleImageLeft.src = '../../../static/assets/pong/resting_left.png';
+
+const boot = new Image();
+boot.src = '../../../static/assets/pong/boot.png'
+const sword = new Image();
+sword.src = '../../../static/assets/pong/sword.png'
+
+function loadImages(characterNames) {
+    const images = {};
+
+    characterNames.forEach(name => {
+        images[name] = {
+            front: new Image(),
+            back: new Image(),
+            left: new Image(),
+            right: new Image(),
+        };
+        images[name].front.src = `../../../static/assets/pong/head/${name}_front.png`;
+        images[name].back.src = `../../../static/assets/pong/head/${name}_back.png`;
+        images[name].left.src = `../../../static/assets/pong/head/${name}_left.png`;
+        images[name].right.src = `../../../static/assets/pong/head/${name}_right.png`;
+    });
+    return images;
+}
+
+const characterMap = ['isaac', 'cain', 'maggie', 'juda','isaac', 'eve'];
+const characterImages = loadImages(characterMap);
+
+const paddleBodyAnimationFrames = [
+    '../../../static/assets/pong/moving_frame_1.png',
+    '../../../static/assets/pong/moving_frame_2.png',
+    '../../../static/assets/pong/moving_frame_3.png',
+    '../../../static/assets/pong/moving_frame_4.png',
+    '../../../static/assets/pong/moving_frame_5.png',
+    '../../../static/assets/pong/moving_frame_6.png',
+    '../../../static/assets/pong/moving_frame_7.png',
+    '../../../static/assets/pong/moving_frame_8.png',
+    '../../../static/assets/pong/moving_frame_9.png',
+];
+
+const paddleBodyImages = paddleBodyAnimationFrames.map((src) => {
+    const img = new Image();
+    img.src = src;
+    return img;
+});
+
+let currentBodyFrame = 0;
+let animationIntervalID = null;
+
+function startBodyAnimation() {
+    if (animationIntervalID) return;
+
+    animationIntervalID = setInterval(() => {
+        currentBodyFrame = (currentBodyFrame + 1) % paddleBodyImages.length;
+    }, 100); 
+}
+
+function stopBodyAnimation() {
+    if (animationIntervalID) {
+        clearInterval(animationIntervalID);
+        animationIntervalID = null;
+        currentBodyFrame = 0;
+    }
+}
+
+const paddleWidth = 56;
+const paddleHeight = 66;
 const ballRadius = 8;
 
 let paddle1Y;
@@ -40,13 +123,86 @@ let socket;
 let pingIntervalID;
 let pingSpan;
 
-function handleKeydown(e) {
+let player1InitialScore;
+let player1Force;
+let player1Speed;
+let player1Character;
+
+let player2InitialScore;
+let player2Force;
+let player2Speed;
+let player2Character;
+
+
+function drawBackground() {
+    backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+
+    const backgroundImage = new Image();
+    backgroundImage.src = '../../../static/assets/background/pongBG2.png'	;
+    backgroundImage.onload = () => {
+        backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+    };
+}
+
+function drawStats() {
+    backgroundCtx.font = "14px";
+    backgroundCtx.fillStyle = "white";
+
+    backgroundCtx.drawImage(boot, 20, 80, 38, 24);
+    backgroundCtx.fillText(player1Speed, 70, 100);
+	backgroundCtx.drawImage(sword, 27, 115, 26, 26);
+    backgroundCtx.fillText(player1Force, 70, 135);
+
+	backgroundCtx.drawImage(boot, backgroundCanvas.width - boot.width - 20, 80, 38, 24);
+    backgroundCtx.fillText(player2Speed, backgroundCanvas.width - 70, 100);
+	backgroundCtx.drawImage(sword, backgroundCanvas.width - sword.width - 27, 115, 26, 26);
+    backgroundCtx.fillText(player2Force, backgroundCanvas.width - 70, 135);
+}
+
+function centerPongCanvas() {
+
+	const leftX = 0;
+	const topY = 0;
+
+    const bgWidth = backgroundCanvas.width;
+    const bgHeight = backgroundCanvas.height;
+    const pongWidth = canvas.width;
+    const pongHeight = canvas.height;
+
+    const centerX = (bgWidth - pongWidth) / 2;
+    const centerY = (bgHeight - pongHeight) / 2;
+
+    canvas.style.left = `${centerX + leftX}px`;
+    canvas.style.top = `${centerY + topY}px`;
+	backgroundCanvas.style.left = `${leftX}px`;
+	backgroundCanvas.style.top = `${topY}px`;
+	lifeCanvas.style.left = `${leftX}px`;
+	lifeCanvas.style.top = `${topY}px`;
+}
+
+function drawScores() {
+    lifeCtx.clearRect(0, 0, backgroundCanvas.width, 70);
+	
+    for (let i = 0; i < player1InitialScore; i++) {
+		let heartToDraw = (i < player1Score) ? heartImage : heartEmptyImage; 
+        lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50);
+		}
+
+	for (let i = 0; i < player2InitialScore; i++) {
+		let heartToDraw = (i < player2Score) ? heartImage : heartEmptyImage;
+		lifeCtx.drawImage(heartToDraw, backgroundCanvas.width - 20 - (i + 1) * 50, 10, 50, 50);
+		}
+}
+
+function handleKeydown(e) {	
 	if (viewer || !game_started)
 		return;
 
 	if (e.key === 'ArrowUp') {
+		startBodyAnimation();
 		socket.send(JSON.stringify({ message: 'keydown', direction: 'up' }));
 	} else if (e.key === 'ArrowDown') {
+		startBodyAnimation();
 		socket.send(JSON.stringify({ message: 'keydown', direction: 'down' }));
 	}
 }
@@ -56,46 +212,137 @@ function handleKeyup(e) {
 		return;
 
 	if (e.key === 'ArrowUp') {
+		stopBodyAnimation();
 		socket.send(JSON.stringify({ message: 'keyup', direction: 'up' }));
 	} else if (e.key === 'ArrowDown') {
+		stopBodyAnimation();
 		socket.send(JSON.stringify({ message: 'keyup', direction: 'down' }));
 	}
 }
 
 function draw(interpolatedState) {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	ctx.fillStyle = 'black';
-	ctx.fillRect(5, interpolatedState.paddle1Y, paddleWidth, paddleHeight);
-	ctx.fillRect(canvas.width - paddleWidth - 5, interpolatedState.paddle2Y, paddleWidth, paddleHeight);
+    const player1Name = characterMap[player1Character];
+    const player2Name = characterMap[player2Character];
 
-	ctx.beginPath();
-	ctx.arc(interpolatedState.ballX, interpolatedState.ballY, ballRadius, 0, Math.PI * 2);
-	ctx.fillStyle = 'red';
-	ctx.fill();
-	ctx.closePath();
+    const paddle1BodyImage = (paddle1moveup || paddle1movedown)
+        ? paddleBodyImages[currentBodyFrame]
+        : idleImage;
 
-	ctx.font = '20px Arial';
-	ctx.fillText(`${player1.username}: ${player1Score}`, 20, 20);
-	ctx.fillText(`${player2.username}: ${player2Score}`, canvas.width - 200, 20);
+    ctx.drawImage(
+        paddle1BodyImage,
+        15,
+        interpolatedState.paddle1Y + 38,
+        34,
+        paddleHeight - 32
+    );
+
+    let headPlayer1;
+    if (paddle1movedown) {
+        headPlayer1 = characterImages[player1Name].front;
+    } else if (paddle1moveup) {
+        headPlayer1 = characterImages[player1Name].back;
+    } else {
+        headPlayer1 = characterImages[player1Name].right;
+    }
+
+    ctx.drawImage(
+        headPlayer1,
+        5,
+        interpolatedState.paddle1Y,
+        56,
+		characterImages[player1Name].right.height
+    );
+
+    // Paddle 2 logic
+    const paddle2BodyImage = (paddle2moveup || paddle2movedown)
+        ? paddleBodyImages[currentBodyFrame]
+        : idleImageLeft;
+
+    ctx.drawImage(
+        paddle2BodyImage,
+        canvas.width - paddleWidth,
+        interpolatedState.paddle2Y + 38,
+        34,
+        paddleHeight - 32
+    );
+
+    let headPlayer2;
+    if (paddle2movedown) {
+        headPlayer2 = characterImages[player2Name].front;
+    } else if (paddle2moveup) {
+        headPlayer2 = characterImages[player2Name].back;
+    } else {
+        headPlayer2 = characterImages[player2Name].left;
+    }
+
+    ctx.drawImage(
+        headPlayer2,
+        canvas.width - paddleWidth - 10,
+        interpolatedState.paddle2Y,
+		56,
+		characterImages[player2Name].right.height
+    );
+
+    // Draw the ball
+    ctx.drawImage(
+        ballImage,
+        interpolatedState.ballX - ballRadius,
+        interpolatedState.ballY - ballRadius,
+        ballRadius * 2,
+        ballRadius * 2
+    );
+
+    drawScores();
 }
 
+
 function draw_reset() {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	ctx.fillStyle = 'black';
-	ctx.fillRect(5, (canvas.height - paddleHeight) / 2, paddleWidth, paddleHeight);
-	ctx.fillRect(canvas.width - paddleWidth - 5, (canvas.height - paddleHeight) / 2, paddleWidth, paddleHeight);
+    const player1Name = characterMap[player1Character];
+    const player2Name = characterMap[player2Character];
 
-	ctx.beginPath();
-	ctx.arc(canvas.width / 2, canvas.height / 2, ballRadius, 0, Math.PI * 2);
-	ctx.fillStyle = 'red';
-	ctx.fill();
-	ctx.closePath();
+    ctx.drawImage(
+        idleImage,
+        15,
+        (canvas.height - paddleHeight) / 2 + 38,
+        34,
+        paddleHeight - 32
+    );
+    ctx.drawImage(
+        characterImages[player1Name].right,
+        5,
+        (canvas.height - paddleHeight) / 2,
+        characterImages[player1Name].right.width,
+        characterImages[player1Name].right.height
+    );
 
-	ctx.font = '20px Arial';
-	ctx.fillText(`${player1.username}: ${player1Score}`, 20, 20);
-	ctx.fillText(`${player2.username}: ${player2Score}`, canvas.width - 200, 20);
+    ctx.drawImage(
+        idleImageLeft,
+        canvas.width - paddleWidth,
+        (canvas.height - paddleHeight) / 2 + 38,
+        34,
+        paddleHeight - 32
+    );
+    ctx.drawImage(
+        characterImages[player2Name].left,
+        canvas.width - paddleWidth - 10,
+        (canvas.height - paddleHeight) / 2,
+        characterImages[player2Name].left.width,
+        characterImages[player2Name].left.height
+    );
+
+    ctx.drawImage(
+        ballImage,
+        canvas.width / 2 - ballRadius,
+        canvas.height / 2 - ballRadius,
+        ballRadius * 2,
+        ballRadius * 2
+    );
+
+    drawScores();
 }
 
 function interpolateGameState(currentTime) {
@@ -128,6 +375,18 @@ function interpolateGameState(currentTime) {
 }
 
 function updateGame(data) {
+	if (lastGameState == null	)
+	{
+		player1InitialScore = data.player1.score;
+		player1Force = data.player1.force;
+		player1Speed = data.player1.speed;
+		player1Character = data.player1.id.id;
+		player2InitialScore = data.player2.score
+		player2Force = data.player2.force;
+		player2Speed = data.player2.speed;
+		player2Character = data.player2.id.id;
+		drawStats();
+	}
 	lastUpdateTime = Date.now();
 	lastGameState = {
 		ball: { x: ballX, y: ballY, speed_x: ballspeedX, speed_y: ballspeedY },
@@ -149,6 +408,7 @@ function updateGame(data) {
 	paddle2speed = data.player2.speed;
 	player1Score = data.player1.score;
 	player2Score = data.player2.score;
+
 }
 
 function gameLoop() {
@@ -159,6 +419,23 @@ function gameLoop() {
 	}
 	else
 		draw_reset();
+}
+
+
+function closeButton()
+{
+	console.log("game close function");
+	const buttonDiv = document.createElement('div');
+	buttonDiv.className = 'return-menu'; 
+	buttonDiv.innerHTML =  `<input id="button-return" type="button" value="Return to menu" data-link>
+	`;
+	const parentDiv = document.getElementById("game-canvas");
+	
+	parentDiv.appendChild(buttonDiv)
+	document.getElementById('button-return').addEventListener('click', function() {
+        window.location.href = '/character';
+    });
+
 }
 
 class PongSocket {
@@ -188,6 +465,7 @@ class PongSocket {
 			customalert('Game Over', data.message + " winner is " + winner);
 			game_ended = true;
 			clearInterval(pingIntervalID);
+			closeButton();
 		}
 		else if (data.type === 'viewer')
 			viewer = true;
@@ -243,6 +521,21 @@ async function get_game_players(game_id) {
 
 	player1 = response_game_data.player1;
 	player2 = response_game_data.player2;
+
+	const profilePicture1 = player1.picture_remote ? player1.picture_remote : config.backendUrl + player1.profile_picture;
+	const profilePicture2 = player2.picture_remote ? player2.picture_remote : config.backendUrl + player2.profile_picture;
+	const player1block = document.getElementById('player1');
+	const player2block = document.getElementById('player2');
+
+	player1block.innerHTML = `
+	<span class="profile-pic"> <img src="${profilePicture1}" height=100 alt="Room Picture"> </span> 
+	<span class="player-name">${player1.username}</span>
+	`;
+
+	player2block.innerHTML = `
+	<span class="player-name">${player2.username}</span>
+	<span class="profile-pic"> <img src="${profilePicture2}" height=100 alt="Room Picture"> </span>
+	`;
 }
 
 export async function initComponent() {
@@ -260,6 +553,10 @@ export async function initComponent() {
 	ballspeedY = 4;
 	player1Score = 0;
 	player2Score = 0;
+	player1InitialScore = 0;
+	player2InitialScore = 0;
+	player1Character = 0;
+	player2Character = 0;
 
 	lastUpdateTime = Date.now();
 	lastGameState = null;
@@ -296,6 +593,8 @@ export async function initComponent() {
 	document.addEventListener('keyup', handleKeyup);
 
 	draw_reset();
+	centerPongCanvas();
+	drawBackground();
 
 	gameLoop();
 }
@@ -313,6 +612,12 @@ export function cleanupComponent() {
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+	stopPaddleAnimation();
+
+
 	document.removeEventListener('keydown', handleKeydown);
 	document.removeEventListener('keyup', handleKeyup);
+
+	deleteCookie('user');
+	deleteCookie('access_token');
 }

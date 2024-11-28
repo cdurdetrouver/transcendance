@@ -1,5 +1,22 @@
-.container {
+@font-face {
+    font-family: isaac-bold;
+    src: url('../../assets/font/isaac_bold.ttf') format('truetype');
+}
 
+#background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
+	background-image: url("../../../static/assets/background/background_1.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: -1;
+}
+
+.container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -26,36 +43,78 @@
 	text-align: center;
 }
 
-.user__name p {
-	font-size: 2rem;
-	margin: 0;
+.user__name {
+	font-family: isaac-bold;
+	font-size: 1rem;
+	background-image: url(../../../static/assets/pong/nametag.png);
+	width: 230px;
+	height: 60px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;
 }
 
+.user_picture {
+    width: 250px;
+    height: 250px;
+    position: relative;
+    background-image: url("../../../static/assets/pong/player-sheet.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.user_picture::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit; 
+    z-index: 2; 
+    pointer-events: none; /
+}
 .user_picture img {
-	width: 150px;
-	height: 150px;
-	border-radius: 30%;
+	margin-top: 40px;
+	width: 170px;
+	height: 170px;
+    position: relative; /* Establish stacking context */
+    z-index: 2; /* Bring it to the front */
 }
 
-.user__status svg {
-	width: 50px;
-	height: 50px;
+.user__status img {
+	width: 40px;
+	height: 40px;
 }
 
 .waiting__message {
-	font-size: 1.5rem;
-	background-color: white;
+	background-image: url("../../../static/assets/pong/vs.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 50px;
+	height: 50px;
+	background-color: #e8d9de;
 	padding: 1rem;
-	border-radius: 1.5rem;
+	border-radius: 50%;
 	position: relative;
 }
 
 @keyframes rotate {
-	from {
-		--angle: 0deg;
-	}
-
-	to {
+    0% {
+        --angle: 0deg;
+    }
+    30% {
+        --angle: 45deg;
+    }
+    70% {
+        --angle: 315deg;
+    }
+	100% {
 		--angle: 360deg;
 	}
 }
@@ -75,11 +134,11 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	background-image: conic-gradient(from var(--angle), transparent 90%, grey);
-	border-radius: 1.5rem;
+	border-radius: 50%;
 	position: absolute;
 	padding: 5px;
 	z-index: -1;
-	animation: 2s rotate linear infinite;
+	animation: 1.5s rotate linear infinite;
 	display: none;
 }
 
@@ -94,11 +153,33 @@
 }
 
 .users {
+	position: relative;
+	gap: 3rem;
+	background-image: url("../../../static/assets/pong/sheet.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+	height: 850px;
+	width: 850px;
+	z-index: 0;
+}
+
+.users h1 {
+	font-family: isaac-bold;
+	color: #372b2d;
+	margin-top: 100px;
+	margin-bottom: 50px;
+}
+
+#player-container {
+	position: relative;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	gap: 3rem;
+	z-index: 0;
+
 }
 
 .waiting__button #search {

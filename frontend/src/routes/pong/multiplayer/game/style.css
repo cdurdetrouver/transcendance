@@ -1,7 +1,113 @@
+@import url("https://fonts.googleapis.com/css2?family=Jersey+10&display=swap");
 body {
-	text-align: center;
+  text-align: center;
 }
+
 canvas {
-	border: 2px solid black;
-	background-color: #f5f5f5;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
 }
+
+@font-face {
+  font-family: isaac-bold;
+  src: url("../../../assets/font/isaac_bold.ttf") format("truetype");
+}
+#background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  background-image: url("../../../../static/assets/background/background_1.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+#container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#container #game-canvas {
+  margin-top: 40px;
+  height: 765px;
+  width: 800px;
+  position: relative;
+}
+#container #game-canvas #backgroundCanvas {
+  position: absolute;
+  z-index: 0;
+  border-radius: 40px;
+}
+#container #game-canvas #pongCanvas {
+  position: absolute;
+  z-index: 1;
+}
+#container #game-canvas #lifeCanvas {
+  position: absolute;
+  z-index: 1;
+}
+#container #game-canvas .name {
+  position: absolute;
+  font-family: isaac-bold;
+  font-size: 16px;
+  color: black;
+  text-align: center;
+  padding: 5px;
+}
+#container #game-canvas .name.top-name {
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#container #game-canvas .name.bottom-name {
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#container #game-canvas .name.left-name {
+  left: -60px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+}
+#container #game-canvas .name.right-name {
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+}
+#container #game-canvas .return-menu {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  z-index: 5;
+}
+#container #game-canvas .return-menu #button-return {
+  position: absolute;
+  font-family: isaac-bold;
+  font-size: 0.8rem;
+  background-image: url(../../../../static/assets/sheets/Button.png);
+  width: 150px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+#container #game-canvas .return-menu #button-return:hover {
+  transform: scale(1.02);
+  border: none;
+  background-color: transparent;
+}/*# sourceMappingURL=style.css.map */

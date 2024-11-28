@@ -95,7 +95,7 @@ export async function initComponent() {
 		});
 		if (response.status !== 200) {
 			console.error('Error connecting to user');
-			customalert('Error', 'Error get user', true);
+			customalert('Error', 'User does not exist', true);
 			router.navigate('/');
 		}
 		user = await response.json();

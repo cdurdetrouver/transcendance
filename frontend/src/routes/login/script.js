@@ -62,6 +62,7 @@ export async function cleanupComponent() {
 	const div_2fa = document.querySelector('.div_2fa');
 	const form = div_2fa.querySelector('form');
 	let user_id = null;
+	
 	form.addEventListener('submit', (event) => form_2fa(event, user_id));
 }
 

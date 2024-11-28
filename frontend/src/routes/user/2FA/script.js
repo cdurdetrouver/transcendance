@@ -6,13 +6,13 @@ import config from '../../../env/config.js';
 
 let secret = '';
 
-async function enable2FA() {
-	let token = document.getElementById('2fa_code').value;
+export async function enable2FA() {
+	let token = document.getElementById('code').value;
 	if (token === '') {
 		customalert('Error', 'Token cannot be empty', true);
 		return;
 	}
-	console.log(secret, token);
+	console.log("secret = ",secret, "token = ", token);
 	const response = await fetch(config.backendUrl + '/user/enable-2fa/', {
 		method: 'POST',
 		headers: {
@@ -25,35 +25,34 @@ async function enable2FA() {
 		credentials: 'include',
 	});
 
+	const data = await response.json();
 	if (response.status === 200) {
-		const data = await response.json();
 		deleteCookie('user');
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
 		customalert('Success', '2FA enabled successfully', false);
-		router.navigate('/user/edit');
+		router.navigate('/account');
 	}
 	else {
-		customalert('Error', 'Failed to enable 2FA', true);
+		customalert('Error', response, true);
 	}
 }
 
-async function getQrcode() {
-	console.log('getQrcode');
+export async function getQrcode() {
 	const response = await fetch(config.backendUrl + '/user/generate-2fa-qr/', {
 		method: 'GET',
 		credentials: 'include',
 	});
 
 	const data = await response.json();
-
+	console.log(data);
 	if (response.status === 200) {
 		const qr_code = data.qr_code;
 		secret = data.secret;
-		const button_qr_code = document.getElementById('gen-qrcode');
-		button_qr_code.style.display = 'none';
-		const qr_code_div = document.getElementsByClassName('qr_code').item(0);
-		qr_code_div.style.display = 'block';
-		const qr_code_img = document.getElementById('img_qr_code');
+		const button_qr_code = document.querySelector("#generate-qrcode");
+		button_qr_code.style.display = "none";
+		const qr_code_div = document.getElementsByClassName("qrcode").item(0);
+		qr_code_div.style.display = "flex";
+		const qr_code_img = document.querySelector(".qrcode img");
 		qr_code_img.src = `data:image/png;base64,${qr_code}`
 	}
 	else {
