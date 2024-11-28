@@ -1,94 +1,159 @@
 @font-face {
-    font-family: isaac-bold;
-    src: url('../../../assets/font/isaac_bold.ttf') format('truetype');
+  font-family: isaac-bold;
+  src: url("../../../assets/font/isaac_bold.ttf") format("truetype");
 }
-
 body {
-	text-align: center;
+  text-align: center;
 }
+
 canvas {
-	position: absolute;
-	left:0;
-	top:0;
-	}
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 #background-image {
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; 
-    background-image: url('../../../static/assets/background/background_1.png');
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
-    z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../../../../static/assets/background/background_1.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
 }
 
-#backgroundCanvas {
-	position: absolute;
-    z-index: 0; /* Behind the game canvas */
+#container {
+  font-family: isaac-bold;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#container #player-block {
+  font-size: 1.3rem;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 50px;
+  margin-bottom: 10px;
+  width: 950px;
+}
+#container #player-block #player1 {
+  text-align: left;
+}
+#container #player-block #player2 {
+  text-align: right;
+}
+#container #game-canvas {
+  position: relative;
+  height: 605px;
+  width: 1025px;
+}
+#container #game-canvas #backgroundCanvas {
+  position: absolute;
+  z-index: 0;
+  border-radius: 40px;
+}
+#container #game-canvas #pongCanvas {
+  position: absolute;
+  z-index: 1;
+}
+#container #game-canvas #lifeCanvas {
+  position: absolute;
+  z-index: 1;
+}
+#container #game-canvas .return-menu {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  z-index: 5;
+}
+#container #game-canvas .return-menu #button-return {
+  position: absolute;
+  font-family: isaac-bold;
+  font-size: 0.8rem;
+  background-image: url(../../../../static/assets/sheets/Button.png);
+  width: 150px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+#container #game-canvas .return-menu #button-return:hover {
+  transform: scale(1.02);
+  border: none;
+  background-color: transparent;
+}
+#container #matchList {
+  position: absolute;
+  top: 100px;
+  left: 1450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+}
+#container #matchList .Matchline {
+  font-size: 0.8rem;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+#container #matchList .Matchline .player-left {
+  text-align: left;
+  width: 75px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-right: 20px;
+}
+#container #matchList .Matchline .player-right {
+  text-align: right;
+  width: 75px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 20px;
+}
+#container #space-start {
+  margin-top: 10px;
 }
 
-#pongCanvas {
-	position: absolute;
-    z-index: 1; /* In front of the background */
-}
-#lifeCanvas {
-	position: absolute;
-    z-index: 1; /* In front of the background */
-}
-#matchList {
-	font-family: isaac-bold;
-	position: absolute;
-	left: 1300px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	width: 400px;
-
-}
-#matchList .Matchline {
-	position: relative;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between; /* Ensures alignment */
-	gap: 10px;
-	margin-top: 10px;
-}
-#matchList .Matchline .player-left {
-	text-align: left; /* Ensures text aligns to the left */
-	width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-	padding-right: 20px;
-}
-#matchList .Matchline .player-right {
-	text-align: right; /* Ensures text aligns to the right */
-	width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-	padding-left: 20px;
-
-}
 .win {
-	background-image: url(../../../../static/assets/yes.png);
-	width: 20px;
-	height: 20px;
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-color: transparent;
-	outline: none;
-	border: none;	
+  background-image: url(../../../../static/assets/yes.png);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
 }
+
 .lost {
-	background-image: url(../../../../static/assets/no.png);
-	width: 20px;
-	height: 20px;
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-color: transparent;
-	outline: none;
-	border: none;	
-}
+  background-image: url(../../../../static/assets/no.png);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}/*# sourceMappingURL=style.css.map */

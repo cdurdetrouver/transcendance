@@ -11,7 +11,12 @@ const lifeCanvas = document.getElementById("lifeCanvas");
 const lifeCtx = lifeCanvas.getContext("2d");
 
 const heartImage = new Image();
-heartImage.src = '../../../static/assets/pong/heart.png'; 
+heartImage.src = '../../../static/assets/pong/heart.png';
+const heartEmptyImage = new Image();
+heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
+
+const ballImage = new Image();
+ballImage.src = '../../../../static/assets/multi/bullet.png';
 
 const paddleWidth = 10;
 const paddleHeight = 75;
@@ -41,15 +46,17 @@ function centerPongCanvas() {
 }
 
 function drawScores(player1Score, player2Score) {
-    lifeCtx.clearRect(0, 0, canvas.width, 40); 
+    lifeCtx.clearRect(0, 0, backgroundCanvas.width, 70);
 	
-    for (let i = 0; i < player1Score; i++) {
-        lifeCtx.drawImage(heartImage, 20 + i * 30, 10, 20, 20); 
-    }
+    for (let i = 0; i < 3; i++) {
+		let heartToDraw = (i < player1Score) ? heartImage : heartEmptyImage; 
+        lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50);
+		}
 
-    for (let i = 0; i < player2Score; i++) {
-        lifeCtx.drawImage(heartImage, canvas.width - 200 + i * 30, 10, 20, 20); 
-    }
+	for (let i = 0; i < 3; i++) {
+		let heartToDraw = (i < player2Score) ? heartImage : heartEmptyImage;
+		lifeCtx.drawImage(heartToDraw, backgroundCanvas.width - 20 - (i + 1) * 50, 10, 50, 50);
+		}
 }
 
 function draw_reset() {
@@ -59,11 +66,13 @@ function draw_reset() {
 	ctx.fillRect(5, (canvas.height - paddleHeight) / 2, paddleWidth, paddleHeight);
 	ctx.fillRect(canvas.width - paddleWidth - 5, (canvas.height - paddleHeight) / 2, paddleWidth, paddleHeight);
 
-	ctx.beginPath();
-	ctx.arc(canvas.width / 2, canvas.height / 2, ballRadius, 0, Math.PI * 2);
-	ctx.fillStyle = 'red';
-	ctx.fill();
-	ctx.closePath();
+	ctx.drawImage(
+		ballImage,
+		canvas.width/2,
+		canvas.height/2,
+		ballRadius * 2,
+		ballRadius * 2
+	);
 
 	drawScores(3, 3);
 }
@@ -153,11 +162,13 @@ class PongGame {
         ctx.fillRect(5, this.paddle1Y, paddleWidth, paddleHeight);
         ctx.fillRect(canvas.width - paddleWidth - 5, this.paddle2Y, paddleWidth, paddleHeight);
 
-        ctx.beginPath();
-        ctx.arc(this.ballX, this.ballY, ballRadius, 0, Math.PI * 2);
-        ctx.fillStyle = 'red';
-        ctx.fill();
-        ctx.closePath();
+		ctx.drawImage(
+			ballImage,
+			this.ballX,
+			this.ballY,
+			ballRadius * 2,
+			ballRadius * 2
+		);
 
         drawScores(this.player1Score, this.player2Score);
     }
@@ -353,56 +364,38 @@ class Tournament {
         if (!match.player2) {
             match.winner = match.player1;
         } else {
+			const spacebar = document.getElementById("space-start");
+			spacebar.style.display = "flex"
             customalert("Match", `${match.player1} VS ${match.player2}`);
             console.log(`Match playing ${match.player1} vs ${match.player2}`);
-            // Play the game
+
             let pongGame = new PongGame(match.player1, match.player2);
-			const matchList = document.getElementById("matchList");
-			const Matchline = document.createElement('div');
-			Matchline.classList.add('Matchline');
-			matchList.appendChild(Matchline);
-
-			const playerLine = document.createElement('div');
-			playerLine.classList.add('playerLine');
-
-			const player1block = document.createElement('div');
-			player1block.classList.add('player-left');
-			player1block.textContent = `${match.player1}`
-
-			const player2block = document.createElement('div');
-			player2block.classList.add('player-right');
-			player2block.textContent = `${match.player2}`
-
-			Matchline.appendChild(player1block);
-			Matchline.appendChild(player2block);
-
 
             await pongGame.gameStart();
+			spacebar.style.display = "none"
             match.winner = pongGame.winner;
             match.loser = pongGame.loser;
+
             console.log("Game ended");
-            // await pongGame.clear();
             customalert("Winner", `${match.winner} wins the match!`);
 
 			const playerLeftResult = document.createElement('div');
 			const playerRightResult = document.createElement('div');
-			if(match.winner == match.player1) {
-				playerLeftResult.classList.add('win');
-				playerRightResult.classList.add('lost');
-			}
-			else {
-				playerLeftResult.classList.add('lost');
-				playerRightResult.classList.add('win');
-			}
-			Matchline.prepend(playerLeftResult);
-			Matchline.appendChild(playerRightResult);
+			
+			const [leftClass, rightClass] = match.winner == match.player1 ? ['win', 'lost'] : ['lost', 'win'];
+			
+			playerLeftResult.classList.add(leftClass);
+			playerRightResult.classList.add(rightClass);
+
+			const lastMatchline = document.querySelector(".Matchline:last-of-type");
+			lastMatchline.prepend(playerLeftResult);
+			lastMatchline.appendChild(playerRightResult);
 
 
-
-			// matchHistoric.textContent = `${match.winner} - ${match.loser}`;
-	
-
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 3500))
+			.then(() => {
+				console.log('5 seconds have passed');
+			  });
         }
         return match.winner;
     }
@@ -413,10 +406,40 @@ class Tournament {
         if (match.left) match.player1 = await this.playTournament(match.left);
         if (match.right) match.player2 = await this.playTournament(match.right);
 
+		const player1div = document.getElementById("player1");
+		const player2div = document.getElementById("player2");
+		const matchList = document.getElementById("matchList");
+
+		player1div.innerText = match.player1;
+		player2div.innerText = match.player2;
+
+		const matchHTML = `
+		<div class="Matchline">
+			<div class="player-left">${match.player1}</div>
+			<div class="player-right">${match.player2}</div>
+		</div>
+		`;
+		matchList.innerHTML += matchHTML;
+
         return await this.playMatch(match);
     }
 }
 
+function closeButton()
+{
+	console.log("game close function");
+	const buttonDiv = document.createElement('div');
+	buttonDiv.className = 'return-menu'; 
+	buttonDiv.innerHTML =  `<input id="button-return" type="button" value="Return to menu" data-link>
+	`;
+	const parentDiv = document.getElementById("game-canvas");
+	
+	parentDiv.appendChild(buttonDiv)
+	document.getElementById('button-return').addEventListener('click', function() {
+        router.navigate('/tournament');
+    });
+
+}
 
 export async function initComponent() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -434,12 +457,15 @@ export async function initComponent() {
 
 	const tournament = new Tournament(players);
 
-    draw_reset();
 	centerPongCanvas();
 	drawBackground();
+	ballImage.onload = function() {
+		draw_reset();
+	};
 
-    // the game is starting
+
     const winner = await tournament.playTournament();
+	closeButton()
 
     customalert("Winner", `${winner} wins the tournament!`);
     // game is finished
