@@ -102,6 +102,10 @@
 	{
 		"path": "/stats",
 		"files": "/stats"
+	},
+	{
+		"path": "/friends",
+		"files": "/friends"
 	}
 
 ]
