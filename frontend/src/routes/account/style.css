@@ -129,7 +129,7 @@ body #page #background #container #sheet {
   position: relative;
 }
 body #page #background #container #sheet #sheet-image {
-  width: 50vw;
+  width: 47vw;
   display: flex;
   justify-content: center;
   align-items: center;
