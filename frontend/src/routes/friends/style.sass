@@ -1,3 +1,8 @@
+@font-face
+  font-family: isaac-bold
+  src: url('../assets/font/isaac_bold.ttf')
+
+    
 body, html
     background-image: url('../assets/images/account/background_account.png')
     background-position: center
@@ -9,9 +14,6 @@ body, html
         position: relative
         height: 100%
 
-        .text
-            font-family: isaac-bold
-            color: #332C2B
         button
             background-color: transparent
             border: none
@@ -32,3 +34,59 @@ body, html
             justify-content: center
             align-items: center
             flex-direction: column
+
+            .text
+                font-family: isaac-bold
+           
+            #friends-box
+                background-color: #dd8500
+                width: 50%
+                height: 60%
+                display: flex
+                flex-direction: column
+
+                hr
+                    border: 1px solid #332C2B
+                    width: 90%
+                    margin: 0 auto
+
+                #header
+                    display: flex
+                    justify-content: center
+
+                    h1
+                        display: flex
+                        justify-content: center
+                        font-size: 2vw
+                        color: #332C2B
+                        font-family: isaac-bold
+
+                #search
+                    display: flex
+                    justify-content: center
+                    // padding: 1% 1%
+                    height: 10%
+                    margin: 1%
+
+                    input
+                        height: 70%
+                #list
+                    background-color: #e90e45
+                    // height: 100%
+                    // width: 100%
+                    margin-top:  1%
+                    display: flex
+                    justify-content: center
+                    padding: 1%
+
+                    .friend
+                        display: flex
+                        // justify-content: space-between
+                        align-items: center
+
+                        .profile-picture-container
+                            width: 10%
+                            
+                            img
+                                width: 100%
+                                border-radius: 50%

@@ -1,3 +1,7 @@
+@font-face {
+  font-family: isaac-bold;
+  src: url("../assets/font/isaac_bold.ttf");
+}
 body, html {
   background-image: url("../assets/images/account/background_account.png");
   background-position: center;
@@ -8,10 +12,6 @@ body, html {
 body #page, html #page {
   position: relative;
   height: 100%;
-}
-body #page .text, html #page .text {
-  font-family: isaac-bold;
-  color: #332C2B;
 }
 body #page button, html #page button {
   background-color: transparent;
@@ -33,4 +33,57 @@ body #page #background, html #page #background {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+body #page #background .text, html #page #background .text {
+  font-family: isaac-bold;
+}
+body #page #background #friends-box, html #page #background #friends-box {
+  background-color: #dd8500;
+  width: 50%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+}
+body #page #background #friends-box hr, html #page #background #friends-box hr {
+  border: 1px solid #332C2B;
+  width: 90%;
+  margin: 0 auto;
+}
+body #page #background #friends-box #header, html #page #background #friends-box #header {
+  display: flex;
+  justify-content: center;
+}
+body #page #background #friends-box #header h1, html #page #background #friends-box #header h1 {
+  display: flex;
+  justify-content: center;
+  font-size: 2vw;
+  color: #332C2B;
+  font-family: isaac-bold;
+}
+body #page #background #friends-box #search, html #page #background #friends-box #search {
+  display: flex;
+  justify-content: center;
+  height: 10%;
+  margin: 1%;
+}
+body #page #background #friends-box #search input, html #page #background #friends-box #search input {
+  height: 70%;
+}
+body #page #background #friends-box #list, html #page #background #friends-box #list {
+  background-color: #e90e45;
+  margin-top: 1%;
+  display: flex;
+  justify-content: center;
+  padding: 1%;
+}
+body #page #background #friends-box #list .friend, html #page #background #friends-box #list .friend {
+  display: flex;
+  align-items: center;
+}
+body #page #background #friends-box #list .friend .profile-picture-container, html #page #background #friends-box #list .friend .profile-picture-container {
+  width: 10%;
+}
+body #page #background #friends-box #list .friend .profile-picture-container img, html #page #background #friends-box #list .friend .profile-picture-container img {
+  width: 100%;
+  border-radius: 50%;
 }/*# sourceMappingURL=style.css.map */

@@ -1,3 +1,5 @@
+import { get_user } from '../../components/user/script.js';
+
 setTimeout(function() {
     let headerElement = document.querySelector('header'); 
     
