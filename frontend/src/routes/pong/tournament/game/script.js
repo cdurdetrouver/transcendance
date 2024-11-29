@@ -47,7 +47,7 @@ function centerPongCanvas() {
 
 function drawScores(player1Score, player2Score) {
     lifeCtx.clearRect(0, 0, backgroundCanvas.width, 70);
-	
+
     for (let i = 0; i < 3; i++) {
 		let heartToDraw = (i < player1Score) ? heartImage : heartEmptyImage; 
         lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50);
@@ -185,8 +185,7 @@ class PongGame {
             this.game_ended = true;
         }
 
-        
-        if (RectCircleColliding({ x: this.ballX, y: this.ballY, radius: ballRadius }, { x: 5, y: this.paddle1Y, width: paddleWidth, height: paddleHeight })) {
+        if (this.ballX + ballRadius > 5 + paddleWidth && RectCircleColliding({ x: this.ballX + ballRadius, y: this.ballY + ballRadius, radius: ballRadius }, { x: 5, y: this.paddle1Y, width: paddleWidth, height: paddleHeight })) {
             this.ballspeedX = -this.ballspeedX;
             this.ballspeedY = (this.ballY - (this.paddle1Y + paddleHeight / 2)) / 8;
         }
@@ -198,8 +197,7 @@ class PongGame {
             this.ballspeedY = 3;
         }
 
-
-        if (RectCircleColliding({ x: this.ballX, y: this.ballY, radius: ballRadius }, { x: canvas.width - paddleWidth - 5, y: this.paddle2Y, width: paddleWidth, height: paddleHeight })) {
+        if (this.ballX + ballRadius + this.ballspeedX < canvas.width - paddleWidth - 5 && RectCircleColliding({ x: this.ballX + ballRadius, y: this.ballY + ballRadius, radius: ballRadius }, { x: canvas.width - paddleWidth - 5, y: this.paddle2Y, width: paddleWidth, height: paddleHeight })) {
             this.ballspeedX = -this.ballspeedX;
             this.ballspeedY = (this.ballY - (this.paddle2Y + paddleHeight / 2)) / 8;
         }
@@ -211,7 +209,7 @@ class PongGame {
             this.ballspeedY = 3;
         }
 
-        if (this.ballY - ballRadius < 0 || this.ballY + ballRadius > canvas.height) {
+        if (this.ballY < 0 || this.ballY + 2 * ballRadius > canvas.height) {
             this.ballspeedY = -this.ballspeedY;
         }
 
