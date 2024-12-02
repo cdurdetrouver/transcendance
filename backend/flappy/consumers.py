@@ -28,6 +28,16 @@ class FlappyMatchmakingConsumer(AsyncWebsocketConsumer):
             return
         self.user = result
         self.blocked_users = await sync_to_async(list)(self.user.blocked_users.all())
+
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in the waiting list'
+                }))
+                await self.close()
+                return
+
         self.waiting_players.append(self)
 
         if len(self.waiting_players) >= 2:
@@ -96,6 +106,15 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             return
 
         self.user = result
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in the waiting list'
+                }))
+                await self.close()
+                return
+
         self.room_group_name = self.scope['url_route']['kwargs']['room_name']
         self.game = await sync_to_async(FlappyGame.objects.get)(room_name=self.room_group_name)
         await sync_to_async(lambda: self.game.player1)()
@@ -124,7 +143,6 @@ class FlappyConsumer(AsyncWebsocketConsumer):
         await asyncio.sleep(1)
         self.waiting_players.append(self.user.id)
         self.player = 'player1' if self.user == self.game.player1 else 'player2'
-        await sync_to_async(self.game.save)()
         await self.send(text_data=json.dumps({
             'type': 'waiting',
             'message': 'Waiting for opponent to join',
@@ -157,15 +175,16 @@ class FlappyConsumer(AsyncWebsocketConsumer):
         if self.game.finished:
             return
         else:
-            self.game.nb_players -= 1
 
             if self.room_group_name in self.games:
-                self.GameThread.stop()
+                self.GameThread.stop(self.user)
                 del self.games[self.room_group_name]
-            del self.GameThread
+            if self.GameThread :
+                del self.GameThread
+                self.GameThread = None
 
-            self.game.winner = self.game.get_other_player(self.user)
-            self.game.finished = True
+            self.game = await sync_to_async(FlappyGame.objects.get)(room_name=self.room_group_name)
+            await sync_to_async(lambda: self.game.winner)()
             await sync_to_async(self.game.save)()
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -175,6 +194,8 @@ class FlappyConsumer(AsyncWebsocketConsumer):
                     'winner' : self.game.winner.id
                 }
             )
+            self.game.nb_players -= 1
+            await sync_to_async(self.game.save)()
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data):
@@ -193,12 +214,14 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             'type': 'error',
             'message': event['message'],
         }))
+        self.game = await sync_to_async(FlappyGame.objects.get)(room_name=self.room_group_name)
         self.game.finished = True
         await sync_to_async(self.game.save)()
         if self.room_group_name in self.games:
-            self.GameThread.stop()
             del self.games[self.room_group_name]
-        del self.GameThread
+        if self.GameThread :
+            del self.GameThread
+            self.GameThread = None
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         await self.close()
 
@@ -221,11 +244,10 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             'message': event['message'],
             'winner': event['winner']
         }))
-        self.game.finished = True
-        await sync_to_async(self.game.save)()
         if self.room_group_name in self.games:
-            self.GameThread.stop()
             del self.games[self.room_group_name]
-        del self.GameThread
+        if self.GameThread :
+            del self.GameThread
+            self.GameThread = None
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         await self.close()
