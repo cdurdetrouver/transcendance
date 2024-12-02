@@ -51,7 +51,6 @@ export async function initComponent() {
 	sidebar.addEventListener('mouseleave', () => {
 		iconImage.src = '../../static/assets/jpg/head.png';
 	});
-
 }
 
 export async function cleanupComponent() {
