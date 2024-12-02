@@ -191,6 +191,12 @@ class GameThread(threading.Thread):
 	def game_over(self, Winner):
 		self.game.finished = True
 		self.game.winner = Winner
+		if self.game.player1_score > self.game.player1.best_score:
+			self.game.player1.best_score = self.game.player1_score
+		if self.game.player2_score > self.game.player2.best_score:
+			self.game.player2.best_score = self.game.player2_score
+		self.game.player1.save()
+		self.game.player2.save()
 		self.game.save()
 		self.game.winner.save()
 		self._stop_event.set()
@@ -225,5 +231,11 @@ class GameThread(threading.Thread):
 		user2 = self.game.player2 if user == self.game.player1 else self.game.player1
 		self.game.finished = True
 		self.game.winner = user2
+		if self.game.player1_score > self.game.player1.best_score:
+			self.game.player1.best_score = self.game.player1_score
+		if self.game.player2_score > self.game.player2.best_score:
+			self.game.player2.best_score = self.game.player2_score
+		self.game.player1.save()
+		self.game.player2.save()
 		self.game.save()
 		self._stop_event.set()
