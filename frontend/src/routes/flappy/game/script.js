@@ -194,6 +194,22 @@ function gameLoop() {
 		draw_reset();
 }
 
+function closeButton()
+{
+	console.log("game close function");
+	const buttonDiv = document.createElement('div');
+	buttonDiv.className = 'return-menu'; 
+	buttonDiv.innerHTML =  `<input id="button-return" type="button" value="Return to menu" data-link>
+	`;
+	const parentDiv = document.getElementById("game-canvas");
+	
+	parentDiv.appendChild(buttonDiv)
+	document.getElementById('button-return').addEventListener('click', function() {
+        window.location.href = '/character';
+    });
+
+}
+
 class FlappySocket {
 	constructor(game_room) {
 		this.socket = null;
@@ -221,6 +237,7 @@ class FlappySocket {
 			customalert('Game Over', data.message + " winner is " + winner);
 			game_ended = true;
 			clearInterval(pingIntervalID);
+			closeButton();
 		}
 		else if (data.type === 'viewer')
 			viewer = true;
@@ -276,6 +293,21 @@ async function get_game_players(game_id) {
 
 	player1 = response_game_data.player1;
 	player2 = response_game_data.player2;
+
+	const profilePicture1 = player1.picture_remote ? player1.picture_remote : config.backendUrl + player1.profile_picture;
+	const profilePicture2 = player2.picture_remote ? player2.picture_remote : config.backendUrl + player2.profile_picture;
+	const player1block = document.getElementById('player1');
+	const player2block = document.getElementById('player2');
+
+	player1block.innerHTML = `
+	<span class="profile-pic"> <img src="${profilePicture1}" height=100 alt="Room Picture"> </span> 
+	<span class="player-name">${player1.username}</span>
+	`;
+
+	player2block.innerHTML = `
+	<span class="player-name">${player2.username}</span>
+	<span class="profile-pic"> <img src="${profilePicture2}" height=100 alt="Room Picture"> </span>
+	`;
 }
 
 export async function initComponent() {

@@ -2,54 +2,125 @@
     font-family: flappyFont;
     src: url(../../static/assets/fonts/flappy.TTF);
 }
+@font-face {
+	font-family: isaac-bold;
+	src: url("../../assets/font/isaac_bold.ttf") format("truetype");
+  }
+#background-image {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
+	background-image: url("../../../static/assets/background/background_1.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: -1;
+  }
 
-/* Container for canvases and leaderboard */
-.container {
+#container {
     display: flex;
-    justify-content: center;    /* Center canvasWrapper and leaderboard horizontally */
-    align-items: center;        /* Center canvasWrapper and leaderboard vertically */
+    justify-content: center;    
+    align-items: center; 
 	flex-direction: column;
-    height: 90vh;               /* Use 90% of viewport height */
-    padding-right: 20px;        /* Space for the leaderboard */
+    height: 90vh;              
+    padding-right: 20px;       
     position: relative;
 }
 
-/* Canvas Wrapper for background and game canvases */
-.canvasWrapper {
+#game-canvas {
     position: relative;
-    width: 800px;               /* Canvas width */
-    height: 600px;              /* Canvas height */
-    display: block;             /* Block-level element to contain canvases */
-    margin-right: 50px;         /* Space between the canvases and the leaderboard */
+    width: 800px;               
+    height: 600px;              
+    display: block;             
 }
 
-/* Superposing the canvases */
 #backgroundCanvas, #gameCanvas {
-    position: absolute;         /* Stack canvases on top of each other */
+    position: absolute;         
     top: 0;
     left: 0;
-    z-index: 0;                 /* Background canvas underneath */
-    width: 100%;                /* Full width of the canvasWrapper */
-    height: 100%;               /* Full height of the canvasWrapper */
+    z-index: 0;                
+    width: 100%;                
+    height: 100%;              
 	border: solid;
+	border-radius: 5%;
 	-webkit-box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6); 
 	box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6);
 }
 
 #gameCanvas {
-    z-index: 1;                 /* Game canvas on top */
+    z-index: 1;                 
 }
-
-/* Username positioned at the bottom-left of the canvasWrapper */
-#user_username {
-    position: absolute;          /* Absolute positioning relative to canvasWrapper */
-    top: 5%   ;                /* 10px from the bottom of the canvasWrapper */
-    left: 20%;                  /* Align to the left of the canvasWrapper */
-    font-size: 24px;
-    font-family: flappyFont;
-    color: #000;
-    z-index: 2;                  /* Ensure it's above the canvases */
-    background-color: rgba(255, 255, 255, 0.7); /* Optional: background for better visibility */
-    padding: 5px;
-    border-radius: 5px;
-}
+#container #player-block {
+	font-family: isaac-bold;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 800px;
+	margin-top: 15px;
+  }
+  #container #player-block #player1 {
+	display: flex;
+	align-items: center;
+  }
+  #container #player-block #player1 .profile-pic {
+	display: inline-flex;
+	align-items: center;
+	margin-right: 10px;
+  }
+  #container #player-block #player1 .player-name {
+	display: inline-flex;
+	align-items: center;
+  }
+  #container #player-block #player2 {
+	display: flex;
+	align-items: center;
+  }
+  #container #player-block #player2 .profile-pic {
+	display: inline-flex;
+	align-items: center;
+	margin-left: 10px;
+  }
+  #container #player-block #player2 .player-name {
+	display: inline-flex;
+	align-items: center;
+  }
+  
+  .profile-pic img {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: solid 2px;
+  }
+  #container #game-canvas .return-menu {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 50%;
+	z-index: 5;
+  }
+  #container #game-canvas .return-menu #button-return {
+	position: absolute;
+	font-family: isaac-bold;
+	font-size: 0.8rem;
+	background-image: url(../../../static/assets/sheets/Button.png);
+	width: 150px;
+	height: 60px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;
+	cursor: pointer;
+	transition: transform 0.1s ease;
+  }
+  #container #game-canvas .return-menu #button-return:hover {
+	transform: scale(1.02);
+	border: none;
+	background-color: transparent;
+  }
