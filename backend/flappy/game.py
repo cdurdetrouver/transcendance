@@ -192,7 +192,8 @@ class GameThread(threading.Thread):
 		self.game.finished = True
 		self.game.winner = Winner
 		self.game.save()
-		self.stop()
+		self.game.winner.save()
+		self._stop_event.set()
 
 		async_to_sync(self.channel_layer.group_send)(
 			self.group_name,
@@ -219,6 +220,10 @@ class GameThread(threading.Thread):
 		elif not data['pressed']:
 			player_jump.can_jump = True
 
-	def stop(self):
+	def stop(self, user):
 		print("Game stopped")
+		user2 = self.game.player2 if user == self.game.player1 else self.game.player1
+		self.game.finished = True
+		self.game.winner = user2
+		self.game.save()
 		self._stop_event.set()
