@@ -28,6 +28,16 @@ class FlappyMatchmakingConsumer(AsyncWebsocketConsumer):
             return
         self.user = result
         self.blocked_users = await sync_to_async(list)(self.user.blocked_users.all())
+
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in the waiting list'
+                }))
+                await self.close()
+                return
+
         self.waiting_players.append(self)
 
         if len(self.waiting_players) >= 2:
@@ -96,6 +106,15 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             return
 
         self.user = result
+        for player in self.waiting_players:
+            if player.user == self.user:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'You are already in the waiting list'
+                }))
+                await self.close()
+                return
+
         self.room_group_name = self.scope['url_route']['kwargs']['room_name']
         self.game = await sync_to_async(FlappyGame.objects.get)(room_name=self.room_group_name)
         await sync_to_async(lambda: self.game.player1)()
