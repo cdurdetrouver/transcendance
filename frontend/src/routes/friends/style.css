@@ -1,6 +1,6 @@
 @font-face {
-  font-family: isaac-bold;
-  src: url("../assets/font/isaac_bold.ttf");
+  font-family: isaac;
+  src: url("../assets/font/isaac.ttf");
 }
 body, html {
   background-image: url("../assets/images/account/background_account.png");
@@ -35,55 +35,116 @@ body #page #background, html #page #background {
   flex-direction: column;
 }
 body #page #background .text, html #page #background .text {
-  font-family: isaac-bold;
+  font-family: isaac;
 }
-body #page #background #friends-box, html #page #background #friends-box {
-  background-color: #dd8500;
+body #page #background #sheet-image, html #page #background #sheet-image {
   width: 50%;
-  height: 60%;
+}
+body #page #background #container, html #page #background #container {
+  background-image: url("../assets/images/friends/friend_sheet.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  aspect-ratio: 225/196;
   display: flex;
   flex-direction: column;
 }
-body #page #background #friends-box hr, html #page #background #friends-box hr {
+body #page #background #container #friend-box, html #page #background #container #friend-box {
+  aspect-ratio: 225/196;
+  display: flex;
+  flex-direction: column;
+}
+body #page #background #container hr, html #page #background #container hr {
   border: 1px solid #332C2B;
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
 }
-body #page #background #friends-box #header, html #page #background #friends-box #header {
+body #page #background #container #header, html #page #background #container #header {
   display: flex;
   justify-content: center;
 }
-body #page #background #friends-box #header h1, html #page #background #friends-box #header h1 {
+body #page #background #container #header h1, html #page #background #container #header h1 {
   display: flex;
   justify-content: center;
   font-size: 2vw;
   color: #332C2B;
-  font-family: isaac-bold;
+  font-family: isaac;
 }
-body #page #background #friends-box #search, html #page #background #friends-box #search {
-  display: flex;
-  justify-content: center;
-  height: 10%;
-  margin: 1%;
-}
-body #page #background #friends-box #search input, html #page #background #friends-box #search input {
-  height: 70%;
-}
-body #page #background #friends-box #list, html #page #background #friends-box #list {
-  background-color: #e90e45;
+body #page #background #container #list, html #page #background #container #list {
+  width: 90%;
   margin-top: 1%;
   display: flex;
   justify-content: center;
+  flex-direction: column;
   padding: 1%;
+  max-height: 60%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
 }
-body #page #background #friends-box #list .friend, html #page #background #friends-box #list .friend {
+body #page #background #container #list .friend, html #page #background #container #list .friend {
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
-body #page #background #friends-box #list .friend .profile-picture-container, html #page #background #friends-box #list .friend .profile-picture-container {
-  width: 10%;
+body #page #background #container #list .friend .delete-friend, html #page #background #container #list .friend .delete-friend {
+  height: 28%;
 }
-body #page #background #friends-box #list .friend .profile-picture-container img, html #page #background #friends-box #list .friend .profile-picture-container img {
+body #page #background #container #list .friend .delete-friend img, html #page #background #container #list .friend .delete-friend img {
+  height: 180%;
+}
+body #page #background #container #list .friend .profile-picture-container, html #page #background #container #list .friend .profile-picture-container {
+  width: 20%;
+}
+body #page #background #container #list .friend .profile-picture-container img, html #page #background #container #list .friend .profile-picture-container img {
   width: 100%;
   border-radius: 50%;
+}
+body #page #background #container #list .friend .username, html #page #background #container #list .friend .username {
+  font-size: 2vw;
+}
+body #page #popin, html #page #popin {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0%;
+  left: 0%;
+}
+body #page #popin img, html #page #popin img {
+  width: 35%;
+}
+body #page #popin #confirmation-content, html #page #popin #confirmation-content {
+  position: absolute;
+  width: 31%;
+  aspect-ratio: 228/129;
+}
+body #page #popin #confirmation-content button, html #page #popin #confirmation-content button {
+  border: none;
+  position: absolute;
+  top: 60%;
+  transition: transform 0.3s ease;
+  font-size: 4vw;
+}
+body #page #popin #confirmation-content span, html #page #popin #confirmation-content span {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  font-size: 2.8vw;
+}
+body #page #popin #confirmation-content .button-popin:hover, html #page #popin #confirmation-content .button-popin:hover {
+  transform: scale(1.2);
+}
+body #page #popin #confirmation-content #yes, html #page #popin #confirmation-content #yes {
+  left: 15%;
+  width: 27%;
+  height: 18%;
+}
+body #page #popin #confirmation-content #no, html #page #popin #confirmation-content #no {
+  left: 60%;
+  width: 23%;
+  height: 18%;
 }/*# sourceMappingURL=style.css.map */

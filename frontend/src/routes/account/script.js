@@ -123,7 +123,7 @@ export async function initComponent() {
 	inviteOrEditButton.addEventListener("click", function() {
 		if (id) {
 			console.log("invite to chat");
-	
+			
 		}
 		else {
 			console.log("edit profile");

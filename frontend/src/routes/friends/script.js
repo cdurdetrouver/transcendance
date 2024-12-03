@@ -3,25 +3,8 @@ import { router } from '../../app.js';
 import config from '../../env/config.js';
 import {customalert} from '../../components/alert/script.js';
 
-async function add_user_friend(user_id) {
-    const response = await fetch(config.backendUrl + "/user/friend/" + user_id + "/", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: "include",
-    });
-    const data = await response.json();
-    if (response.status === 200)
-            return data.message;
-    else {
-        console.log("error: ", data['error'])
-    }
-    return null;
-}
-
-async function delete_user_friend(user_id) {
-    const response = await fetch(config.backendUrl + "/user/friend/" + user_id + "/", {
+async function deleteUserFriend(user) {
+    const response = await fetch(config.backendUrl + "/user/friend/" + user.id + "/", {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
@@ -29,16 +12,20 @@ async function delete_user_friend(user_id) {
         credentials: "include",
     });
     const data = await response.json();
-    if (response.status === 200)
-            return data.message;
+    if (response.status === 200) {
+        customalert("Success", user.username + " is no longer your friend");
+        return data.message;
+    }
     else {
         console.log("error: ", data['error'])
     }
     return null;
 }
 
-async function get_user_friends(user_id) {
-    const response = await fetch(config.backendUrl + "/user/friend/" + user_id + "/", {
+async function getUserFriends(user) {
+	console.log("userid = ", user.id);
+
+    const response = await fetch(config.backendUrl + "/user/friend/" + user.id + "/", {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
@@ -55,16 +42,15 @@ async function get_user_friends(user_id) {
     return null;
 }
 
-async function displayFriends(user_id) {
-	const friends = await get_user_friends(user_id);
-
-	console.log(friends);
+async function displayFriends(user) {
+	const friends = await getUserFriends(user);
 
 	if (friends && friends.length > 0) {
 		let friendsList = document.querySelector("#list");
 		friendsList.innerHTML = ""; // Efface le contenu existant
 	
 		friends.forEach(friend => {
+            
 				let friendElement = document.createElement("div");
 				friendElement.className = "friend";
 
@@ -92,18 +78,36 @@ async function displayFriends(user_id) {
 
 				let deleteButton = document.createElement("button");
 				deleteButton.className = "delete-friend";
-				deleteButton.textContent = "Delete";
-				//red cross
+				// deleteButton.textContent = "Delete";
+                let deleteImage = document.createElement("img");
+                deleteImage.src = "../../static/assets/no.png";
+                deleteImage.alt = "delete";
+           
+                deleteButton.appendChild(deleteImage);
+                friendElement.appendChild(usernameDiv);
+                friendElement.appendChild(deleteButton);
+                friendsList.appendChild(friendElement);
 
-				deleteButton.addEventListener("click", () => {
-					console.log(`Deleting friend: ${friend.username}`);
-				});
-				friendElement.appendChild(usernameDiv);
-				friendElement.appendChild(deleteButton);
-				friendsList.appendChild(friendElement);
+                const yesButton = document.querySelector("#yes");
+                const noButton = document.querySelector("#no");
+                const popin = document.querySelector("#popin");
+
+                deleteButton.addEventListener("click", () => {
+                    popin.style.display = "flex";
+        
+                    yesButton.addEventListener("click", function() {
+                        const friendElement = deleteButton.closest('.friend');
+                        deleteUserFriend(user);
+                        friendElement.remove();
+                        popin.style.display = "none";
+                    });
+        
+                    noButton.addEventListener("click", function() {
+                        popin.style.display = "none";
+                    });
+                });
 		});
 	}
-
 	else {
 		customalert("Error", "No friends :(");
 	}
@@ -114,7 +118,9 @@ export async function initComponent(params) {
     if (!user)
         router.navigate('/');
 	console.log()
-	displayFriends(user.id);
+	displayFriends(user);
+
+
 }
 
 export async function cleanupComponent(params) {

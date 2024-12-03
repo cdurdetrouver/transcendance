@@ -1,6 +1,6 @@
 @font-face {
-  font-family: isaac-bold;
-  src: url("../assets/font/isaac_bold.ttf");
+  font-family: isaac;
+  src: url("../assets/font/isaac.ttf");
 }
 body, html {
   background-image: url("../assets/images/account/background_account.png");
@@ -13,7 +13,7 @@ body #page, html #page {
   height: 100%;
 }
 body #page .text, html #page .text {
-  font-family: isaac-bold;
+  font-family: isaac;
   color: #332C2B;
 }
 body #page button, html #page button {
@@ -35,7 +35,7 @@ body #page #background #book, html #page #background #book {
   display: flex;
   justify-content: center;
   width: 100%;
-  font-family: isaac-bold;
+  font-family: isaac;
 }
 body #page #background #book img, html #page #background #book img {
   width: 70vw;

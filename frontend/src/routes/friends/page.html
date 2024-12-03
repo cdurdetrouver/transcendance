@@ -1,16 +1,23 @@
 {{header}}
 <div id="page">
 	<div id="background">
-		<div id="friends-box">
-			<div id="header">
-				<h1 class="text">Box of Friends</h1>
+		<div id="container">
+			<div id="friend-box">
+				<div id="header">
+					<h1 class="text">Box of Friends</h1>
+				</div>
+				<hr>
+					<div id="list"></div>
 			</div>
-			<hr>
-			<div id="search">
-				<input type="text" id="search" placeholder="Search for friends">
-				<button id="search-button">Search</button>
+		</div>
+		<div id="popin">
+			<img src="../routes/assets/images/account/confirmation_sheet_empty.png" alt="Confirmation Image">
+			<div id="confirmation-content">
+				<span class="text">ARE YOU SURE ?</span>
+				<button class="text buttons" id="yes">YES</button>
+				<button class="text buttons" id="no">NO</button>
 			</div>
-			<div id="list"></div>
+		</div>
 	</div>
 </div>
 	

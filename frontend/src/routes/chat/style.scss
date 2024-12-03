@@ -1,10 +1,10 @@
 @font-face {
-	font-family: isaac-bold;
+	font-family: isaac;
 	src: url(../../routes/assets/font/IsaacGame.ttf);
   }
   @font-face {
-    font-family: isaac-bold;
-    src: url('http://localhost:5500/routes/assets/font/isaac_bold.ttf') format('truetype');
+    font-family: isaac;
+    src: url('http://localhost:5500/routes/assets/font/isaac.ttf') format('truetype');
 }
   html, body {
     overflow: hidden;
@@ -46,7 +46,7 @@
 		display: flex;
 		flex-direction: column;
 		.left-top {
-			font-family: isaac-bold;
+			font-family: isaac;
 			color: #2d2d2d;
 			margin-left: 50px;
 			h1 {
@@ -56,7 +56,7 @@
 				width: 91%;
 				padding-bottom: 10px;
 				#create-room-btn {
-					font-family: isaac-bold;
+					font-family: isaac;
 					font-size: 0.7rem;
 					background-image: url(../../static/assets/sheets/Button.png);
 					width: 200px;
@@ -104,7 +104,7 @@
 			list-style-type: none; 
 		}
 		.chat-list {
-			font-family: isaac-bold;
+			font-family: isaac;
 			color: #2d2d2d;
 			border-top: 2px solid rgb(171, 170, 170); 
 			border-bottom: 2px solid   rgb(171, 170, 170);
@@ -126,7 +126,7 @@
 			
 		}
 		.invitation {
-			font-family: isaac-bold;
+			font-family: isaac;
 			color: #2d2d2d;
 			margin-left: 50px;
 			position: relative;
@@ -158,7 +158,7 @@
 					width: inherit;
 					height: 100%;
 					#chat-header {
-						font-family: isaac-bold;
+						font-family: isaac;
 						color: #2d2d2d;
 						padding-top: 30px;
 						display: flex;
@@ -183,7 +183,7 @@
 						}
 					}
 					#chat-log {
-						font-family: isaac-bold;
+						font-family: isaac;
 						color: #2d2d2d;
 						overflow-y: auto;
 						margin-left: 50px;
@@ -280,7 +280,7 @@
 		}
 	}
 	.right {
-		font-family: isaac-bold;
+		font-family: isaac;
 		color: #2d2d2d;
 		background-color: transparent;
 		background-image: url('../../static/assets/sheets/chat-right.png');
@@ -296,7 +296,7 @@
 				padding-top: 20px;
 			}
 			#chat-message-leave {
-				font-family: isaac-bold;
+				font-family: isaac;
 				font-size: 0.7rem;
 				background-image: url(../../static/assets/sheets/Button-cross.png);
 				width: 200px;
@@ -346,7 +346,7 @@
 				gap: 20px;
 				margin-bottom: 15px;
 				#button-add-user{
-					font-family: isaac-bold;
+					font-family: isaac;
 					font-size: 0.8rem;
 					background-image: url(../../static/assets/chat/Button-green.png);
 					width: 150px;
@@ -366,7 +366,7 @@
 					}
 				}
 				#button-remove-user{
-					font-family: isaac-bold;
+					font-family: isaac;
 					font-size: 0.8rem;
 					background-image: url(../../static/assets/chat/button-red.png);
 					width: 150px;
@@ -436,7 +436,7 @@
 					margin-left: 20px;
 					gap: 20px;
 					#submit-edit {
-						font-family: isaac-bold;
+						font-family: isaac;
 						font-size: 0.7rem;
 						background-image: url(../../static/assets/sheets/Button.png);
 						width: 150px;
@@ -457,7 +457,7 @@
 					}
 				}
 				#chat-delete {
-					font-family: isaac-bold;
+					font-family: isaac;
 					font-size: 0.7rem;
 					background-image: url(../../static/assets/sheets/Button-delete.png);
 					width: 150px;
@@ -483,7 +483,7 @@
 			position: relative;
 			.user-list {
 				height: 175px;
-				font-family: isaac-bold;
+				font-family: isaac;
 				color: #2d2d2d;
 				width: 80%;
 				list-style-type: none;
@@ -588,7 +588,7 @@ input[type="text"] {
 	transition: 0.3s;    
 	box-shadow: none;    
 	background-color: #e9dadf;
-	font-family: isaac-bold; 
+	font-family: isaac; 
 }
 input[type="text"]:focus {
 	border-color: #66afe9; 
@@ -596,7 +596,7 @@ input[type="text"]:focus {
 	box-shadow: none;
 }
 .input-text-chat::placeholder {
-	font-family: isaac-bold;
+	font-family: isaac;
 	color: gray;
 	opacity: 0.7;
 }

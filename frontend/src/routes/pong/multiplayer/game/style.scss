@@ -7,8 +7,8 @@ canvas {
     margin-left: auto;
 }
 @font-face {
-    font-family: isaac-bold;
-    src: url('../../../assets/font/isaac_bold.ttf') format('truetype');
+    font-family: isaac;
+    src: url('../../../assets/font/isaac.ttf') format('truetype');
 }
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 
@@ -52,7 +52,7 @@ canvas {
 		}
 		.name {
 			position: absolute;
-			font-family: isaac-bold; 
+			font-family: isaac; 
 			font-size: 16px;
 			color: black;
 			text-align: center;
@@ -90,7 +90,7 @@ canvas {
 			z-index: 5;
 			#button-return {
 				position: absolute;
-				font-family: isaac-bold;
+				font-family: isaac;
 				font-size: 0.8rem;
 				background-image: url(../../../../static/assets/sheets/Button.png);
 				width: 150px;
