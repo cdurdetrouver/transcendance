@@ -17,32 +17,32 @@ WIDTH = 800
 class Player:
 	characters = [
 		{
-			'force': 4,
+			'force': 5,
 			'life': 3,
 			'speed': 4
 		},
 		{
-			'force': 5,
+			'force': 6,
 			'life': 2,
 			'speed': 5
 		},
 		{
-			'force': 4,
+			'force': 5,
 			'life': 4,
 			'speed': 3
 		},
 		{
-			'force': 6,
+			'force': 7,
 			'life': 1,
 			'speed': 4
 		},
 		{
-			'force': 4,
+			'force': 5,
 			'life': 1,
 			'speed': 4
 		},
 		{
-			'life': 3,
+			'life': 4,
 			'speed': 4,
 			'force': 3
 		}
@@ -99,6 +99,9 @@ class GameThread(threading.Thread):
 		self.player1 = Player(self.game.player1_character)
 		self.player2 = Player(self.game.player2_character)
 
+		self.player1_loose = False
+		self.player2_loose = False
+
 		self.game_speed = 0
 
 		self.obstacles = queue.Queue()
@@ -149,8 +152,10 @@ class GameThread(threading.Thread):
 				if self.obstacles.empty() or self.obstacles.queue[-1].x < WIDTH - OBSTACLE_SPACING:
 					self.obstacles.put(Obstacle(WIDTH))
 
-				self.player1.update()
-				self.player2.update()
+				if not self.player1_loose:
+					self.player1.update()
+				if not self.player2_loose:
+					self.player2.update()
 
 				for obstacle in list(self.obstacles.queue):
 					obstacle.update(self.game_speed)
@@ -159,12 +164,15 @@ class GameThread(threading.Thread):
 						self.game.player1_score += 1
 						self.game.player2_score += 1
 						self.game_speed += 0.1
-					elif self.player1.collide(obstacle):
+					elif not self.player1_loose and self.player1.collide(obstacle):
+						self.player1_loose = True
 						self.game_over(self.game.player2)
-						break
-					elif self.player2.collide(obstacle):
+					elif not self.player2_loose and self.player2.collide(obstacle):
+						self.player2_loose = True
 						self.game_over(self.game.player1)
-						break
+
+				if self.player1_loose and self.player2_loose:
+					self.game_end()
 
 				async_to_sync(self.channel_layer.group_send)(
 					self.group_name,
@@ -188,9 +196,7 @@ class GameThread(threading.Thread):
 				)
 				break
 
-	def game_over(self, Winner):
-		self.game.finished = True
-		self.game.winner = Winner
+	def game_end(self):
 		if self.game.player1_score > self.game.player1.best_score:
 			self.game.player1.best_score = self.game.player1_score
 		if self.game.player2_score > self.game.player2.best_score:
@@ -204,19 +210,40 @@ class GameThread(threading.Thread):
 		async_to_sync(self.channel_layer.group_send)(
 			self.group_name,
 			{
-				'type': 'game.update',
-				'message': self.serialize()
+				'type': 'game.end',
+				'message': 'Game has ended',
+				'winner': self.game.winner.id
 			}
 		)
+
+	def game_over(self, Winner):
+		if self.game.finished:
+			return
+		print("game_over")
+		self.game.finished = True
+		self.game.winner = Winner
+		self.game.save()
 
 		async_to_sync(self.channel_layer.group_send)(
 			self.group_name,
 			{
-				'type': 'game.end',
+				'type': 'game.looser',
 				'message': 'Game has ended',
 				'winner': Winner.id
 			}
 		)
+
+	async def left(self, player):
+		if self.player1_loose and self.player2_loose:
+			return True
+		if self.player1 == player and not self.player1_loose:
+			self.player1_loose = True
+			self.game_over(self.game.player2)
+			return False
+		elif self.player2 == player and not self.player2_loose:
+			self.player2_loose = True
+			self.game_over(self.game.player1)
+			return False
 
 	async def set_player_jump(self, player, data):
 		player_jump = self.player1 if player == "player1" else self.player2

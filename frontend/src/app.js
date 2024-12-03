@@ -1,5 +1,5 @@
 import { getCookie } from "./components/storage/script.js";
-import { refresh_token } from "./components/user/script.js";
+import { get_user, refresh_token } from "./components/user/script.js";
 
 class Router {
 	constructor() {
@@ -48,7 +48,7 @@ class Router {
 	}
 
 	async _loadRoute(pathName) {
-		if (getCookie("access_token") == null && getCookie("refresh_token") != null) await refresh_token();
+		if (getCookie("user") == null) await refresh_token();
 		let route = this.routes.find(r => r.path === pathName.split('?')[0] || r.path + '/' === pathName.split('?')[0]);
 		if (!route) {
 			route = this.routes.find(r => r.path === '/404');
