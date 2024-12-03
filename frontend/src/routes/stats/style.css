@@ -40,6 +40,9 @@ body #page #background #book, html #page #background #book {
 body #page #background #book img, html #page #background #book img {
   width: 70vw;
 }
+body #page #background #book hr, html #page #background #book hr {
+  width: 85%;
+}
 body #page #background #book #left-page, html #page #background #book #left-page {
   position: absolute;
   top: 8%;
@@ -48,11 +51,19 @@ body #page #background #book #left-page, html #page #background #book #left-page
   height: 80%;
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 body #page #background #book #left-page span, html #page #background #book #left-page span {
   font-size: 2vw;
 }
-body #page #background #book #left-page #matchList, html #page #background #book #left-page #matchList {
+body #page #background #book #left-page #match-container, html #page #background #book #left-page #match-container {
+  width: 100%;
+  height: 100%;
+}
+body #page #background #book #left-page #match-container #matchList, html #page #background #book #left-page #match-container #matchList {
+  overflow-y: auto;
+  overflow-x: hidden;
   position: absolute;
   top: 10%;
   left: 0%;
@@ -63,10 +74,10 @@ body #page #background #book #left-page #matchList, html #page #background #book
   overflow-y: scroll;
   font-size: 1.2vw;
 }
-body #page #background #book #left-page #matchList::-webkit-scrollbar, html #page #background #book #left-page #matchList::-webkit-scrollbar {
+body #page #background #book #left-page #match-container::-webkit-scrollbar, html #page #background #book #left-page #match-container::-webkit-scrollbar {
   display: none;
 }
-body #page #background #book #left-page #matchList .Matchline, html #page #background #book #left-page #matchList .Matchline {
+body #page #background #book #left-page #match-container .Matchline, html #page #background #book #left-page #match-container .Matchline {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -75,7 +86,7 @@ body #page #background #book #left-page #matchList .Matchline, html #page #backg
   margin-top: 10px;
   margin-bottom: 10px;
 }
-body #page #background #book #left-page #matchList .Matchline .player-left, html #page #background #book #left-page #matchList .Matchline .player-left {
+body #page #background #book #left-page #match-container .Matchline .player-left, html #page #background #book #left-page #match-container .Matchline .player-left {
   overflow-wrap: break-word;
   text-align: left;
   white-space: nowrap;
@@ -84,7 +95,7 @@ body #page #background #book #left-page #matchList .Matchline .player-left, html
   display: flex;
   align-items: center;
 }
-body #page #background #book #left-page #matchList .Matchline .player-right, html #page #background #book #left-page #matchList .Matchline .player-right {
+body #page #background #book #left-page #match-container .Matchline .player-right, html #page #background #book #left-page #match-container .Matchline .player-right {
   overflow-wrap: break-word;
   text-align: right;
   white-space: nowrap;
@@ -92,6 +103,55 @@ body #page #background #book #left-page #matchList .Matchline .player-right, htm
   padding-left: 20px;
   display: flex;
   align-items: center;
+}
+body #page #background #book #left-page span, html #page #background #book #left-page span {
+  font-size: 2vw;
+}
+body #page #background #book #left-page #pong-stats, html #page #background #book #left-page #pong-stats {
+  width: 100%;
+  height: 100%;
+}
+body #page #background #book #left-page #pong-stats span, html #page #background #book #left-page #pong-stats span {
+  font-size: 1.5vw;
+}
+body #page #background #book #left-page #pong-stats .stats-count, html #page #background #book #left-page #pong-stats .stats-count {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 3vw;
+}
+body #page #background #book #left-page #pong-stats #wins, html #page #background #book #left-page #pong-stats #wins {
+  position: absolute;
+  height: 43%;
+  width: 44%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+body #page #background #book #left-page #pong-stats #wins img, html #page #background #book #left-page #pong-stats #wins img {
+  padding-bottom: 4%;
+  height: 18%;
+  width: 30%;
+}
+body #page #background #book #left-page #pong-stats #losses, html #page #background #book #left-page #pong-stats #losses {
+  position: absolute;
+  left: 52%;
+  height: 43%;
+  width: 44%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+body #page #background #book #left-page #pong-stats #losses img, html #page #background #book #left-page #pong-stats #losses img {
+  rotate: -6deg;
+  width: 30%;
+  height: 21%;
+}
+body #page #background #book #left-page #pong-stats::-webkit-scrollbar, html #page #background #book #left-page #pong-stats::-webkit-scrollbar {
+  display: none;
 }
 body #page #background #book #right-page, html #page #background #book #right-page {
   position: absolute;
@@ -101,24 +161,78 @@ body #page #background #book #right-page, html #page #background #book #right-pa
   height: 80%;
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 body #page #background #book #right-page span, html #page #background #book #right-page span {
   font-size: 2vw;
 }
-body #page #background #book #right-page #pong-stats span, html #page #background #book #right-page #pong-stats span {
+body #page #background #book #right-page #match-container, html #page #background #book #right-page #match-container {
+  width: 100%;
+  height: 100%;
+}
+body #page #background #book #right-page #match-container #matchList, html #page #background #book #right-page #match-container #matchList {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  top: 10%;
+  left: 0%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  overflow-y: scroll;
+  font-size: 1.2vw;
+}
+body #page #background #book #right-page #match-container::-webkit-scrollbar, html #page #background #book #right-page #match-container::-webkit-scrollbar {
+  display: none;
+}
+body #page #background #book #right-page #match-container .Matchline, html #page #background #book #right-page #match-container .Matchline {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+body #page #background #book #right-page #match-container .Matchline .player-left, html #page #background #book #right-page #match-container .Matchline .player-left {
+  overflow-wrap: break-word;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+}
+body #page #background #book #right-page #match-container .Matchline .player-right, html #page #background #book #right-page #match-container .Matchline .player-right {
+  overflow-wrap: break-word;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+}
+body #page #background #book #right-page span, html #page #background #book #right-page span {
+  font-size: 2vw;
+}
+body #page #background #book #right-page #flappy-stats, html #page #background #book #right-page #flappy-stats {
+  width: 100%;
+  height: 100%;
+}
+body #page #background #book #right-page #flappy-stats span, html #page #background #book #right-page #flappy-stats span {
   font-size: 1.5vw;
 }
-body #page #background #book #right-page #pong-stats .stats-count, html #page #background #book #right-page #pong-stats .stats-count {
+body #page #background #book #right-page #flappy-stats .stats-count, html #page #background #book #right-page #flappy-stats .stats-count {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   font-size: 3vw;
 }
-body #page #background #book #right-page #pong-stats #wins, html #page #background #book #right-page #pong-stats #wins {
+body #page #background #book #right-page #flappy-stats #wins, html #page #background #book #right-page #flappy-stats #wins {
   position: absolute;
-  top: 10%;
-  left: 3%;
   height: 43%;
   width: 44%;
   display: flex;
@@ -126,14 +240,13 @@ body #page #background #book #right-page #pong-stats #wins, html #page #backgrou
   align-items: center;
   flex-direction: column;
 }
-body #page #background #book #right-page #pong-stats #wins img, html #page #background #book #right-page #pong-stats #wins img {
+body #page #background #book #right-page #flappy-stats #wins img, html #page #background #book #right-page #flappy-stats #wins img {
   padding-bottom: 4%;
   height: 18%;
   width: 30%;
 }
-body #page #background #book #right-page #pong-stats #losses, html #page #background #book #right-page #pong-stats #losses {
+body #page #background #book #right-page #flappy-stats #losses, html #page #background #book #right-page #flappy-stats #losses {
   position: absolute;
-  top: 10%;
   left: 52%;
   height: 43%;
   width: 44%;
@@ -142,12 +255,12 @@ body #page #background #book #right-page #pong-stats #losses, html #page #backgr
   align-items: center;
   flex-direction: column;
 }
-body #page #background #book #right-page #pong-stats #losses img, html #page #background #book #right-page #pong-stats #losses img {
+body #page #background #book #right-page #flappy-stats #losses img, html #page #background #book #right-page #flappy-stats #losses img {
   rotate: -6deg;
   width: 30%;
   height: 21%;
 }
-body #page #background #book #right-page #pong-stats::-webkit-scrollbar, html #page #background #book #right-page #pong-stats::-webkit-scrollbar {
+body #page #background #book #right-page #flappy-stats::-webkit-scrollbar, html #page #background #book #right-page #flappy-stats::-webkit-scrollbar {
   display: none;
 }
 
