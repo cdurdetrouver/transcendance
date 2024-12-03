@@ -30,6 +30,7 @@ class User(AbstractUser):
 
 	wins = models.IntegerField(default=0)
 	looses = models.IntegerField(default=0)
+	best_score = models.IntegerField(default=0)
 
 	def save(self, *args, **kwargs):
 		if not self.pk and self.user_type == 'email' and self.password:

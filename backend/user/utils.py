@@ -202,7 +202,7 @@ def is_valid_username(username):
 		message = "Username is too short. It should be at least 3 characters long."
 		return False, message
 	if len(username) > 15:
-		message ="Username is too long. It should be no more than 20 characters long."
+		message ="Username is too long. It should be no more than 15 characters long."
 		return False, message
 
 	if not username[0].isalpha():

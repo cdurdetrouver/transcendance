@@ -13,6 +13,8 @@ from .serializers import UserSerializer, LoginSerializer
 from chat.data_handling import delete_mess_of
 from pong.models import Game
 from pong.serializers import GameSerializer
+from flappy.models import FlappyGame
+from flappy.serializers import FlappyGameSerializer
 import jwt
 import datetime
 import pyotp
@@ -366,6 +368,39 @@ def user_games(request, user_id):
 	games_s = GameSerializer(games, many=True).data
 	games = Game.objects.filter(player2=user)
 	games_s += GameSerializer(games, many=True).data
+	return JsonResponse({'games': games_s}, status=status.HTTP_200_OK)
+
+@swagger_auto_schema(
+	method='get',
+	request_body=None,
+	responses={
+		200: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'games': openapi.Schema(
+					type=openapi.TYPE_ARRAY,
+					items=FlappyGameSerializer.game_swagger
+				)
+			}
+		),
+		404: openapi.Schema(
+			type=openapi.TYPE_OBJECT,
+			properties={
+				'error': openapi.Schema(type=openapi.TYPE_STRING, description="User doesn't exist")
+			}
+		)
+	},
+	operation_description="Retrieve a list of games of flappy for a user"
+)
+@api_view(['GET'])
+def flappy_user_games(request, user_id):
+	user = User.objects.filter(id=user_id).first()
+	if user is None:
+		return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+	games = FlappyGame.objects.filter(player1=user)
+	games_s = FlappyGameSerializer(games, many=True).data
+	games = FlappyGame.objects.filter(player2=user)
+	games_s += FlappyGameSerializer(games, many=True).data
 	return JsonResponse({'games': games_s}, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(

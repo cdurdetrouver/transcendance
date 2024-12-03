@@ -359,10 +359,20 @@ function interpolateGameState(currentTime) {
 	else if (paddle1movedown)
 		nextpaddle1Y += paddle1speed * t;
 
+	if (nextpaddle1Y < 0)
+		nextpaddle1Y = 0;
+	if (nextpaddle1Y + paddleHeight > 400)
+		nextpaddle1Y = 400 - paddleHeight;
+
 	if (paddle2moveup)
 		nextpaddle2Y -= paddle2speed * t;
 	else if (paddle2movedown)
 		nextpaddle2Y += paddle2speed * t;
+
+	if (nextpaddle2Y < 0)
+		nextpaddle2Y = 0;
+	if (nextpaddle2Y + paddleHeight > 400)
+		nextpaddle2Y = 400 - paddleHeight;
 
 	const interpolatedState = {
 		ballX: lastGameState.ball.x + ballspeedX * t,

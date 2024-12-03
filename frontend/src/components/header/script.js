@@ -1,4 +1,4 @@
-import { get_user } from '../../components/user/script.js';
+import { get_user } from "../user/script.js";
 
 setTimeout(function() {
     let headerElement = document.querySelector('header'); 
@@ -39,7 +39,7 @@ function denyLink() {
 
 export async function initComponent() {
 	let user = await get_user();
-    if (!user) {
+	if (!user) {
 		denyLink();
 	}
 
@@ -53,7 +53,6 @@ export async function initComponent() {
 	sidebar.addEventListener('mouseleave', () => {
 		iconImage.src = '../../static/assets/jpg/head.png';
 	});
-
 }
 
 export async function cleanupComponent() {
