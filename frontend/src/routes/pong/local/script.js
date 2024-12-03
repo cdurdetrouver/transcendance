@@ -94,8 +94,10 @@ export async function initComponent() {
 	const mainContainer = document.getElementById("container");
 	const tournamentContainer = document.getElementById("container-tournament");
 	const tournamentClick = document.getElementById("tournament-postit")
+
 	const multiContainer = document.getElementById("container-multi");
 	const multiClick = document.getElementById("multi-postit")
+	
 	const returnButton = document.getElementById("return-button");
 
 
