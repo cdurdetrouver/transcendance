@@ -1,0 +1,302 @@
+@font-face {
+    font-family: isaac-bold;
+    src: url('../../assets/font/isaac_bold.ttf') format('truetype');
+}
+#background-image {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
+	background-image: url("../../../static/assets/background/background_1.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: -1;
+}
+#container {
+	font-family: isaac-bold;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	top: 20%;
+	width: 30%;
+	height: 70%;
+	display: flex;
+	flex-direction: row;
+	gap: 50px;
+
+	.block {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		.postit {
+			font-size: 0.8rem;
+			width: 300px;
+			height: 300px;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-color: transparent;
+			outline: none;
+			border: none;
+			cursor: pointer;
+			transition: transform 0.3s ease;
+			margin-bottom: 15px;
+		}
+	}
+	#left .postit {
+		background-image: url(../../../static/assets/tournament/multi-sad.png);
+		&:hover {
+			transform: scale(1.02);
+			border: none;
+			background-color: transparent;
+			background-image: url(../../../static/assets/tournament/multi-happy.png);
+		}
+	}
+	#right .postit {
+		background-image: url(../../../static/assets/tournament/tourna-sad.png);
+		&:hover {
+			transform: scale(1.02);
+			border: none;
+			background-color: transparent;
+			background-image: url(../../../static/assets/tournament/tourna-happy.png);
+		}
+	}
+	#separator {
+		position: relative;
+		display: block; 
+		width: 15px;
+		height: 70%;
+		background: #929292;
+		border-radius: 20%;
+		color: #929292;
+	}
+	
+}
+
+#container-tournament {
+	font-family: isaac-bold;
+    position: absolute;
+    left:50%;
+	transform: translateX(-50%);
+    background-image: url("../../../static/assets/tournament/sheet.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+	height: 600px;
+	width: 600px;
+	z-index: 0;
+	display: none;
+	#content {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		padding-left: 80px;
+		padding-right: 100px;
+		min-height: 90%;
+		box-sizing: border-box;
+		#title {
+			text-align: center;
+			position: relative;
+			font-family: isaac-bold;
+			font-size: 2.5rem;
+			padding-top: 10px;
+			padding-bottom: 5px;
+			h3 {
+				font-size: 1rem;
+				text-align: center;
+				line-height: 1.5;
+				word-spacing: 5px;
+			}
+		}
+		#nameAdd {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 20px;
+			#addPlayer {
+				margin-left: 10px;
+				background-image: url(../../../static/assets/yes.png);
+				width: 20px;
+				height: 20px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-color: transparent;
+				outline: none;
+				border: none;	
+				cursor: pointer;
+				transition: transform 0.1s ease;
+				&:hover{
+					transform: scale(1.3);
+					border: none;
+					background-color: transparent;
+				}
+			}
+		}
+		#players {
+			height: 150px;
+			overflow-y: scroll;
+			scrollbar-width: thin; 
+			scrollbar-color: #888 transparent;
+			.newPlayer {
+				margin-top: 15px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				#removePlayer {
+					margin-left: 10px;
+					background-image: url(../../../static/assets/no.png);
+					width: 20px;
+					height: 20px;
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-position: center;
+					background-color: transparent;
+					outline: none;
+					border: none;	
+					cursor: pointer;
+					transition: transform 0.1s ease;
+					&:hover {
+						transform: scale(1.3);
+						border: none;
+						background-color: transparent;
+					}
+				}
+			}
+		}
+		#start {
+			margin-top: 50px; 
+			align-self: center;
+			font-family: isaac-bold;
+			background-image: url(../../../static/assets/sheets/Button.png);
+			width: 200px;
+			height: 80px;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-color: transparent;
+			outline: none;
+			border: none;	
+			cursor: pointer;
+			transition: transform 0.2s ease;
+			&:hover {
+				transform: scale(1.1);
+				border: none;
+				background-color: transparent;
+			}
+		}
+	}
+}
+input[type="text"] {
+	width: 60%; 
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid  grey; 
+	font-size: 16px;    
+	transition: 0.3s;    
+	box-shadow: none;    
+	background-color: #e9dadf;
+	font-family: isaac-bold; 
+}
+input[type="text"]:focus {
+	border-color: #66afe9; 
+	outline: none;
+	box-shadow: none;
+}
+
+
+#container-multi {
+	font-family: isaac-bold;
+    position: absolute;
+    left:50%;
+	transform: translateX(-50%);
+    background-image: url("../../../static/assets/multi/sheet.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+	height: 600px;
+	width: 600px;
+	z-index: 0;
+	display: none;
+	#content {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		padding-left: 80px;
+		padding-right: 100px;
+		min-height: 90%;
+		box-sizing: border-box;
+		#title {
+			text-align: center;
+			position: relative;
+			font-family: isaac-bold;
+			font-size: 2.5rem;
+			padding-top: 10px;
+			padding-bottom: 5px;
+			h3 {
+				font-size: 1rem;
+				text-align: center;
+				line-height: 1.5;
+				word-spacing: 5px;
+			}
+		}
+		#nameAdd{
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			align-items: center;
+			gap: 10px;
+		}
+		#start-multi {
+			margin-top: auto; 
+			align-self: center;
+			font-family: isaac-bold;
+			background-image: url(../../../static/assets/sheets/Button.png);
+			width: 200px;
+			height: 80px;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-color: transparent;
+			outline: none;
+			border: none;	
+			cursor: pointer;
+			transition: transform 0.2s ease;
+			&hover {
+				transform: scale(1.1);
+				border: none;
+				background-color: transparent;
+			}
+		}
+	}
+}
+#return-button {
+	display: none;
+	position: absolute;
+	top:80%;
+	left:47%;
+	background-image: url(../../../static/assets/tournament/return.png);
+	width: 75px;
+	height: 75px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;	
+	cursor: pointer;
+	transition: transform 0.2s ease;
+	&:hover {
+		transform: scale(1.1);
+		border: none;
+		background-color: transparent;
+	}
+}
