@@ -1,9 +1,8 @@
 @font-face
     font-family: "isaac"
     src: url(../routes/assets/font/isaac_bold.ttf)
-
 body, html
-    background-image: url("../routes/assets/images/home/background.png")
+    background-image: url("../static/assets/background/background_home.png")
     background-position: center
     background-repeat: no-repeat
     background-size: cover
@@ -48,17 +47,11 @@ body, html
                 align-items: center
                 position: relative
 
-                #sheet-image
-                    width: 44%
-                    display: flex
-                    justify-content: center
-                    align-items: center
-
                 #selection-mode
                     position: absolute
                     left: 24%
                     top: 0%
-                    width: 41%
+                    width: 35%
                     height: 85%
                     max-width: 100%
                     max-height: 100%
@@ -75,7 +68,7 @@ body, html
                         color: rgb(69, 57, 59)
                         cursor: pointer
                         font-family: isaac
-                        font-size: 5vw
+                        font-size: 5rem
                         text-decoration: none
                         border: none
                         transition: transform 0.3s ease
@@ -85,12 +78,16 @@ body, html
                         cursor: not-allowed
 
             #login-container
+                background-image: url("../static/assets/pong/player-sheet.png")
+                background-size: cover
+                background-position: center
+                background-repeat: no-repeat
                 position: absolute
                 top: 28%
                 left: 6%
+                min-width: 280px
                 width: 15%
-                height: 32%
-                rotate: 2deg
+                height: 35%
                 display: flex
                 flex-direction: column-reverse
                 align-content: center
@@ -100,20 +97,35 @@ body, html
                 overflow: hidden
                 text-overflow: ellipsis
                 z-index: 1111
-
+                &::after
+                    content: ''
+                    position: absolute
+                    top: 0
+                    left: 0
+                    width: 100%
+                    height: 100%
+                    background: inherit
+                    z-index: 2
+                    pointer-events: none
+                img
+                    width: 70%
+                    height: 70%
+                    position: relative
+                    z-index: 2
                 button
+                    position: absolute
+                    left:18%
+                    top: 71%
+                    rotate: 7deg
                     background-color: transparent
                     font-family: isaac
                     transition: transform 0.3s ease
-                    font-size: 2vw
+                    font-size: 1.8vw
                     border: none
+                    z-index: 3
                     color: #313131
-
                 button:hover
                     transform: scale(1.2)
-
-                img
-                    width: 50%
 
             #popin-container
                 display: none

@@ -102,6 +102,11 @@
 	{
 		"path": "/stats",
 		"files": "/stats"
+	},
+	{
+		"path": "/local",
+		"files": "/pong/local"
 	}
+
 
 ]
