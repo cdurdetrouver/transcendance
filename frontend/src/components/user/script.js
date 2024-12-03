@@ -88,7 +88,7 @@ async function get_user() {
 		})
 	if (response.status === 200) {
 		const data = await response.json();
-		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+		setCookie('user', JSON.stringify(data.user), 0.003472 );
 		return data.user;
 	}
 	return null;

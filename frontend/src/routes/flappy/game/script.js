@@ -2,6 +2,7 @@ import config from "../../../env/config.js";
 import { get_user } from '../../../../components/user/script.js';
 import { customalert } from "../../../components/alert/script.js";
 import { router } from '../../../app.js';
+import { deleteCookie } from "../../../components/storage/script.js";
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -46,6 +47,7 @@ let player1;
 let player2;
 let player;
 let viewer;
+let user;
 let game_started;
 let game_ended;
 
@@ -129,7 +131,7 @@ function draw(interpolatedState) {
 }
 
 function draw_reset() {
-	draw({ player: { y: canvas.height / 2, score: 0 }, obstacles: [] });
+	draw({ player: { y: canvas.height / 2, score: lastGameState ? lastGameState.player.score : 0 }, obstacles: [] });
 }
 
 function interpolateGameState(currentTime) {
@@ -203,10 +205,10 @@ function closeButton()
 	`;
 	const parentDiv = document.getElementById("game-canvas");
 	
-	parentDiv.appendChild(buttonDiv)
+	parentDiv.appendChild(buttonDiv);
 	document.getElementById('button-return').addEventListener('click', function() {
-        window.location.href = '/character';
-    });
+		router.navigate("/character");
+	});
 
 }
 
@@ -226,18 +228,32 @@ class FlappySocket {
 
 	onmessage(event) {
 		let data = JSON.parse(event.data);
-		// console.log(data);
 		if (data.type === 'game_update')
 			updateGame(data.message);
 		else if (data.type === 'game_started') {
 			game_started = true;
 		}
 		else if (data.type === 'game_end') {
-			let winner = data.winner === player1.id ? player1.username : player2.username;
-			customalert('Game Over', data.message + " winner is " + winner);
+			let winner = data.winner === player1.id ? "player1" : "player2";
+			customalert('GG', "Winner score is " + lastGameState[winner].score);
 			game_ended = true;
 			clearInterval(pingIntervalID);
 			closeButton();
+			deleteCookie("user");
+			setTimeout(async () => {
+				await get_user();
+			}, 1000);
+		}
+		else if (data.type === 'game_loose') {
+			let winner = data.winner === player1.id ? player1.username : player2.username;
+			let win = data.winner === user.id
+			if (win == false)
+			{
+				game_ended = true;
+				clearInterval(pingIntervalID);
+				closeButton();
+			}
+			customalert('Game Over', "Winner is " + winner, !win);
 		}
 		else if (data.type === 'viewer')
 			viewer = true;
@@ -317,7 +333,7 @@ export async function initComponent() {
 	lastUpdateTime = Date.now();
 	lastGameState = null;
 
-	const user = await get_user();
+	user = await get_user();
 	if (!user)
 		router.navigate('/login?return=/flappy');
 

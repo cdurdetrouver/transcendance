@@ -172,8 +172,6 @@ class FlappyConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         if not self.user:
             return
-        if self.game.finished:
-            return
         else:
 
             if self.room_group_name in self.games:
@@ -251,3 +249,10 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             self.GameThread = None
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         await self.close()
+
+    async def game_looser(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_loose',
+            'message': event['message'],
+            'winner': event['winner']
+        }))
