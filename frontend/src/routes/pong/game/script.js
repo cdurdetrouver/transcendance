@@ -431,7 +431,6 @@ function gameLoop() {
 		draw_reset();
 }
 
-
 function closeButton()
 {
 	console.log("game close function");
@@ -443,9 +442,8 @@ function closeButton()
 	
 	parentDiv.appendChild(buttonDiv)
 	document.getElementById('button-return').addEventListener('click', function() {
-        window.location.href = '/character';
-    });
-
+		router.navigate("/character");
+	});
 }
 
 class PongSocket {
