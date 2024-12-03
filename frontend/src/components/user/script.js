@@ -66,7 +66,7 @@ async function register(username, email, password, profile_picture) {
 		return response;
 	}
 	else {
-        console.error('Registration failed with status:', response.status);
+		console.error('Registration failed with status:', response.status);
 	}
 	return response;
 }
@@ -75,9 +75,6 @@ async function get_user() {
 	let user = getCookie('user');
 	if (user)
 		return JSON.parse(user);
-	let refresh = await refresh_token();
-	if (refresh.status !== 200)
-		return null;
 	const response = await fetch(config.backendUrl + "/user/",
 		{
 			method: "GET",
@@ -86,10 +83,12 @@ async function get_user() {
 				"Content-Type": "application/json",
 			},
 			credentials: "include",
-		});
+		}).catch(() => {
+			return null
+		})
 	if (response.status === 200) {
 		const data = await response.json();
-		setCookie('user', JSON.stringify(data.user), 5 / 1440);
+		setCookie('user', JSON.stringify(data.user), 0.003472 );
 		return data.user;
 	}
 	return null;

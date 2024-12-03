@@ -1,3 +1,5 @@
+import { get_user } from "../user/script.js";
+
 setTimeout(function() {
     let headerElement = document.querySelector('header'); 
     
@@ -51,7 +53,6 @@ export async function initComponent() {
 	sidebar.addEventListener('mouseleave', () => {
 		iconImage.src = '../../static/assets/jpg/head.png';
 	});
-
 }
 
 export async function cleanupComponent() {
