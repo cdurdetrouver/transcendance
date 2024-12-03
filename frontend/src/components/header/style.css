@@ -1,15 +1,149 @@
-/* Example CSS for the Header component */
+@font-face {
+	font-family: 'IsaacFont';
+	src: url(../../static/assets/font/IsaacGame.ttf);
+}
+@font-face {
+    font-family: isaac-bold;
+    src: url('http://localhost:5500/routes/assets/font/isaac_bold.ttf') format('truetype');
+}
+
 header {
-	background-color: #f4f4f4;
-	padding: 10px;
-	text-align: center;
-}
-
-header h2 {
-	color: red;
-}
-
-a {
-	color: black;
+	font-family: isaac-bold;
+	font-size: 1.5rem;
+	color: #2d2d2d;
 	text-decoration: none;
+}
+
+header.preload *{
+	animation-duration: 0s !important;
+	-webkit-animation-duration: 0s !important;
+	transition: background-color 0s, opacity 0s, color 0s, width 0s, height 0s, padding 0s, margin 0s !important;
+}
+
+.sidebar {
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	width:  80px;
+	height: 100vh;
+	background: url('../../static/assets/sheets/header_sheet2.png')  no-repeat  right;
+	background-size: 100% 150%;
+	overflow: hidden;
+	transition: .6s;
+}
+
+.sidebar:hover
+{
+	width: 300px;
+}
+
+.sidebar ul 
+{
+	position: relative;
+	left: -20px;
+	height: 100vh;
+	display: flex; 
+    flex-direction: column;
+}
+
+.sidebar li:hover {
+    transform: scale(1.1) translateX(12px); /* Applies to all li elements */
+}
+
+.icon img {
+	width: 30px;
+    height: auto;
+}
+
+.sidebar ul li
+{
+	list-style: none;
+	white-space: nowrap;
+	text-decoration: none;
+	width: auto;
+	min-width: 60px;
+	height: 70px;
+	align-items: center;
+}
+
+.sidebar .text-header
+{
+	margin-left: 35px;
+}
+
+.title img {
+	position: relative;
+	width: 185px;
+    height: auto;
+	margin-left: 15px;
+	top: 10px
+}
+
+.logo {
+	position: relative;
+	top: -20px;
+}
+
+.top .icon img
+{
+	position: relative;
+	top: 0px;
+	width: 40px;
+    left:-5px
+}
+
+.top .logo:hover
+{
+	transform: none;
+    cursor: default; /* Optionally, prevent the hover cursor */
+}
+
+a:link { 
+	text-decoration: none;
+	color: #2d2d2d;
+  } 
+  a:visited { 
+	text-decoration: none;
+	color: #2d2d2d;
+  } 
+  a:hover { 
+	text-decoration: none; 
+  } 
+  a:active { 
+	text-decoration: none; 
+  }
+
+.line {
+	height: 3px;       /* Set the height of the rectangle */
+	width: 30px;      /* Set the width to be greater than the height for a rectangular shape */
+	background:  #929292; /* The background color of the rectangle */
+	display: inline-block; /* Ensures it behaves like a block element */
+	border-radius: 18%;
+	transition: width 0.6s; /* Add transition for smooth width change */
+
+}
+
+.sidebar:hover .line {
+    width: 240px;
+}
+
+.line-no-hover 
+{
+	position: relative;
+    transform: none !important;
+}
+
+.sidebar:hover .doodle {
+	transition: none;
+}
+
+.doodle 
+{
+	position: absolute;
+	top: 10%;
+	z-index: -1;
+}
+
+.menu:hover {
+	cursor: pointer;
 }

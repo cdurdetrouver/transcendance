@@ -1,0 +1,477 @@
+@font-face {
+  font-family: isaac-bold;
+  src: url("../assets/font/isaac_bold.ttf");
+}
+body {
+  background-image: url("../assets/images/account/background_account.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+body #page {
+  height: 100%;
+}
+body #page .text {
+  font-family: isaac-bold;
+  color: #332C2B;
+}
+body #page button {
+  background-color: transparent;
+  border: none;
+}
+body #page button:hover {
+  transform: scale(1.2);
+}
+body #page #background {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  left: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+body #page #background #container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+body #page #background #container .buttons {
+  transition: transform 0.3s ease;
+  background-color: transparent;
+  border: none;
+}
+body #page #background #container .buttons:hover {
+  transform: scale(1.2);
+}
+body #page #background #container #matchList {
+  font-size: 0.7rem;
+  position: absolute;
+  left: 100px;
+  font-family: isaac-bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  max-height: 300px;
+  overflow-y: scroll;
+}
+body #page #background #container #matchList::-webkit-scrollbar {
+  display: none;
+}
+body #page #background #container #matchList .Matchline {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+body #page #background #container #matchList .Matchline .player-left {
+  text-align: left;
+  width: 90px;
+  height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+}
+body #page #background #container #matchList .Matchline .player-right {
+  text-align: right;
+  width: 90px;
+  height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+}
+body #page #background #container #logout-sheet {
+  width: 19%;
+  position: absolute;
+  top: 57%;
+  left: 70%;
+}
+body #page #background #container #logout {
+  position: absolute;
+  rotate: -6deg;
+  left: 71%;
+  top: 59%;
+  width: 16%;
+  aspect-ratio: 95/67;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  padding-left: 1%;
+}
+body #page #background #container #logout span {
+  font-size: 1.6vw;
+}
+body #page #background #container #logout button img {
+  width: 60%;
+}
+body #page #background #container #sheet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+body #page #background #container #sheet #sheet-image {
+  width: 47vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body #page #background #container #sheet #who {
+  font-size: 1.8vw;
+  position: absolute;
+  top: 0vh;
+  left: 11vw;
+}
+body #page #background #container #sheet #main-page {
+  position: absolute;
+  left: 9%;
+  top: 4%;
+  width: 63%;
+  height: 80%;
+  transform: rotate(7deg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  max-width: 100%;
+  max-height: 100%;
+}
+body #page #background #container #sheet #main-page #user-info {
+  position: absolute;
+  width: 80%;
+  height: 30%;
+  top: 39%;
+  left: 10%;
+  font-size: 1.7vw;
+}
+body #page #background #container #sheet #main-page #user-info #current-info {
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+body #page #background #container #sheet #main-page #user-info #current-info input {
+  border: none;
+  background-color: #ccc7c6;
+  margin: 3px;
+}
+body #page #background #container #sheet #main-page #user-info #current-info button {
+  width: 100%;
+}
+body #page #background #container #sheet #main-page #user-info #current-info .edit-logo-mode {
+  width: 30%;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #label-email {
+  padding: 2px;
+  background-color: #ada2a0;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #label-username {
+  padding: 2px;
+  background-color: #ada2a0;
+}
+body #page #background #container #sheet #main-page #user-info #current-info .edit-input {
+  width: 80%;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #username {
+  display: flex;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #username button {
+  display: none;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #username form {
+  display: none;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password {
+  display: none;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password img {
+  width: 50%;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password span {
+  white-space: nowrap;
+  padding: 2px;
+  background-color: #ada2a0;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password form {
+  display: none;
+  flex-direction: row;
+  align-items: flex-end;
+}
+body #page #background #container #sheet #main-page #user-info #current-info #edit-password form #password-container {
+  display: flex;
+  flex-direction: column;
+}
+body #page #background #container #sheet #delete-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  height: 10%;
+}
+body #page #background #container #sheet #delete-profile button {
+  white-space: nowrap;
+  font-size: 2vw;
+  left: 10%;
+}
+body #page #background #container #sheet #delete-profile img {
+  width: 8%;
+  vertical-align: middle;
+}
+body #page #background #container #sheet #delete-profile #delete-logo-left {
+  top: 88%;
+  left: 100%;
+}
+body #page #background #container #sheet #delete-profile #delete-logo-right {
+  top: 88%;
+  left: 0%;
+}
+body #page #background #container #sheet #edit-profile {
+  position: absolute;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  height: 10%;
+  top: 85%;
+  left: 5%;
+}
+body #page #background #container #sheet #edit-profile button {
+  white-space: nowrap;
+  font-size: 2vw;
+  left: 10%;
+}
+body #page #background #container #sheet #edit-profile .edit-logo {
+  width: 10%;
+  vertical-align: middle;
+}
+body #page #background #container #sheet #edit-profile #edit-logo-right {
+  top: 88%;
+}
+body #page #background #container #sheet #edit-profile #edit-logo-left {
+  top: 88%;
+}
+body #page #background #container #sheet #friend-or-2fa {
+  position: absolute;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  height: 10%;
+  top: 77%;
+  left: 5%;
+}
+body #page #background #container #sheet #friend-or-2fa button {
+  white-space: nowrap;
+  font-size: 2vw;
+  left: 10%;
+}
+body #page #background #container #sheet #friend-or-2fa .edit-logo {
+  width: 10%;
+  vertical-align: middle;
+}
+body #page #background #container #sheet #friend-or-2fa #edit-logo-right {
+  top: 88%;
+}
+body #page #background #container #sheet #friend-or-2fa #edit-logo-left {
+  top: 88%;
+}
+body #page #background #container #sheet #profile-picture-container {
+  position: absolute;
+  top: 11%;
+  left: 31%;
+  width: 41%;
+  height: 23%;
+  display: flex;
+  justify-content: center;
+}
+body #page #background #container #sheet #profile-picture-container #profile-picture {
+  width: 73%;
+}
+body #page #background #container #sheet #profile-picture-container #profile-picture img {
+  width: 100%;
+}
+body #page #background #container #sheet #profile-picture-container form label {
+  display: none;
+  position: absolute;
+  top: 88%;
+  left: 86%;
+  width: 17%;
+}
+body #page #background #container #sheet #profile-picture-container form label img {
+  width: 100%;
+}
+body #page #background #container #sheet #profile-picture-container form input {
+  display: none;
+}
+body #page #background #container #sheet .button-image {
+  width: 100%;
+}
+body #page #background #container #sheet .stats {
+  position: absolute;
+  width: 24%;
+  height: 20%;
+  font-size: 1.7vw;
+  text-align: center;
+  top: 18%;
+}
+body #page #background #container #sheet #wins {
+  left: 5%;
+  color: #332C2B;
+}
+body #page #background #container #sheet #losses {
+  left: 73%;
+}
+body #page #background #popin {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0%;
+  left: 0%;
+}
+body #page #background #popin img {
+  width: 35%;
+}
+body #page #background #popin #confirmation-content {
+  position: absolute;
+  width: 31%;
+  aspect-ratio: 228/129;
+}
+body #page #background #popin #confirmation-content button {
+  border: none;
+  position: absolute;
+  top: 60%;
+  transition: transform 0.3s ease;
+  font-size: 4vw;
+}
+body #page #background #popin #confirmation-content span {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  font-size: 2.8vw;
+}
+body #page #background #popin #confirmation-content .button-popin:hover {
+  transform: scale(1.2);
+}
+body #page #background #popin #confirmation-content #yes-button {
+  left: 15%;
+  width: 27%;
+  height: 18%;
+}
+body #page #background #popin #confirmation-content #no-button {
+  left: 60%;
+  width: 23%;
+  height: 18%;
+}
+body #page #background #popin #qrcode-content {
+  display: none;
+  position: absolute;
+  width: 31%;
+  aspect-ratio: 228/129;
+}
+body #page #background #popin #qrcode-content button {
+  transition: transform 0.3s ease;
+}
+body #page #background #popin #qrcode-content #close-button {
+  background-image: url(../static/assets/login/cross.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: transparent;
+  position: absolute;
+  top: 17%;
+  right: 6%;
+  cursor: pointer;
+  height: 4%;
+  width: 4%;
+  border: none;
+}
+body #page #background #popin #qrcode-content span {
+  overflow-wrap: break-word;
+}
+body #page #background #popin #qrcode-content img {
+  position: absolute;
+  top: 38%;
+  left: 5%;
+  width: 25%;
+}
+body #page #background #popin #qrcode-content #generate-qrcode {
+  display: flex;
+  align-items: center;
+  font-size: 1.8vw;
+}
+body #page #background #popin #qrcode-content .qrcode {
+  display: none;
+  flex-direction: row-reverse;
+  align-items: center;
+  width: 100%;
+}
+body #page #background #popin #qrcode-content .qrcode #submit-code {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  width: 30%;
+  height: 10%;
+}
+body #page #background #popin #qrcode-content .qrcode #scan {
+  font-size: 1.7vw;
+  position: absolute;
+  top: 8%;
+  left: 2%;
+}
+body #page #background #popin #qrcode-content .qrcode #enter {
+  font-size: 1vw;
+  position: absolute;
+  top: 41%;
+  left: 40%;
+}
+body #page #background #popin #qrcode-content .qrcode #code {
+  position: absolute;
+  top: 54%;
+  left: 40%;
+}
+
+.win {
+  background-image: url(../../static/assets/yes.png);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.lost {
+  background-image: url(../../static/assets/no.png);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}/*# sourceMappingURL=style.css.map */

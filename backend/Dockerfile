@@ -13,6 +13,12 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip setuptools wheel
 RUN pip install -r requirements.txt
+RUN python -m spacy download en_core_web_sm
+RUN python -m spacy download fr_core_news_sm
+
+# Install cron
+RUN apt-get update
+RUN apt-get install -y cron
 
 # Copy project
 COPY . .
@@ -23,4 +29,5 @@ EXPOSE 8000
 # Copy the script to the container
 COPY script.sh .
 RUN chmod +x script.sh
-ENTRYPOINT [ "sh", "script.sh", "8000"]
+ENTRYPOINT [ "sh", "script.sh"]
+CMD [ "./manage.py", "runserver", "0.0.0.0:8000"]

@@ -1,0 +1,126 @@
+@font-face {
+    font-family: flappyFont;
+    src: url(../../static/assets/fonts/flappy.TTF);
+}
+@font-face {
+	font-family: isaac-bold;
+	src: url("../../assets/font/isaac_bold.ttf") format("truetype");
+  }
+#background-image {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
+	background-image: url("../../../static/assets/background/background_1.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: -1;
+  }
+
+#container {
+    display: flex;
+    justify-content: center;    
+    align-items: center; 
+	flex-direction: column;
+    height: 90vh;              
+    padding-right: 20px;       
+    position: relative;
+}
+
+#game-canvas {
+    position: relative;
+    width: 800px;               
+    height: 600px;              
+    display: block;             
+}
+
+#backgroundCanvas, #gameCanvas {
+    position: absolute;         
+    top: 0;
+    left: 0;
+    z-index: 0;                
+    width: 100%;                
+    height: 100%;              
+	border: solid;
+	border-radius: 5%;
+	-webkit-box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6); 
+	box-shadow: 4px 3px 2px 0px rgba(0,0,0,0.6);
+}
+
+#gameCanvas {
+    z-index: 1;                 
+}
+#container #player-block {
+	font-family: isaac-bold;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 800px;
+	margin-top: 15px;
+  }
+  #container #player-block #player1 {
+	display: flex;
+	align-items: center;
+  }
+  #container #player-block #player1 .profile-pic {
+	display: inline-flex;
+	align-items: center;
+	margin-right: 10px;
+  }
+  #container #player-block #player1 .player-name {
+	display: inline-flex;
+	align-items: center;
+  }
+  #container #player-block #player2 {
+	display: flex;
+	align-items: center;
+  }
+  #container #player-block #player2 .profile-pic {
+	display: inline-flex;
+	align-items: center;
+	margin-left: 10px;
+  }
+  #container #player-block #player2 .player-name {
+	display: inline-flex;
+	align-items: center;
+  }
+  
+  .profile-pic img {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: solid 2px;
+  }
+  #container #game-canvas .return-menu {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 50%;
+	z-index: 5;
+  }
+  #container #game-canvas .return-menu #button-return {
+	position: absolute;
+	font-family: isaac-bold;
+	font-size: 0.8rem;
+	background-image: url(../../../static/assets/sheets/Button.png);
+	width: 150px;
+	height: 60px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;
+	cursor: pointer;
+	transition: transform 0.1s ease;
+  }
+  #container #game-canvas .return-menu #button-return:hover {
+	transform: scale(1.02);
+	border: none;
+	background-color: transparent;
+  }

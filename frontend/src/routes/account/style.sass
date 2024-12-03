@@ -1,0 +1,469 @@
+@font-face
+  font-family: isaac-bold
+  src: url('../assets/font/isaac_bold.ttf')
+
+body
+    background-image: url('../assets/images/account/background_account.png')
+    background-position: center
+    background-repeat: no-repeat
+    background-size: cover
+    height: 100%
+
+    #page
+        // position: relative
+        height: 100%
+
+        .text
+            font-family: isaac-bold
+            color: #332C2B
+        button
+            background-color: transparent
+            border: none
+       
+        button:hover
+            transform: scale(1.2)
+
+        #background
+            position: relative
+            width: 100vw
+            height: 100vh
+            left: 50%
+            background-position: center
+            background-repeat: no-repeat
+            background-size: contain
+            transform: translateX(-50%)
+            display: flex
+            justify-content: center
+            align-items: center
+            flex-direction: column
+
+            #container
+                position: relative
+                display: flex
+                align-items: center
+                justify-content: center
+                width: 100%
+                height: 100%
+
+                .buttons
+                    transition: transform 0.3s ease
+                    background-color: transparent
+                    border: none
+                .buttons:hover
+                    transform: scale(1.2)
+
+                #matchList 
+                    font-size: 0.7rem
+                    position: absolute
+                    left: 100px
+                    font-family: isaac-bold
+                    display: flex
+                    flex-direction: column
+                    align-items: center
+                    width: auto
+                    max-height: 300px
+                    overflow-y: scroll
+                    &::-webkit-scrollbar
+                         display: none
+
+                    .Matchline 
+                        position: relative
+                        display: flex
+                        flex-direction: row
+                        justify-content: space-between
+                        gap: 10px
+                        margin-top: 10px
+                        margin-bottom: 10px
+                        .player-left
+                            text-align: left
+                            width: 90px
+                            height: 20px
+                            white-space: nowrap
+                            overflow: hidden
+                            padding-right: 20px
+                            display: flex
+                            align-items: center
+                        .player-right
+                            text-align: right
+                            width: 90px
+                            height: 20px
+                            white-space: nowrap
+                            overflow: hidden
+                            padding-left: 20px
+                            display: flex
+                            align-items: center
+
+                #logout-sheet
+                    width: 19%
+                    position: absolute
+                    top: 57%
+                    left: 70%
+                
+                #logout
+                    position: absolute
+                    rotate: -6deg
+                    left: 71%
+                    top: 59%
+                    width: 16%
+                    aspect-ratio: 95 / 67
+                    display: flex
+                    justify-content: center
+                    align-items: center
+                    flex-direction: row
+                    padding-left: 1%
+                    
+                    span
+                        font-size: 1.6vw
+                    button
+                        img
+                            width: 60%
+
+                #sheet
+                    display: flex
+                    justify-content: center
+                    align-items: center
+                    position: relative
+
+                    #sheet-image
+                        width: 47vw
+                        display: flex
+                        justify-content: center
+                        align-items: center
+
+                    #who
+                        font-size: 1.8vw
+                        position: absolute
+                        top: 0vh
+                        left: 11vw
+
+                    #main-page
+                        position: absolute
+                        left: 9%
+                        top: 4%
+                        width: 63%
+                        height: 80%
+                        transform: rotate(7deg)
+                        display: flex
+                        justify-content: center
+                        align-items: flex-end
+                        max-width: 100%
+                        max-height: 100%
+                    
+                        #user-info
+                            position: absolute
+                            width: 80%
+                            height: 30%
+                            top: 39%
+                            left: 10%
+
+                            font-size: 1.7vw
+                            
+                            #current-info
+                                display: flex
+                                flex-direction: column
+                                word-wrap: break-word
+                                overflow-wrap: break-word
+                                justify-content: center
+                                align-items: center
+                                width: 100%
+                                height: 100%
+
+                                input
+                                    border: none
+                                    background-color: #ccc7c6
+                                    margin: 3px
+                                button
+                                    width: 100%
+
+                                .edit-logo-mode
+                                    width: 30%
+                            
+                                #label-email
+                                    padding: 2px
+                                    background-color: #ada2a0
+
+                                #label-username
+                                    padding: 2px
+                                    background-color: #ada2a0
+ 
+                                .edit-input
+                                    width: 80%
+
+                                #username
+                                    display: flex
+
+                                    button
+                                        display: none
+
+                                    form
+                                        display: none
+                                
+                                #edit-password
+                                    display: none
+
+                                    img
+                                        width: 50%
+
+                                    span
+                                        white-space: nowrap
+                                        padding: 2px
+                                        background-color: #ada2a0
+
+                                    form
+                                        display: none
+                                        flex-direction: row
+                                        align-items: flex-end
+
+                                        #password-container
+                                            display: flex
+                                            flex-direction: column
+                                        #submit
+                    #delete-profile
+                        display: flex
+                        align-items: center
+                        justify-content: space-between
+                        width: 90%
+                        height: 10%
+
+                        button
+                            white-space: nowrap
+                            font-size: 2vw
+                            left: 10%
+
+                        img
+                            width: 8%
+                            vertical-align: middle
+
+                        #delete-logo-left
+                            top: 88%
+                            left: 100%
+
+                        #delete-logo-right
+                            top: 88%
+                            left: 0%
+
+                    #edit-profile
+                        position: absolute
+                        align-items: center
+                        justify-content: space-between
+                        width: 90%
+                        height: 10%
+                        top: 85%
+                        left: 5%
+
+                        button
+                            white-space: nowrap
+                            font-size: 2vw
+                            left: 10%
+
+                        .edit-logo
+                            width: 10%
+                            vertical-align: middle
+
+                        #edit-logo-right
+                            top: 88%
+
+                        #edit-logo-left
+                            top: 88%
+                    
+                    #friend-or-2fa
+                        position: absolute
+                        align-items: center
+                        justify-content: space-between
+                        width: 90%
+                        height: 10%
+                        top: 77%
+                        left: 5%
+
+                        button
+                            white-space: nowrap
+                            font-size: 2vw
+                            left: 10%
+
+                        .edit-logo
+                            width: 10%
+                            vertical-align: middle
+
+                        #edit-logo-right
+                            top: 88%
+
+                        #edit-logo-left
+                            top: 88%
+
+                    #profile-picture-container
+                        position: absolute
+                        top: 11%
+                        left: 31%
+                        width: 41%
+                        height: 23%
+                        display: flex
+                        justify-content: center
+
+                        #profile-picture
+                            width: 73%
+                            img
+                                width: 100%
+                            
+                        form
+                            label
+                                display: none
+                                position: absolute
+                                top: 88%
+                                left: 86%
+                                width: 17%
+
+                                img
+                                    width: 100%
+                            input
+                                display: none
+
+                        
+                    .button-image
+                        width: 100%
+
+                    .stats
+                        position: absolute
+                        width: 24%
+                        height: 20%
+                        font-size: 1.7vw
+                        text-align: center
+                        top: 18%
+
+                    #wins
+                        left: 5%
+                        color: #332C2B
+
+                    #losses
+                        left: 73%
+
+            #popin
+                position: absolute
+                display: none
+                align-items: center
+                justify-content: center
+                width: 100%
+                height: 100%
+                background-color: rgba(0, 0, 0, 0.5)
+                top: 0%
+                left: 0%
+
+                img
+                    width: 35%
+
+                #confirmation-content
+                    position: absolute
+                    width: 31%
+                    aspect-ratio: 228 / 129
+
+                    button
+                        border: none
+                        position: absolute
+                        top: 60%
+                        transition: transform 0.3s ease
+                        font-size: 4vw
+
+                    span
+                        position: absolute
+                        top: 20%
+                        left: 10%
+                        font-size: 2.8vw
+
+                    .button-popin:hover
+                        transform: scale(1.2)
+
+                    #yes-button
+                        left: 15%
+                        width: 27%
+                        height: 18%
+
+                    #no-button
+                        left: 60%
+                        width: 23%
+                        height: 18%
+                
+                #qrcode-content
+                    display: none
+                    position: absolute
+                    width: 31%
+                    aspect-ratio: 228 / 129
+
+                    button
+                        transition: transform 0.3s ease
+
+                    #close-button
+                        background-image: url(../static/assets/login/cross.png)
+                        background-repeat: no-repeat
+                        background-size: contain
+                        background-color: transparent
+                        position: absolute
+                        top: 17%
+                        right: 6%
+                        cursor: pointer
+                        height: 4%
+                        width: 4%
+                        border: none
+
+                    span
+                        overflow-wrap: break-word
+                    
+                    img
+                        position: absolute
+                        top: 38%
+                        left: 5%
+                        width: 25%
+
+                    #generate-qrcode
+                        display: flex
+                        align-items: center
+                        font-size: 1.8vw
+
+
+                    .qrcode
+                        display: none
+                        flex-direction: row-reverse
+                        align-items: center
+                        width: 100%
+
+                        #submit-code
+                            position: absolute
+                            top: 70%
+                            left: 50%
+                            width: 30%
+                            height: 10%
+
+                        #scan
+                            font-size: 1.7vw
+                            position: absolute
+                            top: 8%
+                            left: 2%
+                        
+                        #enter
+                            font-size: 1vw
+                            position: absolute
+                            top: 41%
+                            left: 40%
+                        
+                        #code
+                            position: absolute
+                            top: 54%
+                            left: 40%
+.win 
+    background-image: url(../../static/assets/yes.png)
+    width: 20px
+    height: 20px
+    background-size: contain
+    background-repeat: no-repeat
+    background-position: center
+    background-color: transparent
+    outline: none
+    border: none
+.lost 
+    background-image: url(../../static/assets/no.png)
+    width: 20px
+    height: 20px
+    background-size: contain
+    background-repeat: no-repeat
+    background-position: center
+    background-color: transparent
+    outline: none
+    border: none

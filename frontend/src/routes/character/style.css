@@ -1,0 +1,202 @@
+@font-face {
+	font-family: 'IsaacFont';
+	src: url(../../static/assets/font/IsaacGame.ttf);
+}
+
+.preload *{
+	animation-duration: 0s !important;
+	-webkit-animation-duration: 0s !important;
+	transition: background-color 0s, opacity 0s, color 0s, width 0s, height 0s, padding 0s, margin 0s !important;
+}
+
+
+body {
+	padding: 70px 0;
+	font: 15px/20px Arial, sans-serif;
+	background-image: url('../../static/assets/background/background_1.png'); /* Add your background image path */
+	background-repeat: repeat;
+	background-size: cover;
+  }
+  
+
+  .background {
+    position: relative;
+    width: 80vw;
+    height: 80vh;
+    background-image: url('../../static/assets/sheets/character_sheet.png'); 
+    background-position: center;
+	background-repeat: no-repeat;
+	background-size:contain;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	flex-direction: column;
+}
+
+
+
+.container {
+    margin-top: 15vh; 
+	position: relative;
+	width: 25vw;
+	height: 20vh;
+	perspective: 1000px;
+}
+
+  .carousel {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	transform-style: preserve-3d;
+	transition: transform 1s;
+	transform: rotateX(-20deg);
+	
+  }
+  
+  .item img {
+    width: 20%;
+    height: auto; 
+	min-width: 20%;
+}
+
+  .item {
+	display: block;
+	position: absolute;
+	background: transparent;
+	width: 25vw;
+	height: 20vh;
+	text-align: center;
+
+  }
+  
+  .item_a {
+	transition: transform 1s; 
+	transform: rotateY(0deg) translateZ(11vw); }
+  .item_b {
+	transition: transform 1s; 
+	transform: rotateY(60deg)  translateZ(11vw) rotateY(-60deg); }
+  .item_c {
+	transition: transform 1s; 
+	transform: rotateY(120deg) translateZ(11vw) rotateY(60deg); }
+  .item_d {
+	transition: transform 1s; 
+	transform: rotateY(180deg) translateZ(11vw); }
+  .item_e {
+	transition: transform 1s; 
+	transform: rotateY(240deg) translateZ(11vw) rotateY(-60deg); }
+  .item_f {
+	transition: transform 1s;  
+	transform: rotateY(300deg) translateZ(11vw) rotateY(60deg); }
+  
+
+.controls {
+	margin-top: 10vh;
+	position: relative;
+	display: flex;
+	justify-content: center; 
+	align-items: center;
+}
+
+	.name {
+		font-family: IsaacFont;
+		font-size: 6vh;
+		color: #2d2d2d;
+		width: 13vw;
+		text-align: center; 
+		position: relative;
+		display: inline-block;
+	}
+	
+	.prev, .next {
+		width: 20%;
+		cursor: pointer;
+		position: absolute;
+	}
+	
+	.prev {
+		left: -7vw; 
+		top: -0.5vh;
+	}
+	
+	.next {
+		right: -7vw; 
+		top: -1vh;
+	}
+	
+	.next img, .prev img {
+		width: 7vh; 
+		max-width: 100px; 
+		height: auto;
+		transition: transform 0.3s ease, opacity 0.3s ease; 
+	}
+
+	.prev img:hover, .next img:hover {
+		transform: scale(1.1); 
+	}
+
+
+.stats {
+
+	margin-left: 2vw;
+	height: auto;
+	display: flex;
+	width: auto;
+	margin-top: 7vh; 
+	font-family: IsaacFont;
+	font-size: 2vh;
+	color: #444;
+}
+
+.stats img {
+    width: 7vh; 
+    max-width: 100px; 
+    height: auto;
+}
+
+.life-stat,.speed-stat, .str-stat  {
+	margin-right: 2dvw;
+	margin-left: 1dvw;
+
+}
+
+.game_sheet {
+    position: absolute;
+    top: 50vh;
+    left: 63vw;
+    width: 30%;
+    height: 30%;
+    background-image: url('../../static/assets/sheets/game_sheet.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.text {
+    position: relative;
+    margin-top: -1vh;
+    font-family: IsaacFont;
+    font-size: 4vh;
+    color: #2d2d2d;
+    transform: rotate(7deg);
+}
+
+
+.game {
+    position: relative;
+    cursor: pointer;
+    color: #7a7a7a;
+	transition: transform 0.3s ease, opacity 0.3s ease; 
+
+}
+
+.game:hover {
+    color: #2d2d2d;
+	transform: scale(1.1); 
+}

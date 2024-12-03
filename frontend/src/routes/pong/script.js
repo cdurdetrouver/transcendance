@@ -1,139 +1,187 @@
-export var leftPaddle;
-export var rightPaddle;
-export var BallVar;
-export var isPlaying = false;
+import config from '../../env/config.js';
+import { get_user } from '../../components/user/script.js';
+import { customalert } from '../../components/alert/script.js';
+import { router } from '../../app.js';
 
-console.log("Hello from script.js!");
+const checkImageSrc = "../../static/assets/yes.png";
+const crossImageSrc = "../../static/assets/no.png";
 
-export function startGame() {
-  myGameArea.start();
-  leftPaddle = new Paddle(30, 105, "w", "s");
-  rightPaddle = new Paddle(440, 105, "ArrowUp", "ArrowDown");
-  BallVar = new Ball();
-  window.addEventListener('keydown', function (e) {
-    if (e.code === "Space" && !isPlaying) {
-      isPlaying = true;
-      myGameArea.startGameLoop();
+let searchButtonTimeoutId = null;
+let SearchButton = null;
+let SearchStatus = false;
+let socket = null;
+let character = null;
+
+class MatchmakingSocket {
+  constructor() {
+    this.socket = null;
+  }
+
+  onopen() {
+    console.log("Connected to the Matchmaking websocket");
+    this.socket.send(JSON.stringify({ message: "Hello, server!" }));
+  }
+
+  onmessage(event) {
+    let data = JSON.parse(event.data);
+    console.log(data);
+    if (data.type == "error") {
+      get_user().then((response) => {
+        if (response == null) {
+          customalert("Error", "You are not logged in", true);
+          router.navigate('/login');
+        }
+        this.open();
+      });
     }
-  });
-}
-
-export var myGameArea = {
-  canvas: document.getElementById("gameCanvas"),
-  start: function () {
-    window.addEventListener('keydown', function (e) {
-      myGameArea.keys = (myGameArea.keys || []);
-      myGameArea.keys[e.key] = true;
-    });
-    window.addEventListener('keyup', function (e) {
-      myGameArea.keys[e.key] = false;
-    });
-    this.canvas.width = 480;
-    this.canvas.height = 270;
-    this.context = this.canvas.getContext("2d");
-  },
-  startGameLoop: function () {
-    this.interval = setInterval(updateGameArea, 20);
-  },
-  clear: function () {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  }
-}
-
-export function Paddle(x, y, upKey, downKey) {
-  this.width = 10;
-  this.height = 60;
-  this.color = "black";
-  this.speedY = 0;
-  this.x = x;
-  this.y = y;
-  this.upKey = upKey;
-  this.downKey = downKey;
-
-  this.update = function () {
-    const ctx = myGameArea.context; // Define ctx within the method
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-  }
-
-  this.newPos = function () {
-    this.y += this.speedY;
-    if (this.y < 0) this.y = 0;
-    if (this.y + this.height > myGameArea.canvas.height) this.y = myGameArea.canvas.height - this.height;
-  }
-
-  this.move = function () {
-    this.speedY = 0;
-    if (myGameArea.keys && myGameArea.keys[this.upKey]) { this.speedY = -4; }
-    if (myGameArea.keys && myGameArea.keys[this.downKey]) { this.speedY = 4; }
-  }
-}
-
-export function ballImpact(ball, paddles) {
-  // Impact with top and bottom walls
-  const nextX = ball.x + ball.vx;
-  const nextY = ball.y + ball.vy;
-  if (nextY > myGameArea.canvas.height - ball.radius || nextY < ball.radius) {
-    ball.vy = -ball.vy;
-  }
-
-  // Impact with paddles front
-  paddles.forEach(function (paddle) {
-    if (nextX < paddle.x + paddle.width + ball.radius &&
-      nextX > paddle.x - ball.radius &&
-      nextY > paddle.y &&
-      nextY < paddle.y + paddle.height) {
-      ball.vx = -ball.vx;
+    if (data.type === 'match_found') {
+      toggleSvgStatus(true, true);
+      let opponent = data.opponent;
+      setPlayer(opponent, true);
+      let WaitingTextDiv = document.querySelector('.waiting__message');
+      let WaitingText = WaitingTextDiv.querySelector('p');
+      WaitingText.innerHTML = "";
+      WaitingTextDiv.classList.remove('show');
+      clearTimeout(searchButtonTimeoutId);
+      SearchButton.style.opacity = "0.2";
+      SearchButton.style.cursor = "not-allowed";
+      setTimeout(() => {
+        router.navigate('/pong/game?game_room=' + data.game_room + '&game_id=' + data.game_id);
+      }, 2000);
     }
-    // Impact with paddles corner
-    var distX = Math.abs(nextX - paddle.x - paddle.width / 2);
-    var distY = Math.abs(nextY - paddle.y - paddle.height / 2);
-    var dx = distX - paddle.width / 2;
-    var dy = distY - paddle.height / 2;
-    if (dx * dx + dy * dy <= (ball.radius * ball.radius)) {
-      ball.vx = -ball.vx;
+  }
+
+  onclose() {
+    console.log("Disconnected from the Matchmaking websocket");
+  }
+
+  open() {
+    if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
+      this.socket = new WebSocket(config.websocketurl + "/ws/pong/matchmaking/?character=" + character);
+      this.socket.onopen = this.onopen.bind(this);
+      this.socket.onmessage = this.onmessage.bind(this);
+      this.socket.onclose = this.onclose.bind(this);
     }
-  });
+  }
 
-  // Impact with left and right walls
-  if (nextX > myGameArea.canvas.width - ball.radius || nextX < ball.radius) {
-    ball.vx = -ball.vx;
+  close() {
+    if (this.socket) {
+      this.socket.close();
+      this.socket = null;
+    }
   }
 }
 
-export function Ball() {
-  this.x = 100;
-  this.y = 100;
-  this.vx = 5;
-  this.vy = 5;
-  this.radius = 15;
-  this.color = "blue";
-  this.update = function () {
-    const ctx = myGameArea.context; // Define ctx within the method
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-    ctx.closePath();
-    ctx.fillStyle = this.color;
-    ctx.fill();
+function setSVGContent(element, svgContent) {
+	let img = element.querySelector('img');
+    if (!img) {
+        img = document.createElement('img');
+        element.appendChild(img);
+    }
+	img.src = svgContent;
+}
+
+function toggleSvgStatus(opponent = false, status = false) {
+  if (opponent == true) {
+    let div = document.getElementById('opponent');
+    let userNameDiv = div.querySelector('.user__status');
+    setSVGContent(userNameDiv, status ? checkImageSrc : crossImageSrc);
+  }
+  else {
+    let div = document.getElementById('player');
+    let userNameDiv = div.querySelector('.user__status');
+    setSVGContent(userNameDiv, status ? checkImageSrc : crossImageSrc);
   }
 }
 
-export function updateGameArea() {
-  myGameArea.clear();
-
-  // Move and update paddles
-  leftPaddle.move();
-  rightPaddle.move();
-
-  leftPaddle.newPos();
-  rightPaddle.newPos();
-  BallVar.x += BallVar.vx;
-  BallVar.y += BallVar.vy;
-  ballImpact(BallVar, [leftPaddle, rightPaddle]);
-
-  leftPaddle.update();
-  rightPaddle.update();
-  BallVar.update();
+function setPlayer(user, opponent = false) {
+  if (opponent == true) {
+    let div = document.getElementById('opponent');
+    let userNameDiv = div.querySelector('.user__name');
+    let pElement = userNameDiv.querySelector('p');
+    let imgElement = div.querySelector('img');
+    pElement.innerHTML = user.username;
+    const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+    imgElement.src = profile_picture;
+  }
+  else {
+    let div = document.getElementById('player');
+    let userNameDiv = div.querySelector('.user__name');
+    let pElement = userNameDiv.querySelector('p');
+    let imgElement = div.querySelector('img');
+    pElement.innerHTML = user.username;
+    const profile_picture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
+    imgElement.src = profile_picture;
+  }
 }
 
-startGame();
+async function handleClick() {
+
+  let WaitingTextDiv = document.querySelector('.waiting__message');
+  let WaitingText = WaitingTextDiv.querySelector('p');
+  if (SearchStatus == false) {
+    SearchButton.removeEventListener('click', handleClick);
+    searchButtonTimeoutId = setTimeout(() => {
+      SearchButton.style.opacity = "1";
+      SearchButton.style.cursor = "pointer";
+      SearchButton.addEventListener('click', handleClick);
+    }, 15000);
+
+    SearchStatus = true;
+    SearchButton.innerHTML = "Cancel";
+    SearchButton.style.opacity = "0.2";
+    SearchButton.style.cursor = "not-allowed";
+    SearchButton.style.backgroundColor = "red";
+    WaitingText.innerHTML = "";
+    WaitingTextDiv.classList.add('show');
+    toggleSvgStatus(false, true);
+
+    socket.open();
+  }
+  else {
+    SearchStatus = false;
+    SearchButton.innerHTML = "Search";
+    SearchButton.style.backgroundColor = "green";
+    WaitingText.innerHTML = "";
+    WaitingTextDiv.classList.remove('show');
+    toggleSvgStatus(false, false);
+
+    socket.close();
+  }
+}
+
+export async function initComponent() {
+  const user = await get_user();
+  if (!user) {
+    customalert("Error", "You are not logged in", true);
+    router.navigate('/login?return=/pong');
+  }
+
+  let urlParams = new URLSearchParams(window.location.search);
+  character = urlParams.get('character');
+  if (!character) {
+    customalert("Error", "Character not found", true);
+    router.navigate('/character');
+  }
+
+  setPlayer(user);
+  toggleSvgStatus(false, false);
+  toggleSvgStatus(true, false);
+
+  SearchButton = document.getElementById('search');
+  SearchStatus = false;
+
+  socket = new MatchmakingSocket();
+
+  SearchButton.addEventListener('click', handleClick);
+}
+
+export async function cleanupComponent() {
+  SearchButton.removeEventListener('click', handleClick);
+  SearchButton = null;
+  SearchStatus = false;
+  clearTimeout(searchButtonTimeoutId);
+  searchButtonTimeoutId = null;
+  if (socket)
+    socket.close();
+}

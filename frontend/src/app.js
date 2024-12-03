@@ -1,23 +1,28 @@
+import { getCookie } from "./components/storage/script.js";
+import { refresh_token } from "./components/user/script.js";
+
 class Router {
 	constructor() {
 		this.routes = [];
 		this.components = {};
 		this.componentsscripts = [];
 		this.componentsstyles = [];
+		this.activeScripts = [];
 	}
 
 	async initRouter() {
 		// Fetch routes from JSON configuration file
 		try {
-			const response = await fetch('routes.json');
+			const response = await fetch('/routes.json');
 			this.routes = await response.json();
 			await this._loadInitialRoute();
 
 			// Listen for link clicks
 			document.body.addEventListener('click', (event) => {
-				if (event.target.matches('[data-link]')) {
+				const link = event.target.closest('[data-link]');
+				if (link) {
 					event.preventDefault();
-					const pathName = event.target.getAttribute('href');
+					const pathName = link.getAttribute('href');
 					this.navigate(pathName);
 				}
 			});
@@ -43,7 +48,8 @@ class Router {
 	}
 
 	async _loadRoute(pathName) {
-		let route = this.routes.find(r => r.path === pathName);
+		if (getCookie("access_token") == null && getCookie("refresh_token") != null) await refresh_token();
+		let route = this.routes.find(r => r.path === pathName.split('?')[0] || r.path + '/' === pathName.split('?')[0]);
 		if (!route) {
 			route = this.routes.find(r => r.path === '/404');
 			if (!route) {
@@ -53,13 +59,13 @@ class Router {
 		}
 
 		// Remove previously loaded scripts and styles
-		this._clearDynamicAssets();
+		await this._clearDynamicAssets();
 
 		const files = route.files;
 
 		try {
 			// Load HTML content of the route
-			let html = await fetch(`routes${files}/page.html`).then(res => res.text());
+			let html = await fetch(`/routes${files}/page.html`).then(res => res.text());
 
 			// Load and replace components within the HTML content
 			html = await this._loadComponentsHtml(html);
@@ -68,15 +74,15 @@ class Router {
 
 			// Load and execute JS for the route
 			for (const script of this.componentsscripts) {
-				this._loadScript(script);
+				await this._loadScript(script);
 			}
-			this._loadScript(`routes${files}/script.js`);
+			await this._loadScript(`/routes${files}/script.js`);
 
 			// Load CSS for the route
 			for (const style of this.componentsstyles) {
 				this._loadStyle(style);
 			}
-			this._loadStyle(`routes${files}/style.css`);
+			this._loadStyle(`/routes${files}/style.css`);
 
 			this.componentsscripts = [];
 			this.componentsstyles = [];
@@ -95,9 +101,9 @@ class Router {
 			const componentHtml = await this._fetchComponentHtml(componentName);
 			html = html.replace(match, componentHtml);
 
-			this.componentsscripts.push(`components/${componentName.toLowerCase()}/script.js`);
+			this.componentsscripts.push(`/components/${componentName.toLowerCase()}/script.js`);
 
-			this.componentsstyles.push(`components/${componentName.toLowerCase()}/style.css`);
+			this.componentsstyles.push(`/components/${componentName.toLowerCase()}/style.css`);
 		}
 
 		return html;
@@ -105,13 +111,13 @@ class Router {
 
 	async _fetchComponentHtml(componentName) {
 		try {
-			const html = await fetch(`components/${componentName.toLowerCase()}/page.html`)
-			.then(res => {
-				if (!res.ok) {
-					throw new Error(`Error loading component "${componentName}": ${res.status}`);
-				}
-				return res.text()
-			});
+			const html = await fetch(`/components/${componentName.toLowerCase()}/page.html`)
+				.then(res => {
+					if (!res.ok) {
+						throw new Error(`Error loading component "${componentName}": ${res.status}`);
+					}
+					return res.text()
+				});
 			return html;
 		} catch (error) {
 			console.error(`Error loading component "${componentName}":`, error);
@@ -119,13 +125,18 @@ class Router {
 		}
 	}
 
-	_loadScript(scriptUrl, isModule = true) {
-		const scriptElement = document.createElement('script');
-		scriptElement.src = scriptUrl;
-		scriptElement.type = isModule ? 'module' : 'text/javascript';
-		scriptElement.defer = true;
-		scriptElement.setAttribute('data-dynamic', 'true');
-		document.body.appendChild(scriptElement);
+	async _loadScript(scriptUrl) {
+		try {
+			const module = await import(`${scriptUrl}`);
+
+			if (module && typeof module.initComponent === 'function') {
+				module.initComponent();
+			}
+
+			this.activeScripts.push(module);
+		} catch (error) {
+			console.error(`Error loading script "${scriptUrl}":`, error);
+		}
 	}
 
 	_loadStyle(styleUrl) {
@@ -136,7 +147,19 @@ class Router {
 		document.head.appendChild(styleElement);
 	}
 
-	_clearDynamicAssets() {
+	async _clearDynamicAssets() {
+		for (const script of this.activeScripts) {
+			if (script && typeof script.cleanupComponent === 'function') {
+				try {
+					await script.cleanupComponent();;
+				} catch (error) {
+					console.error(`Error Cleanup script :`, error);
+				}
+			}
+		}
+
+		this.activeScripts = [];
+
 		// Remove previously loaded scripts
 		Array.from(document.querySelectorAll('script[data-dynamic]')).forEach(script => script.remove());
 
@@ -146,5 +169,5 @@ class Router {
 }
 
 // Initialize Router
-const router = new Router();
+export const router = new Router();
 router.initRouter();

@@ -1,3 +1,323 @@
-body {
-	background-color: lightblue;
+@font-face {
+  font-family: "isaac";
+  src: url(../routes/assets/font/isaac_bold.ttf);
 }
+body, html {
+  background-image: url("../routes/assets/images/home/background.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+body #page-container, html #page-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body #page-container #page-content, html #page-container #page-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+body #page-container #page-content .text, html #page-container #page-content .text {
+  font-family: isaac;
+  font-size: 1rem;
+}
+body #page-container #page-content a:hover, html #page-container #page-content a:hover {
+  transform: scale(1.2);
+}
+body #page-container #page-content button:hover, html #page-container #page-content button:hover {
+  transform: scale(1.05);
+  border: none;
+  background-color: transparent;
+}
+body #page-container #page-content #log-sheet, html #page-container #page-content #log-sheet {
+  position: absolute;
+  width: 22%;
+  top: 20%;
+  left: 2%;
+  z-index: 111;
+  rotate: -10deg;
+}
+body #page-container #page-content #sheet, html #page-container #page-content #sheet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+body #page-container #page-content #sheet #sheet-image, html #page-container #page-content #sheet #sheet-image {
+  width: 44%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body #page-container #page-content #sheet #selection-mode, html #page-container #page-content #sheet #selection-mode {
+  position: absolute;
+  left: 24%;
+  top: 0%;
+  width: 41%;
+  height: 85%;
+  max-width: 100%;
+  max-height: 100%;
+  transform: translate(10%, 10%) rotate(-5deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 4%;
+}
+body #page-container #page-content #sheet #selection-mode .button, html #page-container #page-content #sheet #selection-mode .button {
+  padding: 10px 20px;
+  background: transparent;
+  color: rgb(69, 57, 59);
+  cursor: pointer;
+  font-family: isaac;
+  font-size: 5vw;
+  text-decoration: none;
+  border: none;
+  transition: transform 0.3s ease;
+}
+body #page-container #page-content #sheet #selection-mode .disabled, html #page-container #page-content #sheet #selection-mode .disabled {
+  color: #666666;
+  cursor: not-allowed;
+}
+body #page-container #page-content #login-container, html #page-container #page-content #login-container {
+  position: absolute;
+  top: 28%;
+  left: 6%;
+  width: 15%;
+  height: 32%;
+  rotate: 2deg;
+  display: flex;
+  flex-direction: column-reverse;
+  align-content: center;
+  justify-content: space-around;
+  align-items: center;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 1111;
+}
+body #page-container #page-content #login-container button, html #page-container #page-content #login-container button {
+  background-color: transparent;
+  font-family: isaac;
+  transition: transform 0.3s ease;
+  font-size: 2vw;
+  border: none;
+  color: #313131;
+}
+body #page-container #page-content #login-container button:hover, html #page-container #page-content #login-container button:hover {
+  transform: scale(1.2);
+}
+body #page-container #page-content #login-container img, html #page-container #page-content #login-container img {
+  width: 50%;
+}
+body #page-container #page-content #popin-container, html #page-container #page-content #popin-container {
+  display: none;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+body #page-container #page-content #popin-content, html #page-container #page-content #popin-content {
+  background-image: url("../static/assets/sheets/login2.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+  padding: 20px;
+  border-radius: 5px;
+  width: 600px;
+  height: 400px;
+  position: relative;
+}
+body #page-container #page-content form .text, html #page-container #page-content form .text {
+  font-size: 1rem;
+}
+body #page-container #page-content #title, html #page-container #page-content #title {
+  font-family: isaac;
+  color: #313131;
+  font-size: 2rem;
+  position: relative;
+  margin-bottom: 30px;
+  left: 9%;
+  top: 11%;
+  transform: rotate(3deg);
+}
+body #page-container #page-content #close-button, html #page-container #page-content #close-button {
+  background-image: url(../static/assets/login/cross.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: transparent;
+  position: absolute;
+  top: 17%;
+  right: 6%;
+  cursor: pointer;
+  height: 4%;
+  border: none;
+}
+body #page-container #page-content input, html #page-container #page-content input {
+  border: none;
+  background-color: #ccc7c6;
+}
+body #page-container #page-content .button, html #page-container #page-content .button {
+  font-family: isaac;
+  font-size: 1rem;
+  background-image: url(../static/assets/sheets/Button.png);
+  width: 200px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+body #page-container #page-content .button:hover, html #page-container #page-content .button:hover {
+  transform: scale(1.05);
+  border: none;
+  background-color: transparent;
+}
+body #page-container #page-content #login-content, html #page-container #page-content #login-content {
+  display: flex;
+  flex-direction: row;
+  padding-left: 50px;
+  padding-top: 3%;
+  transform: rotate(3deg);
+}
+body #page-container #page-content #login-content #default-login, html #page-container #page-content #login-content #default-login {
+  display: flex;
+  flex-direction: column;
+  width: 150%;
+}
+body #page-container #page-content #login-content .separator, html #page-container #page-content #login-content .separator {
+  margin-left: 20px;
+  margin-right: 20px;
+  display: inline-block;
+  border-radius: 18%;
+  width: 5px;
+  height: 240px;
+}
+body #page-container #page-content #login-content #separator, html #page-container #page-content #login-content #separator {
+  margin-left: 20px;
+  margin-right: 20px;
+  display: inline-block;
+  border-radius: 18%;
+  width: 5px;
+  height: 240px;
+}
+body #page-container #page-content #login-content #app-login, html #page-container #page-content #login-content #app-login {
+  display: flex;
+  flex-direction: column;
+}
+body #page-container #page-content #login-content #app-login a, html #page-container #page-content #login-content #app-login a {
+  margin-top: 20px;
+  width: 54%;
+  margin-left: 60px;
+  background-color: #fffcfc;
+  color: black;
+  padding: 5px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+body #page-container #page-content #login-content #app-login a:hover, html #page-container #page-content #login-content #app-login a:hover {
+  transform: scale(1.05);
+}
+body #page-container #page-content #login-content #app-login img, html #page-container #page-content #login-content #app-login img {
+  width: 20%;
+}
+body #page-container #page-content #login-content #app-login #github, html #page-container #page-content #login-content #app-login #github {
+  color: white;
+  background-color: #2b2e31;
+}
+body #page-container #page-content #login-content #app-login #intra, html #page-container #page-content #login-content #app-login #intra {
+  background-color: rgb(240, 240, 240);
+}
+body #page-container #page-content #login-content #app-login #intra-logo, html #page-container #page-content #login-content #app-login #intra-logo {
+  width: 30%;
+}
+body #page-container #page-content .back-to-login, html #page-container #page-content .back-to-login {
+  background-image: url(../static/assets/login/arrow.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  top: 86%;
+  right: 5%;
+  font-size: 35px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+body #page-container #page-content #register-content, html #page-container #page-content #register-content {
+  padding: 2%;
+  font-family: isaac;
+  display: none;
+  flex-direction: row;
+  transform: rotate(3deg);
+}
+body #page-container #page-content #register-content .text, html #page-container #page-content #register-content .text {
+  font-size: 1rem;
+}
+body #page-container #page-content #register-content #test, html #page-container #page-content #register-content #test {
+  display: flex;
+  flex-direction: row;
+  padding-top: 11px;
+  padding-left: 50px;
+}
+body #page-container #page-content #register-content #test #rgpd, html #page-container #page-content #register-content #test #rgpd {
+  color: rgb(69, 57, 59);
+  position: absolute;
+  top: 78%;
+  left: 10%;
+  text-decoration: none;
+}
+body #page-container #page-content #register-content #test #avatar-register, html #page-container #page-content #register-content #test #avatar-register {
+  padding-left: 30%;
+  padding-top: 3%;
+}
+body #page-container #page-content #register-content #test #avatar-register #avatar, html #page-container #page-content #register-content #test #avatar-register #avatar {
+  position: relative;
+  background-image: url(../static/assets/login/avatar_sad.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 150px;
+  width: 150px;
+  left: -15px;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+body #page-container #page-content #register-content #test #avatar-register #avatar:hover, html #page-container #page-content #register-content #test #avatar-register #avatar:hover {
+  transform: scale(1.05);
+}
+body #page-container #page-content #register-content #test #file-chosen, html #page-container #page-content #register-content #test #file-chosen {
+  position: relative;
+  top: -15px;
+}
+body #page-container #page-content #register-content #test #submit-register, html #page-container #page-content #register-content #test #submit-register {
+  position: relative;
+  left: -29%;
+}
+body #page-container #page-content #qrcode-content, html #page-container #page-content #qrcode-content {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 27%;
+  left: 10%;
+}/*# sourceMappingURL=style.css.map */

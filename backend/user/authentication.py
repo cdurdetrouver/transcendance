@@ -4,19 +4,20 @@ from django.middleware.csrf import CsrfViewMiddleware
 from rest_framework import exceptions
 from django.conf import settings
 from .models import User
+from .utils import get_from_cookies
 
 class SafeJWTAuthentication(BaseAuthentication):
 
 	def authenticate(self, request):
 
-		authorization_header = request.headers.get('Authorization')
-
-		if not authorization_header:
+		cookies = request.headers.get('Cookie')
+		if not cookies:
 			return None
-		try:
-			access_token = authorization_header.split(' ')[1]
-			payload = jwt.decode(
-				access_token, settings.SECRET_KEY, algorithms=['HS256'])
+		try :
+			access_token = get_from_cookies(cookies, 'access_token')
+			if not access_token:
+				return None
+			payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=['HS256'])
 
 		except jwt.ExpiredSignatureError:
 			raise exceptions.AuthenticationFailed('access_token expired')
@@ -30,7 +31,7 @@ class SafeJWTAuthentication(BaseAuthentication):
 		if not user.is_active:
 			raise exceptions.AuthenticationFailed('user is inactive')
 
-		self.enforce_csrf(request)
+		# self.enforce_csrf(request)
 		return (user, None)
 
 	def enforce_csrf(self, request):

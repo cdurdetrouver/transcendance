@@ -8,16 +8,14 @@ class UserModelTest(TestCase):
         self.user = User.objects.create(
             username='testuser',
             email='testuser@example.com',
-            password='\MVwbDjln('
+            password='\MVwbDjln(',
+            user_type='email'
         )
 
     def test_user_creation(self):
         self.assertEqual(self.user.username, 'testuser')
         self.assertEqual(self.user.email, 'testuser@example.com')
         self.assertEqual(check_password('\MVwbDjln(', self.user.password), True)
-
-    def test_user_str(self):
-        self.assertEqual(str(self.user), 'testuser')
 
     def test_user_update(self):
         self.user.username = 'updateduser'

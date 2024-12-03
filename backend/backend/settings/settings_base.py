@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework_swagger',
+    'django_crontab',
 
     # django apps
     'django.contrib.admin',
@@ -60,6 +61,8 @@ INSTALLED_APPS = [
     # apps
     'user',
     'chat',
+    'pong',
+    'flappy',
 ]
 
 MIDDLEWARE = [
@@ -173,3 +176,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     )
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CRONJOBS = [
+    ('0 0 * * *', 'user.tasks.check_inactive_users'),
+]

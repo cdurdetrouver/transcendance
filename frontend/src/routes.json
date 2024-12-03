@@ -12,6 +12,14 @@
 		"files": "/pong"
 	},
 	{
+		"path": "/pong/game",
+		"files": "/pong/game"
+	},
+	{
+		"path": "/pong/list",
+		"files": "/pong/list"
+	},
+	{
 		"path": "/chat",
 		"files": "/chat"
 	},
@@ -28,7 +36,72 @@
 		"files": "/logout"
 	},
 	{
+		"path": "/user",
+		"files": "/user"
+	},
+	{
+		"path": "/flappy",
+		"files": "/flappy"
+	},
+	{
+		"path": "/flappy/game",
+		"files": "/flappy/game"
+	},
+	{
+		"path": "/character",
+		"files": "/character"
+	},
+	{
+		"path": "/user/edit",
+		"files": "/user/edit"
+	},
+	{
+		"path": "/user/2FA",
+		"files": "/user/2FA"
+	},
+	{
+		"path" : "/multiplayer",
+		"files" : "/pong/multiplayer"
+	},
+	{
+		"path" : "/multiplayer/game",
+		"files" : "/pong/multiplayer/game"
+	},
+	{
+		"path" : "/pong/private",
+		"files" : "/pong/private"
+	},
+	{
 		"path": "/404",
 		"files": "/404"
+	},
+	{
+		"path": "/account",
+		"files": "/account"
+	},
+	{
+		"path": "/accountid",
+		"files": "/accountid"
+	},
+	{
+		"path": "/gdpr",
+		"files": "/gdpr"
+	},
+	{
+		"path": "/tournament",
+		"files": "/pong/tournament"
+	},
+	{
+		"path": "/tournament/game",
+		"files": "/pong/tournament/game"
+	},
+	{
+		"path": "/friends",
+		"files": "/friends"
+	},
+	{
+		"path": "/stats",
+		"files": "/stats"
 	}
+
 ]

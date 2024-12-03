@@ -1,3 +1,39 @@
-<textarea id="chat-log" cols="100" rows="20"></textarea><br>
-<input id="chat-message-input" type="text" size="100"><br>
-<input id="chat-message-submit" type="button" value="Send">
+{{header}}
+<div class="background">
+	<div class="flex-container">
+		<div class="block left">
+			<div class="left-top">
+				<h1>GROUP CHAT</h1>
+				<div class="create-box">
+					<div class="create-room">
+						<input id="create-room-btn" type="button" value="create room">
+					</div>
+				</div>
+			</div>
+			<div class="chat-list">
+				<div class="chat-names">
+				</div>
+			</div>
+			<div class="invitation">
+				<h1>INVITATIONS</h1>
+				<div class="invitation-list"></div>
+			</div>
+
+		</div>
+		<div class="block middle">
+			<div class="chat-block"></div>
+		</div>
+		<div class="block right">
+			<div class="room-info"></div>
+			<div id="user-profile"></div>
+			<div class="room-users"></div>
+			<div class="chat-conf"></div>
+			<div class="lower-left">
+				<ul class="user-list"></ul>
+			</div>
+		</div>
+	</div>
+	<ul class="chat-list-invitations">
+		<!-- List of the chat -->
+	</ul>
+</div>
