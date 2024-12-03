@@ -44,13 +44,13 @@ export async function initComponent(params) {
 
 function displayStats(user) {
 	
-	console.log("wins = ", user.wins, "losses = ", user.losses);
 	if (user.wins != null) {
 		document.querySelector("#wins-count").innerHTML += user.wins;
 	}
 	if (user.looses != null) {
 		document.querySelector("#losses-count").innerHTML += user.looses;
 	}
+	document.querySelector("#highscore").innerHTML += user.highscore;
 	
 }
 
@@ -110,7 +110,7 @@ function setFlappyHistoric (games) {
 	}
     games.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-	const matchList = document.getElementById("matchList");
+	const matchList = document.getElementById("matchList-flappy");
 
 	games.forEach(game => {
 		const Matchline = document.createElement('div');
@@ -151,7 +151,7 @@ function setFlappyHistoric (games) {
 
 async function getPongHistoric(id) {
 
-	console.log("id =", id);
+	console.log("PONG =", id);
 
 	let games = null;
 	if (id) {
@@ -177,6 +177,7 @@ async function getPongHistoric(id) {
 
 async function getFlappyHistoric(id) {
 
+	console.log("FLAPPY =", id);
 	let games = null;
 	if (id) {
 		const response = await fetch(config.backendUrl + '/user/flappy/games/' + id, {

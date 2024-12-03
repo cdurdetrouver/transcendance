@@ -302,9 +302,10 @@ body #page #background #container #sheet #profile-picture-container {
   height: 23%;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 body #page #background #container #sheet #profile-picture-container #profile-picture {
-  width: 73%;
+  width: 60%;
 }
 body #page #background #container #sheet #profile-picture-container #profile-picture img {
   width: 100%;
@@ -369,7 +370,7 @@ body #page #background #popin #confirmation-content button {
 body #page #background #popin #confirmation-content span {
   position: absolute;
   top: 20%;
-  left: 10%;
+  left: 17%;
   font-size: 2.8vw;
 }
 body #page #background #popin #confirmation-content .button-popin:hover {
@@ -406,6 +407,7 @@ body #page #background #popin #qrcode-content #close-button {
   height: 4%;
   width: 4%;
   border: none;
+  z-index: 11111111;
 }
 body #page #background #popin #qrcode-content span {
   overflow-wrap: break-word;
@@ -420,6 +422,7 @@ body #page #background #popin #qrcode-content #generate-qrcode {
   display: flex;
   align-items: center;
   font-size: 1.8vw;
+  padding-left: 9%;
 }
 body #page #background #popin #qrcode-content .qrcode {
   display: none;

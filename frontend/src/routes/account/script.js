@@ -6,6 +6,8 @@ import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 import { deleteCookie, setCookie } from '../../../components/storage/script.js';
 import { getQrcode, enable2FA } from '../user/2FA/script.js';
 
+let editMode = false;
+
 function displayUser(user)
 {
 	const username = user.username;
@@ -121,16 +123,18 @@ export async function initComponent() {
 	const password = document.querySelector("#edit-password");
 	
 	inviteOrEditButton.addEventListener("click", function() {
+
 		if (id) {
 			console.log("invite to chat");
-			
 		}
-		else {
+		else if (!editMode) {
+			editMode = true;
 			console.log("edit profile");
 			editUsernameButton.style.display = "flex";
 			password.style.display = "flex";
 			editProfilePicture.style.display = "flex";
 		}
+
 	});
 	
 	const popin = document.getElementById("popin");
