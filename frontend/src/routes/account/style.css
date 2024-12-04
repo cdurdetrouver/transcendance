@@ -23,6 +23,9 @@ body #page button {
 body #page button:hover {
   transform: scale(1.2);
 }
+body #page input {
+  font-family: isaac;
+}
 body #page #background {
   position: relative;
   width: 100vw;

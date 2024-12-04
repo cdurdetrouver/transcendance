@@ -62,11 +62,12 @@ body #page #background #container #friend-box, html #page #background #container
   flex-direction: column;
 }
 body #page #background #container hr, html #page #background #container hr {
-  border: 1px solid #332C2B;
+  border: 1px solid #8f7e6c;
   width: 80%;
   margin: 0 auto;
 }
 body #page #background #container #header, html #page #background #container #header {
+  position: relative;
   display: flex;
   justify-content: center;
   height: 20%;
@@ -79,16 +80,16 @@ body #page #background #container #header h1, html #page #background #container 
   font-family: isaac;
 }
 body #page #background #container #list, html #page #background #container #list {
-  height: 80%;
-  background-color: #d18410;
-  margin-top: 1%;
+  position: relative;
+  flex-grow: 1;
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: #888 transparent;
+  padding: 2%;
+  margin-bottom: 5%;
 }
 body #page #background #container #list .friend, html #page #background #container #list .friend {
   display: flex;
@@ -96,10 +97,10 @@ body #page #background #container #list .friend, html #page #background #contain
   align-items: center;
 }
 body #page #background #container #list .friend .delete-friend, html #page #background #container #list .friend .delete-friend {
-  height: 28%;
+  width: 9%;
 }
 body #page #background #container #list .friend .delete-friend img, html #page #background #container #list .friend .delete-friend img {
-  width: 180%;
+  width: 100%;
 }
 body #page #background #container #list .friend .profile-picture-container, html #page #background #container #list .friend .profile-picture-container {
   width: 20%;
@@ -110,6 +111,10 @@ body #page #background #container #list .friend .profile-picture-container img, 
 }
 body #page #background #container #list .friend .username, html #page #background #container #list .friend .username {
   font-size: 2vw;
+}
+body #page #background #container #list .friend:hover, html #page #background #container #list .friend:hover {
+  background-color: rgba(155, 136, 107, 0.5019607843);
+  border-radius: 10px;
 }
 body #page #popin, html #page #popin {
   position: absolute;

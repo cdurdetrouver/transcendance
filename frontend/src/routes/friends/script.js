@@ -63,7 +63,7 @@ async function displayFriends(user) {
 
 				const profileImage = document.createElement("img");
 				profileImage.src = profilePicture;
-				profileImage.alt = `friend.username's profile picture`; 
+				profileImage.alt = `friend.username's profile picture`;
 				// profileImage.classList.add('');
 
 				pictureDiv.appendChild(profileImage);
@@ -105,6 +105,10 @@ async function displayFriends(user) {
                     noButton.addEventListener("click", function() {
                         popin.style.display = "none";
                     });
+                });
+
+                friendElement.addEventListener("click", () => {
+                    router.navigate(`/account?id=${friend.id}`);
                 });
 		});
 	}

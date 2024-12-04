@@ -66,11 +66,12 @@ body, html
                     flex-direction: column
 
                 hr
-                    border: 1px solid #332C2B
+                    border: 1px solid #8f7e6c
                     width: 80%
                     margin: 0 auto
 
                 #header
+                    position: relative
                     display: flex
                     justify-content: center
                     height: 20%
@@ -84,18 +85,16 @@ body, html
                         font-family: isaac
 
                 #list
-                    height: 80%
-                    background-color: #d18410
-                    margin-top:  1%
+                    position: relative
+                    flex-grow: 1
                     display: flex
-                    justify-content: center
                     flex-direction: column
-                    // min-height: 60%
-                    overflow-y: auto
+                    overflow-y: scroll
                     overflow-x: hidden
                     scrollbar-width: thin
                     scrollbar-color: #888 transparent
-                    // padding: 6%
+                    padding: 2%
+                    margin-bottom: 5%
 
                     .friend
                         display: flex
@@ -103,10 +102,10 @@ body, html
                         align-items: center
 
                         .delete-friend
-                            height: 28%
-
+                            width: 9%
+                            
                             img
-                               width: 180%
+                               width: 100%
 
 
                         .profile-picture-container
@@ -117,6 +116,11 @@ body, html
                                 border-radius: 50%
                         .username
                             font-size: 2vw
+
+                        
+                    .friend:hover
+                        background-color: #9b886b80
+                        border-radius: 10px
         #popin
             position: absolute
             display: none
