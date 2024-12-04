@@ -81,9 +81,17 @@ async function displayFriends(user) {
                 let deleteImage = document.createElement("img");
                 deleteImage.src = "../../static/assets/no.png";
                 deleteImage.alt = "delete";
-           
+
+                let onlineStatus = document.createElement("div");
+                onlineStatus.className = "online-status";
+
+                console.log("friend.online = ", friend.online);
+                if (!friend.online)
+                    onlineStatus.style.background = "linear-gradient(145deg, #f01717, #8a0707)";
+
                 deleteButton.appendChild(deleteImage);
                 friendElement.appendChild(usernameDiv);
+                friendElement.appendChild(onlineStatus);
                 friendElement.appendChild(deleteButton);
                 friendsList.appendChild(friendElement);
 

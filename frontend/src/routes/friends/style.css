@@ -112,6 +112,13 @@ body #page #background #container #list .friend .profile-picture-container img, 
 body #page #background #container #list .friend .username, html #page #background #container #list .friend .username {
   font-size: 2vw;
 }
+body #page #background #container #list .friend .online-status, html #page #background #container #list .friend .online-status {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(145deg, #36df0c, #058d11);
+  border-radius: 50%;
+  display: inline-block;
+}
 body #page #background #container #list .friend:hover, html #page #background #container #list .friend:hover {
   background-color: rgba(155, 136, 107, 0.5019607843);
   border-radius: 10px;
