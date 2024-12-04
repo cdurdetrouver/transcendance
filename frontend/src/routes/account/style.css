@@ -296,15 +296,14 @@ body #page #background #container #sheet #friend-or-2fa #edit-logo-left {
 }
 body #page #background #container #sheet #profile-picture-container {
   position: absolute;
-  top: 11%;
-  left: 31%;
-  width: 41%;
-  height: 23%;
+  top: 13%;
+  left: 40%;
+  width: 24%;
   display: flex;
   justify-content: center;
 }
 body #page #background #container #sheet #profile-picture-container #profile-picture {
-  width: 73%;
+  width: 100%;
 }
 body #page #background #container #sheet #profile-picture-container #profile-picture img {
   width: 100%;
