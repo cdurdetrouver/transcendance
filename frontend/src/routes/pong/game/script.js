@@ -122,15 +122,26 @@ function stopBodyAnimation() {
     }
 }
 
+let mapSkin;
 
 function drawBackground() {
 	backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
 
-	const backgroundImage = new Image();
-	backgroundImage.src = '../../../static/assets/background/pongBG2.png'	;
-	backgroundImage.onload = () => {
-		backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
-	};
+	let backgroundPath
+
+    if (mapSkin == 'map3')
+        backgroundPath = '../../../static/assets/background/pongBG3.png';
+    else if (mapSkin == 'map2')
+        backgroundPath = '../.././static/assets/background/pongBG2.png';
+    else 
+        backgroundPath = '../../../static/assets/background/pongBG1.png';
+
+
+    const backgroundImage = new Image();
+    backgroundImage.src = backgroundPath;
+    backgroundImage.onload = () => {
+        backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+    };
 }
 
 function drawStats() {
@@ -609,6 +620,7 @@ export async function initComponent() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const game_room = urlParams.get('game_room');
 	const game_id = urlParams.get('game_id');
+	mapSkin =  urlParams.get('map');
 	if (!game_room || !game_id)
 		router.navigate('/pong');
 

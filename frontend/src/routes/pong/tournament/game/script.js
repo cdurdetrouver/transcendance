@@ -21,12 +21,24 @@ const paddleWidth = 10;
 const paddleHeight = 75;
 const ballRadius = 8;
 
+let mapSkin;
 
-function drawBackground() {
+async function drawBackground() {
+    
     backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
 
+
+    let backgroundPath
+
+    if (mapSkin == 'map3')
+        backgroundPath = '../../../static/assets/background/pongBG3.png';
+    else if (mapSkin == 'map2')
+        backgroundPath = '../.././static/assets/background/pongBG2.png';
+    else 
+        backgroundPath = '../../../static/assets/background/pongBG1.png';
+
     const backgroundImage = new Image();
-    backgroundImage.src = '../../../static/assets/background/pongBG2.png';
+    backgroundImage.src = backgroundPath;
     backgroundImage.onload = () => {
         backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
     };
@@ -475,6 +487,8 @@ export async function initComponent() {
     ballImage = new Image();
     ballImage.src = '../../../../static/assets/multi/bullet.png';
     players = urlParams.get('players').split(',');
+    mapSkin =  urlParams.get('map');
+
     players.forEach(player => {
         if (player.length ===0) {
             customalert("Error", "Player name cannot be empty.");
@@ -488,8 +502,8 @@ export async function initComponent() {
 
 	tournament = new Tournament(players);
 
-	centerPongCanvas();
 	drawBackground();
+	centerPongCanvas();
 	ballImage.onload = function() {
 		draw_reset();
 	};

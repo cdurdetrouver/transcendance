@@ -12,11 +12,22 @@ let lifeCanvasCtx = lifeCanvas;
 
 let ballImage;
 
+let mapSkin;
+
 function drawBackground() {
     backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
 
+	let backgroundPath
+
+    if (mapSkin == 'map3')
+        backgroundPath = '../../../static/assets/background/pongBigBG3.png';
+    else if (mapSkin == 'map2')
+        backgroundPath = '../.././static/assets/background/pongBigBG2.png';
+    else 
+        backgroundPath = '../../../static/assets/background/pongBigBG1.png';
+
     const backgroundImage = new Image();
-    backgroundImage.src = '../../../static/assets/multi/floor.png';
+    backgroundImage.src = backgroundPath;
     backgroundImage.onload = () => {
         backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
     };
@@ -401,6 +412,7 @@ export async function initComponent() {
 		customalert('Error', 'Missing player names', true);
 		router.navigate('/pong');
 	}
+	mapSkin =  urlParams.get('map');
 	const player1div = document.querySelector(".name.left-name");
 	const player2div = document.querySelector(".name.top-name");
 	const player3div = document.querySelector(".name.bottom-name");
