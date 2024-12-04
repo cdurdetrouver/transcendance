@@ -726,12 +726,12 @@ export async function mp_somebody(user_id) {
     const data = await response.json();
     if (response.status === 200)
     {
-        console.log(data["room_status"])
+        customalert("Success", "invitation send", false);
         return ;
     }
     else if (response.status === 303 || response.status === 404 ||response.status === 403 ||response.status === 400)
     {
-        console.log("error mp: ", data["error"]);
+        customalert("Error", data['error'], true);
         return;
     }
     return;
