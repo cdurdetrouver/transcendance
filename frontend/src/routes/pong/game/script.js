@@ -49,7 +49,7 @@ function loadImages(characterNames) {
     return images;
 }
 
-const characterMap = ['isaac', 'cain', 'maggie', 'juda','isaac', 'eve'];
+const characterMap = ['isaac', 'cain', 'maggie', 'juda','blue', 'eve'];
 const characterImages = loadImages(characterMap);
 
 const paddleBodyAnimationFrames = [
@@ -249,8 +249,8 @@ function draw(interpolatedState) {
 	//draw head
     ctx.drawImage(
         headPlayer1,
-        0,
-        interpolatedState.paddle1Y,
+        -2,
+        interpolatedState.paddle1Y - 6,
         70,
 		67
     );
@@ -313,10 +313,10 @@ function draw_reset() {
     );
     ctx.drawImage(
         characterImages[player1Name].right,
-        5,
-        (canvas.height - paddleHeight) / 2,
-        characterImages[player1Name].right.width,
-        characterImages[player1Name].right.height
+        -2,
+        (canvas.height - paddleHeight) / 2 - 6,
+        70,
+		67
     );
 
     ctx.drawImage(
@@ -328,10 +328,10 @@ function draw_reset() {
     );
     ctx.drawImage(
         characterImages[player2Name].left,
-        canvas.width - paddleWidth - 10,
-        (canvas.height - paddleHeight) / 2,
-        characterImages[player2Name].left.width,
-        characterImages[player2Name].left.height
+        canvas.width - paddleWidth - 17,
+        (canvas.height - paddleHeight) / 2 - 6,
+        70,
+		67
     );
 
     ctx.drawImage(
