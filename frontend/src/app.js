@@ -71,6 +71,7 @@ class Router {
 	}
 
 	async _loadRoute(pathName) {
+		if (pathName == null) return;
 		document.querySelector('#app').style.display = "none";
 		this.loaded.style.display = "block";
 		if (getCookie("user") == null) await refresh_token();
