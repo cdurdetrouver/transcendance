@@ -75,7 +75,7 @@ async function displayFriends(user) {
                 console.log("friend.online = ", friend.online);
                 // friend.online = true;
                 if (!friend.online)
-                    onlineStatus.style.background = "linear-gradient(145deg, #f01717, #8a0707)";
+                    onlineStatus.style.background = "linear-gradient(145deg, #b4b4b4, #666666)";
 
 				friendElement.appendChild(pictureDiv);
                 pictureDiv.appendChild(onlineStatus);
@@ -132,9 +132,11 @@ async function displayFriends(user) {
 
 export async function initComponent(params) {	
     let user = await get_user();
-    if (!user)
+    if (!user) {
+        customalert('Error', 'You are not logged in', true);
         router.navigate('/');
-	console.log()
+
+    }
 	displayFriends(user);
 }
 

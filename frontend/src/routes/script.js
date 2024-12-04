@@ -44,6 +44,7 @@ export async function initComponent() {
 
 	
 	if (user) {
+		console.log("user logged in");
 		loginPopin.style.display = "none";
 		isLoggedIn = true;
 		getProfilePicture(user);
@@ -51,8 +52,23 @@ export async function initComponent() {
 		
 	}
 	else {
+		console.log("user not logged in");
+		// let imgElement = document.querySelector("#login-container img");
+		// imgElement.src = "../static/assets/login/avatar_happy.png";
 		isLoggedIn = false;
 		loginPopin.style.display = "flex";
+	}
+
+	const urlParams = new URLSearchParams(window.location.search);
+	const twofa_id = urlParams.get('2fa_id');
+	if (twofa_id && !isLoggedIn) {
+		popin.style.display = "flex";
+		qrcodePopin.style.display = "flex";
+		loginForm.style.display = "none";
+		document.querySelector("#title").textContent = "2FA";
+		document.querySelector("#submit-code").addEventListener("click", function() {
+			form_2fa(twofa_id, loginPopin, qrcodePopin, popin);
+		});
 	}
 	
 	//BUTTONS
@@ -149,10 +165,9 @@ async function login_form(event, loginPopin, popin, loginForm, qrcodePopin) {
 		qrcodePopin.style.display = "flex";
 		loginForm.style.display = "none";
 		document.querySelector("#title").textContent = "2FA";
-
 		document.querySelector("#submit-code").addEventListener("click", function() {
-			console.log("submit button");
-			form_2fa(event, data.user_id, loginPopin, qrcodePopin, popin);
+			console.log("2fa");
+			form_2fa(data.user_id, loginPopin, qrcodePopin, popin);
 		});
 		return;
 	}
@@ -185,11 +200,6 @@ async function register_form(event, registerForm, loginPopin, popin, loginForm, 
 		return
 	}
 
-	if (!profilePicture) {
-		customalert('Error', 'Please choose a profile picture.', true);
-		return
-	}
-
 	const response = await register(username, email, password, profilePicture);
 
 	if (response.status === 201) {
@@ -207,8 +217,7 @@ async function register_form(event, registerForm, loginPopin, popin, loginForm, 
 	}
 }
 
-async function form_2fa(event, id, loginPopin, qrcodePopin, popin) {
-	event.preventDefault();
+async function form_2fa(id, loginPopin, qrcodePopin, popin) {
 	const token = document.querySelector(".qrcode input").value;
 
 	const response = await fetch(config.backendUrl + '/user/verify-2fa/', {
@@ -236,6 +245,8 @@ async function form_2fa(event, id, loginPopin, qrcodePopin, popin) {
 		const data = await response.json();
 		customalert('Login failed', data.error, true);
 	}
+	history.pushState({}, '', '/');
+
 }
 
 export async function cleanupComponent() {
