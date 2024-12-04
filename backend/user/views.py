@@ -237,6 +237,9 @@ def login(request):
 def register(request):
 	user_data = request.data.copy()
 
+	if user_data.get('profile_picture') == 'undefined':
+		user_data.pop('profile_picture')
+
 	serializer = UserSerializer(data=user_data)
 
 	is_existing_user = User.objects.filter(email=user_data['email']).exists()
@@ -257,7 +260,7 @@ def register(request):
 
 		# Profile picture
 		if 'profile_picture' not in serializer.validated_data or not serializer.validated_data['profile_picture']:
-			serializer.validated_data['profile_picture'] = 'default.png'
+			serializer.validated_data['profile_picture'] = 'profile_pictures/default.png'
 		else:
 			id = User.objects.all().count() + 1
 			serializer.validated_data['profile_picture'].name = f'{id}.png'
