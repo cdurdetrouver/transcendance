@@ -208,9 +208,9 @@ function closeButton()
 	
 	parentDiv.appendChild(buttonDiv);
 	document.getElementById('button-return').addEventListener('click', function() {
+		console.log("button clicked");
 		router.navigate("/character");
 	});
-
 }
 
 class FlappySocket {
@@ -229,6 +229,7 @@ class FlappySocket {
 
 	onmessage(event) {
 		let data = JSON.parse(event.data);
+		console.log(data);
 		if (data.type === 'game_update')
 			updateGame(data.message);
 		else if (data.type === 'game_started') {
@@ -237,22 +238,19 @@ class FlappySocket {
 		else if (data.type === 'game_end') {
 			let winner = data.winner === player1.id ? "player1" : "player2";
 			customalert('GG', "Winner score is " + lastGameState[winner].score);
-			game_ended = true;
 			clearInterval(pingIntervalID);
 			closeButton();
-			deleteCookie("user");
-			setTimeout(async () => {
-				await get_user();
-			}, 1000);
+			game_ended = true;
 		}
 		else if (data.type === 'game_loose') {
 			let winner = data.winner === player1.id ? player1.username : player2.username;
-			let win = data.winner === user.id
+			let win = data.winner === user.id;
 			if (win == false)
 			{
-				game_ended = true;
+				this.close();
 				clearInterval(pingIntervalID);
 				closeButton();
+				game_ended = true;
 			}
 			customalert('Game Over', "Winner is " + winner, !win);
 		}
@@ -329,6 +327,7 @@ async function get_game_players(game_id) {
 
 export async function initComponent() {
 	game_speed = 0;
+	game_ended = false;
 	jump = false;
 
 	lastUpdateTime = Date.now();

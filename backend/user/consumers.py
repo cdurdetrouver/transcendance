@@ -7,6 +7,10 @@ from asgiref.sync import sync_to_async
 from .utils import get_user_by_status_token
 
 class UserStatusConsumer(AsyncWebsocketConsumer):
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.user = None
+
 	async def connect(self):
 		status_token = self.scope['cookies'].get('status_token')
 
@@ -29,6 +33,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 		}))
 
 	async def disconnect(self, code):
-		self.user.online = False
-		await sync_to_async(self.user.save)()
+		if self.user:
+			self.user.online = False
+			await sync_to_async(self.user.save)()
 

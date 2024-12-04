@@ -106,8 +106,9 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             return
 
         self.user = result
+        print(self.waiting_players)
         for player in self.waiting_players:
-            if player.user == self.user:
+            if player == self.user.id:
                 await self.send(text_data=json.dumps({
                     'type': 'error',
                     'message': 'You are already in the waiting list'
@@ -173,13 +174,15 @@ class FlappyConsumer(AsyncWebsocketConsumer):
         if not self.user:
             return
         else:
-
-            if self.room_group_name in self.games:
-                self.GameThread.stop(self.user)
-                del self.games[self.room_group_name]
-            if self.GameThread :
-                del self.GameThread
-                self.GameThread = None
+            ret = False
+            if self.GameThread:
+                ret = await self.GameThread.left(self.user)
+            if ret:
+                if self.room_group_name in self.games.keys():
+                    del self.games[self.room_group_name]
+                if self.GameThread :
+                    del self.GameThread
+                    self.GameThread = None
 
             self.game = await sync_to_async(FlappyGame.objects.get)(room_name=self.room_group_name)
             await sync_to_async(lambda: self.game.winner)()
@@ -215,7 +218,7 @@ class FlappyConsumer(AsyncWebsocketConsumer):
         self.game = await sync_to_async(FlappyGame.objects.get)(room_name=self.room_group_name)
         self.game.finished = True
         await sync_to_async(self.game.save)()
-        if self.room_group_name in self.games:
+        if self.room_group_name in self.games.keys():
             del self.games[self.room_group_name]
         if self.GameThread :
             del self.GameThread
@@ -242,7 +245,7 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             'message': event['message'],
             'winner': event['winner']
         }))
-        if self.room_group_name in self.games:
+        if self.room_group_name in self.games.keys():
             del self.games[self.room_group_name]
         if self.GameThread :
             del self.GameThread

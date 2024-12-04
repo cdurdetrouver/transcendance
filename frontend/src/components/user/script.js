@@ -104,9 +104,6 @@ async function refresh_user() {
 		setCookie('user', JSON.stringify(data.user), 0.003472 );
 		return data.user;
 	}
-	else if (data.message === "User not found") {
-		router.disconnect();
-	}
 	return null;
 }
 

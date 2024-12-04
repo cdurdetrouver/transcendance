@@ -202,7 +202,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
         for player in self.waiting_players:
-            if player.user == self.user:
+            if player == self.user.id:
                 await self.send(text_data=json.dumps({
                     'type': 'error',
                     'message': 'You are already in that game'
