@@ -41,16 +41,23 @@ body #page #background #sheet-image, html #page #background #sheet-image {
   width: 50%;
 }
 body #page #background #container, html #page #background #container {
-  background-image: url("../assets/images/friends/friend_sheet.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  aspect-ratio: 225/196;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+body #page #background #container img, html #page #background #container img {
+  width: 60vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 body #page #background #container #friend-box, html #page #background #container #friend-box {
-  aspect-ratio: 225/196;
+  position: absolute;
+  top: 5%;
+  left: 4%;
+  width: 90%;
+  height: 90%;
   display: flex;
   flex-direction: column;
 }
@@ -66,12 +73,11 @@ body #page #background #container #header, html #page #background #container #he
 body #page #background #container #header h1, html #page #background #container #header h1 {
   display: flex;
   justify-content: center;
-  font-size: 2vw;
+  font-size: 3vw;
   color: #332C2B;
   font-family: isaac;
 }
 body #page #background #container #list, html #page #background #container #list {
-  width: 90%;
   margin-top: 1%;
   display: flex;
   justify-content: center;
@@ -91,7 +97,7 @@ body #page #background #container #list .friend .delete-friend, html #page #back
   height: 28%;
 }
 body #page #background #container #list .friend .delete-friend img, html #page #background #container #list .friend .delete-friend img {
-  height: 180%;
+  width: 180%;
 }
 body #page #background #container #list .friend .profile-picture-container, html #page #background #container #list .friend .profile-picture-container {
   width: 20%;

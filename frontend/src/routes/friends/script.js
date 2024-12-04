@@ -23,7 +23,6 @@ async function deleteUserFriend(user) {
 }
 
 async function getUserFriends(user) {
-	console.log("userid = ", user.id);
 
     const response = await fetch(config.backendUrl + "/user/friend/" + user.id + "/", {
         method: "GET",
@@ -97,7 +96,8 @@ async function displayFriends(user) {
         
                     yesButton.addEventListener("click", function() {
                         const friendElement = deleteButton.closest('.friend');
-                        deleteUserFriend(user);
+                        console.log(("friend id = ", friend.id));
+                        deleteUserFriend(friend);
                         friendElement.remove();
                         popin.style.display = "none";
                     });
@@ -119,8 +119,6 @@ export async function initComponent(params) {
         router.navigate('/');
 	console.log()
 	displayFriends(user);
-
-
 }
 
 export async function cleanupComponent(params) {
