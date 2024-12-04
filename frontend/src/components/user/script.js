@@ -2,15 +2,19 @@ import config from "../../env/config.js";
 import { setCookie, getCookie, deleteCookie } from "../storage/script.js";
 
 async function refresh_token() {
-	const response = await fetch(config.backendUrl + "/refresh-token/", {
-		method: "POST",
-		headers:
-		{
-			"Content-Type": "application/json",
-		},
-		credentials: "include",
-	});
-	return response;
+	try {
+		const response = await fetch(config.backendUrl + "/refresh-token/", {
+			method: "POST",
+			headers:
+			{
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+		});
+		return response;
+	} catch {
+		return null;
+	}
 }
 
 async function login(email, password) {
