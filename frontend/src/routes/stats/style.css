@@ -74,6 +74,7 @@ body #page #background #book #left-page #match-container #matchList, html #page 
   width: 100%;
   overflow-y: scroll;
   font-size: 1.2vw;
+  max-height: 37%;
 }
 body #page #background #book #left-page #match-container::-webkit-scrollbar, html #page #background #book #left-page #match-container::-webkit-scrollbar {
   display: none;
@@ -185,6 +186,7 @@ body #page #background #book #right-page #match-container #matchList-flappy, htm
   width: 100%;
   overflow-y: scroll;
   font-size: 1.2vw;
+  max-height: 37%;
 }
 body #page #background #book #right-page #match-container::-webkit-scrollbar, html #page #background #book #right-page #match-container::-webkit-scrollbar {
   display: none;
