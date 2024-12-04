@@ -110,7 +110,7 @@
 			border-bottom: 2px solid   rgb(171, 170, 170);
 			width: 80%;
 			margin-left: 50px;
-			min-height: 450px;
+			min-height: 330px;
 			list-style-type: none;
 			overflow-y: scroll;
 			scrollbar-width: thin; 
@@ -177,8 +177,9 @@
 							overflow: hidden;
 						}
 						.room-name {
-							display: inline-flex;
-							align-items: center;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							max-width: 80%;
 							font-size: 2rem;
 						}
 					}
@@ -522,8 +523,9 @@
 
 	.room-name-left
 	{
-		display: inline-flex;
-		align-items: center;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		min-width: 100px;
 	}
 }
 .invite-test {
@@ -589,7 +591,10 @@ input[type="text"] {
 	box-shadow: none;    
 	background-color: #e9dadf;
 	font-family: isaac; 
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
+
 input[type="text"]:focus {
 	border-color: #66afe9; 
 	outline: none;
