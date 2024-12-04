@@ -1,6 +1,6 @@
 @font-face {
-  font-family: isaac-bold;
-  src: url("../../../assets/font/isaac_bold.ttf") format("truetype");
+  font-family: isaac;
+  src: url("../../../assets/font/isaac.ttf") format("truetype");
 }
 body {
   text-align: center;
@@ -26,7 +26,7 @@ canvas {
 }
 
 #container {
-  font-family: isaac-bold;
+  font-family: isaac;
   position: relative;
   width: 100%;
   height: 100%;
@@ -79,7 +79,7 @@ canvas {
 }
 #container #game-canvas .return-menu #button-return {
   position: absolute;
-  font-family: isaac-bold;
+  font-family: isaac;
   font-size: 0.8rem;
   background-image: url(../../../../static/assets/sheets/Button.png);
   width: 150px;

@@ -1,7 +1,7 @@
 @font-face {
-    font-family: isaac-bold;
-    src: url("http://localhost:5500/routes/assets/font/isaac_bold.ttf") format("truetype");
-  }
+    font-family: isaac;
+	src: url("../assets/font/isaac.ttf") format("truetype");
+}
 
 p {
     display: grid;
@@ -50,7 +50,7 @@ a {
 }
 
 .background {
-    font-family: isaac-bold;
+    font-family: isaac;
     font-size: 1.5rem;
     position: center;
     width: 100dvw;

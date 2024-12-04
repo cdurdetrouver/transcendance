@@ -1,6 +1,6 @@
 @font-face
-  font-family: isaac-bold
-  src: url('../assets/font/isaac_bold.ttf')
+  font-family: isaac
+  src: url('../assets/font/isaac.ttf')
 
 body, html
     background-image: url('../assets/images/account/background_account.png')
@@ -14,7 +14,7 @@ body, html
         height: 100%
 
         .text
-            font-family: isaac-bold
+            font-family: isaac
             color: #332C2B
         button
             background-color: transparent
@@ -35,13 +35,15 @@ body, html
                 display: flex
                 justify-content: center
                 width: 100%
-                font-family: isaac-bold
+                font-family: isaac
                 
                 img
                     width: 70vw
                 
+                hr
+                    width: 85%
+                
                 #left-page
-                    // background-color: #cf0000
                     position: absolute
                     top: 8%
                     left: 19%
@@ -49,25 +51,35 @@ body, html
                     height: 80%
                     display: flex
                     justify-content: center
+                    align-items: center
+                    flex-direction: column
 
                     span
                         font-size: 2vw
 
-                    #matchList 
-                        position: absolute
-                        top: 10%
-                        left: 0%
-                        display: flex
-                        flex-direction: column
-                        align-items: center
+                    #match-container
                         width: 100%
-                        overflow-y: scroll
-                        font-size: 1.2vw
+                        height: 100%
+
+                        #matchList
+                            margin-top: 30px
+                            overflow-y: auto
+                            overflow-x: hidden
+                            position: absolute
+                            top: 10%
+                            left: 0%
+                            display: flex
+                            flex-direction: column
+                            align-items: center
+                            width: 100%
+                            overflow-y: scroll
+                            font-size: 1.2vw
+                            max-height: 37%
 
                         &::-webkit-scrollbar
                             display: none
 
-                        .Matchline 
+                        .Matchline
                             position: relative
                             display: flex
                             flex-direction: row
@@ -93,25 +105,14 @@ body, html
                                 padding-left: 20px
                                 display: flex
                                 align-items: center
-
-                #right-page
-                    // background-color: #0400fd
-                    position: absolute
-                    top: 8%
-                    left: 51%
-                    width: 30%
-                    height: 80%
-                    display: flex
-                    justify-content: center
-
                     span
                         font-size: 2vw
                     
                     #pong-stats
-                    
+                        width: 100%
+                        height: 100%
                         span
                             font-size: 1.5vw
-                        
                         
                         .stats-count
                                 // background-color: #00ff00
@@ -124,8 +125,6 @@ body, html
                         #wins
                             // background-color: #00ff00
                             position: absolute
-                            top: 10%
-                            left: 3%
                             height: 43%
                             width: 44%
                             display: flex
@@ -141,7 +140,7 @@ body, html
                         #losses
                             // background-color: #ff0000
                             position: absolute
-                            top: 10%
+                           
                             left: 52%
                             height: 43%
                             width: 44%
@@ -158,6 +157,89 @@ body, html
 
                         &::-webkit-scrollbar
                             display: none
+
+                #right-page
+                    position: absolute
+                    top: 8%
+                    left: 51%
+                    width: 30%
+                    height: 80%
+                    display: flex
+                    justify-content: center
+                    align-items: center
+                    flex-direction: column
+
+
+                    span
+                        font-size: 2vw
+
+                    #match-container
+                        width: 100%
+                        height: 100%
+
+                        #matchList-flappy
+                            margin-top: 35px
+                            overflow-y: auto
+                            overflow-x: hidden
+                            position: absolute
+                            top: 10%
+                            left: 0%
+                            display: flex
+                            flex-direction: column
+                            align-items: center
+                            width: 100%
+                            overflow-y: scroll
+                            font-size: 1.2vw
+                            max-height: 37%
+
+                        &::-webkit-scrollbar
+                            display: none
+
+                        .Matchline 
+                            position: relative
+                            display: flex
+                            flex-direction: row
+                            justify-content: space-between
+                            gap: 10px
+                            margin-bottom: 10px
+
+                            .player-left
+                                overflow-wrap: break-word
+                                text-align: left
+                                white-space: nowrap
+                                overflow: hidden
+                                padding-right: 20px
+                                display: flex
+                                align-items: center
+
+                            .player-right
+                                overflow-wrap: break-word
+                                text-align: right
+                                white-space: nowrap
+                                overflow: hidden
+                                padding-left: 20px
+                                display: flex
+                                align-items: center
+                    span
+                        font-size: 2vw
+                    
+                    #flappy-stats
+                        // width: 100%
+                        height: 100%
+
+                        #highscore
+                            margin-top: 50px
+                            text-align: center
+                            font-size: 3rem
+                        
+                        span
+                            font-size: 1.5vw
+                        
+                        &::-webkit-scrollbar
+                            display: none
+
+
+
 .win 
     background-image: url(../../static/assets/yes.png)
     width: 20px

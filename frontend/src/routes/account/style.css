@@ -1,6 +1,6 @@
 @font-face {
-  font-family: isaac-bold;
-  src: url("../assets/font/isaac_bold.ttf");
+  font-family: isaac;
+  src: url("../assets/font/isaac.ttf");
 }
 body {
   background-image: url("../assets/images/account/background_account.png");
@@ -13,7 +13,7 @@ body #page {
   height: 100%;
 }
 body #page .text {
-  font-family: isaac-bold;
+  font-family: isaac;
   color: #332C2B;
 }
 body #page button {
@@ -45,6 +45,35 @@ body #page #background #container {
   width: 100%;
   height: 100%;
 }
+body #page #background #container #stat-sheet {
+  position: relative;
+  left: 7%;
+  font-family: isaac;
+  font-size: 0.7rem;
+  background-image: url(../../static/assets/sheets/side-sheet.png);
+  width: 200px;
+  height: 200px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+body #page #background #container #stat-sheet span {
+  position: relative;
+  z-index: 5;
+  top: 40%;
+  left: 20%;
+  font-size: 2rem;
+  display: inline-block;
+  transform: rotate(-75deg);
+  transition: transform 0.3s ease;
+}
+body #page #background #container #stat-sheet span:hover {
+  transform: rotate(-75deg) scale(1.2);
+  cursor: pointer;
+}
 body #page #background #container .buttons {
   transition: transform 0.3s ease;
   background-color: transparent;
@@ -57,7 +86,7 @@ body #page #background #container #matchList {
   font-size: 0.7rem;
   position: absolute;
   left: 100px;
-  font-family: isaac-bold;
+  font-family: isaac;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -301,6 +330,7 @@ body #page #background #container #sheet #profile-picture-container {
   width: 24%;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 body #page #background #container #sheet #profile-picture-container #profile-picture {
   width: 100%;
@@ -368,7 +398,7 @@ body #page #background #popin #confirmation-content button {
 body #page #background #popin #confirmation-content span {
   position: absolute;
   top: 20%;
-  left: 10%;
+  left: 17%;
   font-size: 2.8vw;
 }
 body #page #background #popin #confirmation-content .button-popin:hover {
@@ -405,6 +435,7 @@ body #page #background #popin #qrcode-content #close-button {
   height: 4%;
   width: 4%;
   border: none;
+  z-index: 11111111;
 }
 body #page #background #popin #qrcode-content span {
   overflow-wrap: break-word;
@@ -419,6 +450,7 @@ body #page #background #popin #qrcode-content #generate-qrcode {
   display: flex;
   align-items: center;
   font-size: 1.8vw;
+  padding-left: 9%;
 }
 body #page #background #popin #qrcode-content .qrcode {
   display: none;

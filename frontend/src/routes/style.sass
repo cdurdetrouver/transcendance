@@ -1,6 +1,7 @@
 @font-face
     font-family: "isaac"
-    src: url(../routes/assets/font/isaac_bold.ttf)
+    src: url(../routes/assets/font/isaac.ttf)
+
 body, html
     background-image: url("../static/assets/background/background_home.png")
     background-position: center
@@ -49,7 +50,7 @@ body, html
 
                 #selection-mode
                     position: absolute
-                    left: 24%
+                    left: 28%
                     top: 0%
                     width: 35%
                     height: 85%
@@ -61,8 +62,10 @@ body, html
                     align-items: center
                     justify-content: space-evenly
                     gap: 4%
+                    text-align: center
 
                     .button
+                        width: 100%
                         padding: 10px 20px
                         background: transparent
                         color: rgb(69, 57, 59)
@@ -72,6 +75,7 @@ body, html
                         text-decoration: none
                         border: none
                         transition: transform 0.3s ease
+                        
 
                     .disabled
                         color: #666666
