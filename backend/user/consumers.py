@@ -21,8 +21,12 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 			return
 		self.user = result
 		self.user.online = True
-		print(f'{self.user.username} connected')
 		await sync_to_async(self.user.save)()
+
+		await self.send(text_data=json.dumps({
+			'type': 'success',
+			'message': 'Connected'
+		}))
 
 	async def disconnect(self, code):
 		self.user.online = False
