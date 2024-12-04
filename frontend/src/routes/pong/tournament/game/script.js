@@ -4,6 +4,8 @@ import { router } from '../../../../app.js';
 let canvas;
 let ctx;
 
+let tournament;
+
 let backgroundCanvas;
 let backgroundCtx;
 
@@ -80,6 +82,7 @@ class PongGame {
         this.player2 = player2;
         this.winner = null;
         this.loser = null;
+        this.game_ended = false;
 
     }
 
@@ -449,8 +452,8 @@ function closeButton()
 }
 
 export async function cleanupComponent(){
-    // const container = document.querySelector('#container');
-    // container.replaceWith(container.cloneNode(true));
+    tournament.game_ended = true;
+    tournament = null;
 }
 
 export async function initComponent() {
@@ -483,7 +486,7 @@ export async function initComponent() {
         }
     });
 
-	const tournament = new Tournament(players);
+	tournament = new Tournament(players);
 
 	centerPongCanvas();
 	drawBackground();

@@ -226,7 +226,6 @@ function RectCircleColliding(circle_x, circle_y, rect_x, rect_y, rect_width, rec
 }
 
 function UpdateGame() {
-	console.log(ballX, ballY);
 	if (player1moveup && paddle1Y > 0) {
 		paddle1Y -= 7;
 	}
@@ -351,7 +350,6 @@ function closeButton()
 	
 	parentDiv.appendChild(buttonDiv)
 	document.getElementById('button-return').addEventListener('click', function() {
-		console.log('/multiplayer');
         router.navigate('/multiplayer');
     });
 
@@ -393,7 +391,6 @@ export async function initComponent() {
 
 	game_started = false;
 	game_ended = false;
-	console.log(player1Score,player2Score, player3Score, player4Score);
 	const urlParams = new URLSearchParams(window.location.search);
 	player1 = urlParams.get('player1');
 	player2 = urlParams.get('player2');
@@ -402,7 +399,6 @@ export async function initComponent() {
 	if (!player1 || !player2 || !player3 || !player4)
 	{
 		customalert('Error', 'Missing player names', true);
-		console.log('/pong');
 		router.navigate('/pong');
 	}
 	const player1div = document.querySelector(".name.left-name");
@@ -420,12 +416,10 @@ export async function initComponent() {
 	document.addEventListener('keydown', handleKeydown);
 	document.addEventListener('keyup', handleKeyup);
 
-	console.log(player1Score,player2Score, player3Score, player4Score);
 	drawBackground();
 	updateScoreCanvas();
 	centerPongCanvas();
 	game_started = true;
-	console.log(player1Score,player2Score, player3Score, player4Score);
 	gameLoop();
 }
 
