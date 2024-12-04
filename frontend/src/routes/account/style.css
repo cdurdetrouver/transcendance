@@ -48,7 +48,7 @@ body #page #background #container {
   width: 100%;
   height: 100%;
 }
-body #page #background #container #stat-sheet {
+body #page #background #container #stats-sheet {
   position: absolute;
   left: 25%;
   top: 35%;
@@ -57,10 +57,10 @@ body #page #background #container #stat-sheet {
   outline: none;
   border: none;
 }
-body #page #background #container #stat-sheet img {
+body #page #background #container #stats-sheet img {
   width: 100%;
 }
-body #page #background #container #stat-sheet span {
+body #page #background #container #stats-sheet span {
   position: absolute;
   z-index: 5;
   top: 39%;
@@ -70,7 +70,7 @@ body #page #background #container #stat-sheet span {
   transform: rotate(-75deg);
   transition: transform 0.3s ease;
 }
-body #page #background #container #stat-sheet span:hover {
+body #page #background #container #stats-sheet span:hover {
   transform: rotate(-75deg) scale(1.2);
   cursor: pointer;
 }
