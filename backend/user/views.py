@@ -258,9 +258,10 @@ def register(request):
 		# Profile picture
 		if 'profile_picture' not in serializer.validated_data or not serializer.validated_data['profile_picture']:
 			serializer.validated_data['profile_picture'] = 'default.png'
+		else:
+			id = User.objects.all().count() + 1
+			serializer.validated_data['profile_picture'].name = f'{id}.png'
 
-		id = User.objects.all().count() + 1
-		serializer.validated_data['profile_picture'].name = f'{id}.png'
 		user = serializer.save()
 
 		# Generate response
@@ -313,7 +314,7 @@ def refresh_token(request):
 		return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
 	payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
-	if payload['encode'] == None or payload['encode'] == "refresh_token":
+	if payload.get('encode') == None or payload['encode'] != "refresh_token":
 		return Response({'error': 'Refresh token invalid'}, status=status.HTTP_400_BAD_REQUEST)
 	user = User.objects.filter(id=payload['user_id']).first()
 
