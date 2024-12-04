@@ -49,7 +49,8 @@ async function displayFriends(user) {
 		friendsList.innerHTML = ""; // Efface le contenu existant
 	
 		friends.forEach(friend => {
-            
+
+                console.log("friend = ", friend);
 				let friendElement = document.createElement("div");
 				friendElement.className = "friend";
 

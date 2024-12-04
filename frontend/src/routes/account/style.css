@@ -48,30 +48,56 @@ body #page #background #container {
   width: 100%;
   height: 100%;
 }
-body #page #background #container #stat-sheet {
+body #page #background #container #stats-sheet {
   position: absolute;
-  left: 25%;
-  top: 35%;
+  left: 26%;
+  top: 33%;
   font-family: isaac;
-  width: 7%;
+  width: 6%;
   outline: none;
   border: none;
 }
-body #page #background #container #stat-sheet img {
+body #page #background #container #stats-sheet img {
   width: 100%;
 }
-body #page #background #container #stat-sheet span {
+body #page #background #container #stats-sheet span {
   position: absolute;
   z-index: 5;
   top: 39%;
-  right: 11%;
-  font-size: 2vw;
+  right: 14%;
+  font-size: 1.7vw;
   display: inline-block;
-  transform: rotate(-75deg);
+  transform: rotate(-77deg);
   transition: transform 0.3s ease;
 }
-body #page #background #container #stat-sheet span:hover {
-  transform: rotate(-75deg) scale(1.2);
+body #page #background #container #stats-sheet span:hover {
+  transform: rotate(-77deg) scale(1.2);
+  cursor: pointer;
+}
+body #page #background #container #friends-sheet {
+  position: absolute;
+  left: 25%;
+  top: 52%;
+  font-family: isaac;
+  width: 6%;
+  outline: none;
+  border: none;
+}
+body #page #background #container #friends-sheet img {
+  width: 100%;
+}
+body #page #background #container #friends-sheet span {
+  position: absolute;
+  z-index: 5;
+  top: 41%;
+  right: 0%;
+  font-size: 1.7vw;
+  display: inline-block;
+  transform: rotate(-77deg);
+  transition: transform 0.3s ease;
+}
+body #page #background #container #friends-sheet span:hover {
+  transform: rotate(-77deg) scale(1.2);
   cursor: pointer;
 }
 body #page #background #container .buttons {
@@ -83,29 +109,33 @@ body #page #background #container .buttons:hover {
   transform: scale(1.2);
 }
 body #page #background #container #logout-sheet {
-  width: 19%;
+  width: 7%;
   position: absolute;
-  top: 57%;
-  left: 70%;
+  top: -6%;
+  left: 53%;
+  rotate: 83deg;
 }
 body #page #background #container #logout {
   position: absolute;
-  rotate: -6deg;
-  left: 71%;
-  top: 59%;
+  left: 49%;
+  top: 3%;
   width: 16%;
-  aspect-ratio: 95/67;
+  rotate: 6deg;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
   padding-left: 1%;
+  z-index: 5;
 }
 body #page #background #container #logout span {
-  font-size: 1.6vw;
+  font-size: 1vw;
 }
 body #page #background #container #logout button img {
-  width: 60%;
+  width: 40%;
+}
+body #page #background #container #logout button:hover {
+  transform: scale(1);
 }
 body #page #background #container #sheet {
   display: flex;
