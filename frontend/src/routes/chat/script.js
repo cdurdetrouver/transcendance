@@ -570,7 +570,7 @@ async function open_chat(room_selected) {
             chat_log.scrollTop = chat_log.scrollHeight;
         }
 		else if (data.type == 'error') {
-			customalert('error !', 'Message too longs', true);
+			customalert('error !', data.message, true);
 		}
     };
     

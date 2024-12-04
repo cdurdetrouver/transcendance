@@ -31,6 +31,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def check_user(self):
         access_token = self.scope['cookies'].get('access_token')
         success, result = await sync_to_async(get_user_by_token)(access_token)
+        print("test", success, result)
         await self.accept()
         if not success:
             return await self.error(result)

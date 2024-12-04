@@ -13,7 +13,7 @@ from user.models import User
 def generate_access_token(user):
 	access_token_payload = {
 		'user_id': user.id,
-		'encode': 'acces_token',
+		'encode': 'access_token',
 		'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=5),
 		'iat': datetime.datetime.utcnow(),
 	}
@@ -33,7 +33,7 @@ def generate_status_token(user):
 def generate_refresh_token(user):
 	refresh_token_payload = {
 		'user_id': user.id,
-		'encode': 'refreh_token',
+		'encode': 'refresh_token',
 		'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
 		'iat': datetime.datetime.utcnow()
 	}
