@@ -246,13 +246,13 @@ function draw(interpolatedState) {
     } else {
         headPlayer1 = characterImages[player1Name].right;
     }
-
+	//draw head
     ctx.drawImage(
         headPlayer1,
-        5,
+        0,
         interpolatedState.paddle1Y,
-        56,
-		characterImages[player1Name].right.height
+        70,
+		67
     );
 
     // Paddle 2 logic
@@ -279,10 +279,10 @@ function draw(interpolatedState) {
 
     ctx.drawImage(
         headPlayer2,
-        canvas.width - paddleWidth - 10,
-        interpolatedState.paddle2Y,
-		56,
-		characterImages[player2Name].right.height
+        canvas.width - paddleWidth - 17,
+        interpolatedState.paddle2Y - 6 ,
+        70,
+		67
     );
 
     // Draw the ball
