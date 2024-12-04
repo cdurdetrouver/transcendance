@@ -709,9 +709,8 @@ async function print_invitations() {
         }
 }
 
-async function mp_somebody(user_id) {
+export async function mp_somebody(user_id) {
 
-    console.log("mp function");
     const response = await fetch(config.backendUrl + "/chat/room/" + 0, {
         method: "POST",
         headers: {
@@ -726,13 +725,12 @@ async function mp_somebody(user_id) {
     const data = await response.json();
     if (response.status === 200)
     {
-        console.log(data["room_status"])
-        print_chats();
+        customalert("Success", "invitation send", false);
         return ;
     }
     else if (response.status === 303 || response.status === 404 ||response.status === 403 ||response.status === 400)
     {
-        console.log("error mp: ", data["error"]);
+        customalert("Error", data['error'], true);
         return;
     }
     return;

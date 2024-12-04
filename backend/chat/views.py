@@ -69,6 +69,7 @@ def mp_exists(user_1, user_2):
 
 def create_room(user, data):
     if 'type' in data:
+        data["recepient_id"] = int(data["recepient_id"])
         if data['type'] == "mp" and isinstance(data["recepient_id"], int) == True:
             recepient, succes = get_user_mp(data["recepient_id"])
             if not succes:

@@ -104,6 +104,10 @@
 		"files": "/stats"
 	},
 	{
+		"path": "/friends",
+		"files": "/friends"
+	},
+	{
 		"path": "/local",
 		"files": "/pong/local"
 	}
