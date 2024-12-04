@@ -314,7 +314,7 @@ def refresh_token(request):
 		return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
 	payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
-	if payload.get('encode') == None or payload['encode'] != "refresh_token":
+	if payload['encode'] == None or payload['encode'] == "refresh_token":
 		return Response({'error': 'Refresh token invalid'}, status=status.HTTP_400_BAD_REQUEST)
 	user = User.objects.filter(id=payload['user_id']).first()
 

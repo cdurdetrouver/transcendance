@@ -5,90 +5,12 @@ import { router } from '../../../app.js';
 import { deleteCookie } from "../../../components/storage/script.js";
 import { refresh_token, refresh_user } from "../../../components/user/script.js";
 
-const canvas = document.getElementById("pongCanvas");
-const ctx = canvas.getContext("2d");
-
-const backgroundCanvas = document.getElementById("backgroundCanvas");
-const backgroundCtx = backgroundCanvas.getContext("2d");
-
-const lifeCanvas = document.getElementById("lifeCanvas");
-const lifeCtx = lifeCanvas.getContext("2d");
-
-const heartImage = new Image();
-heartImage.src = '../../../static/assets/pong/heart.png';
-const heartEmptyImage = new Image();
-heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
-
-const ballImage = new Image();
-ballImage.src = '../../../static/assets/pong/bullet.png';
-
-const idleImage = new Image();
-idleImage.src = '../../../static/assets/pong/resting.png';
-const idleImageLeft = new Image();
-idleImageLeft.src = '../../../static/assets/pong/resting_left.png';
-
-const boot = new Image();
-boot.src = '../../../static/assets/pong/boot.png'
-const sword = new Image();
-sword.src = '../../../static/assets/pong/sword.png'
-
-function loadImages(characterNames) {
-    const images = {};
-
-    characterNames.forEach(name => {
-        images[name] = {
-            front: new Image(),
-            back: new Image(),
-            left: new Image(),
-            right: new Image(),
-        };
-        images[name].front.src = `../../../static/assets/pong/head/${name}_front.png`;
-        images[name].back.src = `../../../static/assets/pong/head/${name}_back.png`;
-        images[name].left.src = `../../../static/assets/pong/head/${name}_left.png`;
-        images[name].right.src = `../../../static/assets/pong/head/${name}_right.png`;
-    });
-    return images;
-}
-
-const characterMap = ['isaac', 'cain', 'maggie', 'juda','blue', 'eve'];
-const characterImages = loadImages(characterMap);
-
-const paddleBodyAnimationFrames = [
-    '../../../static/assets/pong/moving_frame_1.png',
-    '../../../static/assets/pong/moving_frame_2.png',
-    '../../../static/assets/pong/moving_frame_3.png',
-    '../../../static/assets/pong/moving_frame_4.png',
-    '../../../static/assets/pong/moving_frame_5.png',
-    '../../../static/assets/pong/moving_frame_6.png',
-    '../../../static/assets/pong/moving_frame_7.png',
-    '../../../static/assets/pong/moving_frame_8.png',
-    '../../../static/assets/pong/moving_frame_9.png',
-];
-
-const paddleBodyImages = paddleBodyAnimationFrames.map((src) => {
-    const img = new Image();
-    img.src = src;
-    return img;
-});
-
-let currentBodyFrame = 0;
-let animationIntervalID = null;
-
-function startBodyAnimation() {
-    if (animationIntervalID) return;
-
-    animationIntervalID = setInterval(() => {
-        currentBodyFrame = (currentBodyFrame + 1) % paddleBodyImages.length;
-    }, 100); 
-}
-
-function stopBodyAnimation() {
-    if (animationIntervalID) {
-        clearInterval(animationIntervalID);
-        animationIntervalID = null;
-        currentBodyFrame = 0;
-    }
-}
+let canvas;
+let ctx;
+let backgroundCanvas;
+let backgroundCtx;
+let lifeCanvas;
+let lifeCtx;
 
 const paddleWidth = 56;
 const paddleHeight = 66;
@@ -134,30 +56,110 @@ let player2Force;
 let player2Speed;
 let player2Character;
 
+let heartImage;
+let heartEmptyImage;
+let ballImage;
+let idleImage;
+let idleImageLeft;
+let boot;
+let sword;
+
+const characterMap = ['isaac', 'cain', 'maggie', 'juda','blue', 'eve'];
+let characterImages;
+
+const paddleBodyAnimationFrames = [
+	'../../../static/assets/pong/moving_frame_1.png',
+	'../../../static/assets/pong/moving_frame_2.png',
+	'../../../static/assets/pong/moving_frame_3.png',
+	'../../../static/assets/pong/moving_frame_4.png',
+	'../../../static/assets/pong/moving_frame_5.png',
+	'../../../static/assets/pong/moving_frame_6.png',
+	'../../../static/assets/pong/moving_frame_7.png',
+	'../../../static/assets/pong/moving_frame_8.png',
+	'../../../static/assets/pong/moving_frame_9.png',
+];
+let paddleBodyImages;
+
+let currentBodyFrame;
+let animationIntervalID;
+
+function loadImages(characterNames) {
+	const images = {};
+
+	heartImage = new Image();
+	heartImage.src = '../../../static/assets/pong/heart.png';
+	heartEmptyImage = new Image();
+	heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
+
+	ballImage = new Image();
+	ballImage.src = '../../../static/assets/pong/bullet.png';
+
+	idleImage = new Image();
+	idleImage.src = '../../../static/assets/pong/resting.png';
+	idleImageLeft = new Image();
+	idleImageLeft.src = '../../../static/assets/pong/resting_left.png';
+
+	boot = new Image();
+	boot.src = '../../../static/assets/pong/boot.png'
+	sword = new Image();
+	sword.src = '../../../static/assets/pong/sword.png'
+
+	characterNames.forEach(name => {
+		images[name] = {
+			front: new Image(),
+			back: new Image(),
+			left: new Image(),
+			right: new Image(),
+		};
+		images[name].front.src = `../../../static/assets/pong/head/${name}_front.png`;
+		images[name].back.src = `../../../static/assets/pong/head/${name}_back.png`;
+		images[name].left.src = `../../../static/assets/pong/head/${name}_left.png`;
+		images[name].right.src = `../../../static/assets/pong/head/${name}_right.png`;
+	});
+	return images;
+}
+
+function startBodyAnimation() {
+	if (animationIntervalID) return;
+
+	animationIntervalID = setInterval(() => {
+		currentBodyFrame = (currentBodyFrame + 1) % paddleBodyImages.length;
+	}, 100); 
+}
+
+function stopBodyAnimation() {
+	if (animationIntervalID) {
+		clearInterval(animationIntervalID);
+		animationIntervalID = null;
+		currentBodyFrame = 0;
+	}
+}
+
 
 function drawBackground() {
-    backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+	backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
 
-    const backgroundImage = new Image();
-    backgroundImage.src = '../../../static/assets/background/pongBG2.png'	;
-    backgroundImage.onload = () => {
-        backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
-    };
+	const backgroundImage = new Image();
+	backgroundImage.src = '../../../static/assets/background/pongBG2.png'	;
+	backgroundImage.onload = () => {
+		backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+	};
 }
 
 function drawStats() {
-    backgroundCtx.font = "14px";
-    backgroundCtx.fillStyle = "white";
+	console.log("draw Stats");
+	backgroundCtx.font = "14px";
+	backgroundCtx.fillStyle = "white";
 
-    backgroundCtx.drawImage(boot, 20, 80, 38, 24);
-    backgroundCtx.fillText(player1Speed, 70, 100);
+	backgroundCtx.drawImage(boot, 20, 80, 38, 24);
+	backgroundCtx.fillText(player1Speed, 70, 100);
 	backgroundCtx.drawImage(sword, 27, 115, 26, 26);
-    backgroundCtx.fillText(player1Force, 70, 135);
+	backgroundCtx.fillText(player1Force, 70, 135);
 
 	backgroundCtx.drawImage(boot, backgroundCanvas.width - boot.width - 20, 80, 38, 24);
-    backgroundCtx.fillText(player2Speed, backgroundCanvas.width - 70, 100);
+	backgroundCtx.fillText(player2Speed, backgroundCanvas.width - 70, 100);
 	backgroundCtx.drawImage(sword, backgroundCanvas.width - sword.width - 27, 115, 26, 26);
-    backgroundCtx.fillText(player2Force, backgroundCanvas.width - 70, 135);
+	backgroundCtx.fillText(player2Force, backgroundCanvas.width - 70, 135);
 }
 
 function centerPongCanvas() {
@@ -165,16 +167,16 @@ function centerPongCanvas() {
 	const leftX = 0;
 	const topY = 0;
 
-    const bgWidth = backgroundCanvas.width;
-    const bgHeight = backgroundCanvas.height;
-    const pongWidth = canvas.width;
-    const pongHeight = canvas.height;
+	const bgWidth = backgroundCanvas.width;
+	const bgHeight = backgroundCanvas.height;
+	const pongWidth = canvas.width;
+	const pongHeight = canvas.height;
 
-    const centerX = (bgWidth - pongWidth) / 2;
-    const centerY = (bgHeight - pongHeight) / 2;
+	const centerX = (bgWidth - pongWidth) / 2;
+	const centerY = (bgHeight - pongHeight) / 2;
 
-    canvas.style.left = `${centerX + leftX}px`;
-    canvas.style.top = `${centerY + topY}px`;
+	canvas.style.left = `${centerX + leftX}px`;
+	canvas.style.top = `${centerY + topY}px`;
 	backgroundCanvas.style.left = `${leftX}px`;
 	backgroundCanvas.style.top = `${topY}px`;
 	lifeCanvas.style.left = `${leftX}px`;
@@ -182,11 +184,11 @@ function centerPongCanvas() {
 }
 
 function drawScores() {
-    lifeCtx.clearRect(0, 0, backgroundCanvas.width, 70);
+	lifeCtx.clearRect(0, 0, backgroundCanvas.width, 70);
 	
-    for (let i = 0; i < player1InitialScore; i++) {
+	for (let i = 0; i < player1InitialScore; i++) {
 		let heartToDraw = (i < player1Score) ? heartImage : heartEmptyImage; 
-        lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50);
+		lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50);
 		}
 
 	for (let i = 0; i < player2InitialScore; i++) {
@@ -222,128 +224,129 @@ function handleKeyup(e) {
 }
 
 function draw(interpolatedState) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const player1Name = characterMap[player1Character];
-    const player2Name = characterMap[player2Character];
+	const player1Name = characterMap[player1Character];
+	const player2Name = characterMap[player2Character];
 
-    const paddle1BodyImage = (paddle1moveup || paddle1movedown)
-        ? paddleBodyImages[currentBodyFrame]
-        : idleImage;
+	const paddle1BodyImage = (paddle1moveup || paddle1movedown)
+		? paddleBodyImages[currentBodyFrame]
+		: idleImage;
 
-    ctx.drawImage(
-        paddle1BodyImage,
-        15,
-        interpolatedState.paddle1Y + 38,
-        34,
-        paddleHeight - 32
-    );
+	ctx.drawImage(
+		paddle1BodyImage,
+		15,
+		interpolatedState.paddle1Y + 38,
+		34,
+		paddleHeight - 32
+	);
 
-    let headPlayer1;
-    if (paddle1movedown) {
-        headPlayer1 = characterImages[player1Name].front;
-    } else if (paddle1moveup) {
-        headPlayer1 = characterImages[player1Name].back;
-    } else {
-        headPlayer1 = characterImages[player1Name].right;
-    }
+	let headPlayer1;
+	if (paddle1movedown) {
+		headPlayer1 = characterImages[player1Name].front;
+	} else if (paddle1moveup) {
+		headPlayer1 = characterImages[player1Name].back;
+	} else {
+		headPlayer1 = characterImages[player1Name].right;
+	}
 	//draw head
-    ctx.drawImage(
-        headPlayer1,
-        -2,
-        interpolatedState.paddle1Y - 6,
-        70,
+	ctx.drawImage(
+		headPlayer1,
+		-2,
+		interpolatedState.paddle1Y - 6,
+		70,
 		67
-    );
+	);
 
-    // Paddle 2 logic
-    const paddle2BodyImage = (paddle2moveup || paddle2movedown)
-        ? paddleBodyImages[currentBodyFrame]
-        : idleImageLeft;
+	// Paddle 2 logic
+	const paddle2BodyImage = (paddle2moveup || paddle2movedown)
+		? paddleBodyImages[currentBodyFrame]
+		: idleImageLeft;
 
-    ctx.drawImage(
-        paddle2BodyImage,
-        canvas.width - paddleWidth,
-        interpolatedState.paddle2Y + 38,
-        34,
-        paddleHeight - 32
-    );
+	ctx.drawImage(
+		paddle2BodyImage,
+		canvas.width - paddleWidth,
+		interpolatedState.paddle2Y + 38,
+		34,
+		paddleHeight - 32
+	);
 
-    let headPlayer2;
-    if (paddle2movedown) {
-        headPlayer2 = characterImages[player2Name].front;
-    } else if (paddle2moveup) {
-        headPlayer2 = characterImages[player2Name].back;
-    } else {
-        headPlayer2 = characterImages[player2Name].left;
-    }
+	let headPlayer2;
+	if (paddle2movedown) {
+		headPlayer2 = characterImages[player2Name].front;
+	} else if (paddle2moveup) {
+		headPlayer2 = characterImages[player2Name].back;
+	} else {
+		headPlayer2 = characterImages[player2Name].left;
+	}
 
-    ctx.drawImage(
-        headPlayer2,
-        canvas.width - paddleWidth - 17,
-        interpolatedState.paddle2Y - 6 ,
-        70,
+	ctx.drawImage(
+		headPlayer2,
+		canvas.width - paddleWidth - 17,
+		interpolatedState.paddle2Y - 6 ,
+		70,
 		67
-    );
+	);
 
-    // Draw the ball
-    ctx.drawImage(
-        ballImage,
-        interpolatedState.ballX - ballRadius,
-        interpolatedState.ballY - ballRadius,
-        ballRadius * 2,
-        ballRadius * 2
-    );
+	// Draw the ball
+	ctx.drawImage(
+		ballImage,
+		interpolatedState.ballX - ballRadius,
+		interpolatedState.ballY - ballRadius,
+		ballRadius * 2,
+		ballRadius * 2
+	);
 
-    drawScores();
+	drawScores();
 }
 
 
 function draw_reset() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const player1Name = characterMap[player1Character];
-    const player2Name = characterMap[player2Character];
+	const player1Name = characterMap[player1Character];
+	const player2Name = characterMap[player2Character];
 
-    ctx.drawImage(
-        idleImage,
-        15,
-        (canvas.height - paddleHeight) / 2 + 38,
-        34,
-        paddleHeight - 32
-    );
-    ctx.drawImage(
-        characterImages[player1Name].right,
-        -2,
-        (canvas.height - paddleHeight) / 2 - 6,
-        70,
+	ctx.drawImage(
+		idleImage,
+		15,
+		(canvas.height - paddleHeight) / 2 + 38,
+		34,
+		paddleHeight - 32
+	);
+	ctx.drawImage(
+		characterImages[player1Name].right,
+		-2,
+		(canvas.height - paddleHeight) / 2 - 6,
+		70,
 		67
-    );
+	);
 
-    ctx.drawImage(
-        idleImageLeft,
-        canvas.width - paddleWidth,
-        (canvas.height - paddleHeight) / 2 + 38,
-        34,
-        paddleHeight - 32
-    );
-    ctx.drawImage(
-        characterImages[player2Name].left,
-        canvas.width - paddleWidth - 17,
-        (canvas.height - paddleHeight) / 2 - 6,
-        70,
+	ctx.drawImage(
+		idleImageLeft,
+		canvas.width - paddleWidth,
+		(canvas.height - paddleHeight) / 2 + 38,
+		34,
+		paddleHeight - 32
+	);
+	ctx.drawImage(
+		characterImages[player2Name].left,
+		canvas.width - paddleWidth - 17,
+		(canvas.height - paddleHeight) / 2 - 6,
+		70,
 		67
-    );
+	);
 
-    ctx.drawImage(
-        ballImage,
-        canvas.width / 2 - ballRadius,
-        canvas.height / 2 - ballRadius,
-        ballRadius * 2,
-        ballRadius * 2
-    );
+	ctx.drawImage(
+		ballImage,
+		canvas.width / 2 - ballRadius,
+		canvas.height / 2 - ballRadius,
+		ballRadius * 2,
+		ballRadius * 2
+	);
 
-    drawScores();
+	drawScores();
+	drawStats();
 }
 
 function interpolateGameState(currentTime) {
@@ -463,12 +466,10 @@ class PongSocket {
 
 	onmessage(event) {
 		let data = JSON.parse(event.data);
-		console.log(data);
 		if (data.type === 'game_update')
 			updateGame(data.message);
-		else if (data.type === 'game_started') {
+		else if (data.type === 'game_started')
 			game_started = true;
-		}
 		else if (data.type === 'game_end') {
 			let winner = data.winner === player1.id ? player1.username : player2.username;
 			customalert('Game Over', data.message + " winner is " + winner);
@@ -548,6 +549,15 @@ async function get_game_players(game_id) {
 }
 
 export async function initComponent() {
+	canvas = document.getElementById("pongCanvas");
+	ctx = canvas.getContext("2d");
+
+	backgroundCanvas = document.getElementById("backgroundCanvas");
+	backgroundCtx = backgroundCanvas.getContext("2d");
+
+	lifeCanvas = document.getElementById("lifeCanvas");
+	lifeCtx = lifeCanvas.getContext("2d");
+
 	paddle1Y = (canvas.height - paddleHeight) / 2;
 	paddle2Y = (canvas.height - paddleHeight) / 2;
 	paddle1speed = 4;
@@ -560,15 +570,28 @@ export async function initComponent() {
 	ballY = canvas.height / 2;
 	ballspeedX = 4;
 	ballspeedY = 4;
-	player1Score = 0;
-	player2Score = 0;
+	player1Score = 3;
+	player2Score = 3;
 	player1InitialScore = 0;
 	player2InitialScore = 0;
+	player1Force = 3;
+	player1Speed = 3;
 	player1Character = 0;
 	player2Character = 0;
 
 	lastUpdateTime = Date.now();
 	lastGameState = null;
+
+	characterImages = loadImages(characterMap);
+
+	paddleBodyImages = paddleBodyAnimationFrames.map((src) => {
+		const img = new Image();
+		img.src = src;
+		return img;
+	});
+
+	currentBodyFrame = 0;
+	animationIntervalID = null;
 
 	const user = await get_user();
 	if (!user)
@@ -589,23 +612,23 @@ export async function initComponent() {
 		router.navigate('/pong');
 	}
 
-	try {
-		socket = new PongSocket(game_room);
-		socket.open();
-	} catch (error) {
-		console.error(error);
-		customalert('Error', 'Error connecting to the game', true);
-		router.navigate('/pong');
-	}
+	// try {
+	// 	socket = new PongSocket(game_room);
+	// 	socket.open();
+	// } catch (error) {
+	// 	console.error(error);
+	// 	customalert('Error', 'Error connecting to the game', true);
+	// 	router.navigate('/pong');
+	// }
 
-	document.addEventListener('keydown', handleKeydown);
-	document.addEventListener('keyup', handleKeyup);
+	// document.addEventListener('keydown', handleKeydown);
+	// document.addEventListener('keyup', handleKeyup);
 
-	draw_reset();
 	centerPongCanvas();
 	drawBackground();
+	draw_reset();
 
-	gameLoop();
+	// gameLoop();
 }
 
 export async function cleanupComponent() {
