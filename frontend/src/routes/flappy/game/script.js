@@ -382,7 +382,7 @@ export async function cleanupComponent() {
 		socket = null;
 	}
 
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	game_ended = true;
 
 	document.removeEventListener('keydown', handleKeydown);
 	document.removeEventListener('keyup', handleKeyup);

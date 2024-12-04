@@ -86,6 +86,7 @@ async function register(username, email, password, profile_picture) {
 }
 
 async function refresh_user() {
+	deleteCookie('user');
 	const response = await fetch(config.backendUrl + "/user/",
 		{
 			method: "GET",
@@ -94,14 +95,17 @@ async function refresh_user() {
 				"Content-Type": "application/json",
 			},
 			credentials: "include",
-		}).catch(() => {
-			return null
-		})
+	}).catch(() => {
+		return null
+	});
+	const data = await response.json();
 	if (response.status === 200) {
 		router.connect();
-		const data = await response.json();
 		setCookie('user', JSON.stringify(data.user), 0.003472 );
 		return data.user;
+	}
+	else if (data.message === "User not found") {
+		router.disconnect();
 	}
 	return null;
 }

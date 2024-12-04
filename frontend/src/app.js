@@ -40,6 +40,7 @@ class Router {
 	}
 
 	async _loadInitialRoute() {
+		this.connect();
 		const pathName = window.location.pathname;
 		await this._loadRoute(pathName);
 	}
@@ -47,8 +48,11 @@ class Router {
 	async connect() {
 		if (this.socket == null)
 		{
-			this.socket = new WebSocket(config.websocketurl + "ws/user/status/");
-			await refresh_user();
+			this.socket = new WebSocket(config.websocketurl + "/ws/user/status/");
+			this.socket.onmessage = async (e) => {
+				const data = JSON.parse(e.data);
+				if (data.type == "success") await refresh_user();
+			}
 		}
 	}
 
@@ -60,7 +64,7 @@ class Router {
 	}
 
 	async navigate(pathName) {
-		// Update the URL without refreshing the page
+		if (pathName == null) return;
 		history.pushState({}, '', pathName);
 		await this._loadRoute(pathName);
 	}
