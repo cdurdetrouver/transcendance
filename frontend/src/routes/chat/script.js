@@ -279,7 +279,6 @@ async function update_room(event) {
 }
 
 async function chat_close(params) {
-    const chat_box = document.querySelector('.chat-block');
     const middle_block = document.querySelector(".middle");
     middle_block.innerHTML =`
     <div class="chat-block"></div>
