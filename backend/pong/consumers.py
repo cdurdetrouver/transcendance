@@ -247,14 +247,16 @@ class PongConsumer(AsyncWebsocketConsumer):
         else:
 
             if self.room_group_name in self.games:
-                self.GameThread.stop(self.user)
                 del self.games[self.room_group_name]
             if self.GameThread :
+                print("stop !")
+                await self.GameThread.stop(self.user)
                 del self.GameThread
                 self.GameThread = None
 
             self.game = await sync_to_async(Game.objects.get)(room_name=self.room_group_name)
             await sync_to_async(lambda: self.game.winner)()
+            print("disconnect", self.game.winner)
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
