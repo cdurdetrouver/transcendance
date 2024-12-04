@@ -571,7 +571,7 @@ export async function initComponent() {
 
 	const user = await get_user();
 	if (!user)
-		router.navigate('/login?return=/pong');
+		router.navigate('/');
 
 	pingSpan = document.getElementById("ping");
 
