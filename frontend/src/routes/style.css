@@ -50,7 +50,7 @@ body #page-container #page-content #sheet, html #page-container #page-content #s
 }
 body #page-container #page-content #sheet #selection-mode, html #page-container #page-content #sheet #selection-mode {
   position: absolute;
-  left: 24%;
+  left: 28%;
   top: 0%;
   width: 35%;
   height: 85%;

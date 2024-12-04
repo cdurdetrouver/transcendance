@@ -581,6 +581,12 @@ input[type=text]:focus {
   box-shadow: none;
 }
 
+.input-text-chat::-moz-placeholder {
+  font-family: isaac;
+  color: gray;
+  opacity: 0.7;
+}
+
 .input-text-chat::placeholder {
   font-family: isaac;
   color: gray;

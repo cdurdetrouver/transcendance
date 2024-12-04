@@ -1,5 +1,5 @@
 @font-face {
-    font-family: isaac-bold;
+    font-family: isaac;
     src: url("../assets/font/isaac_bold.ttf") format("truetype");
   }
 
@@ -44,7 +44,7 @@
 }
 
 #bubble {
-	font-family: isaac-bold;
+	font-family: isaac;
 	position: relative;
 	font-size: 8rem;
 	width: 100%;

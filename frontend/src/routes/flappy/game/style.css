@@ -3,7 +3,7 @@
     src: url(../../static/assets/fonts/flappy.TTF);
 }
 @font-face {
-	font-family: isaac-bold;
+	font-family: isaac;
 	src: url("../../assets/font/isaac_bold.ttf") format("truetype");
   }
 #background-image {
@@ -53,7 +53,7 @@
     z-index: 1;                 
 }
 #container #player-block {
-	font-family: isaac-bold;
+	font-family: isaac;
 	display: flex;
 	align-items: center;
 	flex-direction: row;
@@ -105,7 +105,7 @@
   }
   #container #game-canvas .return-menu #button-return {
 	position: absolute;
-	font-family: isaac-bold;
+	font-family: isaac;
 	font-size: 0.8rem;
 	background-image: url(../../../static/assets/sheets/Button.png);
 	width: 150px;

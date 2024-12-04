@@ -28,15 +28,18 @@ export async function initComponent(params) {
 		}
 		user = data
 	}
-	if (me) {
+
+	if (user == null) {
+		console.log(me);
 		getPongHistoric(me.id);
 		getFlappyHistoric(me.id);
 		displayStats(me);
 	}
 	else  {
-		getPongHistoric(user.id);
-		getFlappyHistoric(user.id);
-		displayStats(user);
+		console.log(user.user);
+		getPongHistoric(user.user.id);
+		getFlappyHistoric(user.user.id);
+		displayStats(user.user);
 	}
 
 
@@ -50,8 +53,11 @@ function displayStats(user) {
 	if (user.looses != null) {
 		document.querySelector("#losses-count").innerHTML += user.looses;
 	}
-	document.querySelector("#highscore").innerHTML += user.highscore;
-	
+	if (user.best_score)
+		document.querySelector("#highscore").innerHTML = user.best_score;
+	else 
+		document.querySelector("#highscore").innerHTML += "No highscore yet!";
+	document.getElementById("username-sign").innerHTML += user.username;
 }
 
 function setPongHistoric (games) {
