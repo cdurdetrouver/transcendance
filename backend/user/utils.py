@@ -13,16 +13,27 @@ from user.models import User
 def generate_access_token(user):
 	access_token_payload = {
 		'user_id': user.id,
+		'encode': 'access_token',
 		'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=5),
 		'iat': datetime.datetime.utcnow(),
 	}
 	access_token = jwt.encode(access_token_payload, settings.SECRET_KEY, algorithm='HS256')
 	return access_token
 
+def generate_status_token(user):
+	status_token_payload = {
+		'user_id': user.id,
+		'encode': 'status_token',
+		'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
+		'iat': datetime.datetime.utcnow(),
+	}
+	status_token = jwt.encode(status_token_payload, settings.SECRET_KEY, algorithm='HS256')
+	return status_token
 
 def generate_refresh_token(user):
 	refresh_token_payload = {
 		'user_id': user.id,
+		'encode': 'refresh_token',
 		'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
 		'iat': datetime.datetime.utcnow()
 	}
@@ -49,6 +60,33 @@ def get_user_by_token(token):
 	try:
 		payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
 		user_id = payload.get('user_id')
+		encode = payload.get('encode')
+		if encode != "access_token":
+			return False, "Wrong Access Token"
+		user = User.objects.get(id=user_id)
+		if user is None:
+			return False, 'User not found'
+		return True, user
+	except jwt.ExpiredSignatureError:
+		return False, 'Token expired. Please log in again.'
+	except jwt.InvalidTokenError:
+		return False, 'Invalid token. Please log in again.'
+	except jwt.InvalidSignatureError:
+		return False, 'Invalid signature. Please log in again.'
+	except jwt.InvalidAlgorithmError:
+		return False, 'Invalid algorithm. Please log in again.'
+	except jwt.DecodeError:
+		return False, 'Decode error. Please log in again.'
+	except Exception as e:
+		return False, str(e)
+
+def get_user_by_status_token(token):
+	try:
+		payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+		user_id = payload.get('user_id')
+		encode = payload.get('encode')
+		if encode != "status_token":
+			return False, "Wrong Status Token"
 		user = User.objects.get(id=user_id)
 		if user is None:
 			return False, 'User not found'

@@ -3,6 +3,7 @@ import { get_user } from '../../../../components/user/script.js';
 import { customalert } from "../../../components/alert/script.js";
 import { router } from '../../../app.js';
 import { deleteCookie } from "../../../components/storage/script.js";
+import { refresh_user } from "../../../components/user/script.js";
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -370,7 +371,7 @@ export async function initComponent() {
 	gameLoop();
 }
 
-export function cleanupComponent() {
+export async function cleanupComponent() {
 	if (pingIntervalID) {
 		clearInterval(pingIntervalID);
 		pingIntervalID = null;
@@ -385,4 +386,6 @@ export function cleanupComponent() {
 
 	document.removeEventListener('keydown', handleKeydown);
 	document.removeEventListener('keyup', handleKeyup);
+
+	await refresh_user();
 }

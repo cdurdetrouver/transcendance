@@ -332,3 +332,5 @@ backend/*/migrations/*
 # Ignore all media
 backend/backend/media/profile_pictures/*
 !backend/backend/media/profile_pictures/default.png
+
+backend/backend/media/room_pictures/*
