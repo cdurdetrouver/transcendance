@@ -1,5 +1,6 @@
-import { getCookie } from "./components/storage/script.js";
-import { refresh_token } from "./components/user/script.js";
+import { deleteCookie, getCookie } from "./components/storage/script.js";
+import { get_user, refresh_token, refresh_user } from "./components/user/script.js";
+import config from "./env/config.js";
 
 class Router {
 	constructor() {
@@ -9,6 +10,7 @@ class Router {
 		this.componentsstyles = [];
 		this.activeScripts = [];
 		this.loaded = document.getElementById("loaded");
+		this.socket = null;
 	}
 
 	async initRouter() {
@@ -40,6 +42,21 @@ class Router {
 	async _loadInitialRoute() {
 		const pathName = window.location.pathname;
 		await this._loadRoute(pathName);
+	}
+
+	async connect() {
+		if (this.socket == null)
+		{
+			this.socket = new WebSocket(config.websocketurl + "ws/user/status/");
+			await refresh_user();
+		}
+	}
+
+	async disconnect() {
+		if (this.socket) {
+			this.socket.close();
+			this.socket = null;
+		}
 	}
 
 	async navigate(pathName) {

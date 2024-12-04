@@ -12,5 +12,5 @@ websocket_urlpatterns = [
 	re_path("ws/flappy/matchmaking/", FlappyMatchmakingConsumer.as_asgi()),
 	# re_path(r"ws/flappy/privatematchmaking/(?P<room_name>[\w.!]+)/$", FlappyPrivateMatchmaking.as_asgi()),
 	re_path(r'ws/flappy/(?P<room_name>[\w.!]+)/$', FlappyConsumer.as_asgi()),
-	re_path(r"ws/user/status/", UserStatusConsumer.as_asgi()),
+	re_path("ws/user/status/", UserStatusConsumer.as_asgi()),
 ]

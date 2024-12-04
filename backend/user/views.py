@@ -278,7 +278,7 @@ def register(request):
 		status_token = generate_status_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
 		secure_cookie = settings.DEBUG
-		response.set_cookie('refresh_token', status_token, httponly=False, secure=secure_cookie, samesite='Strict', expires=expires)
+		response.set_cookie('refresh_token', status_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 
 		return response
 	else:
@@ -740,7 +740,7 @@ def complete_login(user):
 	status_token = generate_status_token(user)
 	expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
 	secure_cookie = not settings.DEBUG
-	response.set_cookie('status_token', status_token, httponly=False, secure=secure_cookie, samesite='Strict', expires=expires)
+	response.set_cookie('status_token', status_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 
 	user.last_login = datetime.datetime.utcnow()
 	user.save()
