@@ -104,6 +104,10 @@
 		"files": "/stats"
 	},
 	{
+		"path": "/statsid",
+		"files": "/statsid"
+	},
+	{
 		"path": "/friends",
 		"files": "/friends"
 	},

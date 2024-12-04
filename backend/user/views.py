@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from .utils import generate_access_token, generate_refresh_token, get_intra_user, get_github_user, get_google_user, is_valid_username, is_valid_password
+from .utils import generate_access_token, generate_refresh_token, generate_status_token, get_intra_user, get_github_user, get_google_user, is_valid_username, is_valid_password
 from .models import User
 from .serializers import UserSerializer, LoginSerializer
 from chat.data_handling import delete_mess_of
@@ -94,7 +94,6 @@ def user_detail(request):
 			if profile_picture is not None:
 				id = user.id
 				profile_picture.name = f'{id}.png'
-			print(profile_picture)
 			serializer.save()
 			return JsonResponse({'user': serializer.data}, status=status.HTTP_200_OK)
 		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
@@ -255,7 +254,11 @@ def register(request):
 		succes, error = is_valid_password(serializer.validated_data['password'], None, serializer.validated_data['username'])
 		if not succes:
 			return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
+
 		# Profile picture
+		if 'profile_picture' not in serializer.validated_data or not serializer.validated_data['profile_picture']:
+			serializer.validated_data['profile_picture'] = 'default.png'
+
 		id = User.objects.all().count() + 1
 		serializer.validated_data['profile_picture'].name = f'{id}.png'
 		user = serializer.save()
@@ -264,10 +267,19 @@ def register(request):
 		response = JsonResponse({'user': serializer.data}, status=status.HTTP_201_CREATED)
 		refresh_token = generate_refresh_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
-		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=False, samesite='Strict', expires=expires)
+		secure_cookie = settings.DEBUG
+		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+
 		access_token = generate_access_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
-		response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='Strict', expires=expires)
+		secure_cookie = settings.DEBUG
+		response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+
+		status_token = generate_status_token(user)
+		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
+		secure_cookie = settings.DEBUG
+		response.set_cookie('refresh_token', status_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+
 		return response
 	else:
 		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
@@ -301,6 +313,8 @@ def refresh_token(request):
 		return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
 	payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
+	if payload['encode'] == None or payload['encode'] == "refresh_token":
+		return Response({'error': 'Refresh token invalid'}, status=status.HTTP_400_BAD_REQUEST)
 	user = User.objects.filter(id=payload['user_id']).first()
 
 	if user is None:
@@ -335,6 +349,7 @@ def logout(request):
 	response = JsonResponse({'message': 'Logged out successfully'})
 	response.delete_cookie('refresh_token')
 	response.delete_cookie('access_token')
+	response.delete_cookie('status_token')
 	return response
 
 @swagger_auto_schema(
@@ -722,6 +737,11 @@ def complete_login(user):
 	expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
 	secure_cookie = not settings.DEBUG
 	response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+
+	status_token = generate_status_token(user)
+	expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
+	secure_cookie = not settings.DEBUG
+	response.set_cookie('status_token', status_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 
 	user.last_login = datetime.datetime.utcnow()
 	user.save()

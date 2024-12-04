@@ -1,16 +1,23 @@
+import { router } from "../../app.js";
 import config from "../../env/config.js";
 import { setCookie, getCookie, deleteCookie } from "../storage/script.js";
 
 async function refresh_token() {
-	const response = await fetch(config.backendUrl + "/refresh-token/", {
-		method: "POST",
-		headers:
-		{
-			"Content-Type": "application/json",
-		},
-		credentials: "include",
-	});
-	return response;
+	try {
+		const response = await fetch(config.backendUrl + "/refresh-token/", {
+			method: "POST",
+			headers:
+			{
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+		});
+		if (response.status == 200)
+			router.connect();
+		return response;
+	} catch {
+		return null;
+	}
 }
 
 async function login(email, password) {
@@ -27,6 +34,9 @@ async function login(email, password) {
 		credentials: "include",
 	});
 
+	if (response.status == 200)
+		router.connect();
+
 	return response;
 }
 
@@ -42,6 +52,9 @@ async function login_tierce(code, user_type) {
 		}),
 		credentials: "include",
 	});
+
+	if (response.status == 200)
+		router.connect();
 
 	return response;
 }
@@ -61,6 +74,7 @@ async function register(username, email, password, profile_picture) {
 	});
 
 	if (response.status === 201) {
+		router.connect();
 		const data = await response.json();
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
 		return response;
@@ -69,6 +83,27 @@ async function register(username, email, password, profile_picture) {
 		console.error('Registration failed with status:', response.status);
 	}
 	return response;
+}
+
+async function refresh_user() {
+	const response = await fetch(config.backendUrl + "/user/",
+		{
+			method: "GET",
+			headers:
+			{
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+		}).catch(() => {
+			return null
+		})
+	if (response.status === 200) {
+		router.connect();
+		const data = await response.json();
+		setCookie('user', JSON.stringify(data.user), 0.003472 );
+		return data.user;
+	}
+	return null;
 }
 
 async function get_user() {
@@ -87,6 +122,7 @@ async function get_user() {
 			return null
 		})
 	if (response.status === 200) {
+		router.connect();
 		const data = await response.json();
 		setCookie('user', JSON.stringify(data.user), 0.003472 );
 		return data.user;
@@ -120,17 +156,21 @@ async function delete_user() {
 		},
 		credentials: "include",
 	});
+	if (response.status == 200)
+		router.disconnect();
 	return response;
 }
 
 async function logout() {
-	await fetch(config.backendUrl + "/logout/", {
+	const response = await fetch(config.backendUrl + "/logout/", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 		},
 		credentials: "include",
 	});
+	if (response.status == 200)
+		router.disconnect();
 
 	deleteCookie('user');
 }
@@ -145,4 +185,4 @@ async function searchUsers(query, size = 30) {
 	});
 	return response;
 }
-export { login, register, get_user, update_user, delete_user, refresh_token, logout, login_tierce, searchUsers };
+export { login, register, get_user, update_user, delete_user, refresh_token, logout, login_tierce, searchUsers, refresh_user };

@@ -1,6 +1,6 @@
 @font-face {
-    font-family: isaac-bold;
-    src: url('../../assets/font/isaac_bold.ttf') format('truetype');
+    font-family: isaac;
+    src: url('../../assets/font/isaac.ttf') format('truetype');
 }
 #background-image {
 	position: fixed;
@@ -15,7 +15,7 @@
 	z-index: -1;
 }
 #container {
-	font-family: isaac-bold;
+	font-family: isaac;
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
@@ -78,7 +78,7 @@
 }
 
 #container-tournament {
-	font-family: isaac-bold;
+	font-family: isaac;
     position: absolute;
     left:50%;
 	transform: translateX(-50%);
@@ -102,7 +102,7 @@
 		#title {
 			text-align: center;
 			position: relative;
-			font-family: isaac-bold;
+			font-family: isaac;
 			font-size: 2.5rem;
 			padding-top: 10px;
 			padding-bottom: 5px;
@@ -173,7 +173,7 @@
 		#start {
 			margin-top: 50px; 
 			align-self: center;
-			font-family: isaac-bold;
+			font-family: isaac;
 			background-image: url(../../../static/assets/sheets/Button.png);
 			width: 200px;
 			height: 80px;
@@ -203,7 +203,7 @@ input[type="text"] {
 	transition: 0.3s;    
 	box-shadow: none;    
 	background-color: #e9dadf;
-	font-family: isaac-bold; 
+	font-family: isaac; 
 }
 input[type="text"]:focus {
 	border-color: #66afe9; 
@@ -213,7 +213,7 @@ input[type="text"]:focus {
 
 
 #container-multi {
-	font-family: isaac-bold;
+	font-family: isaac;
     position: absolute;
     left:50%;
 	transform: translateX(-50%);
@@ -237,7 +237,7 @@ input[type="text"]:focus {
 		#title {
 			text-align: center;
 			position: relative;
-			font-family: isaac-bold;
+			font-family: isaac;
 			font-size: 2.5rem;
 			padding-top: 10px;
 			padding-bottom: 5px;
@@ -258,7 +258,7 @@ input[type="text"]:focus {
 		#start-multi {
 			margin-top: auto; 
 			align-self: center;
-			font-family: isaac-bold;
+			font-family: isaac;
 			background-image: url(../../../static/assets/sheets/Button.png);
 			width: 200px;
 			height: 80px;

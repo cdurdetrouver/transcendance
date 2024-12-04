@@ -108,12 +108,19 @@ export async function initComponent() {
 	const inviteOrEditButton = document.querySelector("#edit-profile span");
 	const blockOrDeleteButton = document.querySelector("#delete-profile span");
 	const twofaOrAddFriend = document.querySelector("#friend-or-2fa span");
+	document.getElementById("stat-link").addEventListener("click", (e) => {
+		if (user)
+			router.navigate("/stats?id=" + user.user.id);
+		else
+			router.navigate("/stats");
+	});
 
 	if (user)
 		setUser(user.user, inviteOrEditButton, blockOrDeleteButton, twofaOrAddFriend);
 	else
 		setPersonalUser(me);
 
+	
 
 	document.getElementById("edit-password").addEventListener('submit', handleFormPassword);
 	document.getElementById("username-form").addEventListener('submit', handleFormUsername);
@@ -136,6 +143,7 @@ export async function initComponent() {
 			editProfilePicture.style.display = "flex";
 			editMode = true;
 		}
+
 	});
 	
 	const popin = document.getElementById("popin");

@@ -48,6 +48,35 @@ body
                 width: 100%
                 height: 100%
 
+                #stat-sheet
+                    position: relative
+                    left: 7%
+                    font-family: isaac
+                    font-size: 0.7rem
+                    background-image: url(../../static/assets/sheets/side-sheet.png)
+                    width: 200px
+                    height: 200px
+                    background-size: contain
+                    background-repeat: no-repeat
+                    background-position: center
+                    background-color: transparent
+                    outline: none
+                    border: none
+
+                    span
+                        position: relative
+                        z-index: 5
+                        top: 40%
+                        left: 20%
+                        font-size: 2rem
+                        display: inline-block
+                        transform: rotate(-75deg)
+                        transition: transform 0.3s ease
+                        &:hover
+                            transform: rotate(-75deg) scale(1.2)
+                            cursor: pointer
+                            
+
                 .buttons
                     transition: transform 0.3s ease
                     background-color: transparent
@@ -221,7 +250,6 @@ body
                                         #password-container
                                             display: flex
                                             flex-direction: column
-                                        #submit
                     #delete-profile
                         display: flex
                         align-items: center
@@ -296,15 +324,16 @@ body
 
                     #profile-picture-container
                         position: absolute
-                        top: 11%
-                        left: 31%
-                        width: 41%
-                        height: 23%
+                        top: 13%
+                        left: 40%
+                        width: 24%
+                        // height: 23%
                         display: flex
                         justify-content: center
+                        align-items: center
 
                         #profile-picture
-                            width: 73%
+                            width: 100%
                             img
                                 width: 100%
                             
@@ -407,6 +436,7 @@ body
                         height: 8%
                         width: 4%
                         border: none
+                        z-index: 11111111
 
                     span
                         overflow-wrap: break-word
