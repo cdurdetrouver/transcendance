@@ -49,26 +49,23 @@ body #page #background #container {
   height: 100%;
 }
 body #page #background #container #stat-sheet {
-  position: relative;
-  left: 7%;
+  position: absolute;
+  left: 25%;
+  top: 35%;
   font-family: isaac;
-  font-size: 0.7rem;
-  background-image: url(../../static/assets/sheets/side-sheet.png);
-  width: 200px;
-  height: 200px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: transparent;
+  width: 7%;
   outline: none;
   border: none;
 }
+body #page #background #container #stat-sheet img {
+  width: 100%;
+}
 body #page #background #container #stat-sheet span {
-  position: relative;
+  position: absolute;
   z-index: 5;
-  top: 40%;
-  left: 20%;
-  font-size: 2rem;
+  top: 39%;
+  right: 11%;
+  font-size: 2vw;
   display: inline-block;
   transform: rotate(-75deg);
   transition: transform 0.3s ease;
@@ -84,50 +81,6 @@ body #page #background #container .buttons {
 }
 body #page #background #container .buttons:hover {
   transform: scale(1.2);
-}
-body #page #background #container #matchList {
-  font-size: 0.7rem;
-  position: absolute;
-  left: 100px;
-  font-family: isaac;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: auto;
-  max-height: 300px;
-  overflow-y: scroll;
-}
-body #page #background #container #matchList::-webkit-scrollbar {
-  display: none;
-}
-body #page #background #container #matchList .Matchline {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-body #page #background #container #matchList .Matchline .player-left {
-  text-align: left;
-  width: 90px;
-  height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  padding-right: 20px;
-  display: flex;
-  align-items: center;
-}
-body #page #background #container #matchList .Matchline .player-right {
-  text-align: right;
-  width: 90px;
-  height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  padding-left: 20px;
-  display: flex;
-  align-items: center;
 }
 body #page #background #container #logout-sheet {
   width: 19%;

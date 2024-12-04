@@ -40,6 +40,7 @@ class Router {
 	}
 
 	async _loadInitialRoute() {
+		this.connect();
 		const pathName = window.location.pathname;
 		await this._loadRoute(pathName);
 	}
@@ -47,7 +48,7 @@ class Router {
 	async connect() {
 		if (this.socket == null)
 		{
-			this.socket = new WebSocket(config.websocketurl + "ws/user/status/");
+			this.socket = new WebSocket(config.websocketurl + "/ws/user/status/");
 			await refresh_user();
 		}
 	}
