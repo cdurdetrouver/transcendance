@@ -34,6 +34,9 @@ body #page-container #page-content button:hover, html #page-container #page-cont
   border: none;
   background-color: transparent;
 }
+body #page-container #page-content input, html #page-container #page-content input {
+  font-family: isaac;
+}
 body #page-container #page-content #log-sheet, html #page-container #page-content #log-sheet {
   position: absolute;
   width: 22%;

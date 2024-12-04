@@ -1,0 +1,174 @@
+@font-face {
+  font-family: isaac;
+  src: url("../assets/font/isaac.ttf");
+}
+body, html {
+  background-image: url("../assets/images/account/background_account.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+body #page, html #page {
+  position: relative;
+  height: 100%;
+}
+body #page button, html #page button {
+  background-color: transparent;
+  border: none;
+}
+body #page button:hover, html #page button:hover {
+  transform: scale(1.2);
+}
+body #page #background, html #page #background {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  left: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+body #page #background .text, html #page #background .text {
+  font-family: isaac;
+}
+body #page #background #sheet-image, html #page #background #sheet-image {
+  width: 50%;
+}
+body #page #background #container, html #page #background #container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+body #page #background #container img, html #page #background #container img {
+  width: 55vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body #page #background #container #friend-box, html #page #background #container #friend-box {
+  position: absolute;
+  top: 5%;
+  left: 4%;
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+}
+body #page #background #container hr, html #page #background #container hr {
+  border: 1px solid #8f7e6c;
+  width: 80%;
+  margin: 0 auto;
+}
+body #page #background #container #header, html #page #background #container #header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 20%;
+}
+body #page #background #container #header h1, html #page #background #container #header h1 {
+  display: flex;
+  justify-content: center;
+  font-size: 3vw;
+  color: #332C2B;
+  font-family: isaac;
+}
+body #page #background #container #list, html #page #background #container #list {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+  padding: 2%;
+  margin-bottom: 5%;
+}
+body #page #background #container #list .friend, html #page #background #container #list .friend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+body #page #background #container #list .friend .delete-friend, html #page #background #container #list .friend .delete-friend {
+  width: 9%;
+}
+body #page #background #container #list .friend .delete-friend img, html #page #background #container #list .friend .delete-friend img {
+  width: 100%;
+}
+body #page #background #container #list .friend .profile-picture-container, html #page #background #container #list .friend .profile-picture-container {
+  width: 20%;
+  position: relative;
+}
+body #page #background #container #list .friend .profile-picture-container img, html #page #background #container #list .friend .profile-picture-container img {
+  width: 100%;
+  border-radius: 50%;
+}
+body #page #background #container #list .friend .profile-picture-container .online-status, html #page #background #container #list .friend .profile-picture-container .online-status {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(145deg, #36df0c, #058d11);
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  top: 71%;
+  left: 73%;
+}
+body #page #background #container #list .friend .username, html #page #background #container #list .friend .username {
+  font-size: 2vw;
+}
+body #page #background #container #list .friend:hover, html #page #background #container #list .friend:hover {
+  background-color: rgba(155, 136, 107, 0.5019607843);
+  border-radius: 10px;
+}
+body #page #popin, html #page #popin {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0%;
+  left: 0%;
+}
+body #page #popin img, html #page #popin img {
+  width: 35%;
+}
+body #page #popin #confirmation-content, html #page #popin #confirmation-content {
+  position: absolute;
+  width: 31%;
+  aspect-ratio: 228/129;
+}
+body #page #popin #confirmation-content button, html #page #popin #confirmation-content button {
+  border: none;
+  position: absolute;
+  top: 60%;
+  transition: transform 0.3s ease;
+  font-size: 4vw;
+}
+body #page #popin #confirmation-content span, html #page #popin #confirmation-content span {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  font-size: 2.8vw;
+}
+body #page #popin #confirmation-content .button-popin:hover, html #page #popin #confirmation-content .button-popin:hover {
+  transform: scale(1.2);
+}
+body #page #popin #confirmation-content #yes, html #page #popin #confirmation-content #yes {
+  left: 15%;
+  width: 27%;
+  height: 18%;
+}
+body #page #popin #confirmation-content #no, html #page #popin #confirmation-content #no {
+  left: 60%;
+  width: 23%;
+  height: 18%;
+}/*# sourceMappingURL=style.css.map */

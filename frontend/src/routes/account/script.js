@@ -137,11 +137,11 @@ export async function initComponent() {
 	
 		}
 		else if (!editMode) {
-			editMode = true;
 			console.log("edit profile");
 			editUsernameButton.style.display = "flex";
 			password.style.display = "flex";
 			editProfilePicture.style.display = "flex";
+			editMode = true;
 		}
 
 	});
@@ -220,6 +220,12 @@ export async function initComponent() {
 		labelUsername.style.display = "none";
 		editUsernameButton.style.display = "none";
 		usernameForm.style.display = "flex";
+	});
+
+	document.querySelectorAll("#qrcode-content .close-button").forEach(button => {
+		button.addEventListener("click", function() {
+			popin.style.display = "none";
+		});
 	});
 
 }
