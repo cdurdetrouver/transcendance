@@ -65,7 +65,7 @@ export async function initComponent() {
 	let me = await get_user();
 	if (!me) {
 		customalert('Error', 'You are not logged in', true);
-		router.navigate('/login?return=/user');
+		router.navigate('/');
 	}
 
 	setPersonalUser(me);

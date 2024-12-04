@@ -1,7 +1,7 @@
 import threading
 import time
 import random
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
 
 BALL_RADIUS = 8
 SCREEN_WIDTH = 800
@@ -280,7 +280,8 @@ class GameThread(threading.Thread):
 		self.game.save()
 		self.game.player1.save()
 		self.game.player2.save()
-		self.stop()
+		self.game.winner.save()
+		self._stop_event.set()
 
 		async_to_sync(self.channel_layer.group_send)(
 			self.group_name,
@@ -311,6 +312,10 @@ class GameThread(threading.Thread):
 			else:
 				self.paddle2.movedown = data["message"] == "keydown"
 
-	def stop(self):
+	async def stop(self, user):
 		print("Game stopped")
+		user2 = self.game.player2 if user == self.game.player1 else self.game.player1
+		self.game.finished = True
+		self.game.winner = user2
+		await sync_to_async(self.game.save)()
 		self._stop_event.set()

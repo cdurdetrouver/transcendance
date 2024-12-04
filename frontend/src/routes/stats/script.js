@@ -2,7 +2,6 @@ import config from "../../env/config.js";
 import { get_user } from "../../components/user/script.js";
 import { router } from '../../app.js';
 import {customalert} from '../../components/alert/script.js';
-import { isThisYou } from '../account/script.js';
 
 export async function initComponent(params) {
 

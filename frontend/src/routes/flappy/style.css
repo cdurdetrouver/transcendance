@@ -76,7 +76,7 @@
     height: 100%;
     background: inherit; 
     z-index: 2; 
-    pointer-events: none; /
+    pointer-events: none;
 }
 .user_picture img {
 	margin-top: 40px;
