@@ -195,6 +195,7 @@ body #page #background #container #sheet #main-page #user-info #current-info .ed
 }
 body #page #background #container #sheet #main-page #user-info #current-info #username {
   display: flex;
+  white-space: nowrap;
 }
 body #page #background #container #sheet #main-page #user-info #current-info #username button {
   display: none;
@@ -369,7 +370,7 @@ body #page #background #popin #confirmation-content button {
 body #page #background #popin #confirmation-content span {
   position: absolute;
   top: 20%;
-  left: 10%;
+  left: 16%;
   font-size: 2.8vw;
 }
 body #page #background #popin #confirmation-content .button-popin:hover {
@@ -394,16 +395,15 @@ body #page #background #popin #qrcode-content {
 body #page #background #popin #qrcode-content button {
   transition: transform 0.3s ease;
 }
-body #page #background #popin #qrcode-content #close-button {
-  background-image: url(../static/assets/login/cross.png);
+body #page #background #popin #qrcode-content .close-button {
+  background-image: url(../../static/assets/login/cross.png);
   background-repeat: no-repeat;
   background-size: contain;
-  background-color: transparent;
   position: absolute;
-  top: 17%;
-  right: 6%;
+  top: 5%;
+  right: 0%;
   cursor: pointer;
-  height: 4%;
+  height: 8%;
   width: 4%;
   border: none;
 }
@@ -420,12 +420,18 @@ body #page #background #popin #qrcode-content #generate-qrcode {
   display: flex;
   align-items: center;
   font-size: 1.8vw;
+  position: absolute;
+  top: 41%;
+  left: 7%;
 }
 body #page #background #popin #qrcode-content .qrcode {
   display: none;
   flex-direction: row-reverse;
   align-items: center;
   width: 100%;
+}
+body #page #background #popin #qrcode-content .qrcode button {
+  z-index: 2;
 }
 body #page #background #popin #qrcode-content .qrcode #submit-code {
   position: absolute;

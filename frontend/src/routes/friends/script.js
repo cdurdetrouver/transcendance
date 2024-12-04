@@ -36,7 +36,7 @@ async function getUserFriends(user) {
 		return data.friends;
 	}
     else {
-        console.log("error: ", data['error'])
+        // console.log("error: ", data['error'])
     }
     return null;
 }
@@ -109,7 +109,7 @@ async function displayFriends(user) {
 		});
 	}
 	else {
-		customalert("Error", "No friends :(");
+		// customalert("Error", "No friends :(");
 	}
 }
 

@@ -47,7 +47,7 @@ body #page #background #container, html #page #background #container {
   position: relative;
 }
 body #page #background #container img, html #page #background #container img {
-  width: 60vw;
+  width: 55vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,6 +69,7 @@ body #page #background #container hr, html #page #background #container hr {
 body #page #background #container #header, html #page #background #container #header {
   display: flex;
   justify-content: center;
+  height: 20%;
 }
 body #page #background #container #header h1, html #page #background #container #header h1 {
   display: flex;
@@ -78,15 +79,16 @@ body #page #background #container #header h1, html #page #background #container 
   font-family: isaac;
 }
 body #page #background #container #list, html #page #background #container #list {
+  height: 80%;
+  background-color: #d18410;
   margin-top: 1%;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  padding: 1%;
-  max-height: 60%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
 }
 body #page #background #container #list .friend, html #page #background #container #list .friend {
   display: flex;

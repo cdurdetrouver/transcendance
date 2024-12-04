@@ -40,14 +40,8 @@ body, html
             
             #sheet-image
                 width: 50%
-
-           
+  
             #container
-                // background-image: url('../assets/images/friends/friend_sheet.png')
-                // background-position: center
-                // background-repeat: no-repeat
-                // background-size: contain
-                // aspect-ratio: 225 / 196
                 display: flex
                 justify-content: center
                 align-items: center
@@ -55,24 +49,21 @@ body, html
                 
 
                 img
-                    width: 60vw
+                    width: 55vw
                     display: flex
                     justify-content: center
                     align-items: center
                     
 
                 #friend-box
-                    // font-size: 3vw
                     // background-color: #d18410
                     position: absolute
                     top: 5%
                     left: 4%
                     width: 90%
                     height: 90%
-                    // aspect-ratio: 576 / 501
                     display: flex
                     flex-direction: column
-                    // padding-top: 12%
 
                 hr
                     border: 1px solid #332C2B
@@ -82,6 +73,7 @@ body, html
                 #header
                     display: flex
                     justify-content: center
+                    height: 20%
                    
 
                     h1
@@ -92,18 +84,18 @@ body, html
                         font-family: isaac
 
                 #list
-                    // width: 90%
+                    height: 80%
+                    background-color: #d18410
                     margin-top:  1%
                     display: flex
                     justify-content: center
                     flex-direction: column
-                    padding: 1%
-                    max-height: 60%
+                    // min-height: 60%
                     overflow-y: auto
                     overflow-x: hidden
-                    // border: 1px solid #c29655
-                    padding: 10px
-                    // background-color: #6d5736
+                    scrollbar-width: thin
+                    scrollbar-color: #888 transparent
+                    // padding: 6%
 
                     .friend
                         display: flex
