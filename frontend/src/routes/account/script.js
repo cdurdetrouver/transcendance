@@ -5,6 +5,7 @@ import { router } from '../../app.js';
 import { handleDeleteAccount  } from '../../routes/user/edit/script.js';
 import { deleteCookie, setCookie } from '../../../components/storage/script.js';
 import { getQrcode, enable2FA } from '../user/2FA/script.js';
+import { mp_somebody } from '../chat/script.js';
 
 let editMode = false;
 
@@ -129,10 +130,11 @@ export async function initComponent() {
 	const editProfilePicture = document.querySelector("#profile-picture-container label");
 	const password = document.querySelector("#edit-password");
 	
-	inviteOrEditButton.addEventListener("click", function() {
-
+	inviteOrEditButton.addEventListener("click", async function() {
 		if (id) {
-			console.log("invite to chat");
+			console.log("invite to chat, id = ", id);
+			await mp_somebody(id);
+	
 		}
 		else if (!editMode) {
 			editMode = true;

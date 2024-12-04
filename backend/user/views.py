@@ -94,7 +94,6 @@ def user_detail(request):
 			if profile_picture is not None:
 				id = user.id
 				profile_picture.name = f'{id}.png'
-			print(profile_picture)
 			serializer.save()
 			return JsonResponse({'user': serializer.data}, status=status.HTTP_200_OK)
 		error_messages = [str(error) for errors in serializer.errors.values() for error in errors]
@@ -255,7 +254,11 @@ def register(request):
 		succes, error = is_valid_password(serializer.validated_data['password'], None, serializer.validated_data['username'])
 		if not succes:
 			return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
+
 		# Profile picture
+		if 'profile_picture' not in serializer.validated_data or not serializer.validated_data['profile_picture']:
+			serializer.validated_data['profile_picture'] = 'default.png'
+
 		id = User.objects.all().count() + 1
 		serializer.validated_data['profile_picture'].name = f'{id}.png'
 		user = serializer.save()

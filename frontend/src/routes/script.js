@@ -185,6 +185,11 @@ async function register_form(event, registerForm, loginPopin, popin, loginForm, 
 		return
 	}
 
+	if (!profilePicture) {
+		customalert('Error', 'Please choose a profile picture.', true);
+		return
+	}
+
 	const response = await register(username, email, password, profilePicture);
 
 	if (response.status === 201) {
