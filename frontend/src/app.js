@@ -67,6 +67,7 @@ class Router {
 		if (pathName == null) return;
 		history.pushState({}, '', pathName);
 		await this._loadRoute(pathName);
+		
 	}
 
 	async _loadRoute(pathName) {

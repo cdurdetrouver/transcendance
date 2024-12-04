@@ -1,22 +1,19 @@
 import { customalert } from "../../../../components/alert/script.js";
 import { router } from '../../../../app.js';
 
-const canvas = document.getElementById("pongCanvas");
-const ctx = canvas.getContext("2d");
+let canvas;
+let ctx;
 
-const backgroundCanvas = document.getElementById("backgroundCanvas");
-const backgroundCtx = backgroundCanvas.getContext("2d");
+let backgroundCanvas;
+let backgroundCtx;
 
-const lifeCanvas = document.getElementById("lifeCanvas");
-const lifeCtx = lifeCanvas.getContext("2d");
+let lifeCanvas;
+let lifeCtx;
 
-const heartImage = new Image();
-heartImage.src = '../../../static/assets/pong/heart.png';
-const heartEmptyImage = new Image();
-heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
+let heartImage;
+let heartEmptyImage;
 
-const ballImage = new Image();
-ballImage.src = '../../../../static/assets/multi/bullet.png';
+let ballImage;
 
 const paddleWidth = 10;
 const paddleHeight = 75;
@@ -451,8 +448,29 @@ function closeButton()
 
 }
 
+export async function cleanupComponent(){
+    // const container = document.querySelector('#container');
+    // container.replaceWith(container.cloneNode(true));
+}
+
 export async function initComponent() {
     const urlParams = new URLSearchParams(window.location.search);
+    canvas = document.getElementById("pongCanvas");
+    ctx = canvas.getContext("2d");
+
+    backgroundCanvas = document.getElementById("backgroundCanvas");
+    backgroundCtx = backgroundCanvas.getContext("2d");
+
+    lifeCanvas = document.getElementById("lifeCanvas");
+    lifeCtx = lifeCanvas.getContext("2d");
+
+    heartImage = new Image();
+    heartImage.src = '../../../static/assets/pong/heart.png';
+    heartEmptyImage = new Image();
+    heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
+
+    ballImage = new Image();
+    ballImage.src = '../../../../static/assets/multi/bullet.png';
     players = urlParams.get('players').split(',');
     players.forEach(player => {
         if (player.length ===0) {
