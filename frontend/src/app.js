@@ -61,8 +61,10 @@ class Router {
 
 	async navigate(pathName) {
 		// Update the URL without refreshing the page
+		console.log(pathName);
 		history.pushState({}, '', pathName);
 		await this._loadRoute(pathName);
+		
 	}
 
 	async _loadRoute(pathName) {
