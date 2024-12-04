@@ -1,47 +1,146 @@
 @font-face {
-    font-family: isaac;
-    src: url("http://localhost:5500/routes/assets/font/isaac.ttf") format("truetype");
+    font-family: isaac-bold;
+    src: url("../assets/font/isaac_bold.ttf") format("truetype");
   }
 
-content {
-    display: grid;
-    align-items: center;
-    justify-content: center;
-}
-
-div{
-    display: grid;
-    align-items: center;
-    justify-content: center;
-}
-
-h1 {
-    display: grid;
-    align-items: center;
-    justify-content: center;
-}
-
-a {
-    display: grid;
-    text-decoration: none;
-    outline-color: transparent;
-    justify-content: center;
-    align-items: center;
-    line-height: 3;
-    color: black;
+  @keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .background {
-    font-family: isaac;
-    font-size: 1.5rem;
-    position: center;
-    width: 100dvw;
-    height: 100dvh;
-    display: grid;
-    align-items: center;
+	position: fixed; 
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%; 
+	background-image: url("../../static/assets/background/dream.png");
+	background-size: cover; 
+	background-position: center; 
+	background-repeat: no-repeat; 
+}
+
+#container {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	top: 10%;
+	width: 1000px;
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+}
+
+#small, #medium, #bubble {
+    opacity: 0; 
+    animation: fadeIn 1s ease forwards;
+}
+
+#bubble {
+	font-family: isaac-bold;
+	position: relative;
+	font-size: 8rem;
+	width: 100%;
+	height: 50%;
+	background-image: url("../../static/assets/cloud.png");
+	background-size: contain; 
+	background-position: center; 
+	background-repeat: no-repeat;
+
+	display: flex;
     justify-content: center;
-    background-color: #d2c7c3;
-    background-image: url("../../static/assets/background/background_1.png");
-    background-repeat: repeat;
-    background-size: cover;
+    align-items: center;
+    text-align: center;
+
+	animation-delay: 0.5s;
+}
+
+#medium {
+	margin-left: 15%;
+	position: relative;
+	font-size: 8rem;
+	width: 30%;
+	height: 10%;
+	background-image: url("../../static/assets/cloud-m.png");
+	background-size: contain; 
+	background-position: center; 
+	background-repeat: no-repeat;
+	animation-delay: 0.3s;
+}
+
+#small {
+	margin-left: 30%;
+	position: relative;
+	font-size: 8rem;
+	width: 5%;
+	height: 5%;
+	background-image: url("../../static/assets/cloud-s.png");
+	background-size: contain; 
+	background-position: center; 
+	background-repeat: no-repeat;
+	animation-delay: 0.1s;
+
+}
+
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(-50%);
+    }
+    25% {
+        transform: translateX(-51%);
+    }
+    50% {
+        transform: translateX(-49%);
+    }
+    75% {
+        transform: translateX(-51%);
+    }
+}
+
+#isaac {
+	position: absolute;
+	left: 50%;
+	top: 40%;
+	transform: translateX(-50%);
+	font-size: 8rem;
+	width: 500px;
+	height: 500px;
+	background-image: url("../../static/assets/404/isaac.png");
+	background-size: contain; 
+	background-position: center; 
+	background-repeat: no-repeat;
+	animation: shake 0.3s infinite; /* Shakes very fast */
+}
+
+#return-button {
+	opacity: 0; 
+    animation: fadeIn 1s ease forwards;
+	position: absolute;
+	top:42%;
+	left:48%;
+	background-image: url("../../static/assets/tournament/return.png");
+	width: 50px;
+	height: 50px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	outline: none;
+	border: none;	
+	cursor: pointer;
+	animation-delay: 0.8s;
+	transition: transform 0.2s ease;
+	&:hover {
+		transform: scale(1.1);
+		border: none;
+		background-color: transparent;
+	}
 }

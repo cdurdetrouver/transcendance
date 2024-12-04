@@ -101,11 +101,16 @@ canvas {
 #container #matchList {
   position: absolute;
   top: 100px;
-  left: 1450px;
+  left: 1550px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 400px;
+  width: 300px;
+  border: solid black 2px;
+  padding-bottom: 15px;
+  background-color: #c7b29a;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  border-radius: 5px;
 }
 #container #matchList .Matchline {
   font-size: 0.8rem;
@@ -117,6 +122,8 @@ canvas {
   margin-top: 10px;
 }
 #container #matchList .Matchline .player-left {
+  display: flex;
+  align-items: end;
   text-align: left;
   width: 75px;
   white-space: nowrap;
@@ -124,6 +131,8 @@ canvas {
   padding-right: 20px;
 }
 #container #matchList .Matchline .player-right {
+  display: flex;
+  align-items: end;
   text-align: right;
   width: 75px;
   white-space: nowrap;
@@ -136,6 +145,18 @@ canvas {
 
 .win {
   background-image: url(../../../../static/assets/yes.png);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.topWin {
+  background-image: url(../../../../static/assets/troph.png);
   width: 20px;
   height: 20px;
   background-size: contain;

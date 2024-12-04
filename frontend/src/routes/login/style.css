@@ -1,3 +1,28 @@
+#background-image {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100%;
+	background-image: url("../../../static/assets/background/background_1.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: 100;
+  }
+#loading {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	top:40%;
+	transform: translateX(-50%);
+	left:50%;
+	background-image: url("../../static/assets/loading.gif");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: 101;
+}
 #customBtn {
 	display: inline-block;
 	background: white;

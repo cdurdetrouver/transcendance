@@ -1,5 +1,5 @@
 import { getCookie } from "./components/storage/script.js";
-import { get_user, refresh_token } from "./components/user/script.js";
+import { refresh_token } from "./components/user/script.js";
 
 class Router {
 	constructor() {
@@ -8,6 +8,7 @@ class Router {
 		this.componentsscripts = [];
 		this.componentsstyles = [];
 		this.activeScripts = [];
+		this.loaded = document.getElementById("loaded");
 	}
 
 	async initRouter() {
@@ -48,6 +49,8 @@ class Router {
 	}
 
 	async _loadRoute(pathName) {
+		document.querySelector('#app').style.display = "none";
+		this.loaded.style.display = "block";
 		if (getCookie("user") == null) await refresh_token();
 		let route = this.routes.find(r => r.path === pathName.split('?')[0] || r.path + '/' === pathName.split('?')[0]);
 		if (!route) {
@@ -90,6 +93,10 @@ class Router {
 		} catch (error) {
 			console.error(`Error loading route "${pathName}":`, error);
 		}
+		setTimeout(() =>{
+			this.loaded.style.display = "none";
+			document.querySelector('#app').style.display = "block";
+		}, 50);
 	}
 
 	async _loadComponentsHtml(html) {

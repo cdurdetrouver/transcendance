@@ -49,7 +49,7 @@ function loadImages(characterNames) {
     return images;
 }
 
-const characterMap = ['isaac', 'cain', 'maggie', 'juda','isaac', 'eve'];
+const characterMap = ['isaac', 'cain', 'maggie', 'juda','blue', 'eve'];
 const characterImages = loadImages(characterMap);
 
 const paddleBodyAnimationFrames = [
@@ -246,13 +246,13 @@ function draw(interpolatedState) {
     } else {
         headPlayer1 = characterImages[player1Name].right;
     }
-
+	//draw head
     ctx.drawImage(
         headPlayer1,
-        5,
-        interpolatedState.paddle1Y,
-        56,
-		characterImages[player1Name].right.height
+        -2,
+        interpolatedState.paddle1Y - 6,
+        70,
+		67
     );
 
     // Paddle 2 logic
@@ -279,10 +279,10 @@ function draw(interpolatedState) {
 
     ctx.drawImage(
         headPlayer2,
-        canvas.width - paddleWidth - 10,
-        interpolatedState.paddle2Y,
-		56,
-		characterImages[player2Name].right.height
+        canvas.width - paddleWidth - 17,
+        interpolatedState.paddle2Y - 6 ,
+        70,
+		67
     );
 
     // Draw the ball
@@ -313,10 +313,10 @@ function draw_reset() {
     );
     ctx.drawImage(
         characterImages[player1Name].right,
-        5,
-        (canvas.height - paddleHeight) / 2,
-        characterImages[player1Name].right.width,
-        characterImages[player1Name].right.height
+        -2,
+        (canvas.height - paddleHeight) / 2 - 6,
+        70,
+		67
     );
 
     ctx.drawImage(
@@ -328,10 +328,10 @@ function draw_reset() {
     );
     ctx.drawImage(
         characterImages[player2Name].left,
-        canvas.width - paddleWidth - 10,
-        (canvas.height - paddleHeight) / 2,
-        characterImages[player2Name].left.width,
-        characterImages[player2Name].left.height
+        canvas.width - paddleWidth - 17,
+        (canvas.height - paddleHeight) / 2 - 6,
+        70,
+		67
     );
 
     ctx.drawImage(
@@ -431,7 +431,6 @@ function gameLoop() {
 		draw_reset();
 }
 
-
 function closeButton()
 {
 	console.log("game close function");
@@ -443,9 +442,8 @@ function closeButton()
 	
 	parentDiv.appendChild(buttonDiv)
 	document.getElementById('button-return').addEventListener('click', function() {
-        window.location.href = '/character';
-    });
-
+		router.navigate("/character");
+	});
 }
 
 class PongSocket {
@@ -573,7 +571,7 @@ export async function initComponent() {
 
 	const user = await get_user();
 	if (!user)
-		router.navigate('/login?return=/pong');
+		router.navigate('/');
 
 	pingSpan = document.getElementById("ping");
 
