@@ -279,7 +279,6 @@ async function update_room(event) {
 }
 
 async function chat_close(params) {
-    const chat_box = document.querySelector('.chat-block');
     const middle_block = document.querySelector(".middle");
     middle_block.innerHTML =`
     <div class="chat-block"></div>
@@ -740,26 +739,16 @@ export async function mp_somebody(user_id) {
 export async function initComponent(params) {
     user = await get_user();
     if (!user)
-        router.navigate('/');
+        router.navigate('/login');
+    setInterval(async ()=>{
+        user = await get_user();
+        if (!user)
+            router.navigate('/login');
+    }, 1000 * 60);
     print_chats();
     print_invitations();
     const create_room_btn = document.querySelector('.create-room');
     create_room_btn.addEventListener('click', create_room);
-
-	// document.getElementById('user-search').addEventListener('input', async function() {
-	// 	const query = this.value;
-	// 	if (query.length > 0) {
-	// 		const response = await searchUsers(query, 5);
-	// 		if (response.status === 200) {
-	// 			const data = await response.json();
-	// 			updateUserList(data.users);
-	// 		} else {
-	// 			updateUserList([]);
-	// 		}
-	// 	} else {
-	// 		updateUserList([]);
-	// 	}
-	// });
 }
 
 export async function cleanupComponent(params) {
