@@ -89,8 +89,8 @@ class PongGame {
     async gameStart() {
         this.game_ended = false;
 
-        this.player1Score = 1;
-        this.player2Score = 1;
+        this.player1Score = 3;
+        this.player2Score = 3;
 
         this.paddle1Y = (canvas.height - paddleHeight) / 2;
         this.paddle2Y = (canvas.height - paddleHeight) / 2;
