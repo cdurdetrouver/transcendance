@@ -740,7 +740,7 @@ export async function mp_somebody(user_id) {
 export async function initComponent(params) {
     user = await get_user();
     if (!user)
-        router.navigate('/login');
+        router.navigate('/');
     print_chats();
     print_invitations();
     const create_room_btn = document.querySelector('.create-room');

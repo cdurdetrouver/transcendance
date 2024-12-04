@@ -79,7 +79,7 @@ export async function initComponent() {
 	let me = await get_user();
 	if (!me) {
 		customalert('Error', 'You are not logged in', true);
-		router.navigate('/login?return=/user');
+		router.navigate('/');
 	}
 	const urlparams = new URLSearchParams(window.location.search);
 	const id = urlparams.get('id');
