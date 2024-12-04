@@ -53,12 +53,13 @@ async function displayFriends(user) {
 				let friendElement = document.createElement("div");
 				friendElement.className = "friend";
 
-				let pictureDiv = document.createElement("div");
-				pictureDiv.className = "profile-picture-container";
 				
 				let usernameDiv = document.createElement("div");
 				usernameDiv.className = "username";
-
+				
+                let pictureDiv = document.createElement("div");
+				pictureDiv.className = "profile-picture-container";
+                
 				const profilePicture =  friend.picture_remote ?  friend.picture_remote : config.backendUrl +  friend.profile_picture;
 
 				const profileImage = document.createElement("img");
@@ -67,7 +68,18 @@ async function displayFriends(user) {
 				// profileImage.classList.add('');
 
 				pictureDiv.appendChild(profileImage);
+
+                let onlineStatus = document.createElement("div");
+                onlineStatus.className = "online-status";
+
+                console.log("friend.online = ", friend.online);
+                // friend.online = true;
+                if (!friend.online)
+                    onlineStatus.style.background = "linear-gradient(145deg, #f01717, #8a0707)";
+
 				friendElement.appendChild(pictureDiv);
+                pictureDiv.appendChild(onlineStatus);
+
 
 				let usernameSpan = document.createElement("span");
 				usernameSpan.className = "text";
@@ -82,16 +94,9 @@ async function displayFriends(user) {
                 deleteImage.src = "../../static/assets/no.png";
                 deleteImage.alt = "delete";
 
-                let onlineStatus = document.createElement("div");
-                onlineStatus.className = "online-status";
-
-                console.log("friend.online = ", friend.online);
-                if (!friend.online)
-                    onlineStatus.style.background = "linear-gradient(145deg, #f01717, #8a0707)";
 
                 deleteButton.appendChild(deleteImage);
                 friendElement.appendChild(usernameDiv);
-                friendElement.appendChild(onlineStatus);
                 friendElement.appendChild(deleteButton);
                 friendsList.appendChild(friendElement);
 

@@ -110,19 +110,25 @@ body, html
 
                         .profile-picture-container
                             width: 20%
+                            position: relative
                             
                             img
                                 width: 100%
                                 border-radius: 50%
+
+                            .online-status
+                                width: 20px
+                                height: 20px
+                                background: linear-gradient(145deg, #36df0c, #058d11)
+                                border-radius: 50%
+                                display: inline-block
+                                position: absolute
+                                top: 71%
+                                left: 73%
+                                
                         .username
                             font-size: 2vw
 
-                        .online-status
-                            width: 20px
-                            height: 20px
-                            background: linear-gradient(145deg, #36df0c, #058d11)
-                            border-radius: 50%
-                            display: inline-block
                         
                     .friend:hover
                         background-color: #9b886b80
