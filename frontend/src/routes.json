@@ -94,5 +94,19 @@
 	{
 		"path": "/tournament/game",
 		"files": "/pong/tournament/game"
+	},
+	{
+		"path": "/friends",
+		"files": "/friends"
+	},
+	{
+		"path": "/stats",
+		"files": "/stats"
+	},
+	{
+		"path": "/local",
+		"files": "/pong/local"
 	}
+
+
 ]

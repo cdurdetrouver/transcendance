@@ -138,5 +138,5 @@ async function logout_form(event) {
 	event.preventDefault();
 	await logout();
 	customalert('Logout successful', 'You are now logged out');
-	router.navigate('/login');
+	router.navigate('/');
 }

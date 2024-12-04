@@ -1,10 +1,13 @@
-{{Header}}
-<div class="container">
-	<div class="canvasWrapper">
+<div id="background-image"></div>
+<div id="container">
+	<p class="ping">Ping: <span id="ping">15</span> ms</p>
+	<div id="game-canvas">
 		<canvas id="backgroundCanvas" width="800" height="600"></canvas>
 		<canvas id="gameCanvas" width="800" height="600"></canvas>
 	</div>
-	<span id="user_username"></span>
+	<div id="player-block">
+		<div class="player" id="player1"></div>
+		<div class="player" id="player2"></div>
+	</div>
 	<p id="status"></p>
-	<p class="ping">Ping: <span id="ping">15</span> ms</p>
 </div>

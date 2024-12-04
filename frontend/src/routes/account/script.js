@@ -50,57 +50,13 @@ function setUser(user, inviteOrEditButton, blockOrDeleteButton, twofaOrAddFriend
 	document.querySelector("#who span").textContent = "THEM";
 }
 
-function setHistoric (games) {
-	
-    if (!Array.isArray(games)) {
-        console.error("Invalid data: 'games' should be an array", games);
-        return;
-	}
-    games.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+export async function isThisYou() {
 
-	const matchList = document.getElementById("matchList");
+	const urlparams = new URLSearchParams(window.location.search);
+	const id = urlparams.get('id');
 
-	games.forEach(game => {
-		const Matchline = document.createElement('div');
-		Matchline.classList.add('Matchline');
-		matchList.appendChild(Matchline);
-
-		const playerLine = document.createElement('div');
-		playerLine.classList.add('playerLine');
-
-		const player1block = document.createElement('div');
-		player1block.classList.add('player-left');
-		player1block.textContent = `${game.player1.username}`
-
-		const player2block = document.createElement('div');
-		player2block.classList.add('player-right');
-		player2block.textContent = `${game.player2.username}`
-
-		Matchline.appendChild(player1block);
-		Matchline.appendChild(player2block);
-
-		const playerLeftResult = document.createElement('div');
-		const playerRightResult = document.createElement('div');
-		if (game.winner != null) {
-			if(game.winner.username == game.player1.username) {
-				playerLeftResult.classList.add('win');
-				playerRightResult.classList.add('lost');
-			}
-			else {
-				playerLeftResult.classList.add('lost');
-				playerRightResult.classList.add('win');
-			}
-			Matchline.prepend(playerLeftResult);
-			Matchline.appendChild(playerRightResult);
-		}
-	});
-}
-
-async function getHistoric(id) {
-
-	let games = null;
-	if (id) {
-		const response = await fetch(config.backendUrl + '/user/games/' + id, {
+	if (id && id != me.id) {
+		const response = await fetch(config.backendUrl + '/user/' + id, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'
@@ -109,22 +65,20 @@ async function getHistoric(id) {
 		});
 		const data = await response.json();
 		if (response.status !== 200) {
-			console.error('Error connecting to user game history');
+			console.error('Error connecting to user');
 			customalert('Error', data.error, true);
 			router.navigate('/');
 		}
-		games = data;
+		user = data
+		return user;
 	}
-	console.log(games);
-	if (games)
-		setHistoric(games.games);
 }
 
 export async function initComponent() {
 	let me = await get_user();
 	if (!me) {
 		customalert('Error', 'You are not logged in', true);
-		router.navigate('/login?return=/user');
+		router.navigate('/');
 	}
 	const urlparams = new URLSearchParams(window.location.search);
 	const id = urlparams.get('id');
@@ -147,12 +101,6 @@ export async function initComponent() {
 		}
 		user = data
 	}
-
-	if (user == null)
-		getHistoric(me.id)
-	else 
-		getHistoric(user.user.id)
-
 	var twofa;
 	const inviteOrEditButton = document.querySelector("#edit-profile span");
 	const blockOrDeleteButton = document.querySelector("#delete-profile span");
