@@ -64,7 +64,7 @@ export async function initComponent() {
 	let user = await get_user();
 	if (!user) {
 		customalert('Error', 'You are not logged in', true);
-		router.navigate('/login?return=/user/edit');
+		router.navigate('/');
 	}
 	const button_qr_code = document.getElementById('gen-qrcode');
 	button_qr_code.addEventListener('click', getQrcode);

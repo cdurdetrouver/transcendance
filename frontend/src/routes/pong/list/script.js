@@ -102,7 +102,7 @@ export async function initComponent() {
 	const user = await get_user();
 	if (!user) {
 		customalert('Error', 'You are not logged in', true);
-		router.navigate('/login');
+		router.navigate('/');
 	}
 	else
 		await get_all_game();

@@ -26,7 +26,7 @@ async function get_friend(user_id) {
 export async function initComponent(params) {	
     let user = await get_user();
     if (!user)
-        router.navigate('/login');
+        router.navigate('/');
 	console.log()
 	get_friend(user.id);
 }

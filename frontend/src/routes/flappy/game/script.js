@@ -335,7 +335,7 @@ export async function initComponent() {
 
 	user = await get_user();
 	if (!user)
-		router.navigate('/login?return=/flappy');
+		router.navigate('/');
 
 	pingSpan = document.getElementById("ping");
 
