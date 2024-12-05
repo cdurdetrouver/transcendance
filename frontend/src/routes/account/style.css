@@ -134,13 +134,14 @@ body #page #background #container #sheet #sheet-image {
 body #page #background #container #sheet #who {
   font-size: 1.8vw;
   position: absolute;
-  top: 2vh;
+  top: 2.2vh;
   left: 11vw;
 }
 body #page #background #container #sheet #who img {
   position: absolute;
   top: 36%;
   left: 115%;
+  width: 50%;
 }
 body #page #background #container #sheet #main-page {
   position: absolute;
@@ -298,9 +299,9 @@ body #page #background #container #sheet #friend-or-2fa #edit-logo-left {
 }
 body #page #background #container #sheet #profile-picture-container {
   position: absolute;
-  top: 13%;
-  left: 40%;
-  width: 24%;
+  top: 17%;
+  left: 46%;
+  width: 25%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -314,8 +315,8 @@ body #page #background #container #sheet #profile-picture-container #profile-pic
 body #page #background #container #sheet #profile-picture-container form label {
   display: none;
   position: absolute;
-  top: 88%;
-  left: 86%;
+  top: 95%;
+  left: 97%;
   width: 17%;
 }
 body #page #background #container #sheet #profile-picture-container form label img {
