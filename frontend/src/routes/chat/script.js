@@ -738,8 +738,10 @@ export async function mp_somebody(user_id) {
 
 export async function initComponent(params) {
     user = await get_user();
-    if (!user)
-        router.navigate('/login');
+	if (!user) {
+		customalert('Error', 'You are not logged in', true);
+		router.navigate('/');
+	}
     setInterval(async ()=>{
         user = await get_user();
         if (!user)
