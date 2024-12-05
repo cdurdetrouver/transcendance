@@ -2,7 +2,7 @@ import threading
 import time
 import random
 import queue
-from asgiref.sync import async_to_sync, sync_to_async
+from asgiref.sync import async_to_sync
 
 GRAVITY = 0.2
 JUMP_STRENGTH = -5.5
@@ -161,8 +161,8 @@ class GameThread(threading.Thread):
 					obstacle.update(self.game_speed)
 					if obstacle.x < -OBSTACLE_WIDTH:
 						self.obstacles.get()
-						self.game.player1_score += 1
-						self.game.player2_score += 1
+						if not self.player1_loose: self.game.player1_score += 1
+						if not self.player2_loose: self.game.player2_score += 1
 						self.game_speed += 0.1
 					elif not self.player1_loose and self.player1.collide(obstacle):
 						self.player1_loose = True
@@ -199,8 +199,10 @@ class GameThread(threading.Thread):
 	def game_end(self):
 		if self.game.player1_score > self.game.player1.best_score:
 			self.game.player1.best_score = self.game.player1_score
+			print("player1 best score", self.game.player1.best_score, self.game.player1_score)
 		if self.game.player2_score > self.game.player2.best_score:
 			self.game.player2.best_score = self.game.player2_score
+			print("player2 best score", self.game.player2.best_score, self.game.player2_score)
 		self.game.player1.save()
 		self.game.player2.save()
 		self.game.save()
@@ -236,13 +238,14 @@ class GameThread(threading.Thread):
 	async def left(self, player):
 		if self.player1_loose and self.player2_loose:
 			return True
-		if self.game.player1 == player and not self.player1_loose:
+		if self.player1 == player and not self.player1_loose:
 			self.player1_loose = True
 			self.game_over(self.game.player2)
-		elif self.game.player2 == player and not self.player2_loose:
+			return False
+		elif self.player2 == player and not self.player2_loose:
 			self.player2_loose = True
 			self.game_over(self.game.player1)
-		return False
+			return False
 
 	async def set_player_jump(self, player, data):
 		player_jump = self.player1 if player == "player1" else self.player2
@@ -258,10 +261,8 @@ class GameThread(threading.Thread):
 		self.game.finished = True
 		self.game.winner = user2
 		if self.game.player1_score > self.game.player1.best_score:
-			print("player1 best score", self.game.player1_score, self.game.player1.best_score)
 			self.game.player1.best_score = self.game.player1_score
 		if self.game.player2_score > self.game.player2.best_score:
-			print("player2 best score", self.game.player2_score, self.game.player2.best_score)
 			self.game.player2.best_score = self.game.player2_score
 		self.game.player1.save()
 		self.game.player2.save()

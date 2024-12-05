@@ -281,6 +281,7 @@ class GameThread(threading.Thread):
 		self.game.player1.save()
 		self.game.player2.save()
 		self.game.winner.save()
+		print("game_over")
 		self._stop_event.set()
 
 		async_to_sync(self.channel_layer.group_send)(
@@ -313,9 +314,5 @@ class GameThread(threading.Thread):
 				self.paddle2.movedown = data["message"] == "keydown"
 
 	async def stop(self, user):
-		print("Game stopped")
 		user2 = self.game.player2 if user == self.game.player1 else self.game.player1
-		self.game.finished = True
-		self.game.winner = user2
-		await sync_to_async(self.game.save)()
-		self._stop_event.set()
+		await sync_to_async(self.game_over)(user2)

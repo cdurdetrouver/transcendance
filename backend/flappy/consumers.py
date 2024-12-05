@@ -4,6 +4,7 @@ import asyncio
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
+from autobahn.exception import Disconnected
 
 from user.utils import get_user_by_token
 from user.serializers import UserSerializer
@@ -106,7 +107,6 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             return
 
         self.user = result
-        print(self.waiting_players)
         for player in self.waiting_players:
             if player == self.user.id:
                 await self.send(text_data=json.dumps({
@@ -174,15 +174,15 @@ class FlappyConsumer(AsyncWebsocketConsumer):
         if not self.user:
             return
         else:
-            ret = False
-            if self.GameThread:
-                ret = await self.GameThread.left(self.user)
-            if ret:
-                if self.room_group_name in self.games.keys():
-                    del self.games[self.room_group_name]
-                if self.GameThread :
-                    del self.GameThread
-                    self.GameThread = None
+            if self.GameThread and (not self.GameThread.player1_loose or not self.GameThread.player2_loose):
+                await self.GameThread.left(self.player)
+                return
+            if self.room_group_name in self.games:
+                await sync_to_async(self.GameThread.stop)(self.user)
+                del self.games[self.room_group_name]
+            if self.GameThread :
+                del self.GameThread
+                self.GameThread = None
 
             self.game = await sync_to_async(FlappyGame.objects.get)(room_name=self.room_group_name)
             await sync_to_async(lambda: self.game.winner)()
@@ -207,7 +207,7 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'pong'
             }))
-        elif data["message"] == "jump":
+        elif data["message"] == "jump" and self.GameThread:
             await self.GameThread.set_player_jump(self.player, data)
 
     async def game_error(self,event):
@@ -218,7 +218,7 @@ class FlappyConsumer(AsyncWebsocketConsumer):
         self.game = await sync_to_async(FlappyGame.objects.get)(room_name=self.room_group_name)
         self.game.finished = True
         await sync_to_async(self.game.save)()
-        if self.room_group_name in self.games.keys():
+        if self.room_group_name in self.games:
             del self.games[self.room_group_name]
         if self.GameThread :
             del self.GameThread
@@ -234,10 +234,13 @@ class FlappyConsumer(AsyncWebsocketConsumer):
         }))
 
     async def game_update(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'game_update',
-            'message': event['message']
-        }))
+        try:
+            await self.send(text_data=json.dumps({
+                'type': 'game_update',
+                'message': event['message']
+            }))
+        except Disconnected:
+            print("WebSocket connection closed, unable to send message")
 
     async def game_end(self, event):
         await self.send(text_data=json.dumps({
@@ -245,7 +248,7 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             'message': event['message'],
             'winner': event['winner']
         }))
-        if self.room_group_name in self.games.keys():
+        if self.room_group_name in self.games:
             del self.games[self.room_group_name]
         if self.GameThread :
             del self.GameThread

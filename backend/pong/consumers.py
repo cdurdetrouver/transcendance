@@ -4,6 +4,7 @@ import asyncio
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
+from autobahn.exception import Disconnected
 from urllib.parse import parse_qs
 
 from user.utils import get_user_by_token
@@ -262,7 +263,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'game.end',
                     'message': 'Opponent left the game',
-                    'winner' : self.game.winner.id
+                    'winner' : self.game.winner.id if self.game.winner else None
                 }
             )
             self.game.nb_players -= 1
@@ -277,7 +278,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'pong'
             }))
-        elif data["message"] == "keyup" or data["message"] == "keydown":
+        elif data["message"] == "keyup" or data["message"] == "keydown"  and self.GameThread:
             await self.GameThread.set_player_direction(self.player, data)
 
     async def game_error(self,event):
@@ -304,10 +305,13 @@ class PongConsumer(AsyncWebsocketConsumer):
         }))
 
     async def game_update(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'game_update',
-            'message': event['message']
-        }))
+        try:
+            await self.send(text_data=json.dumps({
+                'type': 'game_update',
+                'message': event['message']
+            }))
+        except Disconnected:
+            print("WebSocket connection closed, unable to send message")
 
     async def game_end(self, event):
         await self.send(text_data=json.dumps({
