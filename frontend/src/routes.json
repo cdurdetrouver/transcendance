@@ -96,10 +96,6 @@
 		"files": "/pong/tournament/game"
 	},
 	{
-		"path": "/friends",
-		"files": "/friends"
-	},
-	{
 		"path": "/stats",
 		"files": "/stats"
 	},
