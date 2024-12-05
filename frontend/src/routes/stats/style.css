@@ -155,6 +155,22 @@ body #page #background #book #left-page #pong-stats #losses img, html #page #bac
 body #page #background #book #left-page #pong-stats::-webkit-scrollbar, html #page #background #book #left-page #pong-stats::-webkit-scrollbar {
   display: none;
 }
+body #page #background #book #left-page .donut-chart, html #page #background #book #left-page .donut-chart {
+  width: 25%;
+  height: 50%;
+  border-radius: 50%;
+  background: conic-gradient(#003f5c calc(var(--value1) * 1%), transparent 0);
+  position: relative;
+  border: solid 3px black;
+}
+body #page #background #book #left-page .chart-label, html #page #background #book #left-page .chart-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2em;
+  font-weight: bold;
+}
 body #page #background #book #right-page, html #page #background #book #right-page {
   position: absolute;
   top: 8%;
