@@ -47,9 +47,9 @@ body #page #background #container {
 }
 body #page #background #container #stats-sheet {
   position: absolute;
-  left: 4%;
-  top: 54%;
-  rotate: -16deg;
+  left: -9%;
+  top: 58%;
+  rotate: -15deg;
   font-family: isaac;
   width: 6%;
 }
@@ -58,13 +58,13 @@ body #page #background #container #stats-sheet span {
   z-index: 5;
   top: 40%;
   left: 20%;
-  font-size: 2rem;
+  font-size: 1.7vw;
   display: inline-block;
-  transform: rotate(-75deg);
+  transform: rotate(-77deg);
   transition: transform 0.3s ease;
 }
 body #page #background #container #stats-sheet span:hover {
-  transform: rotate(-75deg) scale(1.2);
+  transform: rotate(-77deg) scale(1.2);
   cursor: pointer;
 }
 body #page #background #container #friends-sheet {
@@ -74,8 +74,6 @@ body #page #background #container #friends-sheet {
   rotate: -9deg;
   font-family: isaac;
   width: 6%;
-  outline: none;
-  border: none;
 }
 body #page #background #container #friends-sheet span {
   position: absolute;
