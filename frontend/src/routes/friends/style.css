@@ -70,7 +70,17 @@ body #page #background #container #header, html #page #background #container #he
   position: relative;
   display: flex;
   justify-content: center;
+  align-items: center;
   height: 20%;
+}
+body #page #background #container #header button, html #page #background #container #header button {
+  position: absolute;
+  left: 5%;
+  width: 8%;
+  height: 38%;
+}
+body #page #background #container #header button img, html #page #background #container #header button img {
+  width: 4vw;
 }
 body #page #background #container #header h1, html #page #background #container #header h1 {
   display: flex;
@@ -97,7 +107,7 @@ body #page #background #container #list .friend, html #page #background #contain
   align-items: center;
 }
 body #page #background #container #list .friend .delete-friend, html #page #background #container #list .friend .delete-friend {
-  width: 9%;
+  width: 8%;
 }
 body #page #background #container #list .friend .delete-friend img, html #page #background #container #list .friend .delete-friend img {
   width: 100%;
@@ -121,7 +131,7 @@ body #page #background #container #list .friend .profile-picture-container .onli
   left: 73%;
 }
 body #page #background #container #list .friend .username, html #page #background #container #list .friend .username {
-  font-size: 2vw;
+  font-size: 2.4vw;
 }
 body #page #background #container #list .friend:hover, html #page #background #container #list .friend:hover {
   background-color: rgba(155, 136, 107, 0.5019607843);
