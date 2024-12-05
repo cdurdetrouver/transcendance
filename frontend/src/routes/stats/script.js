@@ -33,14 +33,12 @@ export async function initComponent(params) {
 	}
 
 	if (user == null) {
-		console.log(me);
 		getPongHistoric(me.id);
 		getFlappyHistoric(me.id);
 		displayStats(me);
 		pieChart(me);
 	}
 	else  {
-		console.log(user.user);
 		getPongHistoric(user.user.id);
 		getFlappyHistoric(user.user.id);
 		displayStats(user.user);
@@ -53,8 +51,6 @@ export async function initComponent(params) {
 function pieChart(user) {
 
 	let value1;
-	console.log(user.wins)
-	console.log(user.losses)
 
 	if (user.wins == 0 && user.looses == 0)
 		value1 = 0;
@@ -180,9 +176,6 @@ function setFlappyHistoric (games) {
 }
 
 async function getPongHistoric(id) {
-
-	console.log("PONG =", id);
-
 	let games = null;
 	if (id) {
 		const response = await fetch(config.backendUrl + '/user/games/' + id, {
@@ -200,14 +193,11 @@ async function getPongHistoric(id) {
 		}
 		games = data;
 	}
-	console.log(games);
 	if (games)
 		setPongHistoric(games.games);
 }
 
 async function getFlappyHistoric(id) {
-
-	console.log("FLAPPY =", id);
 	let games = null;
 	if (id) {
 		const response = await fetch(config.backendUrl + '/user/flappy/games/' + id, {
@@ -225,7 +215,6 @@ async function getFlappyHistoric(id) {
 		}
 		games = data;
 	}
-	console.log(games);
 	if (games)
 		setFlappyHistoric(games.games);
 }

@@ -35,9 +35,6 @@ async function getUserFriends(user) {
     if (response.status === 200) {
 		return data.friends;
 	}
-    else {
-        // console.log("error: ", data['error'])
-    }
     return null;
 }
 
@@ -46,7 +43,7 @@ async function displayFriends(user) {
 
 	if (friends && friends.length > 0) {
 		let friendsList = document.querySelector("#list");
-		friendsList.innerHTML = ""; // Efface le contenu existant
+		friendsList.innerHTML = "";
 	
 		friends.forEach(friend => {
             
@@ -65,21 +62,17 @@ async function displayFriends(user) {
 				const profileImage = document.createElement("img");
 				profileImage.src = profilePicture;
 				profileImage.alt = `friend.username's profile picture`;
-				// profileImage.classList.add('');
 
 				pictureDiv.appendChild(profileImage);
 
                 let onlineStatus = document.createElement("div");
                 onlineStatus.className = "online-status";
 
-                console.log("friend.online = ", friend.online);
-                // friend.online = true;
                 if (!friend.online)
                     onlineStatus.style.background = "linear-gradient(145deg, #b4b4b4, #666666)";
 
 				friendElement.appendChild(pictureDiv);
                 pictureDiv.appendChild(onlineStatus);
-
 
 				let usernameSpan = document.createElement("span");
 				usernameSpan.className = "text";
@@ -89,11 +82,10 @@ async function displayFriends(user) {
 
 				let deleteButton = document.createElement("button");
 				deleteButton.className = "delete-friend";
-				// deleteButton.textContent = "Delete";
+
                 let deleteImage = document.createElement("img");
                 deleteImage.src = "../../static/assets/no.png";
                 deleteImage.alt = "delete";
-
 
                 deleteButton.appendChild(deleteImage);
                 friendElement.appendChild(usernameDiv);
@@ -109,7 +101,6 @@ async function displayFriends(user) {
         
                     yesButton.addEventListener("click", function() {
                         const friendElement = deleteButton.closest('.friend');
-                        console.log(("friend id = ", friend.id));
                         deleteUserFriend(friend);
                         friendElement.remove();
                         popin.style.display = "none";
@@ -127,9 +118,6 @@ async function displayFriends(user) {
                     router.navigate(`/account?id=${friend.id}`);
                 });
 		});
-	}
-	else {
-		// customalert("Error", "No friends :(");
 	}
 }
 

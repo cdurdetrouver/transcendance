@@ -47,7 +47,7 @@ body
 
                 #stats-sheet
                     position: absolute
-                    left: -9%
+                    left: -14%
                     top: 58%
                     rotate: -15deg
                     font-family: isaac
@@ -71,7 +71,7 @@ body
 
                 #friends-sheet
                     position: absolute
-                    left: 5%
+                    left: 1%
                     top: 81%
                     rotate: -9deg
                     font-family: isaac
@@ -99,7 +99,7 @@ body
                 
                 #logout
                     position: absolute
-                    left: 66%
+                    left: 63%
                     top: -5%
                     width: 31%
                     height: 7%
@@ -133,7 +133,7 @@ body
                     #who
                         font-size: 1.8vw
                         position: absolute
-                        top: 2.2vh
+                        top: 4.2vh
                         left: 11vw
 
                         img
@@ -144,7 +144,7 @@ body
 
                     #main-page
                         position: absolute
-                        left: 9%
+                        left: 12%
                         top: 4%
                         width: 63%
                         height: 80%
@@ -197,6 +197,7 @@ body
 
                                 #username
                                     display: flex
+                                    white-space: nowrap
 
                                     button
                                         display: none
@@ -298,9 +299,8 @@ body
                     #profile-picture-container
                         position: absolute
                         top: 17%
-                        left: 46%
-                        width: 25%
-                        // height: 23%
+                        left: 42%
+                        width: 20%
                         display: flex
                         justify-content: center
                         align-items: center
@@ -396,16 +396,15 @@ body
                     button
                         transition: transform 0.3s ease
 
-                    #close-button
-                        background-image: url(../static/assets/login/cross.png)
+                    .close-button
+                        background-image: url(../../static/assets/login/cross.png)
                         background-repeat: no-repeat
                         background-size: contain
-                        background-color: transparent
                         position: absolute
-                        top: 17%
-                        right: 6%
+                        top: 5%
+                        right: 0%
                         cursor: pointer
-                        height: 4%
+                        height: 8%
                         width: 4%
                         border: none
                         z-index: 11111111
@@ -423,13 +422,19 @@ body
                         display: flex
                         align-items: center
                         font-size: 1.8vw
-                        padding-left: 9%
+                        // padding-left: 9%
+                        position: absolute
+                        top: 41%
+                        left: 7%
 
                     .qrcode
                         display: none
                         flex-direction: row-reverse
                         align-items: center
                         width: 100%
+
+                        button
+                            z-index: 3
 
                         #submit-code
                             position: absolute
