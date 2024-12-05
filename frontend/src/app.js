@@ -33,6 +33,7 @@ class Router {
 			// Listen for back/forward navigation
 			window.addEventListener('popstate', async () => {
 				await refresh_token();
+				const pathName = window.location.pathname;
 				await this._loadRoute(pathName);
 			});
 		} catch (error) {
