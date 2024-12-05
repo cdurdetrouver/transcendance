@@ -250,10 +250,10 @@ function draw(interpolatedState) {
 
     ctx.drawImage(
         headPlayer1,
-        5,
-        interpolatedState.paddle1Y,
-        56,
-		characterImages[player1Name].right.height
+        -2,
+        interpolatedState.paddle1Y - 6,
+        70,
+		67
     );
 
     // Paddle 2 logic
@@ -280,10 +280,10 @@ function draw(interpolatedState) {
 
     ctx.drawImage(
         headPlayer2,
-        canvas.width - paddleWidth - 10,
-        interpolatedState.paddle2Y,
-		56,
-		characterImages[player2Name].right.height
+        canvas.width - paddleWidth - 17,
+        interpolatedState.paddle2Y - 6,
+		70,
+		67
     );
 
     // Draw the ball
@@ -314,10 +314,10 @@ function draw_reset() {
     );
     ctx.drawImage(
         characterImages[player1Name].right,
-        5,
-        (canvas.height - paddleHeight) / 2,
-        characterImages[player1Name].right.width,
-        characterImages[player1Name].right.height
+        -2,
+        (canvas.height - paddleHeight) / 2 - 6,
+        70,
+        67
     );
 
     ctx.drawImage(
@@ -329,10 +329,10 @@ function draw_reset() {
     );
     ctx.drawImage(
         characterImages[player2Name].left,
-        canvas.width - paddleWidth - 10,
-        (canvas.height - paddleHeight) / 2,
-        characterImages[player2Name].left.width,
-        characterImages[player2Name].left.height
+        canvas.width - paddleWidth - 17,
+        (canvas.height - paddleHeight) / 2 - 6,
+        70,
+        67
     );
 
     ctx.drawImage(
