@@ -125,14 +125,13 @@ async function form_2fa(event, user_id) {
 }
 
 async function ask2FA(user_id) {
-	router.navigate('/?2fa_id=' + user_id);
-	// const loginform = document.querySelector('.login');
-	// loginform.style.display = 'none';
-	// const div_2fa = document.querySelector('.div_2fa');
-	// div_2fa.style.display = 'block';
-	// customalert('2FA required', 'Please enter your 2FA code');
-	// const form = div_2fa.querySelector('form');
-	// form.addEventListener('submit', (event) => form_2fa(event, user_id));
+	const loginform = document.querySelector('.login');
+	loginform.style.display = 'none';
+	const div_2fa = document.querySelector('.div_2fa');
+	div_2fa.style.display = 'block';
+	customalert('2FA required', 'Please enter your 2FA code');
+	const form = div_2fa.querySelector('form');
+	form.addEventListener('submit', (event) => form_2fa(event, user_id));
 }
 
 async function logout_form(event) {

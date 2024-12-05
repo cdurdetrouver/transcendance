@@ -48,8 +48,6 @@ function setUser(user, inviteOrEditButton, blockOrDeleteButton, twofaOrAddFriend
 	document.querySelector("#edit-logo-right").src = "../../static/assets/header/chat.png"
 	blockOrDeleteButton.textContent = "BLOCK USER";
 	twofaOrAddFriend.textContent = "ADD FRIEND";
-	document.querySelector("#logo-left").src = "../../static/assets/header/friend.png";
-	document.querySelector("#logo-right").src = "../../static/assets/header/friend.png";
 	document.querySelector("#label-email").style.display = "none";
 	document.querySelector(".label").style.display = "none";
 	document.querySelector("#who span").textContent = "THEM";
@@ -105,24 +103,16 @@ export async function initComponent() {
 			router.navigate('/');
 		}
 		user = data
-		document.querySelector("#friends-sheet").style.display = "none";
 	}
 	var twofa;
 	const inviteOrEditButton = document.querySelector("#edit-profile span");
 	const blockOrDeleteButton = document.querySelector("#delete-profile span");
 	const twofaOrAddFriend = document.querySelector("#friend-or-2fa span");
-
-	document.getElementById("stats-link").addEventListener("click", (e) => {
+	document.getElementById("stat-link").addEventListener("click", (e) => {
 		if (user)
 			router.navigate("/stats?id=" + user.user.id);
 		else
 			router.navigate("/stats");
-	});
-	console.log("friend link =", document.querySelector("#friends-link"));
-
-	document.querySelector("#friends-sheet").addEventListener("click", (e) => {
-		console.log("friends link");
-		router.navigate("/friends");
 	});
 
 	if (user)
@@ -147,11 +137,11 @@ export async function initComponent() {
 	
 		}
 		else if (!editMode) {
+			editMode = true;
 			console.log("edit profile");
 			editUsernameButton.style.display = "flex";
 			password.style.display = "flex";
 			editProfilePicture.style.display = "flex";
-			editMode = true;
 		}
 
 	});
@@ -230,12 +220,6 @@ export async function initComponent() {
 		labelUsername.style.display = "none";
 		editUsernameButton.style.display = "none";
 		usernameForm.style.display = "flex";
-	});
-
-	document.querySelectorAll("#qrcode-content .close-button").forEach(button => {
-		button.addEventListener("click", function() {
-			popin.style.display = "none";
-		});
 	});
 
 }
