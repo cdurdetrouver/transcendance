@@ -33,7 +33,21 @@ export async function initComponent() {
         startTournament();
       }
     });
-  
+	
+	let selectedMap = '';
+
+	const maps = document.querySelectorAll('.map');
+	maps.forEach(div => {
+		div.addEventListener('click', function () {
+		maps.forEach(el => el.classList.remove('active'));
+		
+		this.classList.add('active');
+		selectedMap = this.id
+		});
+	});
+
+
+
     function updatePlayerList(index) {
       playersDiv.innerHTML = '';
       players.forEach((player, index) => {
@@ -58,7 +72,7 @@ export async function initComponent() {
   
     function startTournament() {
         customalert('Tournament started', 'Good luck!', false);
-        const url = '/tournament/game?players=' + players.join(',');
+        const url = '/tournament/game?players=' + players.join(',') + "&map=" + selectedMap;
         router.navigate(url);
     }
 
@@ -86,7 +100,7 @@ export async function initComponent() {
 
 	function startMulti(players) {
 		customalert('Tournament started', 'Good luck!', false);
-		const url = '/multiplayer/game?player1=' + players[0] + '&player2=' + players[1] + '&player3=' + players[2] + '&player4=' + players[3];
+		const url = '/multiplayer/game?player1=' + players[0] + '&player2=' + players[1] + '&player3=' + players[2] + '&player4=' + players[3] + "&map=" + selectedMap;
 		router.navigate(url);
 	}
 
@@ -99,18 +113,21 @@ export async function initComponent() {
 	const multiClick = document.getElementById("multi-postit")
 	
 	const returnButton = document.getElementById("return-button");
+	const mapSelection = document.getElementById("map-choice");
 
 
 	tournamentClick.addEventListener('click', (event) => {
 		mainContainer.style.display = "none";
 		tournamentContainer.style.display = "flex"
 		returnButton.style.display = "flex"
+		mapSelection.style.display = "none"
 	});
 
 	multiClick.addEventListener('click', (event) => {
 		mainContainer.style.display = "none";
 		multiContainer.style.display = "flex"
 		returnButton.style.display = "flex"
+		mapSelection.style.display = "none"
 	});
 
 	returnButton.addEventListener('click', (e) => {
@@ -118,9 +135,8 @@ export async function initComponent() {
 		tournamentContainer.style.display = "none"
 		multiContainer.style.display = "none"
 		returnButton.style.display = "none"
+		mapSelection.style.display = "flex"
 	});
-
-
 }
 
 export function cleanupComponent() {
