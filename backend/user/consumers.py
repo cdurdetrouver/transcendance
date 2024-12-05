@@ -10,9 +10,9 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		status_token = self.scope['cookies'].get('status_token')
 
-		success, result = await sync_to_async(get_user_by_status_token)(status_token)
+		self.success, result = await sync_to_async(get_user_by_status_token)(status_token)
 		await self.accept()
-		if not success:
+		if not self.success:
 			await self.send(text_data=json.dumps({
 				'type': 'error',
 				'message': result
@@ -29,6 +29,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 		}))
 
 	async def disconnect(self, code):
-		self.user.online = False
+		if self.success:
+			self.user.online = False
 		await sync_to_async(self.user.save)()
 
