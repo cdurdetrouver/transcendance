@@ -573,7 +573,6 @@ export async function initComponent() {
 		return img;
 	});
 
-
 	paddle1Y = (canvas.height - paddleHeight) / 2;
 	paddle2Y = (canvas.height - paddleHeight) / 2;
 	paddle1speed = 4;

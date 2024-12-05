@@ -36,4 +36,3 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 		if self.user:
 			self.user.online = False
 			await sync_to_async(self.user.save)()
-
