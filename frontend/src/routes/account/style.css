@@ -47,7 +47,7 @@ body #page #background #container {
 }
 body #page #background #container #stats-sheet {
   position: absolute;
-  left: -9%;
+  left: -14%;
   top: 58%;
   rotate: -15deg;
   font-family: isaac;
@@ -69,7 +69,7 @@ body #page #background #container #stats-sheet span:hover {
 }
 body #page #background #container #friends-sheet {
   position: absolute;
-  left: 5%;
+  left: 1%;
   top: 81%;
   rotate: -9deg;
   font-family: isaac;
@@ -99,7 +99,7 @@ body #page #background #container .buttons:hover {
 }
 body #page #background #container #logout {
   position: absolute;
-  left: 66%;
+  left: 63%;
   top: -5%;
   width: 31%;
   height: 7%;
@@ -134,7 +134,7 @@ body #page #background #container #sheet #sheet-image {
 body #page #background #container #sheet #who {
   font-size: 1.8vw;
   position: absolute;
-  top: 2.2vh;
+  top: 4.2vh;
   left: 11vw;
 }
 body #page #background #container #sheet #who img {
@@ -145,7 +145,7 @@ body #page #background #container #sheet #who img {
 }
 body #page #background #container #sheet #main-page {
   position: absolute;
-  left: 9%;
+  left: 12%;
   top: 4%;
   width: 63%;
   height: 80%;
@@ -301,8 +301,8 @@ body #page #background #container #sheet #friend-or-2fa #edit-logo-left {
 body #page #background #container #sheet #profile-picture-container {
   position: absolute;
   top: 17%;
-  left: 46%;
-  width: 25%;
+  left: 42%;
+  width: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
