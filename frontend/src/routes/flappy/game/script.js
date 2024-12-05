@@ -2,16 +2,15 @@ import config from "../../../env/config.js";
 import { get_user } from '../../../../components/user/script.js';
 import { customalert } from "../../../components/alert/script.js";
 import { router } from '../../../app.js';
-import { deleteCookie } from "../../../components/storage/script.js";
 import { refresh_user } from "../../../components/user/script.js";
 
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+let canvas = document.getElementById('gameCanvas');
+let ctx = canvas.getContext('2d');
 
-const backgroundCanvas = document.getElementById("backgroundCanvas");
-const bgCtx = backgroundCanvas.getContext("2d");
+let backgroundCanvas = document.getElementById("backgroundCanvas");
+let bgCtx = backgroundCanvas.getContext("2d");
 
-const backgroundImage = new Image();
+let backgroundImage = new Image();
 backgroundImage.src = '../../static/assets/jpg/bg_flappy.png';
 
 backgroundImage.onload = function() {
@@ -19,7 +18,7 @@ backgroundImage.onload = function() {
 };
 
 // Gestion animation
-const playerImages = {
+let playerImages = {
 	idle: new Image(),
 	jump1: new Image(),
 	jump2: new Image(),
@@ -208,9 +207,9 @@ function closeButton()
 	
 	parentDiv.appendChild(buttonDiv);
 	document.getElementById('button-return').addEventListener('click', function() {
+		console.log("button clicked");
 		router.navigate("/character");
 	});
-
 }
 
 class FlappySocket {
@@ -229,6 +228,7 @@ class FlappySocket {
 
 	onmessage(event) {
 		let data = JSON.parse(event.data);
+		console.log(data);
 		if (data.type === 'game_update')
 			updateGame(data.message);
 		else if (data.type === 'game_started') {
@@ -237,22 +237,19 @@ class FlappySocket {
 		else if (data.type === 'game_end') {
 			let winner = data.winner === player1.id ? "player1" : "player2";
 			customalert('GG', "Winner score is " + lastGameState[winner].score);
-			game_ended = true;
 			clearInterval(pingIntervalID);
 			closeButton();
-			deleteCookie("user");
-			setTimeout(async () => {
-				await get_user();
-			}, 1000);
+			game_ended = true;
 		}
 		else if (data.type === 'game_loose') {
 			let winner = data.winner === player1.id ? player1.username : player2.username;
-			let win = data.winner === user.id
+			let win = data.winner === user.id;
 			if (win == false)
 			{
-				game_ended = true;
+				this.close();
 				clearInterval(pingIntervalID);
 				closeButton();
+				game_ended = true;
 			}
 			customalert('Game Over', "Winner is " + winner, !win);
 		}
@@ -328,7 +325,49 @@ async function get_game_players(game_id) {
 }
 
 export async function initComponent() {
+
+	canvas = document.getElementById('gameCanvas');
+	ctx = canvas.getContext('2d');
+
+	backgroundCanvas = document.getElementById("backgroundCanvas");
+	bgCtx = backgroundCanvas.getContext("2d");
+
+	backgroundImage = new Image();
+	backgroundImage.src = '../../static/assets/jpg/bg_flappy.png';
+
+	backgroundImage.onload = function() {
+		bgCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+	};
+
+	// Gestion animation
+	playerImages = {
+		idle: new Image(),
+		jump1: new Image(),
+		jump2: new Image(),
+		jump3: new Image()
+	};
+
+	playerImages.idle.src = '../../static/assets/jpg/fly1.png' ;
+	playerImages.jump1.src = '../../static/assets/jpg/fly2.png' ;
+	playerImages.jump2.src = '../../static/assets/jpg/fly3.png' ;
+	playerImages.jump3.src = '../../static/assets/jpg/fly4.png' ;
+
+	currentPlayerImage = playerImages.idle;
+	animationFrame = 0;
+	isAnimating = false;
+	animationInterval;
+
+	game_speed = null;
+	player1 = null;
+	player2 = null;
+	player = null;
+	viewer = null;
+	startTime = null;
+	pingIntervalID = null;
+
 	game_speed = 0;
+	game_ended = false;
+	game_started = false;
 	jump = false;
 
 	lastUpdateTime = Date.now();

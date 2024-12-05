@@ -4,6 +4,7 @@ import asyncio
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
+from autobahn.exception import Disconnected
 
 from user.utils import get_user_by_token
 from user.serializers import UserSerializer
@@ -107,7 +108,7 @@ class FlappyConsumer(AsyncWebsocketConsumer):
 
         self.user = result
         for player in self.waiting_players:
-            if player.user == self.user:
+            if player == self.user.id:
                 await self.send(text_data=json.dumps({
                     'type': 'error',
                     'message': 'You are already in the waiting list'
@@ -173,9 +174,11 @@ class FlappyConsumer(AsyncWebsocketConsumer):
         if not self.user:
             return
         else:
-
+            if self.GameThread and (not self.GameThread.player1_loose or not self.GameThread.player2_loose):
+                await self.GameThread.left(self.player)
+                return
             if self.room_group_name in self.games:
-                self.GameThread.stop(self.user)
+                await sync_to_async(self.GameThread.stop)(self.user)
                 del self.games[self.room_group_name]
             if self.GameThread :
                 del self.GameThread
@@ -204,7 +207,7 @@ class FlappyConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'pong'
             }))
-        elif data["message"] == "jump":
+        elif data["message"] == "jump" and self.GameThread:
             await self.GameThread.set_player_jump(self.player, data)
 
     async def game_error(self,event):
@@ -231,10 +234,13 @@ class FlappyConsumer(AsyncWebsocketConsumer):
         }))
 
     async def game_update(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'game_update',
-            'message': event['message']
-        }))
+        try:
+            await self.send(text_data=json.dumps({
+                'type': 'game_update',
+                'message': event['message']
+            }))
+        except Disconnected:
+            print("WebSocket connection closed, unable to send message")
 
     async def game_end(self, event):
         await self.send(text_data=json.dumps({

@@ -161,8 +161,8 @@ class GameThread(threading.Thread):
 					obstacle.update(self.game_speed)
 					if obstacle.x < -OBSTACLE_WIDTH:
 						self.obstacles.get()
-						self.game.player1_score += 1
-						self.game.player2_score += 1
+						if not self.player1_loose: self.game.player1_score += 1
+						if not self.player2_loose: self.game.player2_score += 1
 						self.game_speed += 0.1
 					elif not self.player1_loose and self.player1.collide(obstacle):
 						self.player1_loose = True
@@ -199,8 +199,10 @@ class GameThread(threading.Thread):
 	def game_end(self):
 		if self.game.player1_score > self.game.player1.best_score:
 			self.game.player1.best_score = self.game.player1_score
+			print("player1 best score", self.game.player1.best_score, self.game.player1_score)
 		if self.game.player2_score > self.game.player2.best_score:
 			self.game.player2.best_score = self.game.player2_score
+			print("player2 best score", self.game.player2.best_score, self.game.player2_score)
 		self.game.player1.save()
 		self.game.player2.save()
 		self.game.save()
