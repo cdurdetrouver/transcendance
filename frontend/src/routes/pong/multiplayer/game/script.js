@@ -23,7 +23,7 @@ function drawBackground() {
     if (mapSkin == 'map3')
         backgroundPath = '../../../static/assets/background/pongBigBG3.png';
     else if (mapSkin == 'map2')
-        backgroundPath = '../.././static/assets/background/pongBigBG2.png';
+        backgroundPath = '../../../static/assets/background/pongBigBG2.png';
     else 
         backgroundPath = '../../../static/assets/background/pongBigBG1.png';
 
