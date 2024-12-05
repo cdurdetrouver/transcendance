@@ -10,6 +10,8 @@ let ctx = canvas.getContext('2d');
 let backgroundCanvas = document.getElementById("backgroundCanvas");
 let bgCtx = backgroundCanvas.getContext("2d");
 
+let backgroundImage = new Image();
+backgroundImage.src = '../../static/assets/jpg/bg_flappy.png';
 let mapSkin;
 
 function drawBackground() {
@@ -345,12 +347,19 @@ export async function initComponent() {
 	backgroundCanvas = document.getElementById("backgroundCanvas");
 	bgCtx = backgroundCanvas.getContext("2d");
 
-	backgroundImage = new Image();
-	backgroundImage.src = '../../static/assets/jpg/bg_flappy.png';
+	let backgroundPath
 
-	backgroundImage.onload = function() {
-		bgCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
-	};
+    if (mapSkin == 'map2')
+        backgroundPath = '../../static/assets/jpg/bg_flappy2.png';
+    else 
+        backgroundPath = '../../static/assets/jpg/bg_flappy.png';
+ 
+
+    const backgroundImage = new Image();
+    backgroundImage.src = backgroundPath;
+    backgroundImage.onload = () => {
+        bgCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+    };
 
 	// Gestion animation
 	playerImages = {
