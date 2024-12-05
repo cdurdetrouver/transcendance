@@ -226,7 +226,7 @@ body #page #background #book #right-page #flappy-stats, html #page #background #
 body #page #background #book #right-page #flappy-stats #highscore, html #page #background #book #right-page #flappy-stats #highscore {
   margin-top: 50px;
   text-align: center;
-  font-size: 2vw;
+  font-size: 3rem;
 }
 body #page #background #book #right-page #flappy-stats span, html #page #background #book #right-page #flappy-stats span {
   font-size: 1.5vw;

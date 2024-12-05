@@ -22,9 +22,6 @@ body
        
         button:hover
             transform: scale(1.2)
-        
-        input
-            font-family: isaac
 
         #background
             position: relative
@@ -57,17 +54,16 @@ body
                     width: 6%
 
                     span
-                        position: absolute
+                        position: relative
                         z-index: 5
-                        top: 39%
-                        right: 14%
-                        font-size: 1.7vw
+                        top: 40%
+                        left: 20%
+                        font-size: 2rem
                         display: inline-block
-                        transform: rotate(-77deg)
+                        transform: rotate(-75deg)
                         transition: transform 0.3s ease
-                        
                         &:hover
-                            transform: rotate(-77deg) scale(1.2)
+                            transform: rotate(-75deg) scale(1.2)
                             cursor: pointer
                             
 
@@ -99,7 +95,6 @@ body
                     transition: transform 0.3s ease
                     background-color: transparent
                     border: none
-
                 .buttons:hover
                     transform: scale(1.2)
                 
@@ -115,7 +110,6 @@ body
                     align-items: center
                     flex-direction: row
                     padding-left: 1%
-                    z-index: 5
                     
                     span
                         font-size: 1.2vw
@@ -203,7 +197,6 @@ body
 
                                 #username
                                     display: flex
-                                    white-space: nowrap
 
                                     button
                                         display: none
@@ -378,7 +371,7 @@ body
                     span
                         position: absolute
                         top: 20%
-                        left: 16%
+                        left: 17%
                         font-size: 2.8vw
 
                     .button-popin:hover
@@ -403,17 +396,16 @@ body
                     button
                         transition: transform 0.3s ease
 
-                    .close-button
-                        background-image: url(../../static/assets/login/cross.png)
-                        // background-color: #f50000
+                    #close-button
+                        background-image: url(../static/assets/login/cross.png)
                         background-repeat: no-repeat
                         background-size: contain
-                        // background-color: transparent
+                        background-color: transparent
                         position: absolute
-                        top: 5%
-                        right: 0%
+                        top: 17%
+                        right: 6%
                         cursor: pointer
-                        height: 8%
+                        height: 4%
                         width: 4%
                         border: none
                         z-index: 11111111
@@ -431,19 +423,13 @@ body
                         display: flex
                         align-items: center
                         font-size: 1.8vw
-                        position: absolute
-                        top: 41%
-                        left: 7%
-
+                        padding-left: 9%
 
                     .qrcode
                         display: none
                         flex-direction: row-reverse
                         align-items: center
                         width: 100%
-
-                        button
-                            z-index: 2
 
                         #submit-code
                             position: absolute

@@ -1,21 +1,22 @@
 import { customalert } from "../../../../components/alert/script.js";
 import { router } from '../../../../app.js';
 
-let canvas;
-let ctx;
+const canvas = document.getElementById("pongCanvas");
+const ctx = canvas.getContext("2d");
 
-let tournament;
+const backgroundCanvas = document.getElementById("backgroundCanvas");
+const backgroundCtx = backgroundCanvas.getContext("2d");
 
-let backgroundCanvas;
-let backgroundCtx;
+const lifeCanvas = document.getElementById("lifeCanvas");
+const lifeCtx = lifeCanvas.getContext("2d");
 
-let lifeCanvas;
-let lifeCtx;
+const heartImage = new Image();
+heartImage.src = '../../../static/assets/pong/heart.png';
+const heartEmptyImage = new Image();
+heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
 
-let heartImage;
-let heartEmptyImage;
-
-let ballImage;
+const ballImage = new Image();
+ballImage.src = '../../../../static/assets/multi/bullet.png';
 
 const paddleWidth = 10;
 const paddleHeight = 75;
@@ -82,7 +83,6 @@ class PongGame {
         this.player2 = player2;
         this.winner = null;
         this.loser = null;
-        this.game_ended = false;
 
     }
 
@@ -451,29 +451,8 @@ function closeButton()
 
 }
 
-export async function cleanupComponent(){
-    tournament.game_ended = true;
-    tournament = null;
-}
-
 export async function initComponent() {
     const urlParams = new URLSearchParams(window.location.search);
-    canvas = document.getElementById("pongCanvas");
-    ctx = canvas.getContext("2d");
-
-    backgroundCanvas = document.getElementById("backgroundCanvas");
-    backgroundCtx = backgroundCanvas.getContext("2d");
-
-    lifeCanvas = document.getElementById("lifeCanvas");
-    lifeCtx = lifeCanvas.getContext("2d");
-
-    heartImage = new Image();
-    heartImage.src = '../../../static/assets/pong/heart.png';
-    heartEmptyImage = new Image();
-    heartEmptyImage.src = '../../../static/assets/pong/heart_empty.png'; 
-
-    ballImage = new Image();
-    ballImage.src = '../../../../static/assets/multi/bullet.png';
     players = urlParams.get('players').split(',');
     players.forEach(player => {
         if (player.length ===0) {
@@ -486,7 +465,7 @@ export async function initComponent() {
         }
     });
 
-	tournament = new Tournament(players);
+	const tournament = new Tournament(players);
 
 	centerPongCanvas();
 	drawBackground();
