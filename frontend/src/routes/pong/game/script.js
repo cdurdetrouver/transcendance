@@ -613,7 +613,7 @@ export async function initComponent() {
 	game_ended = false;
 	game_started = false;
 	
-	await new Promise((resolve, reject) => setTimeout(resolve, 100));
+	
 	const user = await get_user();
 	if (!user)
 		router.navigate('/login?return=/pong');

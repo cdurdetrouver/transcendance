@@ -570,7 +570,7 @@ async function open_chat(room_selected) {
             chat_log.scrollTop = chat_log.scrollHeight;
         }
 		else if (data.type == 'error') {
-			customalert('error !', data.message, true);
+            customalert('error !', data.message, true);
 		}
     };
     
@@ -590,7 +590,6 @@ async function open_chat(room_selected) {
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
 		if (message == ''){
-			console.log("coucou");
 			return;
 		}
         chatSocket.send(JSON.stringify({
@@ -737,7 +736,7 @@ export async function mp_somebody(user_id) {
 }
 
 export async function initComponent(params) {
-    await new Promise((resolve, reject) => setTimeout(resolve, 100));
+    
     user = await get_user();
     if (!user)
         router.navigate('/');

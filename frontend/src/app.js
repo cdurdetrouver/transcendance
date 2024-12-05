@@ -31,8 +31,9 @@ class Router {
 			});
 
 			// Listen for back/forward navigation
-			window.addEventListener('popstate', () => {
-				this._loadRoute(window.location.pathname);
+			window.addEventListener('popstate', async () => {
+				await refresh_token();
+				await this._loadRoute(pathName);
 			});
 		} catch (error) {
 			console.error('Error loading routes:', error);
@@ -42,6 +43,7 @@ class Router {
 	async _loadInitialRoute() {
 		this.connect();
 		const pathName = window.location.pathname;
+		await refresh_token();
 		await this._loadRoute(pathName);
 	}
 
@@ -66,13 +68,13 @@ class Router {
 	async navigate(pathName) {
 		if (pathName == null) return;
 		history.pushState({}, '', pathName);
+		await refresh_token();
 		await this._loadRoute(pathName);
 	}
 
 	async _loadRoute(pathName) {
 		document.querySelector('#app').style.display = "none";
 		this.loaded.style.display = "block";
-		if (getCookie("user") == null) await refresh_token();
 		let route = this.routes.find(r => r.path === pathName.split('?')[0] || r.path + '/' === pathName.split('?')[0]);
 		if (!route) {
 			route = this.routes.find(r => r.path === '/404');

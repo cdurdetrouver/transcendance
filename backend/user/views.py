@@ -82,7 +82,6 @@ def user_detail(request):
 
 		if username is not None and username != user.username:
 			succes, error = is_valid_username(username)
-			print(username)
 			if not succes:
 				return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
 			data['username'] = username
@@ -279,18 +278,18 @@ def register(request):
 		response = JsonResponse({'user': serializer.data}, status=status.HTTP_201_CREATED)
 		refresh_token = generate_refresh_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
-		secure_cookie = settings.DEBUG
+		secure_cookie = not settings.DEBUG
 		response.set_cookie('refresh_token', refresh_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 
 		access_token = generate_access_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
-		secure_cookie = settings.DEBUG
+		secure_cookie = not settings.DEBUG
 		response.set_cookie('access_token', access_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 
 		status_token = generate_status_token(user)
 		expires = datetime.datetime.utcnow() + datetime.timedelta(days=7)
-		secure_cookie = settings.DEBUG
-		response.set_cookie('refresh_token', status_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
+		secure_cookie = not settings.DEBUG
+		response.set_cookie('status_token', status_token, httponly=True, secure=secure_cookie, samesite='Strict', expires=expires)
 
 		return response
 	else:
