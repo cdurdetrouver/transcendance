@@ -2,10 +2,10 @@ import threading
 import time
 import random
 import queue
-from asgiref.sync import async_to_sync
+import asyncio
 
-GRAVITY = 0.2
-JUMP_STRENGTH = -5.5
+GRAVITY = 0.18
+JUMP_STRENGTH = -6
 OBSTACLE_WIDTH = 60
 HOLE_HEIGHT = 200
 OBSTACLE_SPACING = 300
@@ -86,7 +86,7 @@ class Obstacle:
 		self.holeY =  HOLE_MIN_HEIGHT + random.random() * (HOLE_MAX_HEIGHT - HOLE_MIN_HEIGHT)
 
 	def update(self, game_speed):
-		self.x -= 3 + game_speed
+		self.x -= 2.5 + game_speed
 
 class GameThread(threading.Thread):
 	def __init__(self, game, group_name, channel_layer):
@@ -95,6 +95,7 @@ class GameThread(threading.Thread):
 		self.group_name = group_name
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
+		self.loop = asyncio.get_event_loop()
 
 		self.player1 = Player(self.game.player1_character)
 		self.player2 = Player(self.game.player2_character)
@@ -134,13 +135,16 @@ class GameThread(threading.Thread):
 		}
 
 	def run(self):
-		async_to_sync(self.channel_layer.group_send)(
-			self.group_name,
-			{
-				'type': 'game.started',
-				'message': 'Game has started'
-			}
-		)
+		asyncio.run_coroutine_threadsafe(
+            self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'game.started',
+                    'message': 'Game has started'
+                }
+            ),
+            self.loop
+        )
 		print("Game started")
 		last_time = time.time()
 		while not self._stop_event.is_set():
@@ -174,26 +178,32 @@ class GameThread(threading.Thread):
 				if self.player1_loose and self.player2_loose:
 					self.game_end()
 
-				async_to_sync(self.channel_layer.group_send)(
-					self.group_name,
-					{
-						'type': 'game.update',
-						'message': self.serialize()
-					}
-				)
+				asyncio.run_coroutine_threadsafe(
+                    self.channel_layer.group_send(
+                        self.group_name,
+                        {
+                            'type': 'game.update',
+                            'message': self.serialize()
+                        }
+                    ),
+                    self.loop
+                )
 
 				self.game.save()
 
 				time.sleep(max(1.0 / 60 - self.delta_time, 0))
 			except Exception as e:
 				print(e)
-				async_to_sync(self.channel_layer.group_send)(
-					self.group_name,
-					{
-						'type': 'game.error',
-						'message': 'Fatal Error in Game'
-					}
-				)
+				asyncio.run_coroutine_threadsafe(
+                    self.channel_layer.group_send(
+                        self.group_name,
+                        {
+                            'type': 'game.error',
+                            'message': 'Fatal Error in Game'
+                        }
+                    ),
+                    self.loop
+                )
 				break
 
 	def game_end(self):
@@ -209,13 +219,16 @@ class GameThread(threading.Thread):
 		self.game.winner.save()
 		self._stop_event.set()
 
-		async_to_sync(self.channel_layer.group_send)(
-			self.group_name,
-			{
-				'type': 'game.end',
-				'message': 'Game has ended',
-				'winner': self.game.winner.id
-			}
+		asyncio.run_coroutine_threadsafe(
+			self.channel_layer.group_send(
+				self.group_name,
+				{
+					'type': 'game.end',
+					'message': 'Game has ended',
+					'winner': self.game.winner.id
+				}
+			),
+			self.loop
 		)
 
 	def game_over(self, Winner):
@@ -226,14 +239,17 @@ class GameThread(threading.Thread):
 		self.game.winner = Winner
 		self.game.save()
 
-		async_to_sync(self.channel_layer.group_send)(
-			self.group_name,
-			{
-				'type': 'game.looser',
-				'message': 'Game has ended',
-				'winner': Winner.id
-			}
-		)
+		asyncio.run_coroutine_threadsafe(
+            self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'game.looser',
+                    'message': 'Game has ended',
+                    'winner': Winner.id
+                }
+            ),
+            self.loop
+        )
 
 	async def left(self, player):
 		if self.player1_loose and self.player2_loose:

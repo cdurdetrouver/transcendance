@@ -395,7 +395,7 @@ export async function initComponent() {
 	lastUpdateTime = Date.now();
 	lastGameState = null;
 
-	await new Promise((resolve, reject) => setTimeout(resolve, 100));
+	
 	user = await get_user();
 	if (!user)
 		router.navigate('/');

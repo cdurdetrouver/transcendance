@@ -189,13 +189,16 @@ class GameThread(threading.Thread):
 		}
 
 	def run(self):
-		async_to_sync(self.channel_layer.group_send)(
-			self.group_name,
-			{
-				'type': 'game.started',
-				'message': 'Game has started'
-			}
-		)
+		asyncio.run_coroutine_threadsafe(
+            self.channel_layer.group_send(
+				self.group_name,
+				{
+					'type': 'game.started',
+					'message': 'Game has started'
+				}
+			),
+            self.loop
+        )
 		print("Game started")
 		last_time = time.time()
 		while not self._stop_event.is_set():
