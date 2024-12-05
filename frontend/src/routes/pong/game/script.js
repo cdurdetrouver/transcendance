@@ -7,7 +7,6 @@ import { refresh_user } from "../../../components/user/script.js";
 
 let canvas;
 let ctx;
-
 let backgroundCanvas;
 let backgroundCtx;
 
@@ -125,28 +124,29 @@ function stopBodyAnimation() {
 
 
 function drawBackground() {
-    backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+	backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
 
-    const backgroundImage = new Image();
-    backgroundImage.src = '../../../static/assets/background/pongBG2.png'	;
-    backgroundImage.onload = () => {
-        backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
-    };
+	const backgroundImage = new Image();
+	backgroundImage.src = '../../../static/assets/background/pongBG2.png'	;
+	backgroundImage.onload = () => {
+		backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+	};
 }
 
 function drawStats() {
-    backgroundCtx.font = "14px";
-    backgroundCtx.fillStyle = "white";
+	console.log("draw Stats");
+	backgroundCtx.font = "14px";
+	backgroundCtx.fillStyle = "white";
 
-    backgroundCtx.drawImage(boot, 20, 80, 38, 24);
-    backgroundCtx.fillText(player1Speed, 70, 100);
+	backgroundCtx.drawImage(boot, 20, 80, 38, 24);
+	backgroundCtx.fillText(player1Speed, 70, 100);
 	backgroundCtx.drawImage(sword, 27, 115, 26, 26);
-    backgroundCtx.fillText(player1Force, 70, 135);
+	backgroundCtx.fillText(player1Force, 70, 135);
 
 	backgroundCtx.drawImage(boot, backgroundCanvas.width - boot.width - 20, 80, 38, 24);
-    backgroundCtx.fillText(player2Speed, backgroundCanvas.width - 70, 100);
+	backgroundCtx.fillText(player2Speed, backgroundCanvas.width - 70, 100);
 	backgroundCtx.drawImage(sword, backgroundCanvas.width - sword.width - 27, 115, 26, 26);
-    backgroundCtx.fillText(player2Force, backgroundCanvas.width - 70, 135);
+	backgroundCtx.fillText(player2Force, backgroundCanvas.width - 70, 135);
 }
 
 function centerPongCanvas() {
@@ -154,16 +154,16 @@ function centerPongCanvas() {
 	const leftX = 0;
 	const topY = 0;
 
-    const bgWidth = backgroundCanvas.width;
-    const bgHeight = backgroundCanvas.height;
-    const pongWidth = canvas.width;
-    const pongHeight = canvas.height;
+	const bgWidth = backgroundCanvas.width;
+	const bgHeight = backgroundCanvas.height;
+	const pongWidth = canvas.width;
+	const pongHeight = canvas.height;
 
-    const centerX = (bgWidth - pongWidth) / 2;
-    const centerY = (bgHeight - pongHeight) / 2;
+	const centerX = (bgWidth - pongWidth) / 2;
+	const centerY = (bgHeight - pongHeight) / 2;
 
-    canvas.style.left = `${centerX + leftX}px`;
-    canvas.style.top = `${centerY + topY}px`;
+	canvas.style.left = `${centerX + leftX}px`;
+	canvas.style.top = `${centerY + topY}px`;
 	backgroundCanvas.style.left = `${leftX}px`;
 	backgroundCanvas.style.top = `${topY}px`;
 	lifeCanvas.style.left = `${leftX}px`;
@@ -171,11 +171,11 @@ function centerPongCanvas() {
 }
 
 function drawScores() {
-    lifeCtx.clearRect(0, 0, backgroundCanvas.width, 70);
+	lifeCtx.clearRect(0, 0, backgroundCanvas.width, 70);
 	
-    for (let i = 0; i < player1InitialScore; i++) {
+	for (let i = 0; i < player1InitialScore; i++) {
 		let heartToDraw = (i < player1Score) ? heartImage : heartEmptyImage; 
-        lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50);
+		lifeCtx.drawImage(heartToDraw, 20 + i * 50, 10, 50, 50);
 		}
 
 	for (let i = 0; i < player2InitialScore; i++) {
@@ -453,12 +453,10 @@ class PongSocket {
 
 	onmessage(event) {
 		let data = JSON.parse(event.data);
-		console.log(data);
 		if (data.type === 'game_update')
 			updateGame(data.message);
-		else if (data.type === 'game_started') {
+		else if (data.type === 'game_started')
 			game_started = true;
-		}
 		else if (data.type === 'game_end') {
 			let winner = data.winner === player1.id ? player1.username : player2.username;
 			customalert('Game Over', data.message + " winner is " + winner);
@@ -572,8 +570,7 @@ export async function initComponent() {
 		img.src = src;
 		return img;
 	});
-
-
+  
 	paddle1Y = (canvas.height - paddleHeight) / 2;
 	paddle2Y = (canvas.height - paddleHeight) / 2;
 	paddle1speed = 4;
@@ -586,8 +583,8 @@ export async function initComponent() {
 	ballY = canvas.height / 2;
 	ballspeedX = 4;
 	ballspeedY = 4;
-	player1Score = 0;
-	player2Score = 0;
+	player1Score = 3;
+	player2Score = 3;
 	player1InitialScore = 0;
 	player1Force= 0;
 	player1Speed= 0;
@@ -622,23 +619,23 @@ export async function initComponent() {
 		router.navigate('/pong');
 	}
 
-	try {
-		socket = new PongSocket(game_room);
-		socket.open();
-	} catch (error) {
-		console.error(error);
-		customalert('Error', 'Error connecting to the game', true);
-		router.navigate('/pong');
-	}
+	// try {
+	// 	socket = new PongSocket(game_room);
+	// 	socket.open();
+	// } catch (error) {
+	// 	console.error(error);
+	// 	customalert('Error', 'Error connecting to the game', true);
+	// 	router.navigate('/pong');
+	// }
 
-	document.addEventListener('keydown', handleKeydown);
-	document.addEventListener('keyup', handleKeyup);
+	// document.addEventListener('keydown', handleKeydown);
+	// document.addEventListener('keyup', handleKeyup);
 
-	draw_reset();
 	centerPongCanvas();
 	drawBackground();
+	draw_reset();
 
-	gameLoop();
+	// gameLoop();
 }
 
 export async function cleanupComponent() {
