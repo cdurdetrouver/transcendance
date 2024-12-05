@@ -70,7 +70,17 @@ body #page #background #container #header, html #page #background #container #he
   position: relative;
   display: flex;
   justify-content: center;
+  align-items: center;
   height: 20%;
+}
+body #page #background #container #header button, html #page #background #container #header button {
+  position: absolute;
+  left: 5%;
+  width: 8%;
+  height: 38%;
+}
+body #page #background #container #header button img, html #page #background #container #header button img {
+  width: 4vw;
 }
 body #page #background #container #header h1, html #page #background #container #header h1 {
   display: flex;

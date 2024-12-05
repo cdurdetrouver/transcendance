@@ -143,6 +143,11 @@ body #page #background #container #sheet #who {
   top: 2vh;
   left: 11vw;
 }
+body #page #background #container #sheet #who img {
+  position: absolute;
+  top: 36%;
+  left: 115%;
+}
 body #page #background #container #sheet #main-page {
   position: absolute;
   left: 9%;

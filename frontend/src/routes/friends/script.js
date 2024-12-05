@@ -138,6 +138,9 @@ export async function initComponent(params) {
 
     }
 	displayFriends(user);
+    document.querySelector("#header button").addEventListener("click", () => {
+        window.location.href = "/friends";
+    });
 }
 
 export async function cleanupComponent(params) {
