@@ -11,6 +11,7 @@ let SearchButton = null;
 let SearchStatus = false;
 let socket = null;
 let character = null;
+let selectedMap = '';
 
 
 class MatchmakingSocket {
@@ -47,7 +48,7 @@ class MatchmakingSocket {
       SearchButton.style.opacity = "0.2";
       SearchButton.style.cursor = "not-allowed";
       setTimeout(() => {
-        router.navigate('/flappy/game?game_room=' + data.game_room + '&game_id=' + data.game_id);
+        router.navigate('/flappy/game?game_room=' + data.game_room + '&game_id=' + data.game_id + "&map=" + selectedMap);
       }, 2000);
     }
   }
@@ -158,6 +159,16 @@ export async function initComponent() {
     customalert("Error", "You are not logged in", true);
     router.navigate('/');
   }
+
+  const maps = document.querySelectorAll('.map');
+  maps.forEach(div => {
+	  div.addEventListener('click', function () {
+	  maps.forEach(el => el.classList.remove('active'));
+	  
+	  this.classList.add('active');
+	  selectedMap = this.id
+	  });
+  });
 
   setPlayer(user);
   toggleSvgStatus(false, false);

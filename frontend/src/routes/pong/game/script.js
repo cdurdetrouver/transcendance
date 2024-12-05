@@ -123,12 +123,23 @@ function stopBodyAnimation() {
     }
 }
 
+let mapSkin;
 
 function drawBackground() {
     backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
 
+	let backgroundPath
+
+    if (mapSkin == 'map3')
+        backgroundPath = '../../../static/assets/background/pongBG3.png';
+    else if (mapSkin == 'map2')
+        backgroundPath = '../.././static/assets/background/pongBG2.png';
+    else 
+        backgroundPath = '../../../static/assets/background/pongBG1.png';
+
+
     const backgroundImage = new Image();
-    backgroundImage.src = '../../../static/assets/background/pongBG2.png'	;
+    backgroundImage.src = backgroundPath;
     backgroundImage.onload = () => {
         backgroundCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
     };
@@ -239,10 +250,10 @@ function draw(interpolatedState) {
 
     ctx.drawImage(
         headPlayer1,
-        5,
-        interpolatedState.paddle1Y,
-        56,
-		characterImages[player1Name].right.height
+        -2,
+        interpolatedState.paddle1Y - 6,
+        70,
+		67
     );
 
     // Paddle 2 logic
@@ -269,10 +280,10 @@ function draw(interpolatedState) {
 
     ctx.drawImage(
         headPlayer2,
-        canvas.width - paddleWidth - 10,
-        interpolatedState.paddle2Y,
-		56,
-		characterImages[player2Name].right.height
+        canvas.width - paddleWidth - 17,
+        interpolatedState.paddle2Y - 6,
+		70,
+		67
     );
 
     // Draw the ball
@@ -303,10 +314,10 @@ function draw_reset() {
     );
     ctx.drawImage(
         characterImages[player1Name].right,
-        5,
-        (canvas.height - paddleHeight) / 2,
-        characterImages[player1Name].right.width,
-        characterImages[player1Name].right.height
+        -2,
+        (canvas.height - paddleHeight) / 2 - 6,
+        70,
+        67
     );
 
     ctx.drawImage(
@@ -318,10 +329,10 @@ function draw_reset() {
     );
     ctx.drawImage(
         characterImages[player2Name].left,
-        canvas.width - paddleWidth - 10,
-        (canvas.height - paddleHeight) / 2,
-        characterImages[player2Name].left.width,
-        characterImages[player2Name].left.height
+        canvas.width - paddleWidth - 17,
+        (canvas.height - paddleHeight) / 2 - 6,
+        70,
+        67
     );
 
     ctx.drawImage(
@@ -612,6 +623,7 @@ export async function initComponent() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const game_room = urlParams.get('game_room');
 	const game_id = urlParams.get('game_id');
+	mapSkin =  urlParams.get('map');
 	if (!game_room || !game_id)
 		router.navigate('/pong');
 

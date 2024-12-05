@@ -157,6 +157,20 @@ body, html
 
                         &::-webkit-scrollbar
                             display: none
+                    .donut-chart
+                        width: 25%
+                        height: 50%
+                        border-radius: 50%
+                        background: conic-gradient(#003f5c calc(var(--value1)*1%), transparent 0)
+                        position: relative
+                        border: solid 3px black
+                    .chart-label
+                        position: absolute
+                        top: 50%
+                        left: 50%
+                        transform: translate(-50%, -50%)
+                        font-size: 1.2em
+                        font-weight: bold
 
                 #right-page
                     position: absolute

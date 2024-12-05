@@ -21,7 +21,6 @@
   left: 50%;
   transform: translateX(-50%);
   top: 20%;
-  width: 30%;
   height: 70%;
   display: flex;
   flex-direction: row;
@@ -33,6 +32,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  width: 350px;
 }
 #container .block .postit {
   font-size: 0.8rem;
@@ -300,4 +300,60 @@ input[type=text]:focus {
   transform: scale(1.1);
   border: none;
   background-color: transparent;
+}
+
+#map-choice {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 80%;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+#map1 {
+  position: relative;
+  background-image: url(../../../static/assets/mapChocie/map1.png);
+  width: 52px;
+  height: 36px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+#map2 {
+  position: relative;
+  background-image: url(../../../static/assets/mapChocie/map2.png);
+  width: 52px;
+  height: 36px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+#map3 {
+  position: relative;
+  background-image: url(../../../static/assets/mapChocie/map3.png);
+  width: 52px;
+  height: 36px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.map {
+  border: 5px solid transparent;
+  display: inline-block;
+}
+
+.map.active {
+  border-color: rgb(26, 26, 26);
+  border-radius: 5px;
 }/*# sourceMappingURL=style.css.map */
