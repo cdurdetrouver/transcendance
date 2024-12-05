@@ -77,6 +77,8 @@ export async function initComponent() {
 		if (!isLoggedIn) {
 			customalert("Error", "Please login", 1);
 			event.preventDefault();
+			event.stopPropagation();
+
 		}
 	});
 
@@ -84,6 +86,7 @@ export async function initComponent() {
 		if (!isLoggedIn) {
 			customalert("Error", "Please login", 1);
 			event.preventDefault();
+			event.stopPropagation();
 		}
 	});
 
@@ -91,6 +94,7 @@ export async function initComponent() {
 		if (!isLoggedIn) {
 			customalert("Error", "Please login", 1);
 			event.preventDefault();
+			event.stopPropagation();
 		}
 	});
 
