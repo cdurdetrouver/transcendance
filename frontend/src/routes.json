@@ -4,12 +4,20 @@
 		"files": ""
 	},
 	{
+		"path": "/about",
+		"files": "/about"
+	},
+	{
 		"path": "/pong",
 		"files": "/pong"
 	},
 	{
 		"path": "/pong/game",
 		"files": "/pong/game"
+	},
+	{
+		"path": "/pong/list",
+		"files": "/pong/list"
 	},
 	{
 		"path": "/chat",
@@ -28,6 +36,10 @@
 		"files": "/logout"
 	},
 	{
+		"path": "/user",
+		"files": "/user"
+	},
+	{
 		"path": "/flappy",
 		"files": "/flappy"
 	},
@@ -38,6 +50,14 @@
 	{
 		"path": "/character",
 		"files": "/character"
+	},
+	{
+		"path": "/user/edit",
+		"files": "/user/edit"
+	},
+	{
+		"path": "/user/2FA",
+		"files": "/user/2FA"
 	},
 	{
 		"path" : "/multiplayer",
@@ -60,6 +80,10 @@
 		"files": "/account"
 	},
 	{
+		"path": "/accountid",
+		"files": "/accountid"
+	},
+	{
 		"path": "/gdpr",
 		"files": "/gdpr"
 	},
@@ -78,6 +102,10 @@
 	{
 		"path": "/stats",
 		"files": "/stats"
+	},
+	{
+		"path": "/statsid",
+		"files": "/statsid"
 	},
 	{
 		"path": "/friends",
