@@ -61,11 +61,12 @@ function pieChart(user) {
 	else
 		value1 = user.wins / (user.wins + user.looses) * 100
 
+	const valueFixed = value1.toFixed(1);
 	const chart = document.querySelector('.donut-chart');
-	chart.style.setProperty('--value1', value1);
+	chart.style.setProperty('--value1', valueFixed);
 
 	const label = document.getElementById('chart-label');
-	label.textContent = `${value1}%`;
+	label.textContent = `${valueFixed}%`;
 }
 
 function displayStats(user) {
