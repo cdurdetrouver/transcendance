@@ -64,6 +64,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_invitation(self, event):
         self.game_invit = True
         await self.send(text_data=json.dumps({"type": "invitation", "match_name": self.channel_name}))
+        print("invitation sent")    
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)

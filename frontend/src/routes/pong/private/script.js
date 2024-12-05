@@ -14,8 +14,9 @@ let match_name = null;
 let character = null;
 
 class PrivateMatchmakingSocket {
-  constructor() {
+  constructor(match_name) {
     this.socket = null;
+    this.match_name = match_name;
   }
 
   onopen() {
@@ -59,7 +60,7 @@ class PrivateMatchmakingSocket {
 
   open() {
     if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
-      this.socket = new WebSocket(config.websocketurl + "/ws/pong/privatematchmaking/?character=" + character);
+      this.socket = new WebSocket(config.websocketurl + "/ws/pong/privatematchmaking/" + this.match_name + "/?character=" + character);
       this.socket.onopen = this.onopen.bind(this);
       this.socket.onmessage = this.onmessage.bind(this);
       this.socket.onclose = this.onclose.bind(this);
@@ -182,7 +183,7 @@ export async function initComponent() {
   SearchButton = document.getElementById('search');
   SearchStatus = false;
 
-  socket = new PrivateMatchmakingSocket();
+  socket = new PrivateMatchmakingSocket(match_name);
 
   SearchButton.addEventListener('click', handleClick);
 }

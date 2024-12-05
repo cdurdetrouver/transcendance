@@ -1,6 +1,7 @@
 import threading
 import time
 import random
+import asyncio
 from asgiref.sync import async_to_sync, sync_to_async
 
 BALL_RADIUS = 8
@@ -141,6 +142,7 @@ class GameThread(threading.Thread):
 		self.group_name = group_name
 		self.channel_layer = channel_layer
 		self._stop_event = threading.Event()
+		self.loop = asyncio.get_event_loop()
 
 		self.ball = Ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1)
 		self.paddle1 = Paddle(5, (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2, self.game.player1_character)
@@ -246,26 +248,32 @@ class GameThread(threading.Thread):
 				elif self.paddle2.life <= 0:
 					self.game_over(self.game.player1)
 				else :
-					async_to_sync(self.channel_layer.group_send)(
-						self.group_name,
-						{
-							'type': 'game.update',
-							'message': self.serialize()
-						}
-					)
+					asyncio.run_coroutine_threadsafe(
+                        self.channel_layer.group_send(
+                            self.group_name,
+                            {
+                                'type': 'game.update',
+                                'message': self.serialize()
+                            }
+                        ),
+                        self.loop
+                    )
 
 				self.game.save()
 
 				time.sleep(max(1.0 / 60 - self.delta_time, 0))
 			except Exception as e:
 				print(e)
-				async_to_sync(self.channel_layer.group_send)(
-					self.group_name,
-					{
-						'type': 'game.error',
-						'message': 'Fatal Error in Game'
-					}
-				)
+				asyncio.run_coroutine_threadsafe(
+                    self.channel_layer.group_send(
+                        self.group_name,
+                        {
+                            'type': 'game.error',
+                            'message': 'Fatal Error in Game'
+                        }
+                    ),
+                    self.loop
+                )
 				break
 
 	def game_over(self, Winner):
@@ -284,22 +292,28 @@ class GameThread(threading.Thread):
 		print("game_over")
 		self._stop_event.set()
 
-		async_to_sync(self.channel_layer.group_send)(
-			self.group_name,
-			{
-				'type': 'game.update',
-				'message': self.serialize()
-			}
-		)
+		asyncio.run_coroutine_threadsafe(
+            self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'game.update',
+                    'message': self.serialize()
+                }
+            ),
+            self.loop
+        )
 
-		async_to_sync(self.channel_layer.group_send)(
-			self.group_name,
-			{
-				'type': 'game.end',
-				'message': 'Game has ended',
-				'winner': Winner.id
-			}
-		)
+		asyncio.run_coroutine_threadsafe(
+            self.channel_layer.group_send(
+                self.group_name,
+                {
+                    'type': 'game.end',
+                    'message': 'Game has ended',
+                    'winner': Winner.id
+                }
+            ),
+            self.loop
+        )
 
 	async def set_player_direction(self, player, data):
 		if player == "player1":

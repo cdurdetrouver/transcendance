@@ -8,6 +8,7 @@ from autobahn.exception import Disconnected
 from urllib.parse import parse_qs
 
 from user.utils import get_user_by_token
+from .utils import sanitize_group_name
 from user.serializers import UserSerializer
 from .game import GameThread
 from .models import Game
@@ -28,16 +29,18 @@ class PrivateMatchmakingConsumer(AsyncWebsocketConsumer):
             }))
             await self.close()
             return
+
         self.user = result
-        self.friends = await sync_to_async(list)(self.user.friends.all())
+        # self.friends = await sync_to_async(list)(self.user.friends.all())
         game_room_name = self.scope['url_route']['kwargs']['room_name']
-        if not self.friends:
-            await self.send(text_data=json.dumps({
-                'type': 'error',
-                'message': 'You have no friends'
-            }))
-            await self.close()
-            return
+        game_room_name = sanitize_group_name(game_room_name)
+        # if not self.friends:
+        #     await self.send(text_data=json.dumps({
+        #         'type': 'error',
+        #         'message': 'You have no friends'
+        #     }))
+        #     await self.close()
+        #     return
 
         query_string = self.scope['query_string'].decode()
         query_params = parse_qs(query_string)
@@ -178,8 +181,18 @@ class PongConsumer(AsyncWebsocketConsumer):
             return
 
         self.user = result
-        self.room_group_name = self.scope['url_route']['kwargs']['room_name']
-        self.game = await sync_to_async(Game.objects.get)(room_name=self.room_group_name)
+        game_room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_group_name = sanitize_group_name(game_room_name)
+
+        try:
+            self.game = await sync_to_async(Game.objects.get)(room_name=self.room_group_name)
+        except Game.DoesNotExist:
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'Game not found'
+            }))
+            await self.close()
+            return
         await sync_to_async(lambda: self.game.player1)()
         await sync_to_async(lambda: self.game.player2)()
         await sync_to_async(lambda: self.game.winner)()
