@@ -29,6 +29,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 		}))
 
 	async def disconnect(self, code):
-		self.user.online = False
-		await sync_to_async(self.user.save)()
+		if self.user:
+			self.user.online = False
+			await sync_to_async(self.user.save)()
 
