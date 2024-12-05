@@ -247,6 +247,9 @@ def register(request):
 
 	serializer = UserSerializer(data=user_data)
 
+	if user_data.get('profile_picture') == 'undefined':
+		user_data.pop('profile_picture')
+
 	is_existing_user = User.objects.filter(email=user_data['email']).exists()
 	if is_existing_user:
 		return JsonResponse({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
@@ -265,7 +268,7 @@ def register(request):
 
 		# Profile picture
 		if 'profile_picture' not in serializer.validated_data or not serializer.validated_data['profile_picture']:
-			serializer.validated_data['profile_picture'] = 'default.png'
+			serializer.validated_data['profile_picture'] = '/profile_pictures/default.png'
 		else:
 			id = User.objects.all().count() + 1
 			serializer.validated_data['profile_picture'].name = f'{id}.png'
