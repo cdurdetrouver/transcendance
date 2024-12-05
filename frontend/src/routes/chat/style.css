@@ -2,10 +2,7 @@
   font-family: isaac;
   src: url(../../routes/assets/font/IsaacGame.ttf);
 }
-@font-face {
-  font-family: isaac;
-  src: url("http://localhost:5500/routes/assets/font/isaac.ttf") format("truetype");
-}
+
 html, body {
   overflow: hidden;
   height: 100%;
