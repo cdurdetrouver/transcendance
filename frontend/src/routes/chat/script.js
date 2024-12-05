@@ -745,7 +745,7 @@ export async function initComponent(params) {
     setInterval(async ()=>{
         user = await get_user();
         if (!user)
-            router.navigate('/');
+            router.navigate('/login');
     }, 1000 * 60);
     print_chats();
     print_invitations();
