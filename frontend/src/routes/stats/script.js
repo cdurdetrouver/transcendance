@@ -37,15 +37,35 @@ export async function initComponent(params) {
 		getPongHistoric(me.id);
 		getFlappyHistoric(me.id);
 		displayStats(me);
+		pieChart(me);
 	}
 	else  {
 		console.log(user.user);
 		getPongHistoric(user.user.id);
 		getFlappyHistoric(user.user.id);
 		displayStats(user.user);
+		pieChart(user.user);
 	}
+	;
 
+}
 
+function pieChart(user) {
+
+	let value1;
+	console.log(user.wins)
+	console.log(user.losses)
+
+	if (user.wins == 0 && !user.losses)
+		value1 = 0;
+	else
+		value1 = user.wins / (user.wins + user.losses) * 100
+
+	const chart = document.querySelector('.donut-chart');
+	chart.style.setProperty('--value1', value1);
+
+	const label = document.getElementById('chart-label');
+	label.textContent = `${value1}%`;
 }
 
 function displayStats(user) {
