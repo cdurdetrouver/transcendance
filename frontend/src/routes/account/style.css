@@ -50,15 +50,11 @@ body #page #background #container {
 }
 body #page #background #container #stats-sheet {
   position: absolute;
-  left: 26%;
-  top: 33%;
+  left: 4%;
+  top: 54%;
+  rotate: -16deg;
   font-family: isaac;
   width: 6%;
-  outline: none;
-  border: none;
-}
-body #page #background #container #stats-sheet img {
-  width: 100%;
 }
 body #page #background #container #stats-sheet span {
   position: absolute;
@@ -76,15 +72,13 @@ body #page #background #container #stats-sheet span:hover {
 }
 body #page #background #container #friends-sheet {
   position: absolute;
-  left: 25%;
-  top: 52%;
+  left: 5%;
+  top: 81%;
+  rotate: -9deg;
   font-family: isaac;
   width: 6%;
   outline: none;
   border: none;
-}
-body #page #background #container #friends-sheet img {
-  width: 100%;
 }
 body #page #background #container #friends-sheet span {
   position: absolute;
@@ -108,19 +102,13 @@ body #page #background #container .buttons {
 body #page #background #container .buttons:hover {
   transform: scale(1.2);
 }
-body #page #background #container #logout-sheet {
-  width: 7%;
-  position: absolute;
-  top: -6%;
-  left: 53%;
-  rotate: 83deg;
-}
 body #page #background #container #logout {
   position: absolute;
-  left: 49%;
-  top: 3%;
-  width: 16%;
-  rotate: 6deg;
+  left: 66%;
+  top: -5%;
+  width: 31%;
+  height: 7%;
+  rotate: -7deg;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -129,10 +117,10 @@ body #page #background #container #logout {
   z-index: 5;
 }
 body #page #background #container #logout span {
-  font-size: 1vw;
+  font-size: 1.2vw;
 }
 body #page #background #container #logout button img {
-  width: 40%;
+  width: 100%;
 }
 body #page #background #container #logout button:hover {
   transform: scale(1);
@@ -152,7 +140,7 @@ body #page #background #container #sheet #sheet-image {
 body #page #background #container #sheet #who {
   font-size: 1.8vw;
   position: absolute;
-  top: 0vh;
+  top: 2vh;
   left: 11vw;
 }
 body #page #background #container #sheet #main-page {

@@ -169,6 +169,10 @@ body #page #background #book #right-page, html #page #background #book #right-pa
 body #page #background #book #right-page span, html #page #background #book #right-page span {
   font-size: 2vw;
 }
+body #page #background #book #right-page #username-sign, html #page #background #book #right-page #username-sign {
+  color: #68635c;
+  font-size: 1.5vw;
+}
 body #page #background #book #right-page #match-container, html #page #background #book #right-page #match-container {
   width: 100%;
   height: 100%;

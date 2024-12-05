@@ -97,7 +97,7 @@ body #page #background #container #list .friend, html #page #background #contain
   align-items: center;
 }
 body #page #background #container #list .friend .delete-friend, html #page #background #container #list .friend .delete-friend {
-  width: 9%;
+  width: 8%;
 }
 body #page #background #container #list .friend .delete-friend img, html #page #background #container #list .friend .delete-friend img {
   width: 100%;
@@ -121,7 +121,7 @@ body #page #background #container #list .friend .profile-picture-container .onli
   left: 73%;
 }
 body #page #background #container #list .friend .username, html #page #background #container #list .friend .username {
-  font-size: 2vw;
+  font-size: 2.4vw;
 }
 body #page #background #container #list .friend:hover, html #page #background #container #list .friend:hover {
   background-color: rgba(155, 136, 107, 0.5019607843);
