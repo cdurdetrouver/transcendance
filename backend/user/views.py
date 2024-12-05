@@ -106,6 +106,14 @@ def user_detail(request):
 		response.delete_cookie('access_token')
 		return response
 	else :
+		games = Game.objects.filter(player1=user, winner__isnull=False)
+		games_s = GameSerializer(games, many=True).data
+		games = Game.objects.filter(player2=user, winner__isnull=False)
+		games_s += GameSerializer(games, many=True).data
+		win = Game.objects.filter(winner=user)
+		user.wins = len(win)
+		user.looses = len(games_s) - len(win)
+		user.save()
 		serialized_user = UserSerializer(user)
 		return JsonResponse({'user': serialized_user.data}, status=status.HTTP_200_OK)
 
@@ -383,9 +391,9 @@ def user_games(request, user_id):
 	user = User.objects.filter(id=user_id).first()
 	if user is None:
 		return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-	games = Game.objects.filter(player1=user)
+	games = Game.objects.filter(player1=user, winner__isnull=False)
 	games_s = GameSerializer(games, many=True).data
-	games = Game.objects.filter(player2=user)
+	games = Game.objects.filter(player2=user, winner__isnull=False)
 	games_s += GameSerializer(games, many=True).data
 	return JsonResponse({'games': games_s}, status=status.HTTP_200_OK)
 
@@ -416,9 +424,9 @@ def flappy_user_games(request, user_id):
 	user = User.objects.filter(id=user_id).first()
 	if user is None:
 		return Response({"error": "User doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-	games = FlappyGame.objects.filter(player1=user)
+	games = FlappyGame.objects.filter(player1=user, winner__isnull=False)
 	games_s = FlappyGameSerializer(games, many=True).data
-	games = FlappyGame.objects.filter(player2=user)
+	games = FlappyGame.objects.filter(player2=user, winner__isnull=False)
 	games_s += FlappyGameSerializer(games, many=True).data
 	return JsonResponse({'games': games_s}, status=status.HTTP_200_OK)
 
