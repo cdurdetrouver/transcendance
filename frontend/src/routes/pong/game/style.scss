@@ -13,14 +13,10 @@ canvas {
 
 @font-face {
     font-family: isaac;
-<<<<<<< HEAD
-    src: url('http://localhost:5500/routes/assets/font/isaac.ttf') format('truetype');
-=======
 	src: url("../../assets/font/isaac.ttf") format("truetype");
->>>>>>> origin/dev
 }
 #background-image {
-    position: fixed; 
+    position: fixed; 	
     top: 0;
     left: 0;
     width: 100vw;

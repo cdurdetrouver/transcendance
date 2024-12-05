@@ -10,12 +10,25 @@ let ctx = canvas.getContext('2d');
 let backgroundCanvas = document.getElementById("backgroundCanvas");
 let bgCtx = backgroundCanvas.getContext("2d");
 
-let backgroundImage = new Image();
-backgroundImage.src = '../../static/assets/jpg/bg_flappy.png';
+let mapSkin;
 
-backgroundImage.onload = function() {
-	bgCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
-};
+function drawBackground() {
+    bgCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+
+	let backgroundPath
+
+    if (mapSkin == 'map2')
+        backgroundPath = '../../static/assets/jpg/bg_flappy2.png';
+    else 
+        backgroundPath = '../../static/assets/jpg/bg_flappy.png';
+ 
+
+    const backgroundImage = new Image();
+    backgroundImage.src = backgroundPath;
+    backgroundImage.onload = () => {
+        bgCtx.drawImage(backgroundImage, 0, 0, backgroundCanvas.width, backgroundCanvas.height);
+    };
+}
 
 // Gestion animation
 let playerImages = {
@@ -382,6 +395,7 @@ export async function initComponent() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const game_room = urlParams.get('game_room');
 	const game_id = urlParams.get('game_id');
+	mapSkin =  urlParams.get('map');
 	if (!game_room || !game_id)
 		router.navigate('/flappy');
 
@@ -404,7 +418,7 @@ export async function initComponent() {
 
 	document.addEventListener('keydown', handleKeydown);
 	document.addEventListener('keyup', handleKeyup);
-
+	drawBackground();
 	draw_reset();
 
 	gameLoop();
