@@ -111,7 +111,7 @@ body #page #background #book #left-page span, html #page #background #book #left
 }
 body #page #background #book #left-page #pong-stats, html #page #background #book #left-page #pong-stats {
   width: 100%;
-  height: 100%;
+  height: 46%;
 }
 body #page #background #book #left-page #pong-stats span, html #page #background #book #left-page #pong-stats span {
   font-size: 1.5vw;
@@ -157,7 +157,7 @@ body #page #background #book #left-page #pong-stats::-webkit-scrollbar, html #pa
 }
 body #page #background #book #left-page .donut-chart, html #page #background #book #left-page .donut-chart {
   width: 25%;
-  height: 50%;
+  height: 47%;
   border-radius: 50%;
   background: conic-gradient(#003f5c calc(var(--value1) * 1%), transparent 0);
   position: relative;

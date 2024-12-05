@@ -130,8 +130,15 @@ export async function initComponent() {
 
 	
 
-	document.getElementById("edit-password").addEventListener('submit', handleFormPassword);
-	document.getElementById("username-form").addEventListener('submit', handleFormUsername);
+	document.getElementById("edit-password").addEventListener('submit', function(event) {
+		console.log("username form");
+		handleFormPassword(event, editPasswordButton, editPassword);
+	});
+
+	document.getElementById("username-form").addEventListener('submit', function(event) {
+		console.log("username form");
+		handleFormUsername(event, labelUsername, editUsernameButton, usernameForm);
+	});
 	document.querySelector("#profile-picture-container input").addEventListener('change', handleFormProfilePicture);
 
 	
@@ -285,13 +292,15 @@ function updateProfilePicture(user) {
 	imgElement.src = profilePicture + '?t=' + new Date().getTime();
 }
 
-async function changeDisplayUsername() {
+async function changeDisplayUsername(labelUsername, editUsernameButton, usernameForm) {
+	console.log("CHANGE DISPLAY USERNAME");
+	console.log("labelUsername", labelUsername);
 	labelUsername.style.display = "flex";
 	editUsernameButton.style.display = "flex";
 	usernameForm.style.display = "none";
 }
 
-async function handleFormUsername(event) {
+async function handleFormUsername(event, labelUsername, editUsernameButton, usernameForm) {
 	console.log("EDIT USERNAME");
 
 	event.preventDefault();
@@ -305,7 +314,8 @@ async function handleFormUsername(event) {
 		setPersonalUser(data.user);
 		deleteCookie('user');
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
-		changeDisplayUsername();
+		console.log("labelUsername", labelUsername);
+		changeDisplayUsername(labelUsername, editUsernameButton, usernameForm);
 	}
 	else {
 		let data = await response.json();
@@ -313,15 +323,16 @@ async function handleFormUsername(event) {
 	}
 }
 
-async function changeDisplayPassword() {
-	// inputPassword.style.display = "flex";
+async function changeDisplayPassword(editPasswordButton, editPassword) {
+	console.log("LA = ", editPasswordButton);
+	
 	editPasswordButton.style.display = "none";
 	editPassword.style.display = "none";
 }
 
 
-async function handleFormPassword(event) {
-	console.log("EDIT PASSWORD");
+async function handleFormPassword(event, editPasswordButton, editPassword) {
+	console.log("HELLLOOOO");
 
 	event.preventDefault();
 	const form = document.querySelector("#edit-password form");
@@ -341,10 +352,8 @@ async function handleFormPassword(event) {
 	if (response.status === 200) {
 		customalert('Success', 'Password updated successfully', false);
 		// let data = await response.json();
-		// setPersonalUser(data.user);
-		// deleteCookie('user');
-		// setCookie('user', JSON.stringify(data.user), 5 / 1440);
-		changeDisplayPassword();
+		console.log("ICI = ", editPasswordButton);
+		changeDisplayPassword(editPasswordButton, editPassword);
 	}
 	else {
 		let data = await response.json();
