@@ -23,7 +23,6 @@ async function deleteUserFriend(user) {
 }
 
 async function getUserFriends(user) {
-	console.log("userid = ", user.id);
 
     const response = await fetch(config.backendUrl + "/user/friend/" + user.id + "/", {
         method: "GET",
@@ -37,7 +36,7 @@ async function getUserFriends(user) {
 		return data.friends;
 	}
     else {
-        console.log("error: ", data['error'])
+        // console.log("error: ", data['error'])
     }
     return null;
 }
@@ -54,21 +53,33 @@ async function displayFriends(user) {
 				let friendElement = document.createElement("div");
 				friendElement.className = "friend";
 
-				let pictureDiv = document.createElement("div");
-				pictureDiv.className = "profile-picture-container";
 				
 				let usernameDiv = document.createElement("div");
 				usernameDiv.className = "username";
-
+				
+                let pictureDiv = document.createElement("div");
+				pictureDiv.className = "profile-picture-container";
+                
 				const profilePicture =  friend.picture_remote ?  friend.picture_remote : config.backendUrl +  friend.profile_picture;
 
 				const profileImage = document.createElement("img");
 				profileImage.src = profilePicture;
-				profileImage.alt = `friend.username's profile picture`; 
+				profileImage.alt = `friend.username's profile picture`;
 				// profileImage.classList.add('');
 
 				pictureDiv.appendChild(profileImage);
+
+                let onlineStatus = document.createElement("div");
+                onlineStatus.className = "online-status";
+
+                console.log("friend.online = ", friend.online);
+                // friend.online = true;
+                if (!friend.online)
+                    onlineStatus.style.background = "linear-gradient(145deg, #b4b4b4, #666666)";
+
 				friendElement.appendChild(pictureDiv);
+                pictureDiv.appendChild(onlineStatus);
+
 
 				let usernameSpan = document.createElement("span");
 				usernameSpan.className = "text";
@@ -82,7 +93,8 @@ async function displayFriends(user) {
                 let deleteImage = document.createElement("img");
                 deleteImage.src = "../../static/assets/no.png";
                 deleteImage.alt = "delete";
-           
+
+
                 deleteButton.appendChild(deleteImage);
                 friendElement.appendChild(usernameDiv);
                 friendElement.appendChild(deleteButton);
@@ -97,7 +109,8 @@ async function displayFriends(user) {
         
                     yesButton.addEventListener("click", function() {
                         const friendElement = deleteButton.closest('.friend');
-                        deleteUserFriend(user);
+                        console.log(("friend id = ", friend.id));
+                        deleteUserFriend(friend);
                         friendElement.remove();
                         popin.style.display = "none";
                     });
@@ -106,22 +119,32 @@ async function displayFriends(user) {
                         popin.style.display = "none";
                     });
                 });
+
+                usernameDiv.addEventListener("click", () => {
+                    router.navigate(`/account?id=${friend.id}`);
+                });
+                pictureDiv.addEventListener("click", () => {
+                    router.navigate(`/account?id=${friend.id}`);
+                });
 		});
 	}
 	else {
-		customalert("Error", "No friends :(");
+		// customalert("Error", "No friends :(");
 	}
 }
 
 export async function initComponent(params) {
-    await new Promise((resolve, reject) => setTimeout(resolve, 100));	
+    await new Promise((resolve, reject) => setTimeout(resolve, 100));
     let user = await get_user();
-    if (!user)
+    if (!user) {
+        customalert('Error', 'You are not logged in', true);
         router.navigate('/');
-	console.log()
+
+    }
 	displayFriends(user);
-
-
+    document.querySelector("#header button").addEventListener("click", () => {
+        window.location.href = "/friends";
+    });
 }
 
 export async function cleanupComponent(params) {

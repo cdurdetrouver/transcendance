@@ -45,33 +45,48 @@ body #page #background #container {
   width: 100%;
   height: 100%;
 }
-body #page #background #container #stat-sheet {
-  position: relative;
-  left: 7%;
+body #page #background #container #stats-sheet {
+  position: absolute;
+  left: -9%;
+  top: 58%;
+  rotate: -15deg;
   font-family: isaac;
-  font-size: 0.7rem;
-  background-image: url(../../static/assets/sheets/side-sheet.png);
-  width: 200px;
-  height: 200px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: transparent;
-  outline: none;
-  border: none;
+  width: 6%;
 }
-body #page #background #container #stat-sheet span {
+body #page #background #container #stats-sheet span {
   position: relative;
   z-index: 5;
   top: 40%;
   left: 20%;
-  font-size: 2rem;
+  font-size: 1.7vw;
   display: inline-block;
-  transform: rotate(-75deg);
+  transform: rotate(-77deg);
   transition: transform 0.3s ease;
 }
-body #page #background #container #stat-sheet span:hover {
-  transform: rotate(-75deg) scale(1.2);
+body #page #background #container #stats-sheet span:hover {
+  transform: rotate(-77deg) scale(1.2);
+  cursor: pointer;
+}
+body #page #background #container #friends-sheet {
+  position: absolute;
+  left: 5%;
+  top: 81%;
+  rotate: -9deg;
+  font-family: isaac;
+  width: 6%;
+}
+body #page #background #container #friends-sheet span {
+  position: absolute;
+  z-index: 5;
+  top: 41%;
+  right: 0%;
+  font-size: 1.7vw;
+  display: inline-block;
+  transform: rotate(-77deg);
+  transition: transform 0.3s ease;
+}
+body #page #background #container #friends-sheet span:hover {
+  transform: rotate(-77deg) scale(1.2);
   cursor: pointer;
 }
 body #page #background #container .buttons {
@@ -82,63 +97,13 @@ body #page #background #container .buttons {
 body #page #background #container .buttons:hover {
   transform: scale(1.2);
 }
-body #page #background #container #matchList {
-  font-size: 0.7rem;
-  position: absolute;
-  left: 100px;
-  font-family: isaac;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: auto;
-  max-height: 300px;
-  overflow-y: scroll;
-}
-body #page #background #container #matchList::-webkit-scrollbar {
-  display: none;
-}
-body #page #background #container #matchList .Matchline {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-body #page #background #container #matchList .Matchline .player-left {
-  text-align: left;
-  width: 90px;
-  height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  padding-right: 20px;
-  display: flex;
-  align-items: center;
-}
-body #page #background #container #matchList .Matchline .player-right {
-  text-align: right;
-  width: 90px;
-  height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  padding-left: 20px;
-  display: flex;
-  align-items: center;
-}
-body #page #background #container #logout-sheet {
-  width: 19%;
-  position: absolute;
-  top: 57%;
-  left: 70%;
-}
 body #page #background #container #logout {
   position: absolute;
-  rotate: -6deg;
-  left: 71%;
-  top: 59%;
-  width: 16%;
-  aspect-ratio: 95/67;
+  left: 66%;
+  top: -5%;
+  width: 31%;
+  height: 7%;
+  rotate: -7deg;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,10 +111,13 @@ body #page #background #container #logout {
   padding-left: 1%;
 }
 body #page #background #container #logout span {
-  font-size: 1.6vw;
+  font-size: 1.2vw;
 }
 body #page #background #container #logout button img {
-  width: 60%;
+  width: 100%;
+}
+body #page #background #container #logout button:hover {
+  transform: scale(1);
 }
 body #page #background #container #sheet {
   display: flex;
@@ -166,8 +134,13 @@ body #page #background #container #sheet #sheet-image {
 body #page #background #container #sheet #who {
   font-size: 1.8vw;
   position: absolute;
-  top: 0vh;
+  top: 2vh;
   left: 11vw;
+}
+body #page #background #container #sheet #who img {
+  position: absolute;
+  top: 36%;
+  left: 115%;
 }
 body #page #background #container #sheet #main-page {
   position: absolute;

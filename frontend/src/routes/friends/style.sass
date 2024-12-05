@@ -1,0 +1,190 @@
+@font-face
+  font-family: isaac
+  src: url('../assets/font/isaac.ttf')
+
+    
+body, html
+    background-image: url('../assets/images/account/background_account.png')
+    background-position: center
+    background-repeat: no-repeat
+    background-size: cover
+    height: 100%
+
+    #page
+        position: relative
+        height: 100%
+
+        button
+            background-color: transparent
+            border: none
+       
+        button:hover
+            transform: scale(1.2)
+
+        #background
+            position: relative
+            width: 100vw
+            height: 100vh
+            left: 50%
+            background-position: center
+            background-repeat: no-repeat
+            background-size: contain
+            transform: translateX(-50%)
+            display: flex
+            justify-content: center
+            align-items: center
+            flex-direction: column
+
+            .text
+                font-family: isaac
+            
+            #sheet-image
+                width: 50%
+  
+            #container
+                display: flex
+                justify-content: center
+                align-items: center
+                position: relative
+                
+
+                img
+                    width: 55vw
+                    display: flex
+                    justify-content: center
+                    align-items: center
+                    
+
+                #friend-box
+                    // background-color: #d18410
+                    position: absolute
+                    top: 5%
+                    left: 4%
+                    width: 90%
+                    height: 90%
+                    display: flex
+                    flex-direction: column
+
+                hr
+                    border: 1px solid #8f7e6c
+                    width: 80%
+                    margin: 0 auto
+
+                #header
+                    position: relative
+                    display: flex
+                    justify-content: center
+                    align-items: center
+                    height: 20%
+                   
+                    button
+                        position: absolute
+                        left: 5%
+                        width: 8%
+                        height: 38%
+
+                        img
+                            width: 4vw
+
+                    h1
+                        display: flex
+                        justify-content: center
+                        font-size: 3vw
+                        color: #332C2B
+                        font-family: isaac
+
+                #list
+                    position: relative
+                    flex-grow: 1
+                    display: flex
+                    flex-direction: column
+                    overflow-y: scroll
+                    overflow-x: hidden
+                    scrollbar-width: thin
+                    scrollbar-color: #888 transparent
+                    padding: 2%
+                    margin-bottom: 5%
+
+                    .friend
+                        display: flex
+                        justify-content: space-between
+                        align-items: center
+
+                        .delete-friend
+                            width: 8%
+                            z-index: 1111
+                            
+                            img
+                               width: 100%
+
+
+                        .profile-picture-container
+                            width: 20%
+                            position: relative
+                            
+                            img
+                                width: 100%
+                                border-radius: 50%
+
+                            .online-status
+                                width: 20px
+                                height: 20px
+                                background: linear-gradient(145deg, #36df0c, #058d11)
+                                border-radius: 50%
+                                display: inline-block
+                                position: absolute
+                                top: 83%
+                                left: 73%
+                                
+                        .username
+                            font-size: 2.4vw
+
+                        
+                    .friend:hover
+                        background-color: #9b886b80
+                        border-radius: 10px
+        #popin
+            position: absolute
+            display: none
+            align-items: center
+            justify-content: center
+            width: 100%
+            height: 100%
+            background-color: rgba(0, 0, 0, 0.5)
+            top: 0%
+            left: 0%
+
+            img
+                width: 35%
+
+            #confirmation-content
+                position: absolute
+                width: 31%
+                aspect-ratio: 228 / 129
+
+                button
+                    border: none
+                    position: absolute
+                    top: 60%
+                    transition: transform 0.3s ease
+                    font-size: 4vw
+
+                span
+                    position: absolute
+                    top: 20%
+                    left: 10%
+                    font-size: 2.8vw
+
+                .button-popin:hover
+                    transform: scale(1.2)
+
+                #yes
+                    left: 15%
+                    width: 27%
+                    height: 18%
+
+                #no
+                    left: 60%
+                    width: 23%
+                    height: 18%
+            

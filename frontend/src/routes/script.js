@@ -9,7 +9,7 @@ let isLoggedIn;
 export async function initComponent() {
 	await new Promise(r => setTimeout(r, 100));
 	const user = await get_user();
-
+	
 	const accountButton = document.querySelector("#account");
 	const onlineButton = document.querySelector("#online");
 	const chatButton = document.querySelector("#chat");
@@ -34,6 +34,7 @@ export async function initComponent() {
 	const fileChosen = document.getElementById('file-chosen');
 	const avatar = document.querySelector("#avatar");
 	const backFromRegister = document.querySelector("#register-content .back-to-login");
+
 	
 	ButtonGithub.href = `https://github.com/login/oauth/authorize?client_id=${config.github_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login?source=github')}&scope=user`;
 	ButtonIntra.href = `https://api.intra.42.fr/oauth/authorize?client_id=${config.intra_client_id}&redirect_uri=${encodeURIComponent(config.frontendUrl + '/login')}&response_type=code`;
@@ -61,6 +62,8 @@ export async function initComponent() {
 		if (!isLoggedIn) {
 			customalert("Error", "Please login", 1);
 			event.preventDefault();
+			event.stopPropagation();
+
 		}
 	});
 
@@ -68,6 +71,7 @@ export async function initComponent() {
 		if (!isLoggedIn) {
 			customalert("Error", "Please login", 1);
 			event.preventDefault();
+			event.stopPropagation();
 		}
 	});
 
@@ -75,6 +79,7 @@ export async function initComponent() {
 		if (!isLoggedIn) {
 			customalert("Error", "Please login", 1);
 			event.preventDefault();
+			event.stopPropagation();
 		}
 	});
 
