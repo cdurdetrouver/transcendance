@@ -108,6 +108,7 @@ body #page #background #container #list .friend, html #page #background #contain
 }
 body #page #background #container #list .friend .delete-friend, html #page #background #container #list .friend .delete-friend {
   width: 8%;
+  z-index: 1111;
 }
 body #page #background #container #list .friend .delete-friend img, html #page #background #container #list .friend .delete-friend img {
   width: 100%;

@@ -5,6 +5,7 @@ import config from '../../env/config.js';
 import { setCookie } from '../../components/storage/script.js';
 
 export async function initComponent() {
+	await new Promise((resolve, reject) => setTimeout(resolve, 100));
 	const user = await get_user();
 
 	const logindiv = document.querySelector('.login');

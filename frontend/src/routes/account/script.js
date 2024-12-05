@@ -48,6 +48,8 @@ function setUser(user, inviteOrEditButton, blockOrDeleteButton, twofaOrAddFriend
 	document.querySelector("#edit-logo-right").src = "../../static/assets/header/chat.png"
 	blockOrDeleteButton.textContent = "BLOCK USER";
 	twofaOrAddFriend.textContent = "ADD FRIEND";
+	document.querySelector("#logo-left").src = "../../static/assets/header/friend.png";
+	document.querySelector("#logo-right").src = "../../static/assets/header/friend.png";
 	document.querySelector("#label-email").style.display = "none";
 	document.querySelector(".label").style.display = "none";
 	document.querySelector("#who span").textContent = "THEM";

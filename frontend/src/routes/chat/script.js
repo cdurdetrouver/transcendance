@@ -737,6 +737,7 @@ export async function mp_somebody(user_id) {
 }
 
 export async function initComponent(params) {
+    await new Promise((resolve, reject) => setTimeout(resolve, 100));
     user = await get_user();
     if (!user)
         router.navigate('/');

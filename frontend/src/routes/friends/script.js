@@ -120,7 +120,10 @@ async function displayFriends(user) {
                     });
                 });
 
-                friendElement.addEventListener("click", () => {
+                usernameDiv.addEventListener("click", () => {
+                    router.navigate(`/account?id=${friend.id}`);
+                });
+                pictureDiv.addEventListener("click", () => {
                     router.navigate(`/account?id=${friend.id}`);
                 });
 		});
@@ -130,7 +133,8 @@ async function displayFriends(user) {
 	}
 }
 
-export async function initComponent(params) {	
+export async function initComponent(params) {
+    await new Promise((resolve, reject) => setTimeout(resolve, 100));
     let user = await get_user();
     if (!user) {
         customalert('Error', 'You are not logged in', true);
