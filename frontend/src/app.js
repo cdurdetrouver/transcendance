@@ -1,5 +1,4 @@
-import { deleteCookie, getCookie } from "./components/storage/script.js";
-import { get_user, refresh_token, refresh_user } from "./components/user/script.js";
+import { refresh_token, refresh_user } from "./components/user/script.js";
 import config from "./env/config.js";
 
 class Router {
