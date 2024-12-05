@@ -1,0 +1,31 @@
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	width: 80%;
+	max-width: 600px;
+}
+
+li {
+	background-color: #fff;
+	margin: 10px 0;
+	padding: 15px;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.game-info {
+	display: flex;
+	align-items: center;
+}
+
+.game-info div {
+	margin: 0 10px;
+}
+
+.score {
+	font-weight: bold;
+}
