@@ -13,14 +13,11 @@ function displayUser(user)
 {
 	const username = user.username;
 	const email = user.email;
-	// const profilePicture = user.pictureRemote ? user.pictureRemote : config.backendUrl + user.profilePicture;
 	const profilePicture = user.picture_remote ? user.picture_remote : config.backendUrl + user.profile_picture;
 
 	var profilePictureContainer = document.querySelector("#profile-picture");
 
 	if (profilePictureContainer) {
-		console.log("profile picture", profilePicture);
-
 		let imgElement = document.querySelector('#profile-picture img');
 		imgElement.src = profilePicture;
 	}
@@ -119,7 +116,6 @@ export async function initComponent() {
 	});
 
 	document.querySelector("#friends-sheet").addEventListener("click", (e) => {
-		console.log("friends link");
 		router.navigate("/friends");
 	});
 	
@@ -131,29 +127,25 @@ export async function initComponent() {
 	
 
 	document.getElementById("edit-password").addEventListener('submit', function(event) {
-		console.log("username form");
 		handleFormPassword(event, editPasswordButton, editPassword);
 	});
 
 	document.getElementById("username-form").addEventListener('submit', function(event) {
-		console.log("username form");
 		handleFormUsername(event, labelUsername, editUsernameButton, usernameForm);
 	});
-	document.querySelector("#profile-picture-container input").addEventListener('change', handleFormProfilePicture);
 
+	document.querySelector("#profile-picture-container input").addEventListener('change', handleFormProfilePicture);
 	
 	const editProfilePicture = document.querySelector("#profile-picture-container label");
 	const password = document.querySelector("#edit-password");
 	
 	inviteOrEditButton.addEventListener("click", async function() {
 		if (id) {
-			console.log("invite to chat, id = ", id);
 			await mp_somebody(id);
 	
 		}
 		else if (!editMode) {
 			editMode = true;
-			console.log("edit profile");
 			editUsernameButton.style.display = "flex";
 			password.style.display = "flex";
 			editProfilePicture.style.display = "flex";
@@ -170,7 +162,6 @@ export async function initComponent() {
 	const generateQrcode = document.querySelector("#generate-qrcode");
 
 	blockOrDeleteButton.addEventListener("click", function() {
-		console.log("delete button");
 		popin.style.display = "flex";
 	});
 
@@ -204,12 +195,10 @@ export async function initComponent() {
 	});
 
 	document.querySelector("#submit-code").addEventListener("click", function() {
-		console.log("submit button");
 		enable2FA();
 	});
 
 	logoutButton.addEventListener("click", function() {
-		console.log("logout button");
 		logout();
 		router.navigate('/');
 	});
@@ -219,7 +208,6 @@ export async function initComponent() {
 	const labelPassword = document.querySelector("#edit-password  .label");
 
 	editPasswordButton.addEventListener("click", function() {
-		console.log("edit password");
 		labelPassword.style.display = "none";
 		editPasswordButton.style.display = "none";
 		editPassword.style.display = "flex";
@@ -230,11 +218,15 @@ export async function initComponent() {
 	const labelUsername = document.querySelector("#username .label");
 
 	editUsernameButton.addEventListener("click", function() {
-		console.log("edit username");
-		
 		labelUsername.style.display = "none";
 		editUsernameButton.style.display = "none";
 		usernameForm.style.display = "flex";
+	});
+
+	document.querySelectorAll("#qrcode-content .close-button").forEach(button => {
+		button.addEventListener("click", function() {
+			popin.style.display = "none";
+		});
 	});
 
 }
@@ -257,12 +249,9 @@ async function addFriend(id) {
 }
 
 async function handleFormProfilePicture(event) {
-	console.log("EDIT PROFILE PICTURE");
-
 	event.preventDefault();
 	const form = document.querySelector("#profile-picture-container form");
 	const formData = new FormData(form);
-	console.log(formData);
 
 	try {
         let response = await update_user(formData);
@@ -293,20 +282,15 @@ function updateProfilePicture(user) {
 }
 
 async function changeDisplayUsername(labelUsername, editUsernameButton, usernameForm) {
-	console.log("CHANGE DISPLAY USERNAME");
-	console.log("labelUsername", labelUsername);
 	labelUsername.style.display = "flex";
 	editUsernameButton.style.display = "flex";
 	usernameForm.style.display = "none";
 }
 
 async function handleFormUsername(event, labelUsername, editUsernameButton, usernameForm) {
-	console.log("EDIT USERNAME");
-
 	event.preventDefault();
 	const form = document.querySelector("#username-form")
 	const formData = new FormData(form);
-	console.log(formData);
 	let response = await update_user(formData);
 	if (response.status === 200) {
 		customalert('Success', 'User updated successfully', false);
@@ -314,7 +298,6 @@ async function handleFormUsername(event, labelUsername, editUsernameButton, user
 		setPersonalUser(data.user);
 		deleteCookie('user');
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
-		console.log("labelUsername", labelUsername);
 		changeDisplayUsername(labelUsername, editUsernameButton, usernameForm);
 	}
 	else {
@@ -324,16 +307,12 @@ async function handleFormUsername(event, labelUsername, editUsernameButton, user
 }
 
 async function changeDisplayPassword(editPasswordButton, editPassword) {
-	console.log("LA = ", editPasswordButton);
-	
 	editPasswordButton.style.display = "none";
 	editPassword.style.display = "none";
 }
 
 
 async function handleFormPassword(event, editPasswordButton, editPassword) {
-	console.log("HELLLOOOO");
-
 	event.preventDefault();
 	const form = document.querySelector("#edit-password form");
 	const formData = new FormData(form);
@@ -351,8 +330,6 @@ async function handleFormPassword(event, editPasswordButton, editPassword) {
 
 	if (response.status === 200) {
 		customalert('Success', 'Password updated successfully', false);
-		// let data = await response.json();
-		console.log("ICI = ", editPasswordButton);
 		changeDisplayPassword(editPasswordButton, editPassword);
 	}
 	else {
@@ -360,8 +337,6 @@ async function handleFormPassword(event, editPasswordButton, editPassword) {
 		customalert('Error', data.error, true);
 	}
 }
-
-// const deleteButton = document.querySelector("#delete-profile .buttons");
 
 async function deleteOrBlock(id, popin) {
 	try {
