@@ -56,10 +56,10 @@ function pieChart(user) {
 	console.log(user.wins)
 	console.log(user.losses)
 
-	if (user.wins == 0 && !user.losses)
+	if (user.wins == 0 && user.looses == 0)
 		value1 = 0;
 	else
-		value1 = user.wins / (user.wins + user.losses) * 100
+		value1 = user.wins / (user.wins + user.looses) * 100
 
 	const chart = document.querySelector('.donut-chart');
 	chart.style.setProperty('--value1', value1);
