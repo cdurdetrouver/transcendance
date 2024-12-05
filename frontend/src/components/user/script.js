@@ -12,8 +12,8 @@ async function refresh_token() {
 			},
 			credentials: "include",
 		});
-		
-		router.connect();
+		if (response.status == 200)
+			router.connect();
 		return response;
 	} catch {
 		return null;
@@ -34,7 +34,8 @@ async function login(email, password) {
 		credentials: "include",
 	});
 
-	router.connect();
+	if (response.status == 200)
+		router.connect();
 
 	return response;
 }
@@ -52,7 +53,8 @@ async function login_tierce(code, user_type) {
 		credentials: "include",
 	});
 
-	router.connect();
+	if (response.status == 200)
+		router.connect();
 
 	return response;
 }
@@ -71,9 +73,8 @@ async function register(username, email, password, profile_picture) {
 		credentials: "include",
 	});
 
-	router.connect();
-
 	if (response.status === 201) {
+		router.connect();
 		const data = await response.json();
 		setCookie('user', JSON.stringify(data.user), 5 / 1440);
 		return response;
@@ -109,10 +110,7 @@ async function refresh_user() {
 async function get_user() {
 	let user = getCookie('user');
 	if (user)
-	{
-		router.connect();
 		return JSON.parse(user);
-	}
 	const response = await fetch(config.backendUrl + "/user/",
 		{
 			method: "GET",

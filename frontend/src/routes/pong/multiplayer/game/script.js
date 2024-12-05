@@ -1,16 +1,17 @@
 import { customalert } from "../../../../components/alert/script.js";
 import { router } from '../../../../app.js';
 
-let canvas = document;
-let ctx = canvas;
+const canvas = document.getElementById("pongCanvas");
+const ctx = canvas.getContext("2d");
 
-let backgroundCanvas = document;
-let backgroundCtx = backgroundCanvas;
+const backgroundCanvas = document.getElementById("backgroundCanvas");
+const backgroundCtx = backgroundCanvas.getContext("2d");
 
-let lifeCanvas = document;
-let lifeCanvasCtx = lifeCanvas;
+const lifeCanvas = document.getElementById("lifeCanvas");
+const lifeCanvasCtx = lifeCanvas.getContext("2d");
 
-let ballImage;
+const ballImage = new Image();
+ballImage.src = '../../../../static/assets/multi/bullet.png';
 
 function drawBackground() {
     backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
@@ -356,17 +357,6 @@ function closeButton()
 }
 
 export async function initComponent() {
-	canvas = document.getElementById("pongCanvas");
-	ctx = canvas.getContext("2d");
-
-	backgroundCanvas = document.getElementById("backgroundCanvas");
-	backgroundCtx = backgroundCanvas.getContext("2d");
-
-	lifeCanvas = document.getElementById("lifeCanvas");
-	lifeCanvasCtx = lifeCanvas.getContext("2d");
-
-	ballImage = new Image();
-	ballImage.src = '../../../../static/assets/multi/bullet.png';
 	paddle1Y = (canvas.height - paddleHeight) / 2;
 	paddle2X = (canvas.width - paddleHeight) / 2;
     paddle3X = (canvas.width - paddleHeight) / 2;
@@ -390,7 +380,7 @@ export async function initComponent() {
 	player4Score = 0;
 
 	game_started = false;
-	game_ended = false;
+
 	const urlParams = new URLSearchParams(window.location.search);
 	player1 = urlParams.get('player1');
 	player2 = urlParams.get('player2');
@@ -424,7 +414,6 @@ export async function initComponent() {
 }
 
 export function cleanupComponent() {
-	game_ended = true;
 	document.removeEventListener('keydown', handleKeydown);
 	document.removeEventListener('keyup', handleKeyup);
 }

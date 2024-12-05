@@ -12,6 +12,7 @@ if [ "$1" = "cron" ] && [ "$2" = "-f" ]; then
     python3 manage.py crontab add
     echo "Running cron service..."
 else
+    # Run migrations
     python3 manage.py makemigrations --noinput
     python3 manage.py migrate --noinput
 fi

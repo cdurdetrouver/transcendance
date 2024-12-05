@@ -245,9 +245,6 @@ def login(request):
 def register(request):
 	user_data = request.data.copy()
 
-	if user_data.get('profile_picture') == 'undefined':
-		user_data.pop('profile_picture')
-
 	serializer = UserSerializer(data=user_data)
 
 	is_existing_user = User.objects.filter(email=user_data['email']).exists()
@@ -703,7 +700,6 @@ def friend_user(request, user_id):
 		user.save()
 		return JsonResponse({'message': 'Friend added successfully'}, status=status.HTTP_200_OK)
 	else:
-		print("user_to_friend", user_to_friend)
 		user.friends.remove(user_to_friend)
 		user.save()
 		return JsonResponse({'message': 'Friend remove successfully'}, status=status.HTTP_200_OK)
