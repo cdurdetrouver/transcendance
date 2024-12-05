@@ -7,7 +7,6 @@ import config from '../env/config.js';
 let isLoggedIn;
 
 export async function initComponent() {
-	await new Promise(r => setTimeout(r, 100));
 	const user = await get_user();
 	
 	const accountButton = document.querySelector("#account");

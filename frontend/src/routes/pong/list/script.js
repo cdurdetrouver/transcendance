@@ -99,7 +99,7 @@ async function refresh() {
 }
 
 export async function initComponent() {
-	await new Promise((resolve, reject) => setTimeout(resolve, 100));
+	
 	const user = await get_user();
 	if (!user) {
 		customalert('Error', 'You are not logged in', true);

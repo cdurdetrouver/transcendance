@@ -78,7 +78,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.refresh_last_mess()
         elif text_data_json["type"] == "chat":
             if len(text_data_json["message"]) > 128:
-                await self.send(text_data=json.dumps({"type": "error", "content": "Message too long"}))
+                await self.send(text_data=json.dumps({"type": "error", "message": "Message too long"}))
                 return
             if (await in_room(self.room, self.user) == False):
                 return await self.error("User is not register in room: {}".format(

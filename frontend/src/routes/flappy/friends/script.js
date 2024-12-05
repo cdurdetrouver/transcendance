@@ -114,7 +114,7 @@ async function displayFriends(user) {
 }
 
 export async function initComponent(params) {
-    await new Promise((resolve, reject) => setTimeout(resolve, 100));	
+    	
     let user = await get_user();
     if (!user)
         router.navigate('/');
