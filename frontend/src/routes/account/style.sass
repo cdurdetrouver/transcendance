@@ -197,6 +197,7 @@ body
 
                                 #username
                                     display: flex
+                                    white-space: nowrap
 
                                     button
                                         display: none
@@ -396,16 +397,15 @@ body
                     button
                         transition: transform 0.3s ease
 
-                    #close-button
-                        background-image: url(../static/assets/login/cross.png)
+                    .close-button
+                        background-image: url(../../static/assets/login/cross.png)
                         background-repeat: no-repeat
                         background-size: contain
-                        background-color: transparent
                         position: absolute
-                        top: 17%
-                        right: 6%
+                        top: 5%
+                        right: 0%
                         cursor: pointer
-                        height: 4%
+                        height: 8%
                         width: 4%
                         border: none
                         z-index: 11111111
@@ -423,13 +423,19 @@ body
                         display: flex
                         align-items: center
                         font-size: 1.8vw
-                        padding-left: 9%
+                        // padding-left: 9%
+                        position: absolute
+                        top: 41%
+                        left: 7%
 
                     .qrcode
                         display: none
                         flex-direction: row-reverse
                         align-items: center
                         width: 100%
+
+                        button
+                            z-index: 3
 
                         #submit-code
                             position: absolute
