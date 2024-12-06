@@ -1,19 +1,51 @@
 import { customalert } from "../../../../components/alert/script.js";
 import { router } from '../../../../app.js';
 
-const canvas = document.getElementById("pongCanvas");
-const ctx = canvas.getContext("2d");
+let canvas;
+let ctx;
 
-const backgroundCanvas = document.getElementById("backgroundCanvas");
-const backgroundCtx = backgroundCanvas.getContext("2d");
+let backgroundCanvas;
+let backgroundCtx;
 
-const lifeCanvas = document.getElementById("lifeCanvas");
-const lifeCanvasCtx = lifeCanvas.getContext("2d");
+let lifeCanvas;
+let lifeCanvasCtx;
 
-const ballImage = new Image();
-ballImage.src = '../../../../static/assets/multi/bullet.png';
+let ballImage;
 
 let mapSkin;
+
+const paddleWidth = 10;
+const paddleHeight = 75;
+const ballRadius = 8;
+
+let paddle1Y;
+let paddle2X;
+let paddle3X;
+let paddle4Y;
+let ballX;
+let ballY;
+let ballspeedX;
+let ballspeedY;
+let player1moveup;
+let player1movedown;
+let player2moveleft;
+let player2moveright;
+let player3moveright;
+let player3moveleft;
+let player4moveup;
+let player4movedown;
+let player1Score;
+let player2Score;
+let player3Score;
+let player4Score;
+let lastTouch;
+
+let player1;
+let player2;
+let player3;
+let player4;
+let game_started;
+let game_ended;
 
 function drawBackground() {
     backgroundCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
@@ -57,39 +89,6 @@ function centerPongCanvas() {
     canvas.style.left = `${centerX}px`;
     canvas.style.top = `${centerY}px`;
 }
-
-const paddleWidth = 10;
-const paddleHeight = 75;
-const ballRadius = 8;
-
-let paddle1Y;
-let paddle2X;
-let paddle3X;
-let paddle4Y;
-let ballX;
-let ballY;
-let ballspeedX;
-let ballspeedY;
-let player1moveup;
-let player1movedown;
-let player2moveleft;
-let player2moveright;
-let player3moveright;
-let player3moveleft;
-let player4moveup;
-let player4movedown;
-let player1Score;
-let player2Score;
-let player3Score;
-let player4Score;
-let lastTouch;
-
-let player1;
-let player2;
-let player3;
-let player4;
-let game_started;
-let game_ended;
 
 function handleKeydown(e) {
 	if (!game_started)
@@ -368,6 +367,19 @@ function closeButton()
 }
 
 export async function initComponent() {
+
+	canvas = document.getElementById("pongCanvas");
+	ctx = canvas.getContext("2d");
+
+	backgroundCanvas = document.getElementById("backgroundCanvas");
+	backgroundCtx = backgroundCanvas.getContext("2d");
+
+	lifeCanvas = document.getElementById("lifeCanvas");
+	lifeCanvasCtx = lifeCanvas.getContext("2d");
+
+	ballImage = new Image();
+	ballImage.src = '../../../../static/assets/multi/bullet.png';
+
 	paddle1Y = (canvas.height - paddleHeight) / 2;
 	paddle2X = (canvas.width - paddleHeight) / 2;
     paddle3X = (canvas.width - paddleHeight) / 2;
@@ -391,6 +403,7 @@ export async function initComponent() {
 	player4Score = 0;
 
 	game_started = false;
+	game_ended = false;
 
 	const urlParams = new URLSearchParams(window.location.search);
 	player1 = urlParams.get('player1');
@@ -428,4 +441,6 @@ export async function initComponent() {
 export function cleanupComponent() {
 	document.removeEventListener('keydown', handleKeydown);
 	document.removeEventListener('keyup', handleKeyup);
+
+	game_ended = true;	
 }

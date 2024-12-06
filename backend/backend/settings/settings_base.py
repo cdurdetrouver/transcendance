@@ -164,6 +164,7 @@ CHANNEL_LAYERS = {
             'PASSWORD': secrets.get('DB_PASSWORD') or 'postgrespassword',
             'HOST': os.environ['DB_HOST']  or 'db',
             'PORT': os.environ['DB_PORT'] or '5432',
+            'timeout': 2,
         },
     }
 }

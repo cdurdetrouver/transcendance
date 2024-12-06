@@ -1,6 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .serializers import MessageSerializer
+import time
 from asgiref.sync import sync_to_async
 from user.utils import get_user_by_token
 from .data_handling import get_room, in_room, get_last_10_messages, save_message, is_blocked
@@ -41,9 +42,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if (await self.check_user() == -1):
             return
         self.room = await get_room(self.room_group_id)
-        if (not self.room):
+        if not self.room:
             self.room_group_name = "not_allowed"
-            await self.disconnect(404)
             await self.close()
             return
         self.room_group_name = await sync_to_async(lambda: self.room.group_name)()
@@ -53,8 +53,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 self.room.name))
         else:
             await self.refresh_last_mess()
-        await self.channel_layer.group_add(
-            self.room_group_name, self.channel_name)
+        try:
+            await self.channel_layer.group_add(
+                self.room_group_name, self.channel_name)
+        except:
+            await self.error("Dommage")
+            print("Pas de Bigflo et Oli ptdr")
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -63,7 +67,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def chat_invitation(self, event):
         self.game_invit = True
-        await self.send(text_data=json.dumps({"type": "invitation", "match_name": self.channel_name}))
+        await self.send(text_data=json.dumps({"type": "invitation", "match_name": "{}{}".format(time.time(), self.channel_name)}))
         print("invitation sent")    
 
     async def receive(self, text_data):
@@ -96,8 +100,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({"type" : "announce", "content": 'Invite for pong already sent'}))
 
     async def chat_message(self, event):
-        message = event["message"]
-        print(message)
+        message = event["message"]  
         if message['author'] and await is_blocked(self.user, message['author']['id']):
             message["content"] = "undefined"
         await self.send(text_data=json.dumps({"type" : "chat", "message": message}))

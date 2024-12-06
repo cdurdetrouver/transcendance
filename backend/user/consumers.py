@@ -24,8 +24,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 			await self.close()
 			return
 		self.user = result
-		self.user.online = True
-		await sync_to_async(self.user.save)()
+		await sync_to_async(self.user.__class__.objects.filter(pk=self.user.pk).update)(online=True)
 
 		await self.send(text_data=json.dumps({
 			'type': 'success',
@@ -34,5 +33,4 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, code):
 		if self.user:
-			self.user.online = False
-			await sync_to_async(self.user.save)()
+			await sync_to_async(self.user.__class__.objects.filter(pk=self.user.pk).update)(online=False)

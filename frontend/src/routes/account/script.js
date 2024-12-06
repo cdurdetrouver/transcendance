@@ -200,7 +200,9 @@ export async function initComponent() {
 
 	logoutButton.addEventListener("click", function() {
 		logout();
-		router.navigate('/');
+		setTimeout(() => {
+			router.navigate('/');
+		}, 200);
 	});
 
 	const editPasswordButton = document.querySelector("#edit-password .edit-button");
